@@ -1,0 +1,466 @@
+{
+  "8_ball": [
+    "1",
+    "4"
+  ],
+  "abstract_joker": [
+    "3",
+    "0"
+  ],
+  "acrobat": [
+    "3"
+  ],
+  "ancient_joker": [
+    "1.5",
+    "[suit]"
+  ],
+  "arrowhead": [
+    "50"
+  ],
+  "banner": [
+    "30"
+  ],
+  "baron": [
+    "1.5"
+  ],
+  "baseball_card": [
+    "1.5"
+  ],
+  "blackboard": [
+    "3",
+    "Spades",
+    "Clubs"
+  ],
+  "bloodstone": [
+    "1",
+    "2",
+    "1.5"
+  ],
+  "blue_joker": [
+    "2",
+    "0"
+  ],
+  "bootstraps": [
+    "2",
+    "5",
+    "0"
+  ],
+  "bull": [
+    "2",
+    "0"
+  ],
+  "burglar": [
+    "3"
+  ],
+  "business_card": [
+    "1",
+    "2"
+  ],
+  "campfire": [
+    "0.25",
+    "1"
+  ],
+  "canio": [
+    "1",
+    "1"
+  ],
+  "card_sharp": [
+    "3"
+  ],
+  "castle": [
+    "3",
+    "[suit]",
+    "0"
+  ],
+  "cavendish": [
+    "3",
+    "1",
+    "1000"
+  ],
+  "ceremonial_dagger": [
+    "0"
+  ],
+  "chaos_the_clown": [
+    "1"
+  ],
+  "clever_joker": [
+    "80",
+    "Two Pair"
+  ],
+  "cloud_9": [
+    "1",
+    "0"
+  ],
+  "constellation": [
+    "0.1",
+    "1"
+  ],
+  "crafty_joker": [
+    "80",
+    "Flush"
+  ],
+  "crazy_joker": [
+    "12",
+    "Straight"
+  ],
+  "credit_card": [
+    "20"
+  ],
+  "delayed_gratification": [
+    "2"
+  ],
+  "devious_joker": [
+    "100",
+    "Straight"
+  ],
+  "diet_cola": [
+    "Double Tag"
+  ],
+  "driver_gloves": [
+    "3",
+    "16"
+  ],
+  "drivers_license": [
+    "3",
+    "16"
+  ],
+  "droll_joker": [
+    "10",
+    "Flush"
+  ],
+  "drunkard": [
+    "1"
+  ],
+  "egg": [
+    "3"
+  ],
+  "eight_ball": [
+    "1",
+    "4"
+  ],
+  "erosion": [
+    "4",
+    "0",
+    "[deck size]"
+  ],
+  "even_steven": [
+    "4"
+  ],
+  "faceless_joker": [
+    "5",
+    "3"
+  ],
+  "fibonacci": [
+    "2"
+  ],
+  "flash_card": [
+    "2",
+    "0"
+  ],
+  "flower_pot": [
+    "3"
+  ],
+  "fortune_teller": [
+    "1",
+    "0"
+  ],
+  "gift_card": [
+    "1"
+  ],
+  "glass_joker": [
+    "0.75",
+    "1"
+  ],
+  "gluttonous_joker": [
+    "3",
+    "Club"
+  ],
+  "golden_joker": [
+    "4"
+  ],
+  "golden_ticket": [
+    "4"
+  ],
+  "greedy_joker": [
+    "3",
+    "Diamond"
+  ],
+  "green_joker": [
+    "1",
+    "1",
+    "0"
+  ],
+  "gros_michel": [
+    "15",
+    "1",
+    "6"
+  ],
+  "half_joker": [
+    "20",
+    "3"
+  ],
+  "hallucination": [
+    "1",
+    "2"
+  ],
+  "hanging_chad": [
+    "2"
+  ],
+  "hiker": [
+    "5"
+  ],
+  "hit_the_road": [
+    "0.5",
+    "1"
+  ],
+  "hologram": [
+    "0.25",
+    "1"
+  ],
+  "ice_cream": [
+    "100",
+    "5"
+  ],
+  "invisible_joker": [
+    "2",
+    "0"
+  ],
+  "joker": [
+    "4"
+  ],
+  "joker_stencil": [
+    "1"
+  ],
+  "jolly_joker": [
+    "8",
+    "Pair"
+  ],
+  "juggler": [
+    "1"
+  ],
+  "loyalty_card": [
+    "4",
+    "6",
+    "5"
+  ],
+  "lucky_cat": [
+    "0.25",
+    "1"
+  ],
+  "lusty_joker": [
+    "3",
+    "Heart"
+  ],
+  "mad_joker": [
+    "10",
+    "Two Pair"
+  ],
+  "madness": [
+    "0.5",
+    "1"
+  ],
+  "mail_in_rebate": [
+    "5",
+    "[rank]"
+  ],
+  "matador": [
+    "8"
+  ],
+  "merry_andy": [
+    "3",
+    "-1"
+  ],
+  "mystic_summit": [
+    "15",
+    "0"
+  ],
+  "obelisk": [
+    "0.2",
+    "1"
+  ],
+  "odd_todd": [
+    "31"
+  ],
+  "onyx_agate": [
+    "7"
+  ],
+  "photograph": [
+    "2"
+  ],
+  "popcorn": [
+    "20",
+    "4"
+  ],
+  "ramen": [
+    "2",
+    "0.01"
+  ],
+  "red_card": [
+    "3",
+    "0"
+  ],
+  "reserved_parking": [
+    "1",
+    "1",
+    "2"
+  ],
+  "ride_the_bus": [
+    "1",
+    "0"
+  ],
+  "riff_raff": [
+    "2"
+  ],
+  "rocket": [
+    "1",
+    "2"
+  ],
+  "rough_gem": [
+    "1"
+  ],
+  "runner": [
+    "15",
+    "0"
+  ],
+  "satellite": [
+    "1",
+    "0"
+  ],
+  "scary_face": [
+    "30"
+  ],
+  "scholar": [
+    "4",
+    "20"
+  ],
+  "seance": [
+    "Straight Flush"
+  ],
+  "seeing_double": [
+    "2"
+  ],
+  "seltzer": [
+    "10"
+  ],
+  "shoot_the_moon": [
+    "13"
+  ],
+  "sly_joker": [
+    "50",
+    "Pair"
+  ],
+  "smiley_face": [
+    "5"
+  ],
+  "space_joker": [
+    "1",
+    "4"
+  ],
+  "spare_trousers": [
+    "2",
+    "0",
+    "Two Pair"
+  ],
+  "square_joker": [
+    "4",
+    "0"
+  ],
+  "steel_joker": [
+    "0.2",
+    "1"
+  ],
+  "stone_joker": [
+    "25",
+    "0"
+  ],
+  "stuntman": [
+    "250",
+    "-2"
+  ],
+  "swashbuckler": [
+    "1"
+  ],
+  "the_duo": [
+    "2",
+    "Pair"
+  ],
+  "the_family": [
+    "4",
+    "Four of a Kind"
+  ],
+  "the_idol": [
+    "2",
+    "[rank]",
+    "[suit]"
+  ],
+  "the_order": [
+    "3",
+    "Straight"
+  ],
+  "the_tribe": [
+    "2",
+    "Flush"
+  ],
+  "the_trio": [
+    "3",
+    "Three of a Kind"
+  ],
+  "throwback": [
+    "0.25",
+    "1"
+  ],
+  "to_do_list": [
+    "4",
+    "[hand]"
+  ],
+  "to_the_moon": [
+    "1"
+  ],
+  "trading_card": [
+    "1"
+  ],
+  "triboulet": [
+    "2"
+  ],
+  "troubadour": [
+    "2",
+    "-1"
+  ],
+  "turtle_bean": [
+    "5",
+    "1"
+  ],
+  "vagabond": [
+    "4"
+  ],
+  "vampire": [
+    "0.1",
+    "1"
+  ],
+  "walkie_talkie": [
+    "10",
+    "4"
+  ],
+  "wee_joker": [
+    "8",
+    "0"
+  ],
+  "wily_joker": [
+    "100",
+    "Three of a Kind"
+  ],
+  "wrathful_joker": [
+    "3",
+    "Spade"
+  ],
+  "yorick": [
+    "1",
+    "23",
+    "23",
+    "1"
+  ],
+  "zany_joker": [
+    "12",
+    "Three of a Kind"
+  ]
+}

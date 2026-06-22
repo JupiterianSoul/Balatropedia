@@ -293,7 +293,9 @@
       "myrun_likely_synergies": "Synergies probables",
       "myrun_reason_partner": "Partenaire listé",
       "myrun_reason_archetype": "Archétype partagé",
-      "myrun_reason_tag": "Rôle partagé"
+      "myrun_reason_tag": "Rôle partagé",
+      "fav_show_note": "Note",
+      "fav_hide_note": "Masquer la note"
     },
     "sheet": {
       "why_play": "Pourquoi le jouer ?",
