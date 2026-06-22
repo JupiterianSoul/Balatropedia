@@ -2,12 +2,37 @@ import { cn } from "@/lib/utils";
 import { Star, AlertTriangle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
-  Joker, Level, LEVEL_LABELS, ROLE_LABELS, Role, SCALING_LABELS, Scaling,
-  STAGE_LABELS, Stage, JOKER_MAP,
+  Level, Role, Scaling, Stage, JOKER_MAP, Rarity,
 } from "@/lib/helpers";
+import { useLabels, useT } from "@/lib/i18n";
+
+/* ---- Rarity badge ---- */
+const RARITY_TONE: Record<Rarity, string> = {
+  common: "text-muted-foreground border-border bg-card",
+  uncommon: "text-primary border-primary/40 bg-primary/10",
+  rare: "text-[hsl(210_50%_65%)] border-[hsl(210_50%_65%)]/40 bg-[hsl(210_50%_65%)]/10",
+  legendary: "text-accent border-accent/50 bg-accent/15 shadow-[0_0_8px_-2px_hsl(var(--accent)/0.4)]",
+};
+export function RarityBadge({ rarity, size = "sm", className }: { rarity: Rarity; size?: "sm" | "md"; className?: string }) {
+  const labels = useLabels();
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center rounded-sm border font-semibold uppercase tracking-wider",
+        size === "md" ? "px-2 py-0.5 text-[11px]" : "px-1.5 py-0.5 text-[10px]",
+        RARITY_TONE[rarity],
+        className,
+      )}
+      data-testid={`badge-rarity-${rarity}`}
+    >
+      {labels.rarity[rarity]}
+    </span>
+  );
+}
 
 /* ---- Role pill (flat chip) ---- */
 export function RolePill({ role, className }: { role: Role; className?: string }) {
+  const labels = useLabels();
   return (
     <span
       className={cn(
@@ -15,7 +40,7 @@ export function RolePill({ role, className }: { role: Role; className?: string }
         className,
       )}
     >
-      {ROLE_LABELS[role]}
+      {labels.role[role]}
     </span>
   );
 }
@@ -27,6 +52,7 @@ const LEVEL_TONE: Record<Level, string> = {
   high: "border-secondary/60 text-[hsl(350_60%_70%)]",
 };
 export function RiskBadge({ level }: { level: Level }) {
+  const labels = useLabels();
   return (
     <span
       className={cn(
@@ -35,7 +61,7 @@ export function RiskBadge({ level }: { level: Level }) {
       )}
       data-testid={`badge-risk-${level}`}
     >
-      Risk {LEVEL_LABELS[level]}
+      {labels.riskPrefix} {labels.level[level]}
     </span>
   );
 }
@@ -46,6 +72,7 @@ const STAGE_TONE: Record<Stage, string> = {
   late: "border-secondary/50 text-[hsl(350_55%_68%)]",
 };
 export function StageBadge({ stage }: { stage: Stage }) {
+  const labels = useLabels();
   return (
     <span
       className={cn(
@@ -53,7 +80,7 @@ export function StageBadge({ stage }: { stage: Stage }) {
         STAGE_TONE[stage],
       )}
     >
-      {STAGE_LABELS[stage]}
+      {labels.stage[stage]}
     </span>
   );
 }
@@ -65,6 +92,7 @@ export function ScalingBadge({ scaling }: { scaling: Scaling }) {
       : scaling === "static"
         ? "border-border text-muted-foreground"
         : "border-[hsl(145_35%_40%)]/50 text-[hsl(145_45%_60%)]";
+  const labels = useLabels();
   return (
     <span
       className={cn(
@@ -72,7 +100,7 @@ export function ScalingBadge({ scaling }: { scaling: Scaling }) {
         tone,
       )}
     >
-      {SCALING_LABELS[scaling]}
+      {labels.scaling[scaling]}
     </span>
   );
 }
@@ -89,6 +117,7 @@ export function StarToggle({
   testId: string;
   size?: number;
 }) {
+  const t = useT();
   return (
     <button
       type="button"
@@ -96,7 +125,7 @@ export function StarToggle({
         e.stopPropagation();
         onToggle();
       }}
-      aria-label={active ? "Remove from favorites" : "Add to favorites"}
+      aria-label={active ? t("ui.favStar.remove") : t("ui.favStar.add")}
       aria-pressed={active}
       data-testid={testId}
       className="rounded-sm p-1 text-muted-foreground transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -123,6 +152,7 @@ export function JokerChip({
   strike?: boolean;
   testIdPrefix?: string;
 }) {
+  const t = useT();
   const j = JOKER_MAP[id];
   const name = j?.name ?? id;
   const toneCls =
@@ -151,7 +181,7 @@ export function JokerChip({
   );
 
   if (tone === "anti") {
-    const reason = j?.summary ?? "Generally conflicts with this Joker.";
+    const reason = j?.summary ?? t("ui.chip.generic_conflict");
     return (
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>
@@ -164,9 +194,10 @@ export function JokerChip({
 
 /* ---- Level indicator dots (for compare) ---- */
 export function LevelDots({ level }: { level: Level }) {
+  const labels = useLabels();
   const filled = level === "high" ? 3 : level === "med" ? 2 : 1;
   return (
-    <span className="inline-flex items-center gap-1" aria-label={LEVEL_LABELS[level]}>
+    <span className="inline-flex items-center gap-1" aria-label={labels.level[level]}>
       {[0, 1, 2].map((i) => (
         <span
           key={i}
@@ -176,7 +207,7 @@ export function LevelDots({ level }: { level: Level }) {
           )}
         />
       ))}
-      <span className="ml-1 text-xs text-muted-foreground tabular">{LEVEL_LABELS[level]}</span>
+      <span className="ml-1 text-xs text-muted-foreground tabular">{labels.level[level]}</span>
     </span>
   );
 }

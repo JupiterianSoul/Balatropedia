@@ -7,12 +7,13 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { JOKERS, JOKER_MAP } from "@/lib/helpers";
+import { useT } from "@/lib/i18n";
 
 /* Single-select combobox */
 export function JokerCombobox({
   value,
   onChange,
-  placeholder = "Select a Joker…",
+  placeholder,
   testId = "combobox-joker",
 }: {
   value: string | null;
@@ -21,6 +22,8 @@ export function JokerCombobox({
   testId?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useT();
+  const ph = placeholder ?? t("ui.combobox.select_joker");
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -32,16 +35,16 @@ export function JokerCombobox({
           className="w-full justify-between bg-card font-normal"
         >
           <span className={cn(!value && "text-muted-foreground")}>
-            {value ? JOKER_MAP[value]?.name : placeholder}
+            {value ? JOKER_MAP[value]?.name : ph}
           </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Search Jokers…" />
+          <CommandInput placeholder={t("ui.combobox.search_jokers")} />
           <CommandList>
-            <CommandEmpty>No Joker found.</CommandEmpty>
+            <CommandEmpty>{t("ui.combobox.no_joker")}</CommandEmpty>
             <CommandGroup>
               {JOKERS.map((j) => (
                 <CommandItem
@@ -75,6 +78,7 @@ export function JokerMultiCombobox({
   testId?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useT();
   const atMax = values.length >= max;
 
   function toggle(id: string) {
@@ -93,16 +97,16 @@ export function JokerMultiCombobox({
         >
           <span className="flex items-center gap-2 text-muted-foreground">
             <Plus className="h-4 w-4" />
-            Add Joker {values.length > 0 && <span className="tabular">({values.length}/{max})</span>}
+            {t("ui.combobox.add_joker")} {values.length > 0 && <span className="tabular">({values.length}/{max})</span>}
           </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Search Jokers…" />
+          <CommandInput placeholder={t("ui.combobox.search_jokers")} />
           <CommandList>
-            <CommandEmpty>No Joker found.</CommandEmpty>
+            <CommandEmpty>{t("ui.combobox.no_joker")}</CommandEmpty>
             <CommandGroup>
               {JOKERS.map((j) => {
                 const selected = values.includes(j.id);

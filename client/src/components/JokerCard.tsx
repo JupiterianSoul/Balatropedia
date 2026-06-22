@@ -1,9 +1,13 @@
 import { useApp } from "@/lib/appContext";
 import { Joker } from "@/lib/helpers";
-import { RolePill, RiskBadge, StageBadge, StarToggle } from "./primitives";
+import { useGameText } from "@/lib/i18n";
+import { RolePill, RiskBadge, StageBadge, StarToggle, RarityBadge } from "./primitives";
+import { JokerSprite } from "./JokerSprite";
 
 export function JokerCard({ joker }: { joker: Joker }) {
   const { openJokerDetail, isFavoriteJoker, toggleFavoriteJoker } = useApp();
+  const localized = useGameText("jokers", joker.id);
+  const displayName = localized.name || joker.name;
   const visibleRoles = joker.tags.slice(0, 3);
   const extra = joker.tags.length - visibleRoles.length;
 
@@ -19,12 +23,21 @@ export function JokerCard({ joker }: { joker: Joker }) {
         }
       }}
       data-testid={`card-joker-${joker.id}`}
-      className="casino-card casino-card-interactive group flex cursor-pointer flex-col p-3.5 focus-visible:ring-2 focus-visible:ring-ring"
+      className="balatro-card balatro-hover group flex cursor-pointer flex-col p-3.5 focus-visible:ring-2 focus-visible:ring-ring"
+      style={{ contentVisibility: "auto", containIntrinsicSize: "auto 180px" } as React.CSSProperties}
     >
+      {joker.rarity && (
+        <div className="mb-1.5">
+          <RarityBadge rarity={joker.rarity} />
+        </div>
+      )}
       <div className="flex items-start justify-between gap-2">
-        <h3 className="font-display text-base font-semibold leading-tight text-accent">
-          {joker.name}
-        </h3>
+        <div className="flex min-w-0 items-start gap-2.5">
+          <JokerSprite jokerId={joker.id} name={displayName} size={48} className="h-12 w-12 sm:h-14 sm:w-14" />
+          <h3 className="min-w-0 font-pixel text-base font-semibold leading-tight text-accent">
+            {displayName}
+          </h3>
+        </div>
         <StarToggle
           active={isFavoriteJoker(joker.id)}
           onToggle={() => toggleFavoriteJoker(joker.id)}
@@ -32,7 +45,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
         />
       </div>
 
-      <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-foreground/80 small-caps">
+      <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-foreground/80 small-caps">
         {joker.summary}
       </p>
 

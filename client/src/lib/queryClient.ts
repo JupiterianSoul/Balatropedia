@@ -1,6 +1,18 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
-const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
+export const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
+
+// In-memory bearer token. The deployed app runs in a cross-site iframe where
+// `sameSite: none` cookies are dropped, so auth is carried via an Authorization
+// header instead. The token lives only in memory (no localStorage in sandbox),
+// so it does not survive a page reload — that is expected behavior.
+let authToken: string | null = null;
+export function setAuthToken(t: string | null) {
+  authToken = t;
+}
+export function getAuthToken() {
+  return authToken;
+}
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -14,10 +26,15 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  const headers: Record<string, string> = {};
+  if (data) headers["Content-Type"] = "application/json";
+  if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+
   const res = await fetch(`${API_BASE}${url}`, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers,
     body: data ? JSON.stringify(data) : undefined,
+    credentials: "include",
   });
 
   await throwIfResNotOk(res);
@@ -30,7 +47,12 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(`${API_BASE}${queryKey.join("/")}`);
+    const headers: Record<string, string> = {};
+    if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+    const res = await fetch(`${API_BASE}${queryKey.join("/")}`, {
+      headers,
+      credentials: "include",
+    });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
       return null;

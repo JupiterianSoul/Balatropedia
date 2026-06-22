@@ -4,9 +4,11 @@ import { useApp } from "@/lib/appContext";
 import { ARCHETYPES } from "@/lib/helpers";
 import { JokerChip, SectionLabel } from "@/components/primitives";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 export function ArchetypesTab() {
   const { openJokerDetail } = useApp();
+  const t = useT();
   const [openId, setOpenId] = useState<string>(ARCHETYPES[0]?.id ?? "");
 
   return (
@@ -39,13 +41,13 @@ export function ArchetypesTab() {
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <SectionLabel>Enablers</SectionLabel>
+                    <SectionLabel>{t("ui.arch.enablers")}</SectionLabel>
                     <div className="flex flex-wrap gap-1.5">
                       {a.enablers.map((id) => <JokerChip key={id} id={id} onClick={openJokerDetail} testIdPrefix={`chip-enabler-${a.id}`} />)}
                     </div>
                   </div>
                   <div>
-                    <SectionLabel>Scalers</SectionLabel>
+                    <SectionLabel>{t("ui.arch.scalers")}</SectionLabel>
                     <div className="flex flex-wrap gap-1.5">
                       {a.scalers.map((id) => <JokerChip key={id} id={id} onClick={openJokerDetail} testIdPrefix={`chip-scaler-${a.id}`} />)}
                     </div>
@@ -53,14 +55,14 @@ export function ArchetypesTab() {
                 </div>
 
                 <div>
-                  <SectionLabel>Bait — looks good, usually isn't</SectionLabel>
+                  <SectionLabel>{t("ui.arch.bait")}</SectionLabel>
                   <div className="flex flex-wrap gap-1.5">
                     {a.bait.map((id) => <JokerChip key={id} id={id} tone="bait" strike onClick={openJokerDetail} testIdPrefix={`chip-bait-${a.id}`} />)}
                   </div>
                 </div>
 
                 <div className="border-t border-border pt-3">
-                  <SectionLabel>Often lacks</SectionLabel>
+                  <SectionLabel>{t("ui.arch.often_lacks")}</SectionLabel>
                   <p className="text-sm italic leading-relaxed text-muted-foreground">{a.oftenLacks}</p>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import {
   SynergyKind,
 } from "@/lib/helpers";
 import { JokerCombobox } from "@/components/JokerCombobox";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const KIND_ACCENT: Record<SynergyKind, string> = {
@@ -18,6 +19,7 @@ const KIND_ACCENT: Record<SynergyKind, string> = {
 
 export function SynergyTab() {
   const { openJokerDetail } = useApp();
+  const t = useT();
   const [selected, setSelected] = useState<string>("blueprint");
 
   const grouped = useMemo(() => {
@@ -37,7 +39,7 @@ export function SynergyTab() {
       <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
         <div>
           <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            Select a Joker
+            {t("ui.syn.select_joker")}
           </div>
           <JokerCombobox value={selected} onChange={setSelected} testId="combobox-synergy" />
         </div>
@@ -52,12 +54,12 @@ export function SynergyTab() {
             </button>
             <p className="mt-1 text-xs text-foreground/80 small-caps">{j.summary}</p>
             <p className="mt-2 text-xs tabular text-muted-foreground">
-              {total} curated {total === 1 ? "connection" : "connections"}
+              {total} {t("ui.syn.curated")} {total === 1 ? t("ui.syn.connection") : t("ui.syn.connections")}
             </p>
           </div>
         )}
         <div className="space-y-1.5 rounded-md border border-border bg-card/40 p-3 text-[11px] text-muted-foreground">
-          <div className="font-semibold uppercase tracking-[0.12em] text-muted-foreground">Legend</div>
+          <div className="font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t("ui.syn.legend")}</div>
           {SYNERGY_KIND_ORDER.map((k) => (
             <div key={k} className="flex items-center gap-2">
               <span className={cn("h-3 w-1 rounded-full border-l-2", KIND_ACCENT[k])} />
@@ -72,7 +74,7 @@ export function SynergyTab() {
         {total === 0 ? (
           <div className="rounded-md border border-dashed border-border py-16 text-center">
             <p className="text-sm text-muted-foreground">
-              No curated synergies for this Joker yet. Check the Library for general role tags.
+              {t("ui.syn.no_synergies")}
             </p>
           </div>
         ) : (
