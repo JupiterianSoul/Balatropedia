@@ -12,7 +12,7 @@ import {
 import { JokerSprite } from "./JokerSprite";
 import { Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useGameText, useT, useLabels, useCuratedText } from "@/lib/i18n";
+import { useGameText, useT, useLabels, useCuratedText, useI18n } from "@/lib/i18n";
 import type { WhyRule, UseCaseRule } from "@/lib/helpers";
 import { FormattedBalatroText } from "@/lib/balatroText";
 
@@ -28,6 +28,7 @@ export function JokerDetailSheet() {
   const labels = useLabels();
   const j = selectedJokerId ? JOKER_MAP[selectedJokerId] : null;
   const localized = useGameText("jokers", selectedJokerId ?? "");
+  const { lang } = useI18n();
   const displayName = (j && localized.name) || j?.name || "";
 
   return (
@@ -64,7 +65,7 @@ export function JokerDetailSheet() {
                   />
                 </div>
                 <p className="text-sm text-foreground/90">
-                  <FormattedBalatroText text={localized.text || j.summary} />
+                  <FormattedBalatroText text={localized.text || j.summary} id={j.id} lang={lang} />
                 </p>
                 <div className="flex flex-wrap items-center gap-1.5 pt-1">
                   {j.tags.slice(0, 4).map((tg) => (

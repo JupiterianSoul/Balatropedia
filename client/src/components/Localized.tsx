@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useGameText } from "@/lib/i18n";
+import { useGameText, useI18n } from "@/lib/i18n";
 import { FormattedBalatroText } from "@/lib/balatroText";
 
 /** Categories whose `text` field uses Balatro's #N# placeholder + scoring tokens. */
@@ -67,6 +67,7 @@ export function LText({
   raw?: boolean;
 }): ReactNode {
   const { text } = useGameText(category, id);
+  const { lang } = useI18n();
   const value = text || fallback || "";
   const Tag = as as any;
   if (raw || !FORMATTED_CATEGORIES.has(category)) {
@@ -74,7 +75,7 @@ export function LText({
   }
   return (
     <Tag className={className}>
-      <FormattedBalatroText text={value} />
+      <FormattedBalatroText text={value} id={id} lang={lang} />
     </Tag>
   );
 }

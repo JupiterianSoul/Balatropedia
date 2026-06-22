@@ -1,6 +1,7 @@
 /**
  * Formats Balatro joker/consumable text by:
- *  - Stripping the `#N#` numeric placeholders (we don't track per-joker values)
+ *  - Substituting `#N#` placeholders with each joker's default base-game values
+ *    from `data/joker_values.json` (sourced from the official Balatro Fandom wiki).
  *  - Colorizing common scoring tokens with the authentic Balatro palette:
  *      +N Mult / +Mult       → red    (var(--bal-mult))
  *      XN Mult / ×N Mult     → red    (var(--bal-mult))
@@ -14,13 +15,86 @@
  *      Suits (Heart, Diamond, Spade, Club) → suit color
  */
 import { Fragment, type ReactNode } from "react";
+import JOKER_VALUES from "@/data/joker_values.json";
 
-/** Strip "#N#" placeholders → empty (caller usually handles surrounding spaces). */
-function stripPlaceholders(s: string): string {
-  // Replace "#N#" with a generic glyph; we don't know the value.
-  // Most strings already include a sign (+/-/X/$) right before #N#, so just drop the #...#.
-  // Example: "+#1# Mult" → "+ Mult" → we then collapse extra spaces.
-  return s.replace(/#\d+#/g, "").replace(/\s{2,}/g, " ").trim();
+const VALUES: Record<string, string[]> = JOKER_VALUES as Record<string, string[]>;
+
+/**
+ * Per-language localization of the few named tokens that appear as #N# in the
+ * official Balatro localization files (suit names, hand names, rank, etc.).
+ * Numeric values are language-agnostic; only named tokens need this map.
+ */
+type TokenLang = "en" | "fr" | "es";
+const NAMED_TOKENS: Record<TokenLang, Record<string, string>> = {
+  en: {},
+  fr: {
+    "Pair": "Paire",
+    "Three of a Kind": "Brelan",
+    "Four of a Kind": "Carr\u00e9",
+    "Two Pair": "Double Paire",
+    "Straight": "Suite",
+    "Flush": "Couleur",
+    "Straight Flush": "Quinte Flush",
+    "Diamond": "Carreau",
+    "Diamonds": "Carreaux",
+    "Heart": "C\u0153ur",
+    "Hearts": "C\u0153urs",
+    "Spade": "Pique",
+    "Spades": "Piques",
+    "Club": "Tr\u00e8fle",
+    "Clubs": "Tr\u00e8fles",
+    "Double Tag": "Double Tag",
+    "[suit]": "[couleur]",
+    "[hand]": "[main]",
+    "[rank]": "[rang]",
+    "[deck size]": "[taille de paquet]",
+  },
+  es: {
+    "Pair": "Pareja",
+    "Three of a Kind": "Trio",
+    "Four of a Kind": "Poker",
+    "Two Pair": "Doble Pareja",
+    "Straight": "Escalera",
+    "Flush": "Color",
+    "Straight Flush": "Escalera de Color",
+    "Diamond": "Diamante",
+    "Diamonds": "Diamantes",
+    "Heart": "Coraz\u00f3n",
+    "Hearts": "Corazones",
+    "Spade": "Pica",
+    "Spades": "Picas",
+    "Club": "Tr\u00e9bol",
+    "Clubs": "Tr\u00e9boles",
+    "Double Tag": "Etiqueta Doble",
+    "[suit]": "[palo]",
+    "[hand]": "[mano]",
+    "[rank]": "[rango]",
+    "[deck size]": "[tama\u00f1o de mazo]",
+  },
+};
+
+/**
+ * Substitute `#N#` placeholders with the joker's default values.
+ * If no values are known, strip the placeholders. The visible numbers come
+ * from the official Balatro wiki defaults — in-game they update based on run
+ * state, but the displayed defaults are what new players see in shop tooltips.
+ */
+function substitutePlaceholders(s: string, id?: string, lang?: TokenLang): string {
+  const vals = id ? VALUES[id] : undefined;
+  const tokenMap = lang ? NAMED_TOKENS[lang] : undefined;
+  let out = s.replace(/#(\d+)#/g, (_, idx) => {
+    if (!vals) return "";
+    const i = parseInt(idx, 10) - 1;
+    if (i < 0 || i >= vals.length) return "";
+    const raw = vals[i];
+    if (tokenMap && tokenMap[raw]) return tokenMap[raw];
+    return raw;
+  });
+  // Collapse double spaces left from missing values.
+  out = out.replace(/\s{2,}/g, " ").trim();
+  // Tidy up artefacts like "+ Mult" → "+ Mult" (leave as-is) and "$ " → "$".
+  out = out.replace(/\$ /g, "$");
+  return out;
 }
 
 type Token = { type: "text" | "mult" | "chips" | "money" | "chance" | "tag"; text: string; tag?: string };
@@ -57,8 +131,8 @@ const TAG_COLORS: Record<string, string> = {
  * Strategy: run a series of ordered regexes; each match is captured as a colored token.
  * Anything in-between stays as plain text.
  */
-export function tokenizeBalatroText(raw: string): Token[] {
-  const text = stripPlaceholders(raw);
+export function tokenizeBalatroText(raw: string, id?: string, lang?: TokenLang): Token[] {
+  const text = substitutePlaceholders(raw, id, lang);
   if (!text) return [];
 
   // Patterns are tried in this order; first match wins for a given position.
@@ -141,8 +215,20 @@ export function tokenizeBalatroText(raw: string): Token[] {
 }
 
 /** Render a Balatro effect string into colored React nodes. */
-export function FormattedBalatroText({ text, className }: { text: string; className?: string }) {
-  const tokens = tokenizeBalatroText(text);
+export function FormattedBalatroText({
+  text,
+  className,
+  id,
+  lang,
+}: {
+  text: string;
+  className?: string;
+  /** Optional joker/consumable id used to look up default #N# values. */
+  id?: string;
+  /** Optional active UI language so named tokens get translated. */
+  lang?: TokenLang;
+}) {
+  const tokens = tokenizeBalatroText(text, id, lang);
   if (!tokens.length) return null;
   return (
     <span className={className}>
@@ -171,6 +257,6 @@ export function FormattedBalatroText({ text, className }: { text: string; classN
 }
 
 /** Convenience: returns nodes only (no wrapping span). */
-export function formattedBalatroNodes(text: string): ReactNode {
-  return <FormattedBalatroText text={text} />;
+export function formattedBalatroNodes(text: string, id?: string, lang?: TokenLang): ReactNode {
+  return <FormattedBalatroText text={text} id={id} lang={lang} />;
 }

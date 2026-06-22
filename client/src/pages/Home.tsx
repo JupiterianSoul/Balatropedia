@@ -170,10 +170,9 @@ export default function Home() {
 
               <div className="flex-1" />
 
-              {/* mobile right controls */}
+              {/* mobile right controls — no SoundToggle here to keep room for sign-in (desktop has it in the sidebar) */}
               <div className="flex shrink-0 items-center gap-1">
                 <LanguageSwitcher />
-                <SoundToggle />
                 <UserButton />
               </div>
             </div>

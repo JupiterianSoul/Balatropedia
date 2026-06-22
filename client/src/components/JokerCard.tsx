@@ -1,6 +1,6 @@
 import { useApp } from "@/lib/appContext";
 import { Joker } from "@/lib/helpers";
-import { useGameText } from "@/lib/i18n";
+import { useGameText, useI18n } from "@/lib/i18n";
 import { RolePill, RiskBadge, StageBadge, StarToggle, RarityBadge } from "./primitives";
 import { JokerSprite } from "./JokerSprite";
 import { playSound } from "@/lib/sound";
@@ -9,6 +9,7 @@ import { FormattedBalatroText } from "@/lib/balatroText";
 export function JokerCard({ joker }: { joker: Joker }) {
   const { openJokerDetail, isFavoriteJoker, toggleFavoriteJoker } = useApp();
   const localized = useGameText("jokers", joker.id);
+  const { lang } = useI18n();
   const displayName = localized.name || joker.name;
   const visibleRoles = joker.tags.slice(0, 3);
   const extra = joker.tags.length - visibleRoles.length;
@@ -49,7 +50,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
       </div>
 
       <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-foreground/80 small-caps">
-        <FormattedBalatroText text={localized.text || joker.summary} />
+        <FormattedBalatroText text={localized.text || joker.summary} id={joker.id} lang={lang} />
       </p>
 
       <div className="mt-3 flex flex-wrap gap-1.5">
