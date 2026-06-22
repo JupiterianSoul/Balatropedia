@@ -317,6 +317,94 @@ export function impliedArchetypes(selection: string[]): ImpliedArchetype[] {
   return out;
 }
 
+/**
+ * Looser archetype detection — surfaces an archetype as soon as ANY joker in
+ * selection lists it in `joker.archetypes`. Threshold scales with selection size:
+ *  - 1 selected joker  → 1 match needed
+ *  - 2+ selected jokers → 2 matches needed
+ * Falls back to the strict `impliedArchetypes()` membership for the matched list.
+ */
+export function suggestedArchetypes(selection: string[]): ImpliedArchetype[] {
+  if (selection.length === 0) return [];
+  const counts: Record<string, string[]> = {};
+  for (const id of selection) {
+    const j = JOKER_MAP[id];
+    if (!j) continue;
+    for (const arch of j.archetypes) {
+      (counts[arch] ??= []).push(id);
+    }
+  }
+  const threshold = selection.length >= 2 ? 2 : 1;
+  const out: ImpliedArchetype[] = [];
+  for (const a of ARCHETYPES) {
+    const matched = counts[a.id];
+    if (matched && matched.length >= threshold) {
+      out.push({ id: a.id, name: a.name, matched });
+    }
+  }
+  // Sort by matched count desc so the strongest archetypes appear first.
+  return out.sort((x, y) => y.matched.length - x.matched.length);
+}
+
+/**
+ * Heuristic synergy detector — surfaces "likely" synergies when no curated
+ * SYNERGY entry exists for the pair. Reasons (in priority order):
+ *   1. Either joker lists the other in its `partners` array.
+ *   2. Both jokers share at least one archetype.
+ *   3. Both jokers share at least 2 tags.
+ * Excludes pairs already in curated SYNERGIES (those are returned by
+ * `activeSynergies`) and any pair in an anti-synergy relation.
+ */
+export interface HeuristicSynergy {
+  a: string;
+  b: string;
+  reasonKey: "partner" | "archetype" | "tag";
+  detail: string; // e.g. shared archetype id or comma-joined tags
+  score: number;  // higher = stronger
+}
+
+export function heuristicSynergies(selection: string[]): HeuristicSynergy[] {
+  if (selection.length < 2) return [];
+  const out: HeuristicSynergy[] = [];
+  const seen = new Set<string>();
+  for (let i = 0; i < selection.length; i++) {
+    for (let j = i + 1; j < selection.length; j++) {
+      const idA = selection[i];
+      const idB = selection[j];
+      if (idA === idB) continue;
+      const key = [idA, idB].sort().join("|");
+      if (seen.has(key)) continue;
+      seen.add(key);
+      // skip curated synergies (already shown by activeSynergies)
+      if (synergyPairs.has(key)) continue;
+      const a = JOKER_MAP[idA];
+      const b = JOKER_MAP[idB];
+      if (!a || !b) continue;
+      // skip anti-synergies (already shown by antiSynergyWarnings)
+      if (a.antiSynergies.includes(idB) || b.antiSynergies.includes(idA)) continue;
+
+      // 1) partner link
+      if (a.partners.includes(idB) || b.partners.includes(idA)) {
+        out.push({ a: idA, b: idB, reasonKey: "partner", detail: "", score: 3 });
+        continue;
+      }
+      // 2) shared archetype
+      const sharedArch = a.archetypes.filter((x) => b.archetypes.includes(x));
+      if (sharedArch.length > 0) {
+        out.push({ a: idA, b: idB, reasonKey: "archetype", detail: sharedArch.join(","), score: 2 + sharedArch.length });
+        continue;
+      }
+      // 3) shared tags (need at least 2 to avoid noise)
+      const sharedTags = a.tags.filter((x) => b.tags.includes(x));
+      if (sharedTags.length >= 2) {
+        out.push({ a: idA, b: idB, reasonKey: "tag", detail: sharedTags.slice(0, 3).join(","), score: 1 + sharedTags.length * 0.5 });
+      }
+    }
+  }
+  // strongest first, cap at 12 to keep the panel scannable
+  return out.sort((x, y) => y.score - x.score).slice(0, 12);
+}
+
 export interface AntiWarning {
   a: string; // joker that lists b as anti
   b: string;

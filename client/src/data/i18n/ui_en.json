@@ -50,7 +50,9 @@
         "run": "Run",
         "more": "More",
         "favorites": "Favorites"
-      }
+      },
+      "settings": "Settings",
+      "help": "Help"
     },
     "header": {
       "title_a": "Balatro",
@@ -287,7 +289,11 @@
       "vouchers_subtitle": "16 voucher pairs. Buying a tier-1 voucher unlocks its tier-2 upgrade in a later shop.",
       "vouchers_tier_label": "{{tier}}-tier",
       "vouchers_no_upgrade": "No tier-2 upgrade",
-      "myrun_anti_generic": "{{a}} undercuts or competes with {{b}}."
+      "myrun_anti_generic": "{{a}} undercuts or competes with {{b}}.",
+      "myrun_likely_synergies": "Likely synergies",
+      "myrun_reason_partner": "Listed partner",
+      "myrun_reason_archetype": "Shared archetype",
+      "myrun_reason_tag": "Shared role"
     },
     "sheet": {
       "why_play": "Why play this?",
@@ -1226,6 +1232,129 @@
       "tempo": {
         "term": "Tempo",
         "def": "How quickly a build comes online relative to ante difficulty. Slow-scaling builds need defensive shells to survive early antes."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Language, sound, account, and data preferences for Balatropedia.",
+      "language": "Language",
+      "language_hint": "Switches the entire UI and joker text. ES is partially machine-translated.",
+      "sound": "Sound",
+      "sound_enabled": "Sound effects",
+      "sound_enabled_hint": "Card flips, chip clacks, joker triggers.",
+      "on": "On",
+      "off": "Off",
+      "volume_hint": "Master volume for all in-app SFX.",
+      "account_data": "Account & data",
+      "favorites_count": "Saved favorites",
+      "jokers": "jokers",
+      "combos": "combos",
+      "reset": "Clear",
+      "reset_done": "Favorites cleared.",
+      "reset_confirm_title": "Clear all favorites?",
+      "reset_confirm_desc": "This removes every starred joker and combo. The action cannot be undone.",
+      "signed_in_as": "Signed in as",
+      "signout": "Sign out",
+      "signed_out": "Signed out.",
+      "signout_failed": "Sign-out failed",
+      "sign_in_to_sync": "Sign in (top of sidebar) to sync favorites and saved runs across devices.",
+      "about": "About",
+      "source_code": "Source on GitHub",
+      "disclaimer": "Balatropedia is a fan-made reference. Balatro and all associated assets belong to LocalThunk and Playstack."
+    },
+    "help": {
+      "title": "Help & Tutorial",
+      "subtitle": "Pick a feature on the left to learn what it does and how to use it.",
+      "tip_label": "Tip",
+      "overview": {
+        "title": "Overview",
+        "body": "Balatropedia is an unofficial reference for Balatro. Every joker, deck, stake, voucher, boss blind, consumable, and modifier is indexed with curated synergies and archetypes. Use the sidebar to jump between tools — most are pure reference, a few (My Run, Compare, Skeleton) help you plan an actual run.",
+        "tip": "Star anything to add it to Favorites. Sign in to sync favorites and saved runs across devices."
+      },
+      "library": {
+        "title": "Library",
+        "body": "Searchable index of all 150 jokers with full descriptions, scaling, archetypes, and tags. Filters live behind the Filters button — click it to open them. Toggle Mosaic/Grid/List from the top bar.",
+        "tip": "Use the filters to narrow by role, rarity, stage, or hand type. Combine multiple filters — they AND together."
+      },
+      "myrun": {
+        "title": "My Run",
+        "body": "Build the joker set you're actually running. Pick a deck, stake, vouchers, and up to 10 joker slots. The right column live-updates with: curated synergies (hand-tuned pairs), implied archetypes, likely-synergy heuristics (partners / shared archetype / shared tags), and anti-synergy warnings.",
+        "tip": "Likely synergies appear in gold even when no curated entry exists — they're inferred from each joker's metadata so you always get feedback."
+      },
+      "shop": {
+        "title": "Shop",
+        "body": "Simulate a shop reroll. Add candidate jokers and the page scores how well each one fits your current run — based on synergy density with what's already slotted and your active archetype tilt.",
+        "tip": "Use it before you commit money in-game: drop the jokers shown in the shop here and compare scores."
+      },
+      "synergies": {
+        "title": "Synergies",
+        "body": "Browse every curated joker pair, grouped by engine (XMult stack, retrigger, scaling, etc.). Each entry explains why the pair works and what kind of synergy it is.",
+        "tip": "Click any joker name to open the detail sheet with all its other partners."
+      },
+      "combos": {
+        "title": "Combos",
+        "body": "Multi-joker setups (3+ pieces) that produce a known high-output engine. Each combo lists the required jokers, the hand it targets, and rough setup difficulty.",
+        "tip": "Combos are the long-form version of Synergies — use them as build goals rather than ad-hoc pairings."
+      },
+      "archetypes": {
+        "title": "Archetypes",
+        "body": "Strategic build directions (Flush, Steel, High Card, Retrigger Engine, etc.). Each archetype lists enablers (cards that make it possible) and scalers (cards that pay it off), plus what it usually lacks.",
+        "tip": "When My Run shows an archetype, it means at least two of your jokers core that build. Add a scaler or enabler from its list to commit."
+      },
+      "compare": {
+        "title": "Compare",
+        "body": "Side-by-side comparison of 2–4 jokers. Useful for shop decisions when two options are close. Compares scaling, stage, archetypes, partners, and anti-synergies.",
+        "tip": "Add a joker to Compare from any detail sheet via the Compare button."
+      },
+      "skeleton": {
+        "title": "Skeleton",
+        "body": "Build a 5-joker template by engine slot (Chips / Flat Mult / XMult / Retrigger / Consistency). Pick one joker per slot to see how well the skeleton holds together.",
+        "tip": "Treat Skeleton as a blueprint, not a prescription — many runs swap slot roles mid-game."
+      },
+      "decks": {
+        "title": "Decks",
+        "body": "Every base and unlockable deck with its starting effect and best-fit archetypes.",
+        "tip": "Pick a deck before you fill My Run — some archetypes only flourish on specific decks."
+      },
+      "stakes": {
+        "title": "Stakes",
+        "body": "All eight stakes from White through Gold, with what each one changes (Blind size, shop scaling, restricted Tags, etc.) and the difficulty curve.",
+        "tip": "Higher stakes punish slow setup — bias toward early-stage jokers above Black Stake."
+      },
+      "bosses": {
+        "title": "Boss Blinds",
+        "body": "Every boss blind with its effect, the hands/jokers it disables, and how to counter it. Plan one round ahead.",
+        "tip": "Save consumables and high-impact jokers for boss blinds. Some bosses (The Pillar, The Plant) hard-counter specific archetypes."
+      },
+      "vouchers": {
+        "title": "Vouchers",
+        "body": "All vouchers, their cost, and their upgrade. Useful for shop-buy decisions in mid-late game.",
+        "tip": "Many archetypes (Steel, Glass, Discard) need a specific voucher to scale — check the archetype's `oftenLacks` field."
+      },
+      "consumables": {
+        "title": "Consumables",
+        "body": "Tarots, Planets, and Spectrals, with their effects and which builds they help most.",
+        "tip": "Planet cards level hands permanently — prioritize ones for your scoring hand. Spectrals are situational but powerful."
+      },
+      "modifiers": {
+        "title": "Modifiers",
+        "body": "Enhancements (Bonus, Mult, Wild, Glass, Steel, Stone, Gold, Lucky), Editions (Foil, Holographic, Polychrome, Negative), and Seals (Red, Purple, Blue, Gold).",
+        "tip": "Stacking enhancement + edition + seal on one card can produce silly output. Plan for Negative on jokers you don't want to sell."
+      },
+      "heatmap": {
+        "title": "Heatmap",
+        "body": "Pick any joker and see how it pairs with every other joker, color-coded by synergy strength.",
+        "tip": "Green = strong, red = anti, grey = neutral. Use it to discover unexpected partners."
+      },
+      "glossary": {
+        "title": "Glossary",
+        "body": "Definitions for every Balatro-specific term used across the app — Mult, Chips, XMult, Retrigger, Hand level, etc.",
+        "tip": "Open this side-by-side with My Run when learning the game."
+      },
+      "favorites": {
+        "title": "Favorites",
+        "body": "Everything you've starred — jokers and combos in one place. Add notes to remember why you favorited each one.",
+        "tip": "Sign in to keep favorites across devices; otherwise they live only in this browser session."
       }
     }
   }

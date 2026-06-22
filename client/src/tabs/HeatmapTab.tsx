@@ -52,7 +52,7 @@ export function HeatmapTab() {
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <div className="min-w-[240px] flex-1 sm:max-w-sm">
+        <div className="min-w-0 flex-1 sm:min-w-[240px] sm:max-w-sm">
           <JokerCombobox value={selected} onChange={setSelected} placeholder={t("ui.tabs.heatmap_pick")} testId="combobox-heatmap" />
         </div>
         <Button
