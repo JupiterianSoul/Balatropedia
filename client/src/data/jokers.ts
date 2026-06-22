@@ -3081,6 +3081,13 @@ export type SynergyKind =
   | "core_pair" | "strong_support" | "conditional"
   | "archetype_only" | "risky_explosive" | "trap_unless_enabled";
 
+export interface SynergySource {
+  /** Short label shown on the citation chip. */
+  name: string;
+  /** Direct URL to the article / wiki page / tier-list entry. */
+  url: string;
+}
+
 export interface Synergy {
   a: string; b: string;
   kind: SynergyKind;
@@ -3088,21 +3095,43 @@ export interface Synergy {
         | "economy" | "face_card" | "discard_volume" | "enhancement"
         | "suit_unification" | "scaling";
   why: string;
+  /**
+   * External sources that confirm this synergy in community-accepted strategy.
+   * Empty / undefined = unsourced (curated heuristic only). Always cite when present
+   * in the wiki, dood.gg, balatrohq, or a verified high-stake clear video.
+   */
+  sources?: SynergySource[];
 }
 
 export const SYNERGIES: Synergy[] = [
   { a: "blueprint", b: "brainstorm", kind: "core_pair", engine: "xmult_stack",
-    why: "Position-locked copy pair. Stack them around your strongest XMult engine to multiply its output three times in the same scoring pass." },
+    why: "Position-locked copy pair. Stack them around your strongest XMult engine to multiply its output three times in the same scoring pass.",
+    sources: [
+      { name: "Balatro Wiki — Blueprint", url: "https://balatrogame.fandom.com/wiki/Blueprint" },
+      { name: "Balatro Wiki — Brainstorm", url: "https://balatrogame.fandom.com/wiki/Brainstorm" },
+      { name: "Balatro HQ — Advanced Strategies", url: "https://www.balatrohq.com/guides/advanced-strategies/" }
+    ] },
   { a: "blueprint", b: "the_idol", kind: "core_pair", engine: "xmult_stack",
     why: "Each Idol match is X2 — Blueprint doubles the dip on the same scored hand, turning matched cards into X4-per-card scaling." },
   { a: "brainstorm", b: "triboulet", kind: "core_pair", engine: "xmult_stack",
     why: "Position Triboulet far-left so Brainstorm copies it. Every King and Queen scored applies two stacked X2 multipliers." },
   { a: "mime", b: "baron", kind: "core_pair", engine: "retrigger",
-    why: "Baron's X1.5 per held King is re-applied by Mime in the held-in-hand phase, turning each King into X2.25." },
+    why: "Baron's X1.5 per held King is re-applied by Mime in the held-in-hand phase, turning each King into X2.25.",
+    sources: [
+      { name: "dood.gg — Joker Synergies", url: "https://dood.gg/en/balatro/guides/joker-synergy/" },
+      { name: "Balatro Wiki — Blueprint (Naneinf note)", url: "https://balatrogame.fandom.com/wiki/Blueprint" }
+    ] },
   { a: "mime", b: "steel_joker", kind: "core_pair", engine: "retrigger",
-    why: "Steel cards trigger their X1.5 once in held-in-hand. Mime re-triggers, doubling Steel pressure for free." },
+    why: "Steel cards trigger their X1.5 once in held-in-hand. Mime re-triggers, doubling Steel pressure for free.",
+    sources: [
+      { name: "Mobalytics — Balatro Joker Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }
+    ] },
   { a: "sock_and_buskin", b: "triboulet", kind: "core_pair", engine: "retrigger",
-    why: "Sock retriggers every scored face card, and each retrigger re-applies Triboulet's X2 — the canonical face-card scaling loop." },
+    why: "Sock retriggers every scored face card, and each retrigger re-applies Triboulet's X2 — the canonical face-card scaling loop.",
+    sources: [
+      { name: "Two Average Gamers — Strategy Guide", url: "https://www.twoaveragegamers.com/balatro-strategy-guide-the-joker-combos-that-actually-win-runs/" },
+      { name: "Balatro HQ — Advanced Strategies", url: "https://www.balatrohq.com/guides/advanced-strategies/" }
+    ] },
   { a: "pareidolia", b: "triboulet", kind: "strong_support", engine: "face_card",
     why: "Pareidolia makes every scored card count as a face card, so Triboulet's X2 fires on the whole hand instead of just Kings and Queens." },
   { a: "pareidolia", b: "midas_mask", kind: "strong_support", engine: "economy",
@@ -3114,7 +3143,10 @@ export const SYNERGIES: Synergy[] = [
   { a: "hack", b: "glass_joker", kind: "risky_explosive", engine: "retrigger",
     why: "Hack retriggers low cards twice, doubling chances of cracking Glass each hand and accelerating Glass Joker's permanent X0.75 stacks." },
   { a: "hack", b: "fibonacci", kind: "strong_support", engine: "retrigger",
-    why: "2, 3, and 5 are both Fibonacci ranks and Hack ranks — every Fibonacci proc fires twice." },
+    why: "2, 3, and 5 are both Fibonacci ranks and Hack ranks — every Fibonacci proc fires twice.",
+    sources: [
+      { name: "Mobalytics — Balatro Joker Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }
+    ] },
   { a: "raised_fist", b: "mime", kind: "strong_support", engine: "retrigger",
     why: "Mime re-triggers the held-in-hand phase, so Raised Fist's flat mult applies twice from a single low card kept in hand." },
   { a: "hanging_chad", b: "the_idol", kind: "strong_support", engine: "retrigger",
@@ -3122,9 +3154,15 @@ export const SYNERGIES: Synergy[] = [
   { a: "dna", b: "the_idol", kind: "conditional", engine: "deck_manipulation",
     why: "DNA permanently duplicates whatever you single-play. Pick an Idol-target card and farm its X2 procs by stacking the deck." },
   { a: "dna", b: "hologram", kind: "strong_support", engine: "deck_manipulation",
-    why: "Every DNA-cloned card grows Hologram by X0.25 — a free XMult scaling loop." },
+    why: "Every DNA-cloned card grows Hologram by X0.25 — a free XMult scaling loop.",
+    sources: [
+      { name: "dood.gg — Joker Synergies", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }
+    ] },
   { a: "constellation", b: "astronomer", kind: "archetype_only", engine: "scaling",
-    why: "Planet Merchant doubles Planet shop rate; every Planet bought pumps Constellation's XMult. Pure Planet-economy axis." },
+    why: "Planet Merchant doubles Planet shop rate; every Planet bought pumps Constellation's XMult. Pure Planet-economy axis.",
+    sources: [
+      { name: "Balatro Wiki — Constellation", url: "https://balatrogame.fandom.com/wiki/Constellation" }
+    ] },
   { a: "satellite", b: "astronomer", kind: "archetype_only", engine: "economy",
     why: "Satellite scales income with unique Planets used; Planet Merchant guarantees you see more Planet variety." },
   { a: "drunkard", b: "mail_in_rebate", kind: "strong_support", engine: "discard_volume",
@@ -3142,7 +3180,10 @@ export const SYNERGIES: Synergy[] = [
   { a: "pareidolia", b: "greedy_joker", kind: "trap_unless_enabled", engine: "face_card",
     why: "Once everything is a face card, suit-specific Jokers like Greedy stop differentiating their bonus reliably in mixed builds." },
   { a: "perkeo", b: "constellation", kind: "strong_support", engine: "scaling",
-    why: "Perkeo duplicates Planet consumables as Negative copies; Constellation rides the extra Planet plays for free XMult." },
+    why: "Perkeo duplicates Planet consumables as Negative copies; Constellation rides the extra Planet plays for free XMult.",
+    sources: [
+      { name: "Balatro Wiki — Perkeo", url: "https://balatrogame.fandom.com/wiki/Perkeo" }
+    ] },
   { a: "seltzer", b: "triboulet", kind: "risky_explosive", engine: "retrigger",
     why: "Seltzer doubles every scored card for 10 hands. Spike Triboulet during boss blinds, then pivot when it expires." },
   { a: "midas_mask", b: "golden_joker", kind: "strong_support", engine: "economy",
@@ -3629,6 +3670,8 @@ export interface Combo {
   risks: string[];
   why: string;
   pivotOut: string;
+  /** Community sources / tier-lists / wiki entries that validate this combo. */
+  sources?: SynergySource[];
 }
 
 export const COMBOS: Combo[] = [
@@ -3641,13 +3684,21 @@ export const COMBOS: Combo[] = [
     conditions: ["Face-card density of 30%+ in deck","Tarots used to convert low cards into face cards"],
     risks: ["Slow to come online before all three core pieces land","Bricks if Triboulet never appears"],
     why: "Pareidolia makes every scored card a face. Sock & Buskin re-triggers each one. Triboulet applies X2 per face-card trigger. The result is multiplicative scaling that scales linearly with hand size.",
-    pivotOut: "If Triboulet hasn't appeared by Ante 5, pivot into a flat-mult + XMult shell (Cavendish, Blueprint) and treat the face-card pieces as filler."
+    pivotOut: "If Triboulet hasn't appeared by Ante 5, pivot into a flat-mult + XMult shell (Cavendish, Blueprint) and treat the face-card pieces as filler.",
+    sources: [
+      { name: "Balatro Wiki — Triboulet", url: "https://balatrogame.fandom.com/wiki/Triboulet" },
+      { name: "Balatro HQ — Advanced Strategies", url: "https://www.balatrohq.com/guides/advanced-strategies/" }
+    ]
   },
   {
     id: "held_in_hand_steel",
     title: "Baron Steel Held-in-Hand",
     archetype: "held_in_hand",
     core: ["baron","mime","steel_joker"],
+    sources: [
+      { name: "dood.gg — Joker Synergies (Baron+Mime)", url: "https://dood.gg/en/balatro/guides/joker-synergy/" },
+      { name: "Balatro Wiki — Blueprint (Naneinf note)", url: "https://balatrogame.fandom.com/wiki/Blueprint" }
+    ],
     optional: ["raised_fist","shoot_the_moon","blueprint","brainstorm"],
     conditions: ["Hand-size buffs (Stuntman avoided)","Steel-enhancement tarots accessible"],
     risks: ["Slow scaling without Tarot access","Steel Joker fizzles if shop denies enhancements"],
@@ -3669,6 +3720,10 @@ export const COMBOS: Combo[] = [
     id: "flush_mono",
     title: "Mono-Suit Flush Stack",
     archetype: "flush",
+    sources: [
+      { name: "Balatro HQ — Flush Engine", url: "https://www.balatrohq.com/guides/advanced-strategies/" },
+      { name: "dood.gg — Deck Strategies (Checkered)", url: "https://dood.gg/en/balatro/guides/deck-strategies/" }
+    ],
     core: ["smeared_joker","greedy_joker","the_idol"],
     optional: ["wrathful_joker","drunkard","blueprint","brainstorm"],
     conditions: ["Two suits funneled into one via Smeared","Flush hand levelled 3+"],
@@ -3702,6 +3757,9 @@ export const COMBOS: Combo[] = [
     id: "scaling_snowball",
     title: "Hologram Deck Growth",
     archetype: "deck_growth",
+    sources: [
+      { name: "dood.gg — Joker Synergies (Hologram)", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }
+    ],
     core: ["hologram","dna"],
     optional: ["constellation","perkeo","blueprint","brainstorm"],
     conditions: ["Open every Standard pack","Single-play first hand for DNA"],
@@ -3713,6 +3771,10 @@ export const COMBOS: Combo[] = [
     id: "retrigger_engine_general",
     title: "Generic Retrigger Engine",
     archetype: "retrigger_engine",
+    sources: [
+      { name: "Mobalytics — Seltzer / Hack notes", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" },
+      { name: "Balatro HQ — Joker Positioning", url: "https://www.balatrohq.com/guides/advanced-strategies/" }
+    ],
     core: ["sock_and_buskin","hanging_chad","mime"],
     optional: ["seltzer","triboulet","the_idol","baron"],
     conditions: ["Some flat or X payoff Joker to amplify","Mix of scored and held-in-hand phases"],
@@ -3735,6 +3797,9 @@ export const COMBOS: Combo[] = [
     id: "high_card_fib",
     title: "Fibonacci High Card",
     archetype: "high_card",
+    sources: [
+      { name: "Balatro HQ — High Card Hero", url: "https://www.balatrohq.com/guides/advanced-strategies/" }
+    ],
     core: ["fibonacci","green_joker","ride_the_bus"],
     optional: ["blueprint","brainstorm","cavendish"],
     conditions: ["Avoid face cards in scoring","High-card hand levelled"],
@@ -3835,6 +3900,9 @@ export const COMBOS: Combo[] = [
     id: "joker_stencil_empty",
     title: "Lean Stencil Build",
     archetype: "high_card",
+    sources: [
+      { name: "Balatro HQ — Mime + Stencil", url: "https://www.balatrohq.com/guides/advanced-strategies/" }
+    ],
     core: ["joker_stencil", "swashbuckler", "brainstorm"],
     optional: ["blueprint", "madness", "egg", "gift_card"],
     conditions: [

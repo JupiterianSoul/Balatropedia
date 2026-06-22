@@ -5,6 +5,7 @@ import {
   SynergyKind,
 } from "@/lib/helpers";
 import { JokerCombobox } from "@/components/JokerCombobox";
+import { SourceCitations } from "@/components/SourceCitations";
 import { LName, LText } from "@/components/Localized";
 import { useT, useLabels, useCuratedText, useGameText } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -49,6 +50,7 @@ function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProp
         </span>
       </div>
       <p className="mt-2 text-xs leading-relaxed text-foreground/80">{why}</p>
+      <SourceCitations sources={c.sources} />
     </div>
   );
 }

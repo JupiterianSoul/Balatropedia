@@ -139,11 +139,21 @@ export function reliability(j: Joker): Level {
 }
 
 // ---- Synergy lookups ----
-export function synergiesFor(id: string): { partnerId: string; kind: SynergyKind; engine: Synergy["engine"]; why: string; a: string; b: string }[] {
-  const out: { partnerId: string; kind: SynergyKind; engine: Synergy["engine"]; why: string; a: string; b: string }[] = [];
+export interface SynergyConnection {
+  partnerId: string;
+  kind: SynergyKind;
+  engine: Synergy["engine"];
+  why: string;
+  a: string;
+  b: string;
+  sources?: Synergy["sources"];
+}
+
+export function synergiesFor(id: string): SynergyConnection[] {
+  const out: SynergyConnection[] = [];
   for (const s of SYNERGIES) {
-    if (s.a === id) out.push({ partnerId: s.b, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b });
-    else if (s.b === id) out.push({ partnerId: s.a, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b });
+    if (s.a === id) out.push({ partnerId: s.b, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b, sources: s.sources });
+    else if (s.b === id) out.push({ partnerId: s.a, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b, sources: s.sources });
   }
   return out;
 }

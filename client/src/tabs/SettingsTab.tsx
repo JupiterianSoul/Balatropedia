@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music } from "lucide-react";
+import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SectionLabel } from "@/components/primitives";
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { isSoundEnabled, setSoundEnabled, getSoundVolume, setSoundVolume, playSound } from "@/lib/sound";
 import { useI18n, useT, type Lang } from "@/lib/i18n";
+import { useTheme, THEME_OPTIONS, type Theme } from "@/lib/theme";
 import { useApp } from "@/lib/appContext";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -37,6 +38,7 @@ export function SettingsTab() {
 
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [volume, setVolume] = useState(getSoundVolume());
+  const { theme, setTheme } = useTheme();
 
   function handleSoundToggle(next: boolean) {
     setSoundOn(next);
@@ -92,6 +94,37 @@ export function SettingsTab() {
           </SelectContent>
         </Select>
         <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.language_hint")}</p>
+      </section>
+
+      {/* Theme */}
+      <section className="casino-card p-4" data-testid="section-theme">
+        <div className="mb-3 flex items-center gap-1.5">
+          <Palette className="h-3.5 w-3.5 text-accent" />
+          <SectionLabel>{t("ui.settings.theme.title")}</SectionLabel>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-3">
+          {THEME_OPTIONS.map((opt) => {
+            const active = theme === opt.value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => { setTheme(opt.value as Theme); playSound("click"); }}
+                className={`flex flex-col items-start gap-1 rounded-md border-2 px-3 py-2.5 text-left transition-colors ${
+                  active
+                    ? "border-accent bg-accent/10"
+                    : "border-border bg-card/50 hover:border-accent/50"
+                }`}
+                data-testid={`button-theme-${opt.value}`}
+                aria-pressed={active}
+              >
+                <span className="font-pixel text-sm text-accent">{t(opt.labelKey)}</span>
+                <span className="text-xs text-muted-foreground">{t(opt.descriptionKey)}</span>
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.theme.hint")}</p>
       </section>
 
       {/* Sound */}

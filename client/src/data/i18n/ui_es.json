@@ -43,6 +43,7 @@
       "skeleton": "Esqueleto",
       "favorites": "Favoritos",
       "glossary": "Glosario",
+      "about": "Acerca de",
       "group": {
         "library": "Biblioteca",
         "build": "Construir",
@@ -1236,9 +1237,37 @@
         "def": "La velocidad con que una construcción se pone en marcha en relación con la dificultad de la ante. Las construcciones de escalado lento necesitan estructuras defensivas para sobrevivir las primeras antes."
       }
     },
+    "sources": {
+      "label": "Fuentes"
+    },
+    "about": {
+      "title": "Acerca de Balatropedia",
+      "subtitle": "Una guía de estrategia comunitaria para Balatro.",
+      "what_title": "Qué es esto",
+      "what_body": "Balatropedia indexa cada joker, mazo, stake, vale, boss blind, consumible y modificador de Balatro, junto con sinergias, arquetipos y combos curados. Usa la barra lateral para navegar entre herramientas de referencia (Library, Glossary) y de planificación (My Run, Compare, Skeleton).",
+      "accuracy_title": "Precisión y fuentes",
+      "accuracy_body": "Los efectos y valores base de los jokers provienen del Wiki de Balatro. Las afirmaciones de sinergia y la estrategia de combos se cruzan con guías comunitarias de confianza — las citas aparecen en línea bajo cada sinergia y combo. Lista completa de fuentes:",
+      "fandom_attribution": "Texto y valores de los jokers adaptados del Wiki de Balatro bajo licencia CC-BY-SA 3.0. Los comentarios estratégicos son editoriales.",
+      "disclaimer_title": "Aviso honesto",
+      "disclaimer_body": "Los consejos estratégicos son opiniones validadas por la comunidad cuando están citadas, o heurísticas curadas en otros casos. Balatro es profundo — una combinación que parece débil en teoría puede ser fuerte con el mazo/vale/stake adecuado. Si encuentras un error, abre un issue o PR.",
+      "submit_correction": "Enviar una corrección en GitHub",
+      "credits_title": "Créditos",
+      "credit_game": "Juego de",
+      "credit_font": "Fuente pixel de",
+      "credit_stack": "Construido con",
+      "view_source": "Ver código en GitHub",
+      "fanmade": "Proyecto fan-made, no comercial. Balatro © LocalThunk & Playstack."
+    },
     "settings": {
       "title": "Ajustes",
-      "subtitle": "Idioma, sonido, cuenta y datos para Balatropedia.",
+      "subtitle": "Idioma, tema, sonido, cuenta y datos para Balatropedia.",
+      "theme": {
+        "title": "Tema",
+        "hint": "Solo afecta a superficies — los colores de identidad de Balatro (mult rojo, chip azul, money dorado) quedan fijos.",
+        "felt": { "label": "Fieltro", "desc": "Mesa de casino verde por defecto." },
+        "midnight": { "label": "Medianoche", "desc": "Azul-negro profundo, poco fatigante." },
+        "parchment": { "label": "Pergamino", "desc": "Mesa clara color crema." }
+      },
       "language": "Idioma",
       "language_hint": "Cambia toda la interfaz y el texto de los Jokers. ES está parcialmente traducido por máquina.",
       "sound": "Sonido",
