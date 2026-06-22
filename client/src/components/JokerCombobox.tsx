@@ -7,7 +7,47 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { JOKERS, JOKER_MAP } from "@/lib/helpers";
-import { useT } from "@/lib/i18n";
+import { useT, useGameText } from "@/lib/i18n";
+
+/** Localized name for selected-value display (used in trigger button). */
+function SelectedName({ id }: { id: string }) {
+  const { name } = useGameText("jokers", id);
+  return <>{name || JOKER_MAP[id]?.name || id}</>;
+}
+
+/** Per-row command item with localized name; localized text is used as the
+ *  cmdk search value so users can search in their active language. */
+function LocalizedItem({
+  joker,
+  testId,
+  onSelect,
+  selected,
+  disabled,
+}: {
+  joker: { id: string; name: string };
+  testId: string;
+  onSelect: () => void;
+  selected: boolean;
+  disabled?: boolean;
+}) {
+  const { name } = useGameText("jokers", joker.id);
+  const label = name || joker.name;
+  // Include the EN name as a hidden keyword so search still works for users
+  // who know the EN names while their UI is in FR/ES.
+  const value = `${label} ${joker.name}`;
+  return (
+    <CommandItem
+      value={value}
+      disabled={disabled}
+      onSelect={onSelect}
+      data-testid={testId}
+      className={cn(disabled && "opacity-40")}
+    >
+      <Check className={cn("mr-2 h-4 w-4", selected ? "opacity-100 text-accent" : "opacity-0")} />
+      {label}
+    </CommandItem>
+  );
+}
 
 /* Single-select combobox */
 export function JokerCombobox({
@@ -35,7 +75,7 @@ export function JokerCombobox({
           className="w-full justify-between bg-card font-normal"
         >
           <span className={cn(!value && "text-muted-foreground")}>
-            {value ? JOKER_MAP[value]?.name : ph}
+            {value ? <SelectedName id={value} /> : ph}
           </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -47,15 +87,13 @@ export function JokerCombobox({
             <CommandEmpty>{t("ui.combobox.no_joker")}</CommandEmpty>
             <CommandGroup>
               {JOKERS.map((j) => (
-                <CommandItem
+                <LocalizedItem
                   key={j.id}
-                  value={j.name}
+                  joker={j}
+                  testId={`option-${j.id}`}
+                  selected={value === j.id}
                   onSelect={() => { onChange(j.id); setOpen(false); }}
-                  data-testid={`option-${j.id}`}
-                >
-                  <Check className={cn("mr-2 h-4 w-4", value === j.id ? "opacity-100" : "opacity-0")} />
-                  {j.name}
-                </CommandItem>
+                />
               ))}
             </CommandGroup>
           </CommandList>
@@ -112,17 +150,14 @@ export function JokerMultiCombobox({
                 const selected = values.includes(j.id);
                 const disabled = atMax && !selected;
                 return (
-                  <CommandItem
+                  <LocalizedItem
                     key={j.id}
-                    value={j.name}
+                    joker={j}
+                    testId={`option-multi-${j.id}`}
+                    selected={selected}
                     disabled={disabled}
                     onSelect={() => toggle(j.id)}
-                    data-testid={`option-multi-${j.id}`}
-                    className={cn(disabled && "opacity-40")}
-                  >
-                    <Check className={cn("mr-2 h-4 w-4", selected ? "opacity-100 text-accent" : "opacity-0")} />
-                    {j.name}
-                  </CommandItem>
+                  />
                 );
               })}
             </CommandGroup>

@@ -46,7 +46,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
       </div>
 
       <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-foreground/80 small-caps">
-        {joker.summary}
+        {localized.text || joker.summary}
       </p>
 
       <div className="mt-3 flex flex-wrap gap-1.5">

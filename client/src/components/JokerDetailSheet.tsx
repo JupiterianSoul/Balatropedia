@@ -61,7 +61,7 @@ export function JokerDetailSheet() {
                     size={20}
                   />
                 </div>
-                <p className="text-sm text-foreground/90">{j.summary}</p>
+                <p className="text-sm text-foreground/90">{localized.text || j.summary}</p>
                 <div className="flex flex-wrap items-center gap-1.5 pt-1">
                   {j.tags.slice(0, 4).map((t) => (
                     <RolePill key={t} role={t} />

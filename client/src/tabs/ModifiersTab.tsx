@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ENHANCEMENTS, EDITIONS, SEALS, TAGS } from "@/data/phase3/misc";
 import { Phase3Sprite } from "@/components/Phase3Sprite";
 import type { Phase3Category } from "@/lib/phase3Sprites";
+import { LName, LText } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
 type MiniItem = { id: string; name: string; effect: string; trigger?: string };
@@ -14,8 +15,8 @@ function MiniGrid({ category, items }: { category: Phase3Category; items: MiniIt
         <div className="casino-card flex items-start gap-3 p-3.5" key={it.id} data-testid={`card-${category}-${it.id}`}>
           <Phase3Sprite category={category} id={it.id} name={it.name} size={48} className="h-12 w-12" />
           <div className="min-w-0 flex-1">
-            <h3 className="font-display text-sm text-accent">{it.name}</h3>
-            <p className="mt-1 text-xs leading-relaxed text-foreground/80">{it.effect}</p>
+            <h3 className="font-display text-sm text-accent"><LName category={category} id={it.id} fallback={it.name} /></h3>
+            <LText category={category} id={it.id} fallback={it.effect} as="p" className="mt-1 text-xs leading-relaxed text-foreground/80" />
             {it.trigger && (
               <p className="mt-1.5 text-[11px] italic leading-relaxed text-muted-foreground">
                 {t("ui.mods.trigger")}: {it.trigger}

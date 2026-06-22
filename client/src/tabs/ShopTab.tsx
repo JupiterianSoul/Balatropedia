@@ -6,6 +6,7 @@ import { useRun } from "@/lib/runContext";
 import { useApp } from "@/lib/appContext";
 import { useToast } from "@/hooks/use-toast";
 import { JOKERS, JOKER_MAP, type Rarity } from "@/lib/helpers";
+import { LName, LText } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
 // Balatro shop rarity weights (no legendary in shop).
@@ -102,7 +103,7 @@ export function ShopTab() {
                       onClick={() => openJokerDetail(j.id)}
                       className="block truncate text-left font-pixel text-base text-accent hover:underline"
                     >
-                      {j.name}
+                      <LName category="jokers" id={j.id} fallback={j.name} />
                     </button>
                     <div className="mt-1 flex items-center gap-2">
                       {j.rarity && <RarityBadge rarity={j.rarity} />}
@@ -112,9 +113,7 @@ export function ShopTab() {
                     </div>
                   </div>
                 </div>
-                <p className="mt-3 line-clamp-3 flex-1 text-xs leading-relaxed text-foreground/80 small-caps">
-                  {j.summary}
-                </p>
+                <LText category="jokers" id={j.id} fallback={j.summary} as="p" className="mt-3 line-clamp-3 flex-1 text-xs leading-relaxed text-foreground/80 small-caps" />
                 <Button
                   size="sm"
                   variant={inRun ? "outline" : "default"}

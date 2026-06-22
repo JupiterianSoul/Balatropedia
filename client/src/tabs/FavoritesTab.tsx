@@ -5,6 +5,7 @@ import { useApp } from "@/lib/appContext";
 import { useAuth } from "@/lib/auth";
 import { JOKER_MAP, COMBOS, ARCHETYPE_LABELS } from "@/lib/helpers";
 import { StarToggle } from "@/components/primitives";
+import { LName, LText } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
 function EmptyState() {
@@ -56,8 +57,8 @@ export function FavoritesTab() {
           <div key={j!.id} className="casino-card p-4" data-testid={`fav-joker-${j!.id}`}>
             <div className="flex items-start justify-between gap-2">
               <div>
-                <button onClick={() => openJokerDetail(j!.id)} className="font-pixel text-base text-accent hover:underline">{j!.name}</button>
-                <p className="mt-0.5 text-xs text-foreground/75 small-caps">{j!.summary}</p>
+                <button onClick={() => openJokerDetail(j!.id)} className="font-pixel text-base text-accent hover:underline"><LName category="jokers" id={j!.id} fallback={j!.name} /></button>
+                <LText category="jokers" id={j!.id} fallback={j!.summary} as="p" className="mt-0.5 text-xs text-foreground/75 small-caps" />
               </div>
               <StarToggle active onToggle={() => toggleFavoriteJoker(j!.id)} testId={`fav-remove-joker-${j!.id}`} />
             </div>

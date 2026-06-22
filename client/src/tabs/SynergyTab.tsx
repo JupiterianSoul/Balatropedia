@@ -5,6 +5,7 @@ import {
   SynergyKind,
 } from "@/lib/helpers";
 import { JokerCombobox } from "@/components/JokerCombobox";
+import { LName, LText } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -50,9 +51,9 @@ export function SynergyTab() {
               className="font-display text-lg text-accent hover:underline"
               data-testid="button-open-selected-detail"
             >
-              {j.name}
+              <LName category="jokers" id={j.id} fallback={j.name} />
             </button>
-            <p className="mt-1 text-xs text-foreground/80 small-caps">{j.summary}</p>
+            <LText category="jokers" id={j.id} fallback={j.summary} as="p" className="mt-1 text-xs text-foreground/80 small-caps" />
             <p className="mt-2 text-xs tabular text-muted-foreground">
               {total} {t("ui.syn.curated")} {total === 1 ? t("ui.syn.connection") : t("ui.syn.connections")}
             </p>

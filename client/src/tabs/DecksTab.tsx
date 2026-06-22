@@ -12,6 +12,7 @@ import { SectionLabel } from "@/components/primitives";
 import { FilterPill } from "@/components/FilterPills";
 import { useRun } from "@/lib/runContext";
 import { useOpenDetail } from "@/lib/detailContext";
+import { LName, LText } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
 const DIFFS = ["low", "medium", "high"] as const;
@@ -90,10 +91,10 @@ export function DecksTab() {
               <Phase3Sprite category="decks" id={d.id} name={d.name} size={96} className="h-24 w-24" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
-                  <h3 className="truncate font-pixel text-base text-accent">{d.name}</h3>
+                  <h3 className="truncate font-pixel text-base text-accent"><LName category="decks" id={d.id} fallback={d.name} /></h3>
                   <DifficultyBadge difficulty={d.difficulty} />
                 </div>
-                <p className="mt-1 text-xs leading-relaxed text-foreground/80">{d.effect}</p>
+                <LText category="decks" id={d.id} fallback={d.effect} as="p" className="mt-1 text-xs leading-relaxed text-foreground/80" />
               </div>
             </button>
             <div className="flex flex-wrap gap-1.5">

@@ -12,7 +12,32 @@ import { VOUCHERS } from "@/data/phase3/vouchers";
 import { Phase3Sprite } from "@/components/Phase3Sprite";
 import { SectionLabel } from "@/components/primitives";
 import { useRun } from "@/lib/runContext";
-import { useT } from "@/lib/i18n";
+import { useT, useGameText } from "@/lib/i18n";
+import { LName, LText } from "@/components/Localized";
+
+function VoucherRow({
+  v,
+  selected,
+  onSelect,
+}: {
+  v: { id: string; name: string; tier: number };
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const { name } = useGameText("vouchers", v.id);
+  const label = name || v.name;
+  return (
+    <CommandItem
+      value={`${label} ${v.name}`}
+      onSelect={onSelect}
+      data-testid={`voucher-option-${v.id}`}
+    >
+      <Check className={cn("mr-2 h-4 w-4", selected ? "opacity-100 text-accent" : "opacity-0")} />
+      <span className="flex-1">{label}</span>
+      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">T{v.tier}</span>
+    </CommandItem>
+  );
+}
 
 const DECK_MAP = Object.fromEntries(DECKS.map((d) => [d.id, d]));
 const STAKE_MAP = Object.fromEntries(STAKES.map((s) => [s.id, s]));
@@ -41,7 +66,7 @@ export function RunMetaSelectors() {
                 onClick={() => setDeckId(deckId === d.id ? null : d.id)}
                 aria-pressed={deckId === d.id}
                 data-testid={`pick-deck-${d.id}`}
-                title={d.name}
+                title={d.name /* tooltip stays EN — title attr can't access hooks */}
                 className={cn(
                   "rounded-md border p-0.5 transition-all",
                   deckId === d.id
@@ -55,7 +80,7 @@ export function RunMetaSelectors() {
           </div>
           {deck && (
             <p className="mt-2 text-xs leading-relaxed text-foreground/80" data-testid="text-deck-effect">
-              <span className="font-display text-accent">{deck.name}:</span> {deck.effect}
+              <span className="font-display text-accent"><LName category="decks" id={deck.id} fallback={deck.name} />:</span> <LText category="decks" id={deck.id} fallback={deck.effect} />
             </p>
           )}
         </div>
@@ -68,7 +93,7 @@ export function RunMetaSelectors() {
               <Button variant="outline" className="w-full justify-between bg-card font-normal" data-testid="select-stake">
                 <span className="flex items-center gap-2">
                   {stake && <span className="h-3 w-3 rounded-full border border-border" style={{ background: stake.color }} />}
-                  <span className={cn(!stake && "text-muted-foreground")}>{stake ? stake.name : t("ui.runmeta.select_stake")}</span>
+                  <span className={cn(!stake && "text-muted-foreground")}>{stake ? <LName category="stakes" id={stake.id} fallback={stake.name} /> : t("ui.runmeta.select_stake")}</span>
                 </span>
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -89,7 +114,7 @@ export function RunMetaSelectors() {
                   data-testid={`stake-option-${s.id}`}
                 >
                   <span className="h-3 w-3 rounded-full border border-border" style={{ background: s.color }} />
-                  <span className="flex-1 text-left">{s.name}</span>
+                  <span className="flex-1 text-left"><LName category="stakes" id={s.id} fallback={s.name} /></span>
                   {stakeId === s.id && <Check className="h-4 w-4 text-accent" />}
                 </button>
               ))}
@@ -117,16 +142,12 @@ export function RunMetaSelectors() {
                     {VOUCHERS.map((v) => {
                       const selected = voucherIds.includes(v.id);
                       return (
-                        <CommandItem
+                        <VoucherRow
                           key={v.id}
-                          value={v.name}
+                          v={v}
+                          selected={selected}
                           onSelect={() => (selected ? removeVoucher(v.id) : addVoucher(v.id))}
-                          data-testid={`voucher-option-${v.id}`}
-                        >
-                          <Check className={cn("mr-2 h-4 w-4", selected ? "opacity-100 text-accent" : "opacity-0")} />
-                          <span className="flex-1">{v.name}</span>
-                          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">T{v.tier}</span>
-                        </CommandItem>
+                        />
                       );
                     })}
                   </CommandGroup>
@@ -148,7 +169,7 @@ export function RunMetaSelectors() {
                   data-testid={`voucher-chip-${id}`}
                 >
                   <Phase3Sprite category="vouchers" id={id} name={v?.name ?? id} size={20} className="h-5 w-5 border-0" />
-                  {v?.name ?? id}
+                  <LName category="vouchers" id={id} fallback={v?.name ?? id} />
                   <button
                     onClick={() => removeVoucher(id)}
                     aria-label={t("ui.runmeta.remove_voucher", { name: v?.name ?? id })}

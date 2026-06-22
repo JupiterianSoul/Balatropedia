@@ -5,6 +5,7 @@ import { JokerCombobox } from "@/components/JokerCombobox";
 import { JokerSprite } from "@/components/JokerSprite";
 import { useApp } from "@/lib/appContext";
 import { JOKER_MAP, heatmapFor } from "@/lib/helpers";
+import { LName } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
 // Color scale: dark oxblood for negative, charcoal mid (neutral), muted gold for positive.
@@ -88,7 +89,7 @@ export function HeatmapTab() {
               data-testid={`heatmap-cell-${e.id}`}
             >
               <JokerSprite jokerId={e.id} name={e.name} size={36} className="h-9 w-9" />
-              <span className="min-w-0 flex-1 truncate text-sm text-foreground/90">{e.name}</span>
+              <span className="min-w-0 flex-1 truncate text-sm text-foreground/90"><LName category="jokers" id={e.id} fallback={e.name} /></span>
               <span
                 className="shrink-0 rounded-sm border px-1.5 py-0.5 text-[11px] font-semibold tabular"
                 style={chipStyle(e.score)}

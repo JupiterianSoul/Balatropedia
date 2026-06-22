@@ -7,6 +7,7 @@ import {
 } from "@/lib/helpers";
 import { JokerMultiCombobox } from "@/components/JokerCombobox";
 import { LevelDots } from "@/components/primitives";
+import { LName, LText } from "@/components/Localized";
 import { useT, useLabels } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -80,13 +81,13 @@ export function CompareTab() {
                     <th key={j.id} className="border-b border-border p-3 text-left align-top">
                       <div className="flex items-start justify-between gap-2">
                         <button onClick={() => openJokerDetail(j.id)} className="font-pixel text-base text-accent hover:underline" data-testid={`compare-head-${j.id}`}>
-                          {j.name}
+                          <LName category="jokers" id={j.id} fallback={j.name} />
                         </button>
                         <button onClick={() => setIds(ids.filter((x) => x !== j.id))} className="text-muted-foreground hover:text-foreground" aria-label={t("ui.common.remove")} data-testid={`compare-remove-${j.id}`}>
                           <X className="h-3.5 w-3.5" />
                         </button>
                       </div>
-                      <p className="mt-1 text-xs font-normal text-foreground/70 small-caps">{j.summary}</p>
+                      <LText category="jokers" id={j.id} fallback={j.summary} as="p" className="mt-1 text-xs font-normal text-foreground/70 small-caps" />
                     </th>
                   ))}
                 </tr>
@@ -109,7 +110,7 @@ export function CompareTab() {
             {jokers.map((j) => (
               <div key={j.id} className="casino-card p-4">
                 <div className="flex items-start justify-between">
-                  <button onClick={() => openJokerDetail(j.id)} className="font-pixel text-base text-accent">{j.name}</button>
+                  <button onClick={() => openJokerDetail(j.id)} className="font-pixel text-base text-accent"><LName category="jokers" id={j.id} fallback={j.name} /></button>
                   <button onClick={() => setIds(ids.filter((x) => x !== j.id))} aria-label={t("ui.common.remove")} data-testid={`compare-remove-m-${j.id}`}><X className="h-4 w-4 text-muted-foreground" /></button>
                 </div>
                 <dl className="mt-3 space-y-2">
