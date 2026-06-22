@@ -39,7 +39,7 @@ export function LibraryTab() {
   const [stages, setStages] = useState<Set<Stage>>(new Set());
   const [risks, setRisks] = useState<Set<Level>>(new Set());
   const [sort, setSort] = useState<SortKey>("name");
-  const [filtersOpen, setFiltersOpen] = useState(true);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const activeCount = roles.size + rarities.size + archs.size + hands.size + scalings.size + stages.size + risks.size;
 
