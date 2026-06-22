@@ -2,11 +2,12 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { useApp } from "@/lib/appContext";
 import {
-  JOKER_MAP, ROLE_LABELS, SCALING_LABELS, LEVEL_LABELS, ARCHETYPE_LABELS,
-  earlyGameValue, lateGameCeiling, reliability, jokerName, Joker, Level,
+  JOKER_MAP, ARCHETYPE_LABELS,
+  earlyGameValue, lateGameCeiling, reliability, jokerName, Joker,
 } from "@/lib/helpers";
 import { JokerMultiCombobox } from "@/components/JokerCombobox";
 import { LevelDots } from "@/components/primitives";
+import { useT, useLabels } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 interface Row {
@@ -16,19 +17,21 @@ interface Row {
 
 export function CompareTab() {
   const { openJokerDetail } = useApp();
+  const t = useT();
+  const labels = useLabels();
   const [ids, setIds] = useState<string[]>(["triboulet", "joker"]);
   const jokers = ids.map((id) => JOKER_MAP[id]).filter(Boolean) as Joker[];
 
   const rows: Row[] = [
-    { label: "Role", render: (j) => <span className="text-sm">{ROLE_LABELS[j.mainRole]}{j.secondaryRole ? ` / ${ROLE_LABELS[j.secondaryRole]}` : ""}</span> },
-    { label: "Scaling", render: (j) => <span className="text-sm">{SCALING_LABELS[j.scaling]}</span> },
-    { label: "Setup difficulty", render: (j) => <LevelDots level={j.setupDifficulty} /> },
-    { label: "Archetype fit", render: (j) => <span className="text-xs text-muted-foreground">{j.archetypes.map((a) => ARCHETYPE_LABELS[a] ?? a).join(", ")}</span> },
-    { label: "Early-game value", render: (j) => <LevelDots level={earlyGameValue(j)} /> },
-    { label: "Late-game ceiling", render: (j) => <LevelDots level={lateGameCeiling(j)} /> },
-    { label: "Reliability", render: (j) => <LevelDots level={reliability(j)} /> },
+    { label: t("ui.tabs.compare_role"), render: (j) => <span className="text-sm">{labels.role[j.mainRole]}{j.secondaryRole ? ` / ${labels.role[j.secondaryRole]}` : ""}</span> },
+    { label: t("ui.tabs.compare_scaling"), render: (j) => <span className="text-sm">{labels.scaling[j.scaling]}</span> },
+    { label: t("ui.tabs.compare_setup_difficulty"), render: (j) => <LevelDots level={j.setupDifficulty} /> },
+    { label: t("ui.tabs.compare_archetype_fit"), render: (j) => <span className="text-xs text-muted-foreground">{j.archetypes.map((a) => ARCHETYPE_LABELS[a] ?? a).join(", ")}</span> },
+    { label: t("ui.tabs.compare_early_value"), render: (j) => <LevelDots level={earlyGameValue(j)} /> },
+    { label: t("ui.tabs.compare_late_ceiling"), render: (j) => <LevelDots level={lateGameCeiling(j)} /> },
+    { label: t("ui.tabs.compare_reliability"), render: (j) => <LevelDots level={reliability(j)} /> },
     {
-      label: "Best partners", render: (j) => (
+      label: t("ui.tabs.compare_best_partners"), render: (j) => (
         <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
           {j.partners.slice(0, 3).map((p, idx) => (
             <span key={p} className="text-xs">
@@ -43,11 +46,11 @@ export function CompareTab() {
       )
     },
     {
-      label: "Main risks", render: (j) => (
+      label: t("ui.tabs.compare_main_risks"), render: (j) => (
         <div className="text-xs text-[hsl(0_55%_72%)]">
-          Risk {LEVEL_LABELS[j.risk]}
+          {labels.riskPrefix} {labels.level[j.risk]}
           {j.antiSynergies.length > 0 && (
-            <span className="text-muted-foreground"> · conflicts with {j.antiSynergies.map(jokerName).join(", ")}</span>
+            <span className="text-muted-foreground">{t("ui.tabs.compare_conflicts_with", { names: j.antiSynergies.map(jokerName).join(", ") })}</span>
           )}
         </div>
       )
@@ -58,12 +61,12 @@ export function CompareTab() {
     <div className="space-y-5">
       <div className="max-w-sm">
         <JokerMultiCombobox values={ids} onChange={setIds} max={4} testId="combobox-compare" />
-        <p className="mt-1.5 text-xs text-muted-foreground">Select 2–4 Jokers to compare side by side.</p>
+        <p className="mt-1.5 text-xs text-muted-foreground">{t("ui.tabs.compare_select_hint")}</p>
       </div>
 
       {jokers.length < 2 ? (
         <div className="rounded-md border border-dashed border-border py-16 text-center">
-          <p className="text-sm text-muted-foreground">Add at least two Jokers to start comparing.</p>
+          <p className="text-sm text-muted-foreground">{t("ui.tabs.compare_add_two")}</p>
         </div>
       ) : (
         <>
@@ -76,10 +79,10 @@ export function CompareTab() {
                   {jokers.map((j) => (
                     <th key={j.id} className="border-b border-border p-3 text-left align-top">
                       <div className="flex items-start justify-between gap-2">
-                        <button onClick={() => openJokerDetail(j.id)} className="font-display text-base text-accent hover:underline" data-testid={`compare-head-${j.id}`}>
+                        <button onClick={() => openJokerDetail(j.id)} className="font-pixel text-base text-accent hover:underline" data-testid={`compare-head-${j.id}`}>
                           {j.name}
                         </button>
-                        <button onClick={() => setIds(ids.filter((x) => x !== j.id))} className="text-muted-foreground hover:text-foreground" aria-label="Remove" data-testid={`compare-remove-${j.id}`}>
+                        <button onClick={() => setIds(ids.filter((x) => x !== j.id))} className="text-muted-foreground hover:text-foreground" aria-label={t("ui.common.remove")} data-testid={`compare-remove-${j.id}`}>
                           <X className="h-3.5 w-3.5" />
                         </button>
                       </div>
@@ -106,8 +109,8 @@ export function CompareTab() {
             {jokers.map((j) => (
               <div key={j.id} className="casino-card p-4">
                 <div className="flex items-start justify-between">
-                  <button onClick={() => openJokerDetail(j.id)} className="font-display text-base text-accent">{j.name}</button>
-                  <button onClick={() => setIds(ids.filter((x) => x !== j.id))} aria-label="Remove" data-testid={`compare-remove-m-${j.id}`}><X className="h-4 w-4 text-muted-foreground" /></button>
+                  <button onClick={() => openJokerDetail(j.id)} className="font-pixel text-base text-accent">{j.name}</button>
+                  <button onClick={() => setIds(ids.filter((x) => x !== j.id))} aria-label={t("ui.common.remove")} data-testid={`compare-remove-m-${j.id}`}><X className="h-4 w-4 text-muted-foreground" /></button>
                 </div>
                 <dl className="mt-3 space-y-2">
                   {rows.map((r) => (

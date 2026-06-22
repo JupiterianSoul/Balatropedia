@@ -1,31 +1,169 @@
-import { users } from '@shared/schema';
-import type { User, InsertUser } from '@shared/schema';
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
-import { eq } from "drizzle-orm";
+import { users, sessions, favorites, runs } from "@shared/schema";
+import type { User, Session, Favorite, Run } from "@shared/schema";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import { eq, and, desc } from "drizzle-orm";
 
-const sqlite = new Database("data.db");
-sqlite.pragma("journal_mode = WAL");
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is required (Neon connection string).");
+}
+const client = neon(process.env.DATABASE_URL);
+export const db = drizzle(client);
 
-export const db = drizzle(sqlite);
+// Bootstrap schema on first boot — idempotent. Use raw SQL since drizzle-kit
+// is not running at runtime. CREATE TABLE IF NOT EXISTS for all 4 tables.
+async function bootstrap() {
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      language TEXT DEFAULT 'en',
+      created_at BIGINT NOT NULL
+    )
+  `);
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS sessions (
+      token TEXT PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      created_at BIGINT NOT NULL,
+      expires_at BIGINT NOT NULL
+    )
+  `);
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS favorites (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      joker_id TEXT NOT NULL,
+      note TEXT,
+      created_at BIGINT NOT NULL
+    )
+  `);
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS runs (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      name TEXT NOT NULL,
+      joker_ids TEXT NOT NULL,
+      notes TEXT,
+      meta TEXT,
+      created_at BIGINT NOT NULL
+    )
+  `);
+}
+// Fire bootstrap once. Don't block module load on errors — log them.
+bootstrap().catch((e) => console.error("[bootstrap] failed", e));
 
 export interface IStorage {
+  // users
   getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  createUser(email: string, passwordHash: string): Promise<User>;
+  updateUserLanguage(id: number, language: string): Promise<User | undefined>;
+  // sessions
+  createSession(token: string, userId: number, createdAt: number, expiresAt: number): Promise<Session>;
+  getSession(token: string): Promise<Session | undefined>;
+  deleteSession(token: string): Promise<void>;
+  // favorites
+  getFavorites(userId: number): Promise<Favorite[]>;
+  getFavorite(id: number, userId: number): Promise<Favorite | undefined>;
+  getFavoriteByJoker(userId: number, jokerId: string): Promise<Favorite | undefined>;
+  createFavorite(userId: number, jokerId: string, note: string | null): Promise<Favorite>;
+  updateFavorite(id: number, userId: number, note: string | null): Promise<Favorite | undefined>;
+  deleteFavorite(id: number, userId: number): Promise<void>;
+  // runs
+  getRuns(userId: number): Promise<Run[]>;
+  getRun(id: number, userId: number): Promise<Run | undefined>;
+  createRun(userId: number, name: string, jokerIds: string, notes: string | null, meta: string | null): Promise<Run>;
+  updateRun(id: number, userId: number, patch: Partial<{ name: string; jokerIds: string; notes: string | null; meta: string | null }>): Promise<Run | undefined>;
+  deleteRun(id: number, userId: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
-    return db.select().from(users).where(eq(users.id, id)).get();
+    const rows = await db.select().from(users).where(eq(users.id, id));
+    return rows[0];
+  }
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const rows = await db.select().from(users).where(eq(users.email, email));
+    return rows[0];
+  }
+  async createUser(email: string, passwordHash: string): Promise<User> {
+    const rows = await db
+      .insert(users)
+      .values({ email, passwordHash, language: "en", createdAt: Date.now() })
+      .returning();
+    return rows[0];
+  }
+  async updateUserLanguage(id: number, language: string): Promise<User | undefined> {
+    await db.update(users).set({ language }).where(eq(users.id, id));
+    return this.getUser(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return db.select().from(users).where(eq(users.username, username)).get();
+  async createSession(token: string, userId: number, createdAt: number, expiresAt: number): Promise<Session> {
+    const rows = await db.insert(sessions).values({ token, userId, createdAt, expiresAt }).returning();
+    return rows[0];
+  }
+  async getSession(token: string): Promise<Session | undefined> {
+    const rows = await db.select().from(sessions).where(eq(sessions.token, token));
+    return rows[0];
+  }
+  async deleteSession(token: string): Promise<void> {
+    await db.delete(sessions).where(eq(sessions.token, token));
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    return db.insert(users).values(insertUser).returning().get();
+  async getFavorites(userId: number): Promise<Favorite[]> {
+    return db.select().from(favorites).where(eq(favorites.userId, userId)).orderBy(desc(favorites.createdAt));
+  }
+  async getFavorite(id: number, userId: number): Promise<Favorite | undefined> {
+    const rows = await db.select().from(favorites).where(and(eq(favorites.id, id), eq(favorites.userId, userId)));
+    return rows[0];
+  }
+  async getFavoriteByJoker(userId: number, jokerId: string): Promise<Favorite | undefined> {
+    const rows = await db.select().from(favorites).where(and(eq(favorites.userId, userId), eq(favorites.jokerId, jokerId)));
+    return rows[0];
+  }
+  async createFavorite(userId: number, jokerId: string, note: string | null): Promise<Favorite> {
+    const rows = await db
+      .insert(favorites)
+      .values({ userId, jokerId, note, createdAt: Date.now() })
+      .returning();
+    return rows[0];
+  }
+  async updateFavorite(id: number, userId: number, note: string | null): Promise<Favorite | undefined> {
+    await db.update(favorites).set({ note }).where(and(eq(favorites.id, id), eq(favorites.userId, userId)));
+    return this.getFavorite(id, userId);
+  }
+  async deleteFavorite(id: number, userId: number): Promise<void> {
+    await db.delete(favorites).where(and(eq(favorites.id, id), eq(favorites.userId, userId)));
+  }
+
+  async getRuns(userId: number): Promise<Run[]> {
+    return db.select().from(runs).where(eq(runs.userId, userId)).orderBy(desc(runs.createdAt));
+  }
+  async getRun(id: number, userId: number): Promise<Run | undefined> {
+    const rows = await db.select().from(runs).where(and(eq(runs.id, id), eq(runs.userId, userId)));
+    return rows[0];
+  }
+  async createRun(userId: number, name: string, jokerIds: string, notes: string | null, meta: string | null): Promise<Run> {
+    const rows = await db
+      .insert(runs)
+      .values({ userId, name, jokerIds, notes, meta, createdAt: Date.now() })
+      .returning();
+    return rows[0];
+  }
+  async updateRun(
+    id: number,
+    userId: number,
+    patch: Partial<{ name: string; jokerIds: string; notes: string | null; meta: string | null }>,
+  ): Promise<Run | undefined> {
+    if (Object.keys(patch).length > 0) {
+      await db.update(runs).set(patch).where(and(eq(runs.id, id), eq(runs.userId, userId)));
+    }
+    return this.getRun(id, userId);
+  }
+  async deleteRun(id: number, userId: number): Promise<void> {
+    await db.delete(runs).where(and(eq(runs.id, id), eq(runs.userId, userId)));
   }
 }
 

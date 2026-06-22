@@ -7,12 +7,14 @@ import {
 import { JokerMultiCombobox } from "@/components/JokerCombobox";
 import { JokerChip, SectionLabel } from "@/components/primitives";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const LEVEL_RANK = { low: 0, med: 1, high: 2 } as const;
 
 export function SkeletonTab() {
   const { openJokerDetail } = useApp();
+  const t = useT();
   const [ids, setIds] = useState<string[]>(["triboulet", "pareidolia", "sock_and_buskin"]);
   const [whyOpen, setWhyOpen] = useState(false);
   const jokers = ids.map((id) => JOKER_MAP[id]).filter(Boolean) as Joker[];
@@ -30,7 +32,7 @@ export function SkeletonTab() {
     const have = covered.map((c) => `${c.jokers.length} ${c.label.toLowerCase()}${c.jokers.length > 1 ? "s" : ""}`);
 
     // diagnosis rules
-    const rules: { fired: boolean; text: string }[] = [];
+    const rules: { fired: boolean; key: string; n?: number }[] = [];
     const allSameArch = jokers.length > 1 && (() => {
       const sets = jokers.map((j) => new Set(j.archetypes));
       const first = jokers[0].archetypes;
@@ -40,18 +42,18 @@ export function SkeletonTab() {
     const avgSetupHigh = jokers.length > 0 && (jokers.reduce((s, j) => s + LEVEL_RANK[j.setupDifficulty], 0) / jokers.length) >= 1.5;
     const wellRounded = covered.length >= 4;
 
-    rules.push({ fired: allSameArch, text: "All selected Jokers share a single archetype → the build is too narrow." });
-    rules.push({ fired: allLate, text: "Every selected Joker is late-stage only → the build is too slow to come online." });
-    rules.push({ fired: avgSetupHigh, text: "Average setup difficulty is high → the build is too conditional." });
-    rules.push({ fired: wellRounded, text: `Covers ${covered.length} engine categories (≥4) → the build is well-rounded.` });
+    rules.push({ fired: allSameArch, key: "ui.skel.rule_narrow" });
+    rules.push({ fired: allLate, key: "ui.skel.rule_slow" });
+    rules.push({ fired: avgSetupHigh, key: "ui.skel.rule_conditional" });
+    rules.push({ fired: wellRounded, key: "ui.skel.rule_rounded", n: covered.length });
 
-    let diagnosis = "Incomplete — add more pieces to evaluate.";
+    let diagnosis = "ui.skel.dx_incomplete";
     if (jokers.length > 0) {
-      if (allSameArch) diagnosis = "Too narrow";
-      else if (allLate) diagnosis = "Too slow";
-      else if (avgSetupHigh) diagnosis = "Too conditional";
-      else if (wellRounded) diagnosis = "Well-rounded";
-      else diagnosis = "Developing — covers some engine categories but has gaps.";
+      if (allSameArch) diagnosis = "ui.skel.dx_too_narrow";
+      else if (allLate) diagnosis = "ui.skel.dx_too_slow";
+      else if (avgSetupHigh) diagnosis = "ui.skel.dx_too_conditional";
+      else if (wellRounded) diagnosis = "ui.skel.dx_well_rounded";
+      else diagnosis = "ui.skel.dx_developing";
     }
 
     // suggested next category = first missing
@@ -69,7 +71,7 @@ export function SkeletonTab() {
       <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
         <div>
           <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            Your selected Jokers
+            {t("ui.skel.your_selected")}
           </div>
           <JokerMultiCombobox values={ids} onChange={setIds} max={6} testId="combobox-skeleton" />
         </div>
@@ -77,12 +79,12 @@ export function SkeletonTab() {
           {jokers.map((j) => (
             <span key={j.id} className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2 py-1 text-xs">
               <button onClick={() => openJokerDetail(j.id)} className="text-foreground/90 hover:text-accent">{j.name}</button>
-              <button onClick={() => setIds(ids.filter((x) => x !== j.id))} aria-label="Remove" data-testid={`skeleton-remove-${j.id}`}>
+              <button onClick={() => setIds(ids.filter((x) => x !== j.id))} aria-label={t("ui.skel.remove_aria")} data-testid={`skeleton-remove-${j.id}`}>
                 <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
               </button>
             </span>
           ))}
-          {jokers.length === 0 && <p className="text-xs text-muted-foreground">Add up to 6 Jokers to diagnose your run skeleton.</p>}
+          {jokers.length === 0 && <p className="text-xs text-muted-foreground">{t("ui.skel.add_up_to")}</p>}
         </div>
       </div>
 
@@ -90,7 +92,7 @@ export function SkeletonTab() {
       <div className="space-y-5">
         {jokers.length === 0 ? (
           <div className="rounded-md border border-dashed border-border py-16 text-center">
-            <p className="text-sm text-muted-foreground">Select some Jokers to see a transparent, rule-based skeleton analysis.</p>
+            <p className="text-sm text-muted-foreground">{t("ui.skel.select_some")}</p>
           </div>
         ) : (
           <>
@@ -98,16 +100,16 @@ export function SkeletonTab() {
             <div className="casino-card flex items-center gap-3 border-l-2 border-l-accent p-4" data-testid="text-diagnosis">
               <Info className="h-5 w-5 shrink-0 text-accent" />
               <div>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Diagnosis</div>
-                <div className="font-display text-lg text-accent">{analysis.diagnosis}</div>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t("ui.skel.diagnosis")}</div>
+                <div className="font-display text-lg text-accent">{t(analysis.diagnosis)}</div>
               </div>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="casino-card p-4">
-                <SectionLabel>What you have</SectionLabel>
+                <SectionLabel>{t("ui.skel.what_you_have")}</SectionLabel>
                 {analysis.have.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No recognized engine pieces yet.</p>
+                  <p className="text-sm text-muted-foreground">{t("ui.skel.no_pieces")}</p>
                 ) : (
                   <ul className="space-y-1.5">
                     {analysis.covered.map((c) => (
@@ -121,9 +123,9 @@ export function SkeletonTab() {
               </div>
 
               <div className="casino-card p-4">
-                <SectionLabel>What you're missing</SectionLabel>
+                <SectionLabel>{t("ui.skel.what_missing")}</SectionLabel>
                 {analysis.missing.length === 0 ? (
-                  <p className="text-sm text-[hsl(145_45%_55%)]">Nothing — all six engine categories are covered.</p>
+                  <p className="text-sm text-[hsl(145_45%_55%)]">{t("ui.skel.nothing_all_covered")}</p>
                 ) : (
                   <ul className="space-y-1.5">
                     {analysis.missing.map((c) => (
@@ -140,15 +142,15 @@ export function SkeletonTab() {
             {/* Suggested next */}
             {analysis.nextCat && (
               <div className="casino-card p-4">
-                <SectionLabel>Suggested next Joker type</SectionLabel>
+                <SectionLabel>{t("ui.skel.suggested_next")}</SectionLabel>
                 <p className="mb-3 text-sm text-foreground/85">
-                  Your biggest gap is <strong className="text-accent">{analysis.nextCat.label}</strong>. Consider one of these:
+                  {t("ui.skel.biggest_gap_pre")} <strong className="text-accent">{analysis.nextCat.label}</strong>{t("ui.skel.biggest_gap_post")}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {analysis.suggestions.map((j) => (
                     <JokerChip key={j.id} id={j.id} onClick={openJokerDetail} testIdPrefix="chip-suggest" />
                   ))}
-                  {analysis.suggestions.length === 0 && <span className="text-xs text-muted-foreground">No additional candidates outside your current selection.</span>}
+                  {analysis.suggestions.length === 0 && <span className="text-xs text-muted-foreground">{t("ui.skel.no_candidates")}</span>}
                 </div>
               </div>
             )}
@@ -157,16 +159,16 @@ export function SkeletonTab() {
             <Collapsible open={whyOpen} onOpenChange={setWhyOpen}>
               <CollapsibleTrigger className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground" data-testid="button-why-analysis">
                 <Info className="h-3.5 w-3.5" />
-                Why this analysis? {whyOpen ? "Hide" : "Show"} the rules that fired
+                {t("ui.skel.why_pre")} {whyOpen ? t("ui.skel.why_hide") : t("ui.skel.why_show")} {t("ui.skel.why_post")}
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-3 rounded-md border border-border bg-card/40 p-4">
                 {analysis.rules.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">No diagnostic rules fired — the build is still developing.</p>
+                  <p className="text-xs text-muted-foreground">{t("ui.skel.no_rules")}</p>
                 ) : (
                   <ul className="space-y-1.5">
                     {analysis.rules.map((r, i) => (
                       <li key={i} className="flex gap-2 text-xs text-foreground/80">
-                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />{r.text}
+                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />{t(r.key, r.n != null ? { n: r.n } : undefined)}
                       </li>
                     ))}
                   </ul>

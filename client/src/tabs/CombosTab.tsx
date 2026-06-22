@@ -5,9 +5,11 @@ import {
 import { useApp } from "@/lib/appContext";
 import { COMBOS, ARCHETYPE_LABELS, Archetype } from "@/lib/helpers";
 import { JokerChip, StarToggle, SectionLabel } from "@/components/primitives";
+import { useT } from "@/lib/i18n";
 
 export function CombosTab() {
   const { openJokerDetail, isFavoriteCombo, toggleFavoriteCombo } = useApp();
+  const t = useT();
   const [arch, setArch] = useState<string>("all");
 
   const archetypes = useMemo(
@@ -19,13 +21,13 @@ export function CombosTab() {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-muted-foreground tabular">{filtered.length} curated combos</p>
+        <p className="text-xs text-muted-foreground tabular">{t("ui.combos.count", { n: filtered.length })}</p>
         <Select value={arch} onValueChange={setArch}>
           <SelectTrigger className="w-56 bg-card" data-testid="select-combo-archetype">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All archetypes</SelectItem>
+            <SelectItem value="all">{t("ui.combos.all_archetypes")}</SelectItem>
             {archetypes.map((a) => (
               <SelectItem key={a} value={a}>{ARCHETYPE_LABELS[a as Archetype] ?? a}</SelectItem>
             ))}
@@ -53,14 +55,14 @@ export function CombosTab() {
 
             <div className="mt-4 space-y-4">
               <div>
-                <SectionLabel>Core pieces</SectionLabel>
+                <SectionLabel>{t("ui.combos.core_pieces")}</SectionLabel>
                 <div className="flex flex-wrap gap-1.5">
                   {c.core.map((id) => <JokerChip key={id} id={id} onClick={openJokerDetail} testIdPrefix={`chip-core-${c.id}`} />)}
                 </div>
               </div>
               {c.optional.length > 0 && (
                 <div>
-                  <SectionLabel>Optional supports</SectionLabel>
+                  <SectionLabel>{t("ui.combos.optional_supports")}</SectionLabel>
                   <div className="flex flex-wrap gap-1.5">
                     {c.optional.map((id) => <JokerChip key={id} id={id} onClick={openJokerDetail} testIdPrefix={`chip-opt-${c.id}`} />)}
                   </div>
@@ -68,7 +70,7 @@ export function CombosTab() {
               )}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <SectionLabel>Conditions</SectionLabel>
+                  <SectionLabel>{t("ui.combos.conditions")}</SectionLabel>
                   <ul className="space-y-1">
                     {c.conditions.map((x, i) => (
                       <li key={i} className="flex gap-2 text-xs text-foreground/80">
@@ -78,7 +80,7 @@ export function CombosTab() {
                   </ul>
                 </div>
                 <div>
-                  <SectionLabel>Risks</SectionLabel>
+                  <SectionLabel>{t("ui.combos.risks")}</SectionLabel>
                   <ul className="space-y-1">
                     {c.risks.map((x, i) => (
                       <li key={i} className="flex gap-2 text-xs text-[hsl(0_55%_72%)]">
@@ -89,11 +91,11 @@ export function CombosTab() {
                 </div>
               </div>
               <div>
-                <SectionLabel>Why it works</SectionLabel>
+                <SectionLabel>{t("ui.combos.why_works")}</SectionLabel>
                 <p className="text-xs leading-relaxed text-foreground/85">{c.why}</p>
               </div>
               <div className="border-t border-border pt-3">
-                <SectionLabel>When to pivot out</SectionLabel>
+                <SectionLabel>{t("ui.combos.pivot_out")}</SectionLabel>
                 <p className="text-xs italic leading-relaxed text-muted-foreground">{c.pivotOut}</p>
               </div>
             </div>

@@ -1,3 +1,27 @@
-node_modules
-dist
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# SQLite database
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+data/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
 *.log
+npm-debug.log*
+
+# OS
+.DS_Store
+
+# Temp
+/tmp/

@@ -1,10 +1,10 @@
 import {
   JOKERS, SYNERGIES, COMBOS, ARCHETYPES, GLOSSARY, JOKER_MAP,
-  Joker, Role, Scaling, Stage, Level, SynergyKind, Archetype, HandType, Synergy,
+  Joker, Role, Scaling, Stage, Level, SynergyKind, Archetype, HandType, Synergy, Rarity,
 } from "@/data/jokers";
 
 export { JOKERS, SYNERGIES, COMBOS, ARCHETYPES, GLOSSARY, JOKER_MAP };
-export type { Joker, Role, Scaling, Stage, Level, SynergyKind, Archetype, HandType, Synergy };
+export type { Joker, Role, Scaling, Stage, Level, SynergyKind, Archetype, HandType, Synergy, Rarity };
 
 // ---- Human-readable labels ----
 export const ROLE_LABELS: Record<Role, string> = {
@@ -52,6 +52,19 @@ export const HAND_LABELS: Record<HandType, string> = {
 
 export const STAGE_LABELS: Record<Stage, string> = { early: "Early", mid: "Mid", late: "Late" };
 export const LEVEL_LABELS: Record<Level, string> = { low: "Low", med: "Med", high: "High" };
+
+export const RARITY_LABELS: Record<Rarity, string> = {
+  common: "Common",
+  uncommon: "Uncommon",
+  rare: "Rare",
+  legendary: "Legendary",
+};
+// Filter pill order (ascending rarity)
+export const ALL_RARITIES: Rarity[] = ["common", "uncommon", "rare", "legendary"];
+// Sort rank: legendary first → rare → uncommon → common
+export const RARITY_SORT_RANK: Record<Rarity, number> = {
+  legendary: 0, rare: 1, uncommon: 2, common: 3,
+};
 
 export const SYNERGY_KIND_LABELS: Record<SynergyKind, string> = {
   core_pair: "Core Pair",
@@ -193,6 +206,172 @@ export function exampleUseCases(j: Joker): string[] {
     out.push(`Pairs naturally with ${j.partners.length} curated partners — see Best Partners below.`);
   }
   return out.slice(0, 3);
+}
+
+// ---- "Why play this?" rule-based reasoning ----
+export interface WhyBullet {
+  text: string;
+  rule: string; // subtler caption: which rule produced this
+}
+
+export function whyPlayThis(j: Joker): WhyBullet[] {
+  const out: WhyBullet[] = [];
+
+  // Core role + scaling
+  out.push({
+    text: `Core role: ${ROLE_LABELS[j.mainRole]}. Scales by ${SCALING_LABELS[j.scaling].toLowerCase()}.`,
+    rule: "from mainRole + scaling",
+  });
+
+  // Best partners — top 3 from joker.partners mapped to names
+  const partnerNames = j.partners.slice(0, 3).map((id) => jokerName(id)).filter(Boolean);
+  if (partnerNames.length > 0) {
+    out.push({
+      text: `Best partners: ${partnerNames.join(", ")}.`,
+      rule: "top 3 from partners",
+    });
+  }
+
+  // Fits archetypes — ARCHETYPES whose coreJokers/scalers/enablers include this joker
+  const fits = ARCHETYPES.filter(
+    (a) =>
+      a.enablers.includes(j.id) ||
+      a.scalers.includes(j.id) ||
+      (j.archetypes as string[]).includes(a.id),
+  ).map((a) => a.name);
+  const uniqueFits = Array.from(new Set(fits));
+  if (uniqueFits.length > 0) {
+    out.push({
+      text: `Fits archetypes: ${uniqueFits.slice(0, 4).join(", ")}.`,
+      rule: "archetypes containing this joker",
+    });
+  }
+
+  // Setup + risk
+  out.push({
+    text: `Setup: ${LEVEL_LABELS[j.setupDifficulty]}. Risk: ${LEVEL_LABELS[j.risk]}.`,
+    rule: "from setupDifficulty + risk",
+  });
+
+  // Anti-synergies watch out
+  if (j.antiSynergies.length > 0) {
+    const antiNames = j.antiSynergies.map((id) => jokerName(id));
+    out.push({
+      text: `Watch out for: ${antiNames.join(", ")}.`,
+      rule: "from antiSynergies",
+    });
+  }
+
+  return out;
+}
+
+// ---- Run analysis (My Run tab) ----
+export interface ActiveSynergy {
+  a: string;
+  b: string;
+  kind: SynergyKind;
+  engine: Synergy["engine"];
+  why: string;
+}
+
+// SYNERGIES whose participating jokers are a subset of the active selection.
+export function activeSynergies(selection: string[]): ActiveSynergy[] {
+  const set = new Set(selection);
+  return SYNERGIES.filter((s) => set.has(s.a) && set.has(s.b)).map((s) => ({
+    a: s.a, b: s.b, kind: s.kind, engine: s.engine, why: s.why,
+  }));
+}
+
+export interface ImpliedArchetype {
+  id: Archetype;
+  name: string;
+  matched: string[]; // joker ids from selection in this archetype's core (enablers+scalers)
+}
+
+// Archetypes where >= 2 of the selection are in its core (enablers + scalers).
+export function impliedArchetypes(selection: string[]): ImpliedArchetype[] {
+  const set = new Set(selection);
+  const out: ImpliedArchetype[] = [];
+  for (const a of ARCHETYPES) {
+    const core = [...a.enablers, ...a.scalers];
+    const matched = core.filter((id) => set.has(id));
+    if (matched.length >= 2) out.push({ id: a.id, name: a.name, matched });
+  }
+  return out;
+}
+
+export interface AntiWarning {
+  a: string; // joker that lists b as anti
+  b: string;
+  why: string;
+}
+
+// Any pair in the selection where one lists the other in antiSynergies.
+export function antiSynergyWarnings(selection: string[]): AntiWarning[] {
+  const out: AntiWarning[] = [];
+  const seen = new Set<string>();
+  for (const idA of selection) {
+    const ja = JOKER_MAP[idA];
+    if (!ja) continue;
+    for (const idB of selection) {
+      if (idA === idB) continue;
+      if (ja.antiSynergies.includes(idB)) {
+        const key = [idA, idB].sort().join("|");
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const why = antiSynergyReason(idA, idB) ?? `${jokerName(idA)} undercuts or competes with ${jokerName(idB)}.`;
+        out.push({ a: idA, b: idB, why });
+      }
+    }
+  }
+  return out;
+}
+
+// ---- Heatmap pair scoring ----
+// +3 if appears together in a SYNERGY; +2 if same archetype core;
+// +1 if shared tag; -3 if in each other's antiSynergies.
+const synergyPairs = new Set<string>();
+for (const s of SYNERGIES) {
+  synergyPairs.add([s.a, s.b].sort().join("|"));
+}
+
+// Map of joker id -> set of archetype ids it cores (enablers+scalers).
+const archetypeCoreOf: Record<string, Set<string>> = {};
+for (const a of ARCHETYPES) {
+  for (const id of [...a.enablers, ...a.scalers]) {
+    (archetypeCoreOf[id] ??= new Set()).add(a.id);
+  }
+}
+
+export function pairScore(aId: string, bId: string): number {
+  if (aId === bId) return 0;
+  const a = JOKER_MAP[aId];
+  const b = JOKER_MAP[bId];
+  if (!a || !b) return 0;
+  let score = 0;
+  if (synergyPairs.has([aId, bId].sort().join("|"))) score += 3;
+  const acA = archetypeCoreOf[aId];
+  const acB = archetypeCoreOf[bId];
+  if (acA && acB) {
+    if (Array.from(acA).some((id) => acB.has(id))) score += 2;
+  }
+  if (a.tags.some((t) => b.tags.includes(t))) score += 1;
+  if (a.antiSynergies.includes(bId) || b.antiSynergies.includes(aId)) score -= 3;
+  return score;
+}
+
+export interface HeatmapEntry {
+  id: string;
+  name: string;
+  score: number;
+}
+
+export function heatmapFor(jokerId: string): HeatmapEntry[] {
+  return JOKERS.filter((j) => j.id !== jokerId).map((j) => ({
+    id: j.id,
+    name: j.name,
+    score: pairScore(jokerId, j.id),
+  }));
 }
 
 // ---- Build skeleton engine categories ----
