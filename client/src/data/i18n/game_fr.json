@@ -1,0 +1,1326 @@
+{
+  "jokers": {
+    "joker": {
+      "name": "Joker",
+      "text": "Multi. +#1#"
+    },
+    "greedy_joker": {
+      "name": "Joker avide",
+      "text": "Les cartes jouées avec une couleur #2# octroient +#1# au Multi. lorsqu'elles marquent des points"
+    },
+    "lusty_joker": {
+      "name": "Joker lubrique",
+      "text": "Les cartes jouées avec une couleur #2# octroient +#1# au Multi. lorsqu'elles marquent des points"
+    },
+    "wrathful_joker": {
+      "name": "Joker furieux",
+      "text": "Les cartes jouées avec une couleur #2# octroient +#1# au Multi. lorsqu'elles marquent des points"
+    },
+    "gluttonous_joker": {
+      "name": "Joker glouton",
+      "text": "Les cartes jouées avec une couleur #2# octroient +#1# au Multi. lorsqu'elles marquent des points"
+    },
+    "jolly_joker": {
+      "name": "Joker joyeux",
+      "text": "Multi. +#1# si la main jouée contient une #2#"
+    },
+    "zany_joker": {
+      "name": "Joker blagueur",
+      "text": "Multi. +#1# si la main jouée contient un #2#"
+    },
+    "mad_joker": {
+      "name": "Joker fêlé",
+      "text": "Multi. +#1# si la main jouée contient un #2#"
+    },
+    "crazy_joker": {
+      "name": "Joker déjanté",
+      "text": "Multi. +#1# si la main jouée contient une #2#"
+    },
+    "droll_joker": {
+      "name": "Joker plaisantin",
+      "text": "Multi. +#1# si la main jouée contient une #2#"
+    },
+    "sly_joker": {
+      "name": "Joker rusé",
+      "text": "+#1# Jetons si la main jouée contient une #2#"
+    },
+    "wily_joker": {
+      "name": "Joker habile",
+      "text": "+#1# Jetons si la main jouée contient un #2#"
+    },
+    "clever_joker": {
+      "name": "Joker futé",
+      "text": "+#1# Jetons si la main jouée contient un #2#"
+    },
+    "devious_joker": {
+      "name": "Joker sournois",
+      "text": "+#1# Jetons si la main jouée contient une #2#"
+    },
+    "crafty_joker": {
+      "name": "Joker roublard",
+      "text": "+#1# Jetons si la main jouée contient une #2#"
+    },
+    "half_joker": {
+      "name": "Demi-joker",
+      "text": "Multi. +#1# si la main jouée contient #2# cartes ou moins"
+    },
+    "credit_card": {
+      "name": "Carte de crédit",
+      "text": "Vous pouvez accumuler -#1# $ de dettes"
+    },
+    "banner": {
+      "name": "Bannière",
+      "text": "+#1# Jetons pour chaque défausse restante"
+    },
+    "mystic_summit": {
+      "name": "Sommet mystique",
+      "text": "Multi. +#1# lorsqu'il y a #2# défausse restante(s)"
+    },
+    "eight_ball": {
+      "name": "N° 8",
+      "text": "#1# chance(s) sur #2# pour chaque 8 joué de créer une carte de Tarot en marquant des points (Selon la place disponible)"
+    },
+    "misprint": {
+      "name": "Erreur d'impression",
+      "text": ""
+    },
+    "raised_fist": {
+      "name": "Poing levé",
+      "text": "Ajoute le double de la valeur de la carte à la valeur la plus faible de votre main au Multi."
+    },
+    "chaos_the_clown": {
+      "name": "Chaos le clown",
+      "text": "#1# Renouvellement gratuit par magasin"
+    },
+    "scary_face": {
+      "name": "Figures d'effroi",
+      "text": "Les cartes Figure jouées octroient +#1# Jetons en marquant des points"
+    },
+    "abstract_joker": {
+      "name": "Joker abstrait",
+      "text": "Multi. +#1# pour chaque carte Joker (Actuellement Multi. +#2#)"
+    },
+    "delayed_gratification": {
+      "name": "Récompense différée",
+      "text": "Gagnez #1# $ par défausse si aucune défausse n'est utilisée avant la fin de la manche"
+    },
+    "gros_michel": {
+      "name": "Gros Michel",
+      "text": "Multi. +#1# #2# chance(s) sur #3# que cette carte soit détruite à la fin de la manche"
+    },
+    "even_steven": {
+      "name": "Pair gagnant",
+      "text": "Les cartes jouées de valeur paire octroient +#1# au Multi. lorsque ces cartes marquent des points (10, 8, 6, 4, 2)"
+    },
+    "odd_todd": {
+      "name": "Impair pépère",
+      "text": "Les cartes jouées de valeur impaire octroient +#1# Jetons lorsque ces cartes marquent des points (A, 9, 7, 5, 3)"
+    },
+    "scholar": {
+      "name": "Érudit",
+      "text": "Les As joués octroient +#2# Jetons et +#1# au Multi. en marquant des points"
+    },
+    "business_card": {
+      "name": "Carte de visite",
+      "text": "Les cartes Figure jouées ont #1# chance(s) sur #2# d'octroyer 2 $ en marquant des points"
+    },
+    "supernova": {
+      "name": "Supernova",
+      "text": "Le Multi. augmente d'une valeur égale au nombre de fois qu'une main de poker a été jouée durant cette partie une valeur égale au nombre de fois qu"
+    },
+    "ride_the_bus": {
+      "name": "Tour en bus",
+      "text": "Ce Joker octroie +#1# Multi. par main consécutive jouée sans une carte Figure marquant des points (Actuellement : +#2# Multi.)"
+    },
+    "egg": {
+      "name": "Œuf",
+      "text": "Gagnez #1# $ de la valeur de vente à la fin de la manche"
+    },
+    "runner": {
+      "name": "Coureur",
+      "text": "Octroie +#2# Jetons si la main jouée contient une Suite (Actuellement +#1# Jetons)"
+    },
+    "ice_cream": {
+      "name": "Crème glacée",
+      "text": "+#1# Jetons -#2# Jetons pour chaque main jouée"
+    },
+    "splash": {
+      "name": "Plouf",
+      "text": "Chaque carte jouée compte dans l'attribution des points"
+    },
+    "blue_joker": {
+      "name": "Joker bleu",
+      "text": "+#1# Jetons pour chaque carte restante dans le jeu (Actuellement +#2# Jetons)"
+    },
+    "faceless_joker": {
+      "name": "Joker sans visage",
+      "text": "Gagnez #1# $ si #2# cartes Figure ou plus sont défaussées en même temps"
+    },
+    "green_joker": {
+      "name": "Joker vert",
+      "text": "Multi. +#1# par main jouée Multi. -#2# par défausse (Actuellement Multi. +#3#)"
+    },
+    "superposition": {
+      "name": "Superposition",
+      "text": "Crée une carte Tarot si la main de poker contient un As et une Suite (Selon la place disponible)"
+    },
+    "to_do_list": {
+      "name": "Liste des tâches",
+      "text": "Gagnez #1# $ si la main de poker est de type #2# ; la main de poker change à la fin de la manche"
+    },
+    "cavendish": {
+      "name": "Cavendish",
+      "text": "Multi. x#1# #2# chance(s) sur #3# que cette carte soit détruite à la fin de la manche"
+    },
+    "red_card": {
+      "name": "Carton rouge",
+      "text": "Ce Joker octroie +#1# Multi. lorsqu'un Paquet Booster est passé (Actuellement : +#2# Multi.)"
+    },
+    "square_joker": {
+      "name": "Joker carré",
+      "text": "Ce Joker octroie +#2# jetons si la main jouée possède exactement 4 cartes (Actuellement : #1# jetons)"
+    },
+    "riff_raff": {
+      "name": "Racaille",
+      "text": "Lorsque la Blinde est sélectionnée, crée #1# Joker Commun (Selon la place disponible)"
+    },
+    "photograph": {
+      "name": "Photographie",
+      "text": "La première carte Figure octroie x#1# au Multi. en marquant des points"
+    },
+    "reserved_parking": {
+      "name": "Place réservée",
+      "text": "Chaque carte Figure tenue en main a #2# chance(s) sur #3# d'octroyer #1# $"
+    },
+    "mail_in_rebate": {
+      "name": "Remise par courrier",
+      "text": "Gagnez #1# $ pour chaque carte #2# défaussée, la valeur change à chaque manche"
+    },
+    "hallucination": {
+      "name": "Hallucination",
+      "text": "#1# chance sur #2# de créer une carte de Tarot lors de l'ouverture de n'importe quel Paquet Booster (Selon la place disponible) ouverture\",\n\t\t\t\t\t\"de n"
+    },
+    "fortune_teller": {
+      "name": "Voyant",
+      "text": "Multi. +#1# par carte de Tarot utilisée (Actuellement +#2#)"
+    },
+    "juggler": {
+      "name": "Jongleur",
+      "text": "+#1# à la taille de la main"
+    },
+    "drunkard": {
+      "name": "Ivrogne",
+      "text": "+#1# défausse à chaque manche"
+    },
+    "golden_joker": {
+      "name": "Joker d'or",
+      "text": "Gagnez #1# $ à la fin de la manche"
+    },
+    "popcorn": {
+      "name": "Popcorn",
+      "text": "+#1# au Multi. -#2# au Multi. par manche jouée"
+    },
+    "walkie_talkie": {
+      "name": "Talkie-walkie",
+      "text": "Chaque 10 ou 4 joué octroie +#1# Jetons et +#2# au Multi. lorsqu'il marque des points"
+    },
+    "smiley_face": {
+      "name": "Figures souriantes",
+      "text": "Les cartes Figure jouées octroient +#1# au Multi. lorsqu'elles marquent des points"
+    },
+    "golden_ticket": {
+      "name": "Ticket d'or",
+      "text": "Les cartes Or jouées octroient #1# $ en marquant des points"
+    },
+    "swashbuckler": {
+      "name": "Cape et épée",
+      "text": "Ajoute la valeur de vente de tous les Jokers possédés au Multi. (Actuellement : +#1# Multi.)"
+    },
+    "hanging_chad": {
+      "name": "Carte de vote",
+      "text": "Déclenche à nouveau la première carte jouée pour marquer des points #1# fois supplémentaires"
+    },
+    "shoot_the_moon": {
+      "name": "Objectif lune",
+      "text": "Chaque Dame que vous avez en main ajoute +#1# Multi."
+    },
+    "joker_stencil": {
+      "name": "Pochoir de joker",
+      "text": "Multi. x#1# pour chaque emplacement Joker vide Pochoir de Joker inclus (Actuellement x#1# )"
+    },
+    "four_fingers": {
+      "name": "Quatre doigts",
+      "text": "Toutes les Couleurs et les Suites peuvent être effectuées avec 4 cartes"
+    },
+    "mime": {
+      "name": "Mime",
+      "text": "Déclenche à nouveau toutes les capacités des cartes en main"
+    },
+    "ceremonial_dagger": {
+      "name": "Dague de cérémonie",
+      "text": "Lorsque la Blinde est sélectionnée, détruit le Joker situé à sa droite et ajoute de manière permanente le double de sa valeur de vente à ce Multi. (Actuellement Multi. +#1#)"
+    },
+    "marble_joker": {
+      "name": "Joker de marbre",
+      "text": "Ajoute une carte Pierre au jeu lorsque la Blinde est sélectionnée"
+    },
+    "loyalty_card": {
+      "name": "Carte de fidélité",
+      "text": "Multi. x#1# toutes les #2# mains jouées #3#e"
+    },
+    "dusk": {
+      "name": "Crépuscule",
+      "text": "Déclenche à nouveau toutes les cartes marquantes dans la main finale de la manche"
+    },
+    "fibonacci": {
+      "name": "Fibonacci",
+      "text": "Chaque As, 2, 3, 5, ou 8 joué octroie +#1# au Multi. lorsqu'elles marquent des points"
+    },
+    "steel_joker": {
+      "name": "Joker d'acier",
+      "text": "Octroie Multi. x#1# . pour chaque carte Acier dans votre jeu complet (Actuellement : Multi. x#2#)"
+    },
+    "hack": {
+      "name": "Imposteur",
+      "text": "Déclenche à nouveau chaque 2, 3, 4 ou 5 joué"
+    },
+    "pareidolia": {
+      "name": "Paréidolie",
+      "text": "Toutes les cartes sont considérées comme des cartes Figure"
+    },
+    "space_joker": {
+      "name": "Joker de l'espace",
+      "text": "#1# chance(s) sur #2# d'augmenter le niveau de la main de poker jouée"
+    },
+    "burglar": {
+      "name": "Cambrioleur",
+      "text": "Lorsque la Blinde est choisie, gagnez +#1# mains et perdez toutes les défausses"
+    },
+    "blackboard": {
+      "name": "Tableau noir",
+      "text": "Multi. x#1# si toutes les cartes en main sont de type #2# ou #3#"
+    },
+    "sixth_sense": {
+      "name": "Sixième sens",
+      "text": "Si la première main de la manche est un 6 simple, détruisez-la et créez une carte Spectrale (Selon la place disponible)"
+    },
+    "constellation": {
+      "name": "Constellation",
+      "text": "Ce Joker octroie Multi. x#1# chaque fois qu'une carte Planète est utilisée (Actuellement : Multi. x#2# )"
+    },
+    "hiker": {
+      "name": "Randonneur",
+      "text": "Chaque carte jouée gagne de façon permanente +#1# Jetons en marquant des points"
+    },
+    "card_sharp": {
+      "name": "Maître des cartes",
+      "text": "Multi. x#1# si la main de poker jouée a déjà été jouée dans cette manche"
+    },
+    "madness": {
+      "name": "Folie",
+      "text": "Lorsqu'une petite blinde ou une grosse blinde est sélectionnée, gagnez Multi. x#1# et détruisez un Joker aléatoire (Actuellement : Multi. x#2# )"
+    },
+    "seance": {
+      "name": "Séance",
+      "text": "Si la main de poker est de type #1#, crée une carte Spectrale aléatoire (Selon la place disponible)"
+    },
+    "vampire": {
+      "name": "Vampire",
+      "text": "Ce Joker octroie Multi. x#1# pour chaque carte améliorée jouée ; supprime l'amélioration de cartes (Actuellement : Multi. x#2# )"
+    },
+    "shortcut": {
+      "name": "Raccourci",
+      "text": "Permet que les Suites soient comptabilisées avec des intervalles de 1 valeur (ex : 10 8 6 5 3)"
+    },
+    "hologram": {
+      "name": "Hologramme",
+      "text": "Ce Joker octroie Multi. x#1# chaque fois qu'une carte à jouer est ajoutée à votre jeu (Actuellement : Multi. x#2# )"
+    },
+    "cloud_9": {
+      "name": "Neuvième ciel",
+      "text": "Gagnez #1# $ pour chaque 9 dans votre jeu complet à la fin de la manche (Actuellement #2# $)"
+    },
+    "rocket": {
+      "name": "Fusée",
+      "text": "Gagnez #1# $ à la fin de la manche Les gains augmentent de #2# $ quand une grosse blinde est vaincue"
+    },
+    "midas_mask": {
+      "name": "Masque de Midas",
+      "text": "Toutes les cartes Figure jouées deviennent des cartes Or en marquant des points"
+    },
+    "luchador": {
+      "name": "Luchador",
+      "text": "Vendez cette carte pour désactiver la Blinde Boss actuelle"
+    },
+    "gift_card": {
+      "name": "Carte cadeau",
+      "text": "Ajoute #1# $ à la valeur de vente de chaque carte Joker et carte Consommable à la fin de la manche"
+    },
+    "turtle_bean": {
+      "name": "Haricot noir",
+      "text": "+#1# à la taille de la main, mais ce nombre est réduit de #2# à chaque manche"
+    },
+    "erosion": {
+      "name": "Érosion",
+      "text": "Multi. +#1# pour chaque carte en dessous de #3# dans votre jeu complet (Actuellement Multi. +#2#)"
+    },
+    "to_the_moon": {
+      "name": "Vers les étoiles",
+      "text": "Gagnez #1# $ d'intérêt supplémentaire par tranche de 5 $ possédée à la fin de la manche"
+    },
+    "stone_joker": {
+      "name": "Joker de pierre",
+      "text": "Octroie +#1# jetons pour chaque carte Pierre restante dans votre jeu complet (Actuellement : +#2# jetons)"
+    },
+    "lucky_cat": {
+      "name": "Porte-bonheur",
+      "text": "Ce Joker octroie Multi. x#1# à chaque fois qu'une carte Chance est déclenchée avec succès (Actuellement : Multi. x#2# )"
+    },
+    "bull": {
+      "name": "Bull run",
+      "text": "+#1# jetons pour chaque 1 $ que vous avez (Actuellement +#2# jetons)"
+    },
+    "diet_cola": {
+      "name": "Cola zéro",
+      "text": "Vendez cette carte pour créer une carte #1# gratuite"
+    },
+    "trading_card": {
+      "name": "Carte à collectionner",
+      "text": "Si la première défausse de la manche ne contient qu'une carte, détruisez-la et gagnez #1# $"
+    },
+    "flash_card": {
+      "name": "Carte mémoire",
+      "text": "Ce Joker octroie +#1# Multi. par renouvellement dans le magasin (Actuellement : +#2# Multi.)"
+    },
+    "spare_trousers": {
+      "name": "Pantalon de rechange",
+      "text": "Ce Joker octroie +#1# Multi. si la main jouée contient 1 #2# (Actuellement : +#3# Multi.)"
+    },
+    "ramen": {
+      "name": "Ramen",
+      "text": "Ajoute x#1# au Multi. mais retire x#2# au Multi. par carte défaussée"
+    },
+    "seltzer": {
+      "name": "Seltz",
+      "text": "Déclenche à nouveau toutes les cartes jouées pour les #1# prochaines mains"
+    },
+    "castle": {
+      "name": "Château",
+      "text": "Ce Joker octroie +#1# Jetons par carte #2# défaussée, la couleur change à chaque manche (Actuellement +#3# Jetons)"
+    },
+    "satellite": {
+      "name": "Satellite",
+      "text": "Gagnez #1# $ à la fin de la manche pour chaque carte Planète unique utilisée dans cette partie (Actuellement #2# $)"
+    },
+    "acrobat": {
+      "name": "Acrobate",
+      "text": "Multi. x#1# sur la main finale de la manche"
+    },
+    "sock_and_buskin": {
+      "name": "Tragicomédie",
+      "text": "Déclenche à nouveau toutes les cartes Figure jouées"
+    },
+    "troubadour": {
+      "name": "Troubadour",
+      "text": "+#1# à la taille de la main, -#2# main à chaque manche"
+    },
+    "certificate": {
+      "name": "Certificat",
+      "text": "Au début de la manche, ajoute une carte à jouer aléatoire avec un sceau aléatoire dans votre main"
+    },
+    "smeared_joker": {
+      "name": "Joker barbouillé",
+      "text": "Les Cœurs et les Carreaux comptent comme des cartes de même couleur, et les Piques et Trèfles comptent comme des cartes de même couleur"
+    },
+    "throwback": {
+      "name": "Rappel",
+      "text": "x#1# au Multi. pour chaque Blinde passée dans cette partie (Actuellement Multi. x#2#)"
+    },
+    "rough_gem": {
+      "name": "Gemme brute",
+      "text": "Les cartes jouées avec Une couleur Carreau octroient #1# $ en marquant des points"
+    },
+    "bloodstone": {
+      "name": "Pierre de sang",
+      "text": "#1# chance(s) sur #2# pour que les cartes jouées avec une couleur Cœur octroient x#3# au Multi. lorsqu'elles marquent des points"
+    },
+    "arrowhead": {
+      "name": "Pointe de flèche",
+      "text": "Les cartes jouées avec une couleur Pique octroient +#1# Jetons en marquant des points"
+    },
+    "onyx_agate": {
+      "name": "Pierre Onyx",
+      "text": "Les cartes jouées avec une couleur Trèfle octroient +#1# au Multi. en marquant des points"
+    },
+    "glass_joker": {
+      "name": "Joker de verre",
+      "text": "Ce Joker octroie Multi. x#1# pour chaque carte Verre détruite (Actuellement : Multi. x#2# )"
+    },
+    "showman": {
+      "name": "Maître du jeu",
+      "text": "Les cartes Joker, Tarot, Planète et Spectrales peuvent apparaître plusieurs fois"
+    },
+    "flower_pot": {
+      "name": "Pot de fleurs",
+      "text": "Multi. x#1# si la main de poker contient une carte Carreau, une carte Trèfle, une carte Cœur et une carte Pique"
+    },
+    "merry_andy": {
+      "name": "Andy le gentil",
+      "text": "+#1# défausses à chaque manche, #2# à la taille de la main"
+    },
+    "oops_all_6s": {
+      "name": "Oups ! Que des 6",
+      "text": "Double toutes les probabilités (ex. : 1 sur 3 -> 2 sur 3)"
+    },
+    "the_idol": {
+      "name": "L'idole",
+      "text": "Chaque #2# de #3# joué octroie x#1# au Multi. en marquant des points La carte change à chaque manche"
+    },
+    "seeing_double": {
+      "name": "Vision double",
+      "text": "x#1# au Multi. si la main jouée contient une carte Trèfle et une carte marquante de n'importe quelle couleur"
+    },
+    "matador": {
+      "name": "Matador",
+      "text": "Gagnez #1# $ si la main jouée déclenche la capacité Blinde Boss"
+    },
+    "cartomancer": {
+      "name": "Cartomancien",
+      "text": "Crée une carte Tarot lorsque la Blinde est sélectionnée (Selon la place disponible)"
+    },
+    "astronomer": {
+      "name": "Astronome",
+      "text": "Toutes les cartes Planète et les Paquets Céleste dans le magasin sont gratuits"
+    },
+    "bootstraps": {
+      "name": "Débrouillardise",
+      "text": "+#1# Multi. pour chaque #2# $ que vous avez (Actuellement : +#3# Multi.)"
+    },
+    "mr_bones": {
+      "name": "Défaucheuse",
+      "text": "Empêche la mort si les Jetons marqués constituent au minimum 25 % des Jetons nécessaires. S'autodétruit"
+    },
+    "dna": {
+      "name": "ADN",
+      "text": "Si la première main de la manche ne contient qu'une carte, ajoutez-en une copie permanente au jeu et placez-la dans la main"
+    },
+    "vagabond": {
+      "name": "Vagabond",
+      "text": "Crée une carte de Tarot si la main est jouée avec #1# $ ou moins"
+    },
+    "baron": {
+      "name": "Baron",
+      "text": "Chaque Roi que vous avez en main ajoute x#1# au Multi."
+    },
+    "obelisk": {
+      "name": "Obélisque",
+      "text": "Ce Joker octroie Multi. x#1# par main consécutive jouée sans votre main de poker la plus jouée(Actuellement : Multi. x#2# )"
+    },
+    "ancient_joker": {
+      "name": "Joker antique",
+      "text": "Chaque carte jouée avec une couleur de #2# octroie x#1# au Multi. lorsqu'elle marque des points, la couleur change à la fin de la manche"
+    },
+    "driver_gloves": {
+      "name": "Permis de conduire",
+      "text": "Multi. x#1# si vous possédez au moins 16 cartes améliorées (Actuellement #2#)"
+    },
+    "campfire": {
+      "name": "Feu de camp",
+      "text": "Ce Joker ajoute x#1# au Multi. pour chaque carte vendue, mais ce multi. est réinitialisé lorsque la Blinde Boss est vaincue (Actuellement Multi. x#2# )"
+    },
+    "baseball_card": {
+      "name": "Carte de baseball",
+      "text": "Les Jokers peu communs ajoutent chacun x#1# au Multi."
+    },
+    "blueprint": {
+      "name": "Modèle",
+      "text": "Copie les capacités du Joker sur la droite"
+    },
+    "wee_joker": {
+      "name": "P'tit joker",
+      "text": "Ce Joker octroie +#2# Jetons lorsque chaque 2 joué marque des points (Actuellement +#1# Jetons)"
+    },
+    "hit_the_road": {
+      "name": "Prendre la route",
+      "text": "Ce Joker octroie Multi. x#1# pour chaque Joker défaussé lors de cette manche (Actuellement : Multi. x#2# )"
+    },
+    "the_duo": {
+      "name": "Le duo",
+      "text": "Multi. x#1# si la main jouée contient une #2#"
+    },
+    "the_trio": {
+      "name": "Le trio",
+      "text": "Multi. x#1# si la main jouée contient un #2#"
+    },
+    "the_family": {
+      "name": "La famille",
+      "text": "Multi. x#1# si la main jouée contient un #2#"
+    },
+    "the_order": {
+      "name": "L'Ordre",
+      "text": "Multi. x#1# si la main jouée contient une #2#"
+    },
+    "the_tribe": {
+      "name": "La tribu",
+      "text": "Multi. x#1# si la main jouée contient une #2#"
+    },
+    "stuntman": {
+      "name": "Cascadeur",
+      "text": "+#1# Jetons, -#2# à la taille de la main"
+    },
+    "invisible_joker": {
+      "name": "Joker invisible",
+      "text": "Après #1# manches, vendez cette carte pour Dupliquer un Joker aléatoire (Actuellement #2#/#1#)"
+    },
+    "burnt_joker": {
+      "name": "Joker calciné",
+      "text": "Augmente le niveau de la première main de poker défaussée à chaque manche"
+    },
+    "brainstorm": {
+      "name": "Remue-méninges",
+      "text": "Copie les capacités du Joker le plus à gauche"
+    },
+    "canio": {
+      "name": "Caino",
+      "text": "Ce Joker octroie Multi. x#1# quand une carte Figure est détruite (Actuellement : Multi. x#2# )"
+    },
+    "triboulet": {
+      "name": "Triboulet",
+      "text": "Les Rois et les Dames jouées octroient chacun x#1# au Multi. lorsqu'ils marquent des points"
+    },
+    "yorick": {
+      "name": "Yorick",
+      "text": "Ce Joker octroie Multi. x#1# toutes les #2# [#3#] cartes défaussées (Actuellement : Multi. x#4# )"
+    },
+    "chicot": {
+      "name": "Chicot",
+      "text": "Annule l'effet de chaque Blinde Boss"
+    },
+    "perkeo": {
+      "name": "Perkeo",
+      "text": "Crée une copie Négative d'1 carte consommable aléatoire en votre possession à la fin du magasin"
+    }
+  },
+  "decks": {
+    "red_deck": {
+      "name": "Jeu rouge",
+      "text": "+#1# défausse à chaque manche"
+    },
+    "blue_deck": {
+      "name": "Jeu bleu",
+      "text": "+#1# main à chaque manche"
+    },
+    "yellow_deck": {
+      "name": "Jeu jaune",
+      "text": "Commencez avec #1# $ supplémentaires"
+    },
+    "green_deck": {
+      "name": "Jeu vert",
+      "text": "À la fin de la manche : #1# $ par main restante #2# $ par défausse restante Vous ne percevez pas d'intérêts"
+    },
+    "black_deck": {
+      "name": "Jeu noir",
+      "text": "+#1# emplacement Joker -#2# main à chaque manche"
+    },
+    "magic_deck": {
+      "name": "Jeu magique",
+      "text": "Commencez la partie avec le coupon #1# et 2 copies de #2#"
+    },
+    "nebula_deck": {
+      "name": "Jeu nébuleux",
+      "text": "Commencez la partie avec le coupon #1# #2# emplacement de consommable"
+    },
+    "ghost_deck": {
+      "name": "Jeu fantôme",
+      "text": "Les cartes Spectrales peuvent apparaître dans le magasin, et commencez avec une carte Maléfice"
+    },
+    "abandoned_deck": {
+      "name": "Jeu abandonné",
+      "text": "Commencez la partie sans cartes Figure dans votre jeu"
+    },
+    "checkered_deck": {
+      "name": "Jeu en damier",
+      "text": "Commencez la partie avec 26 cartes de Pique et 26 cartes de Cœur dans votre jeu"
+    },
+    "zodiac_deck": {
+      "name": "Jeu Zodiac",
+      "text": "Commencez la partie avec #1#, #2#, et #3#"
+    },
+    "painted_deck": {
+      "name": "Jeu peint",
+      "text": "+#1# à la taille de la main #2# emplacement Joker"
+    },
+    "anaglyph_deck": {
+      "name": "Jeu anaglyphe",
+      "text": "Après avoir battu chaque Blinde Boss, gagnez #1#"
+    },
+    "plasma_deck": {
+      "name": "Jeu plasmique",
+      "text": "Équilibrez les Jetons et le Multi. lors du calcul du score de la main jouée Taille de la Blinde de base x#1#"
+    },
+    "erratic_deck": {
+      "name": "Jeu erratique",
+      "text": "Toutes les Valeurs et les Couleurs du jeu sont aléatoires"
+    }
+  },
+  "stakes": {
+    "white_stake": {
+      "name": "Mise blanche",
+      "text": "Difficulté de base"
+    },
+    "red_stake": {
+      "name": "Mise rouge",
+      "text": "Une Petite Blinde n'octroie pas de récompense en argent Applique toutes les mises précédentes"
+    },
+    "green_stake": {
+      "name": "Mise verte",
+      "text": "Le score requis augmente plus rapidement pour chaque mise initiale Applique toutes les mises précédentes"
+    },
+    "black_stake": {
+      "name": "Mise noire",
+      "text": "Les magasins peuvent posséder des Jokers Éternels (Ne peut pas être vendu ou détruit) Applique toutes les mises précédentes"
+    },
+    "blue_stake": {
+      "name": "Mise bleue",
+      "text": "-1 défausse Applique toutes les mises précédentes"
+    },
+    "purple_stake": {
+      "name": "Mise violette",
+      "text": "Le score requis augmente plus rapidement pour chaque mise initiale Applique toutes les mises précédentes"
+    },
+    "orange_stake": {
+      "name": "Mise orange",
+      "text": "Les magasins peuvent posséder des Jokers périssables (Affaiblis après 5 manches) S'applique à toutes les mises précédentes"
+    },
+    "gold_stake": {
+      "name": "Mise d'or",
+      "text": "Les magasins peuvent posséder des Jokers location (coûte 3 $ par manche) S'applique à toutes les mises précédentes"
+    }
+  },
+  "tarots": {
+    "the_fool": {
+      "name": "Le Mat",
+      "text": "Crée la dernière carte de Tarot ou Planète utilisée pendant cette partie, excepté Le Mat"
+    },
+    "the_magician": {
+      "name": "Le Batleur",
+      "text": "Améliore #1# cartes sélectionnées en #2#"
+    },
+    "the_high_priestess": {
+      "name": "La Papesse",
+      "text": "Crée jusqu'à #1# cartes Planète aléatoires (Selon la place disponible)"
+    },
+    "the_empress": {
+      "name": "L'Impératrice",
+      "text": "Améliore #1# cartes sélectionnées en #2#"
+    },
+    "the_emperor": {
+      "name": "L'Empereur",
+      "text": "Crée jusqu'à #1# cartes de Tarot aléatoires (Selon la place disponible)"
+    },
+    "the_hierophant": {
+      "name": "Le Pape",
+      "text": "Améliore #1# cartes sélectionnées en #2#"
+    },
+    "the_lovers": {
+      "name": "L'Amoureux",
+      "text": "Améliore #1# carte sélectionnée en #2#"
+    },
+    "the_chariot": {
+      "name": "Le Chariot",
+      "text": "Améliore #1# carte sélectionnée en #2#"
+    },
+    "justice": {
+      "name": "La Justice",
+      "text": "Améliore #1# carte sélectionnée en #2#"
+    },
+    "the_hermit": {
+      "name": "L'Ermite",
+      "text": "Double l'argent (#1# $ au maximum)"
+    },
+    "the_wheel_of_fortune": {
+      "name": "La Roue de Fortune",
+      "text": "#1# chance(s) sur #2# d'ajouter une édition Brillantes, Holographique ou Polychrome à un Joker au hasard"
+    },
+    "strength": {
+      "name": "La Force",
+      "text": "Augmente la valeur d'un maximum de #1# cartes sélectionnées de 1"
+    },
+    "the_hanged_man": {
+      "name": "Le Pendu",
+      "text": "Détruit un maximum de #1# cartes sélectionnées"
+    },
+    "death": {
+      "name": "La Mort",
+      "text": "Sélectionnez #1# cartes, la carte de gauche devient la carte de droite (Faites glisser les cartes pour les réorganiser)"
+    },
+    "temperance": {
+      "name": "La Tempérance",
+      "text": "Octroie la valeur de vente totale de tous les Jokers actuels (#1# $ au maximum) (Actuellement #2# $)"
+    },
+    "the_devil": {
+      "name": "Le Diable",
+      "text": "Améliore #1# carte sélectionnée en #2#"
+    },
+    "the_tower": {
+      "name": "La Maison Dieu",
+      "text": "Améliore #1# carte sélectionnée en #2#"
+    },
+    "the_star": {
+      "name": "L'Étoile",
+      "text": "Convertit jusqu'à #1# cartes sélectionnées pour les changer en #2#"
+    },
+    "the_moon": {
+      "name": "La Lune",
+      "text": "Convertit jusqu'à #1# cartes sélectionnées pour les changer en #2#"
+    },
+    "the_sun": {
+      "name": "Le Soleil",
+      "text": "Convertit jusqu'à #1# cartes sélectionnées pour les changer en #2#"
+    },
+    "judgement": {
+      "name": "Le Jugement",
+      "text": "Crée une carte Joker aléatoire (Selon la place disponible)"
+    },
+    "the_world": {
+      "name": "Le Monde",
+      "text": "Convertit jusqu'à #1# cartes sélectionnées pour les changer en #2#"
+    }
+  },
+  "planets": {
+    "pluto": {
+      "name": "Pluton",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "mercury": {
+      "name": "Mercure",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "uranus": {
+      "name": "Uranus",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "venus": {
+      "name": "Vénus",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "saturn": {
+      "name": "Saturne",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "jupiter": {
+      "name": "Jupiter",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "earth": {
+      "name": "Terre",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "mars": {
+      "name": "Mars",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "neptune": {
+      "name": "Neptune",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "planet_x": {
+      "name": "Planète X",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "ceres": {
+      "name": "Cérès",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    },
+    "eris": {
+      "name": "Eris",
+      "text": "(niv.#1#) Niveau supérieur #2# +#3# au Multi. et +#4# Jetons"
+    }
+  },
+  "spectrals": {
+    "familiar": {
+      "name": "Familier",
+      "text": "Détruit 1 carte sélectionnée de votre main, ajoute #1# cartes Figure Améliorées aléatoires à votre main"
+    },
+    "grim": {
+      "name": "Sinistre",
+      "text": "Détruit 1 carte aléatoire de votre main, ajoute #1#As améliorés aléatoires à votre main"
+    },
+    "incantation": {
+      "name": "Incantation",
+      "text": "Détruit 1 carte aléatoire de votre main, ajoute #1# cartes numérotées améliorées aléatoires à votre main"
+    },
+    "talisman": {
+      "name": "Talisman",
+      "text": "Ajoute un Sceau d'or à 1 carte aléatoire de votre main"
+    },
+    "aura": {
+      "name": "Aura",
+      "text": "Ajoute un effet Brillant, Holographique ou Polychrome à 1 carte choisie dans votre main"
+    },
+    "wraith": {
+      "name": "Apparition",
+      "text": "Crée une carte Joker Rare, fixe l'argent à 0 $"
+    },
+    "sigil": {
+      "name": "Sceau",
+      "text": "Convertit toutes les cartes en main en une unique Couleur aléatoire"
+    },
+    "ouija": {
+      "name": "Ouija",
+      "text": "Convertit toutes les cartes en main en une unique Valeur aléatoire Taille de la main -1"
+    },
+    "ectoplasm": {
+      "name": "Ectoplasme",
+      "text": "Ajoute Négatif à un Joker aléatoire, Taille de la main -1"
+    },
+    "immolate": {
+      "name": "Immolation",
+      "text": "Détruit #1# cartes aléatoires en main, gagnez #2# $"
+    },
+    "ankh": {
+      "name": "Ankh",
+      "text": "Crée une copie d'un Joker aléatoire, détruit tous les autres Jokers"
+    },
+    "deja_vu": {
+      "name": "Déjà vu",
+      "text": "Ajoute un Sceau rouge à 1 carte sélectionnée dans votre main"
+    },
+    "hex": {
+      "name": "Maléfice",
+      "text": "Ajoute Polychrome à un Joker aléatoire, détruisez tous les autres Jokers"
+    },
+    "trance": {
+      "name": "Transe",
+      "text": "Ajoute un Sceau bleu à 1 carte sélectionnée dans votre main"
+    },
+    "medium": {
+      "name": "Médium",
+      "text": "Ajoute un Sceau violet à 1 carte sélectionnée dans votre main"
+    },
+    "cryptid": {
+      "name": "Cryptide",
+      "text": "Crée #1# copies d'une carte sélectionnée dans votre main"
+    },
+    "the_soul": {
+      "name": "L'âme",
+      "text": "Crée un Joker Légendaire (Selon la place disponible)"
+    },
+    "black_hole": {
+      "name": "Trou noir",
+      "text": "Augmente chaque main de poker d'1 niveau"
+    }
+  },
+  "vouchers": {
+    "overstock": {
+      "name": "Excédent",
+      "text": "+1 emplacement de carte disponible dans le magasin"
+    },
+    "overstock_plus": {
+      "name": "Excédent plus",
+      "text": "+1 emplacement de carte disponible dans le magasin"
+    },
+    "clearance_sale": {
+      "name": "Déstockage",
+      "text": "Toutes les cartes et tous les paquets du magasin sont vendus avec un rabais de #1# %"
+    },
+    "liquidation": {
+      "name": "Liquidation",
+      "text": "Toutes les cartes et tous les paquets du magasin sont vendus avec un rabais de #1# %"
+    },
+    "hone": {
+      "name": "Aiguisage",
+      "text": "Les cartes Brillantes, Holographiques et Polychromes apparaissent #1#x plus souvent"
+    },
+    "glow_up": {
+      "name": "Bonne mine",
+      "text": "Les cartes Brillantes, Holographiques et Polychromes apparaissent #1#x plus souvent"
+    },
+    "reroll_surplus": {
+      "name": "Renouvellement en pagaille",
+      "text": "Les renouvellements coûtent #1# $ moins cher"
+    },
+    "reroll_glut": {
+      "name": "Comme s'il en pleuvait",
+      "text": "Les renouvellements coûtent #1# $ moins cher"
+    },
+    "crystal_ball": {
+      "name": "Boule de cristal",
+      "text": "+1 emplacement de consommable"
+    },
+    "omen_globe": {
+      "name": "Globe de présage",
+      "text": "Les cartes Spectrales peuvent apparaître dans n'importe quel Paquet Arcana"
+    },
+    "telescope": {
+      "name": "Télescope",
+      "text": "Les Paquets Célestes contiennent toujours la carte Planète pour votre main de poker la plus jouée"
+    },
+    "observatory": {
+      "name": "Observatoire",
+      "text": "Les cartes Planète de votre zone Consommable octroient x#1# au multi. pour leur main de poker spécifique"
+    },
+    "grabber": {
+      "name": "Grappin",
+      "text": "Gagnez de manière permanente +#1# main par manche"
+    },
+    "nacho_tong": {
+      "name": "Tong Nacho",
+      "text": "Gagnez de manière permanente +#1# main par manche"
+    },
+    "wasteful": {
+      "name": "Gaspillage",
+      "text": "Octroie de manière permanente +#1# défausse à chaque manche"
+    },
+    "recyclomancy": {
+      "name": "Recyclomancie",
+      "text": "Octroie de manière permanente +#1# défausse à chaque manche"
+    },
+    "tarot_merchant": {
+      "name": "Marchand de cartes de Tarot",
+      "text": "Les cartes de Tarot apparaissent #1#X plus fréquemment dans le magasin"
+    },
+    "tarot_tycoon": {
+      "name": "Magnat des cartes de Tarot",
+      "text": "Les cartes de Tarot apparaissent #1#X plus fréquemment dans le magasin"
+    },
+    "planet_merchant": {
+      "name": "Marchand de cartes Planète",
+      "text": "Les cartes Planète apparaissent #1#X plus fréquemment dans le magasin"
+    },
+    "planet_tycoon": {
+      "name": "Magnat des cartes Planète",
+      "text": "Les cartes Planète apparaissent #1#X plus fréquemment dans le magasin"
+    },
+    "seed_money": {
+      "name": "Capital de départ",
+      "text": "Augmentez le total d'intérêts gagnés à chaque manche jusqu'à #1# $ intérêts gagnés\",\n\t\t\t\t\t\"à chaque manche jusqu"
+    },
+    "money_tree": {
+      "name": "Arbre à monnaie",
+      "text": "Augmentez le total d'intérêts gagnés à chaque manche jusqu'à #1# $ intérêts gagnés\",\n\t\t\t\t\t\"à chaque manche jusqu"
+    },
+    "blank": {
+      "name": "À blanc",
+      "text": "Ne fait rien ?"
+    },
+    "antimatter": {
+      "name": "Antimatière",
+      "text": "+1 emplacement de Joker"
+    },
+    "magic_trick": {
+      "name": "Tour de magie",
+      "text": "Les Cartes à jouer peuvent être achetées dans le magasin"
+    },
+    "illusion": {
+      "name": "Illusion",
+      "text": "Les Cartes à jouer du magasin peuvent être Améliorées, Édition et/ou Sceau"
+    },
+    "hieroglyph": {
+      "name": "Hiéroglyphe",
+      "text": "-#1# à la mise initiale, -#1# main à chaque manche"
+    },
+    "petroglyph": {
+      "name": "Pétroglyphe",
+      "text": "-#1# à la mise initiale, -#1# défausse à chaque manche"
+    },
+    "directors_cut": {
+      "name": "Director's Cut",
+      "text": "Renouveler la Blinde Boss 1 fois par mise initiale, #1# $ par lancer"
+    },
+    "retcon": {
+      "name": "Retcon",
+      "text": "Renouveler la Blinde Boss un nombre illimité de fois, #1# $ par relance"
+    },
+    "paint_brush": {
+      "name": "Pinceau",
+      "text": "+#1# à la taille de la main"
+    },
+    "palette": {
+      "name": "Palette",
+      "text": "+#1# à la taille de la main"
+    }
+  },
+  "enhancements": {
+    "bonus": {
+      "name": "Carte bonus",
+      "text": ""
+    },
+    "mult": {
+      "name": "Carte Multi.",
+      "text": "Multi. +#1#"
+    },
+    "wild": {
+      "name": "Carte Sauvage",
+      "text": "Peut être utilisée comme n'importe quelle couleur"
+    },
+    "glass": {
+      "name": "Carte Verre",
+      "text": "Multi. x#1# #2# chance(s) sur #3# de détruire la carte"
+    },
+    "steel": {
+      "name": "Carte Acier",
+      "text": "Multi. x#1# tant que cette carte reste en main"
+    },
+    "stone": {
+      "name": "Carte Pierre",
+      "text": "+#1# Jetons sans valeur ni couleur"
+    },
+    "gold": {
+      "name": "Carte Or",
+      "text": "#1# $ si cette carte est en main à la fin de la manche"
+    },
+    "lucky": {
+      "name": "Carte Chance",
+      "text": "#1# chance(s) sur #3# d'obtenir +#2# au Multi. #1# chance(s) sur #5# de gagner #4# $"
+    }
+  },
+  "editions": {
+    "foil": {
+      "name": "Brillante",
+      "text": "+#1# Jetons"
+    },
+    "holographic": {
+      "name": "Holographique",
+      "text": "+#1# au Multi."
+    },
+    "polychrome": {
+      "name": "Polychrome",
+      "text": "Ajoute x#1# au Multi."
+    },
+    "negative": {
+      "name": "Négatif",
+      "text": "+#1# emplacement Joker"
+    }
+  },
+  "seals": {
+    "red_seal": {
+      "name": "Sceau rouge",
+      "text": "Déclenche à nouveau cette carte 1 fois"
+    },
+    "blue_seal": {
+      "name": "Sceau bleu",
+      "text": "Crée une carte Planète pour la dernière main de poker jouée de la manche si vous l'avez en main (Selon la place disponible)"
+    },
+    "gold_seal": {
+      "name": "Sceau d'or",
+      "text": "Gagnez 3 $ lorsque cette carte est jouée et marque"
+    },
+    "purple_seal": {
+      "name": "Sceau violet",
+      "text": "Crée une carte de Tarot lorsque cette carte est défaussée (Selon la place disponible)"
+    }
+  },
+  "tags": {
+    "uncommon_tag": {
+      "name": "Badge peu commun",
+      "text": "Le magasin possède un Joker peu commun gratuit"
+    },
+    "rare_tag": {
+      "name": "Badge rare",
+      "text": "Le magasin possède un Joker rare gratuit"
+    },
+    "negative_tag": {
+      "name": "Badge négatif",
+      "text": "Le prochain Joker en édition de base du magasin sera gratuit et obtiendra le statut Négatif"
+    },
+    "foil_tag": {
+      "name": "Badge brillant",
+      "text": "Le prochain Joker en édition de base du magasin sera gratuit et obtiendra le statut Brillant"
+    },
+    "holographic_tag": {
+      "name": "Badge holographique",
+      "text": "Le prochain Joker en édition de base du magasin sera gratuit et obtiendra le statut Holographique"
+    },
+    "polychrome_tag": {
+      "name": "Badge polychrome",
+      "text": "Le prochain Joker en édition de base du magasin sera gratuit et obtiendra le statut Polychrome"
+    },
+    "investment_tag": {
+      "name": "Badge d'investissement",
+      "text": "Après avoir battu la Blinde Boss, gagnez #1# $"
+    },
+    "voucher_tag": {
+      "name": "Badge de coupon",
+      "text": "Ajoute un Coupon au prochain magasin"
+    },
+    "boss_tag": {
+      "name": "Badge de boss",
+      "text": "Effectue un renouvellement de la Blinde Boss"
+    },
+    "standard_tag": {
+      "name": "Badge standard",
+      "text": "Octroie un Paquet Méga-Standard"
+    },
+    "charm_tag": {
+      "name": "Badge de charme",
+      "text": "Octroie un Paquet Méga-Arcana"
+    },
+    "meteor_tag": {
+      "name": "Badge de météore",
+      "text": "Octroie un Paquet Méga-Céleste"
+    },
+    "buffoon_tag": {
+      "name": "Badge de bouffon",
+      "text": "Octroie un Paquet Méga-Bouffon"
+    },
+    "handy_tag": {
+      "name": "Badge pratique",
+      "text": "Octroie #1# $ par main jouée dans cette partie (Octroiera #2# $)"
+    },
+    "garbage_tag": {
+      "name": "Badge moisi",
+      "text": "Octroie #1# $ par défausse dans cette partie (Octroiera #2# $)"
+    },
+    "ethereal_tag": {
+      "name": "Badge éthéré",
+      "text": "Octroie un Paquet Spectral"
+    },
+    "coupon_tag": {
+      "name": "Badge de coupon",
+      "text": "Les cartes initiales et les Boosters du prochain magasin sont gratuits"
+    },
+    "double_tag": {
+      "name": "Badge double",
+      "text": "Octroie une copie du prochain Badge sélectionné en excluant le badge double"
+    },
+    "juggle_tag": {
+      "name": "Badge de jongleur",
+      "text": "+#1# à la taille de la main à la prochaine manche"
+    },
+    "d6_tag": {
+      "name": "Badge D6",
+      "text": "Les renouvellements du prochain magasin commencent à 0 $"
+    },
+    "top_up_tag": {
+      "name": "Badge d'appoint",
+      "text": "Crée jusqu'à #1# Jokers Communs (Selon la place disponible)"
+    },
+    "speed_tag": {
+      "name": "Badge de rapidité",
+      "text": "Gagnez #1# $ par blinde passée lors de cette partie (Peut octroyer #2# $)"
+    },
+    "orbital_tag": {
+      "name": "Badge orbital",
+      "text": "Augmente #1# de #2# niveaux"
+    },
+    "economy_tag": {
+      "name": "Badge économique",
+      "text": "Double votre argent (#1# $ au maximum)"
+    }
+  },
+  "blinds": {
+    "the_hook": {
+      "name": "L'hameçon",
+      "text": "Défausse 2 cartes aléatoires par main jouée"
+    },
+    "the_ox": {
+      "name": "Le bœuf",
+      "text": "Jouer #1# fixe l'argent à 0 $"
+    },
+    "the_house": {
+      "name": "La maison",
+      "text": "La première main est tirée face cachée"
+    },
+    "the_wall": {
+      "name": "Le mur",
+      "text": "Super grosse Blinde"
+    },
+    "the_wheel": {
+      "name": "La roue",
+      "text": "carte sur 7 est tirée face cachée"
+    },
+    "the_arm": {
+      "name": "Le bras",
+      "text": "Diminue le niveau de la main de poker jouée"
+    },
+    "the_club": {
+      "name": "Le club",
+      "text": "Toutes les cartes Trèfle perdent leurs bonus"
+    },
+    "the_fish": {
+      "name": "Le poisson",
+      "text": "Les cartes sont tirées face cachée après chaque main jouée"
+    },
+    "the_psychic": {
+      "name": "Le médium",
+      "text": "5 cartes doivent être jouées"
+    },
+    "the_goad": {
+      "name": "L'aiguillon",
+      "text": "Toutes les cartes Pique perdent leurs bonus"
+    },
+    "the_water": {
+      "name": "L'eau",
+      "text": "Commencez sans aucune défausse"
+    },
+    "the_window": {
+      "name": "La fenêtre",
+      "text": "Toutes les cartes Carreau perdent leurs bonus"
+    },
+    "the_manacle": {
+      "name": "Les menottes",
+      "text": "Taille de la main -1"
+    },
+    "the_eye": {
+      "name": "L'œil",
+      "text": "Pas de types de main répétés cette manche-ci"
+    },
+    "the_mouth": {
+      "name": "La bouche",
+      "text": "Ne jouez qu'un seul type de main cette manche-ci"
+    },
+    "the_plant": {
+      "name": "La plante",
+      "text": "Toutes les cartes Figure perdent leurs bonus"
+    },
+    "the_serpent": {
+      "name": "Le serpent",
+      "text": "Après avoir joué ou défaussé, tirez toujours 3 cartes"
+    },
+    "the_pillar": {
+      "name": "Le pilier",
+      "text": "Les cartes jouées avant cette mise initiale perdent leurs bonus"
+    },
+    "the_needle": {
+      "name": "L'aiguille",
+      "text": "Ne jouez qu'une main"
+    },
+    "the_head": {
+      "name": "La tête",
+      "text": "Toutes les cartes Cœur perdent leurs bonus"
+    },
+    "the_tooth": {
+      "name": "La dent",
+      "text": "Perdez 1 $ par carte jouée"
+    },
+    "the_flint": {
+      "name": "Le silex",
+      "text": "Les Jetons de base et le Multi. sont réduits de moitié"
+    },
+    "the_mark": {
+      "name": "La marque",
+      "text": "Toutes les cartes Figure sont tirées face cachée"
+    },
+    "the_tribe": {
+      "name": "Petite Blinde",
+      "text": ""
+    },
+    "the_final_acorn": {
+      "name": "Gland ambre",
+      "text": "Retourne et mélange toutes les cartes Joker"
+    },
+    "the_final_heart": {
+      "name": "Cœur écarlate",
+      "text": "Un Joker aléatoire annulé à chaque main"
+    },
+    "the_final_vessel": {
+      "name": "Vase violet",
+      "text": "Très grosse Blinde"
+    },
+    "the_final_leaf": {
+      "name": "Feuille verte",
+      "text": "Toutes les cartes perdent leurs bonus jusqu'à ce qu'un Joker soit vendu à ce qu"
+    }
+  }
+}

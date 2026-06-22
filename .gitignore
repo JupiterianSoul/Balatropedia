@@ -9,7 +9,7 @@ node_modules/
 *.db-shm
 *.db-wal
 *.db-journal
-data/
+/data/
 
 # Environment
 .env
