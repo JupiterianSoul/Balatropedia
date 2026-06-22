@@ -1,0 +1,126 @@
+import { useState, useMemo } from "react";
+import { useApp } from "@/lib/appContext";
+import {
+  JOKER_MAP, synergiesFor, SYNERGY_KIND_ORDER, SYNERGY_KIND_LABELS, ENGINE_LABELS,
+  SynergyKind,
+} from "@/lib/helpers";
+import { JokerCombobox } from "@/components/JokerCombobox";
+import { cn } from "@/lib/utils";
+
+const KIND_ACCENT: Record<SynergyKind, string> = {
+  core_pair: "border-l-accent",
+  strong_support: "border-l-[hsl(145_35%_40%)]",
+  conditional: "border-l-[hsl(173_40%_45%)]",
+  archetype_only: "border-l-muted-foreground",
+  risky_explosive: "border-l-secondary",
+  trap_unless_enabled: "border-l-destructive",
+};
+
+export function SynergyTab() {
+  const { openJokerDetail } = useApp();
+  const [selected, setSelected] = useState<string>("blueprint");
+
+  const grouped = useMemo(() => {
+    const conns = synergiesFor(selected);
+    const map = {} as Record<SynergyKind, typeof conns>;
+    for (const k of SYNERGY_KIND_ORDER) map[k] = [];
+    for (const c of conns) map[c.kind].push(c);
+    return map;
+  }, [selected]);
+
+  const total = Object.values(grouped).reduce((n, l) => n + l.length, 0);
+  const j = JOKER_MAP[selected];
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+      {/* selector pane */}
+      <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
+        <div>
+          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Select a Joker
+          </div>
+          <JokerCombobox value={selected} onChange={setSelected} testId="combobox-synergy" />
+        </div>
+        {j && (
+          <div className="casino-card p-4">
+            <button
+              onClick={() => openJokerDetail(j.id)}
+              className="font-display text-lg text-accent hover:underline"
+              data-testid="button-open-selected-detail"
+            >
+              {j.name}
+            </button>
+            <p className="mt-1 text-xs text-foreground/80 small-caps">{j.summary}</p>
+            <p className="mt-2 text-xs tabular text-muted-foreground">
+              {total} curated {total === 1 ? "connection" : "connections"}
+            </p>
+          </div>
+        )}
+        <div className="space-y-1.5 rounded-md border border-border bg-card/40 p-3 text-[11px] text-muted-foreground">
+          <div className="font-semibold uppercase tracking-[0.12em] text-muted-foreground">Legend</div>
+          {SYNERGY_KIND_ORDER.map((k) => (
+            <div key={k} className="flex items-center gap-2">
+              <span className={cn("h-3 w-1 rounded-full border-l-2", KIND_ACCENT[k])} />
+              <span>{SYNERGY_KIND_LABELS[k]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* connections pane */}
+      <div className="space-y-6">
+        {total === 0 ? (
+          <div className="rounded-md border border-dashed border-border py-16 text-center">
+            <p className="text-sm text-muted-foreground">
+              No curated synergies for this Joker yet. Check the Library for general role tags.
+            </p>
+          </div>
+        ) : (
+          SYNERGY_KIND_ORDER.map((kind) => {
+            const list = grouped[kind];
+            if (!list.length) return null;
+            return (
+              <section key={kind}>
+                <h3 className={cn(
+                  "mb-2.5 inline-block font-display text-sm font-semibold uppercase tracking-wide",
+                  kind === "core_pair" ? "gold-underline text-accent" :
+                  kind === "risky_explosive" ? "text-[hsl(350_55%_70%)]" :
+                  kind === "trap_unless_enabled" ? "text-[hsl(0_60%_70%)]" :
+                  "text-foreground/90",
+                )}>
+                  {SYNERGY_KIND_LABELS[kind]}
+                </h3>
+                <div className="grid gap-2.5 md:grid-cols-2">
+                  {list.map((c) => {
+                    const p = JOKER_MAP[c.partnerId];
+                    return (
+                      <div
+                        key={c.partnerId}
+                        className={cn("casino-card border-l-2 p-3.5", KIND_ACCENT[kind])}
+                        data-testid={`synergy-${selected}-${c.partnerId}`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <button
+                            onClick={() => setSelected(c.partnerId)}
+                            className="font-display text-sm font-semibold text-accent hover:underline"
+                            data-testid={`button-select-partner-${c.partnerId}`}
+                          >
+                            {p?.name ?? c.partnerId}
+                          </button>
+                          <span className="rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                            {ENGINE_LABELS[c.engine]}
+                          </span>
+                        </div>
+                        <p className="mt-2 text-xs leading-relaxed text-foreground/80">{c.why}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+}
