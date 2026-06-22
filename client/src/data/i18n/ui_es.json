@@ -42,12 +42,20 @@
       "compare": "Comparar",
       "skeleton": "Esqueleto",
       "favorites": "Favoritos",
-      "glossary": "Glosario"
+      "glossary": "Glosario",
+      "group": {
+        "library": "Biblioteca",
+        "build": "Construir",
+        "game": "Juego",
+        "run": "Partida",
+        "more": "Más",
+        "favorites": "Favoritos"
+      }
     },
     "header": {
-      "title_a": "Explorador de Sinergias",
-      "title_b": "Joker",
-      "tagline": "Los 150 Jokers · Sinergias curadas · Ayudas de construcción",
+      "title_a": "Balatro",
+      "title_b": "pedia",
+      "tagline": "",
       "footer": "Un compañero de estrategia hecho por fans · Datos de Joker curados y editoriales · Favoritos y notas guardados en tu cuenta"
     },
     "btn": {
