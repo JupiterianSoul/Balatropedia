@@ -32,6 +32,17 @@ function lookup(bundle: UiBundle, key: string): string | undefined {
   return typeof cur === "string" ? cur : undefined;
 }
 
+/** Resolve a dotted key and return the raw value (string | array | object | undefined). */
+function lookupRaw(bundle: UiBundle, key: string): unknown {
+  const parts = key.split(".");
+  let cur: any = bundle;
+  for (const p of parts) {
+    if (cur == null || typeof cur !== "object") return undefined;
+    cur = cur[p];
+  }
+  return cur;
+}
+
 function interpolate(s: string, vars?: Record<string, string | number>): string {
   if (!vars) return s;
   return s.replace(/\{\{(\w+)\}\}/g, (_, k) => (vars[k] != null ? String(vars[k]) : `{{${k}}}`));
@@ -147,6 +158,12 @@ export function useLabels() {
         "economy", "face_card", "discard_volume", "enhancement",
         "suit_unification", "scaling",
       ]),
+      archetype: make("archetype", [
+        "flush", "straight", "high_card", "pair", "two_pair",
+        "three_of_a_kind", "four_of_a_kind", "face_card", "held_in_hand",
+        "steel", "glass", "discard", "deck_growth", "economy_snowball",
+        "retrigger_engine",
+      ]),
       riskPrefix: t("ui.labels.risk_prefix"),
     };
   }, [t]);
@@ -186,6 +203,41 @@ export function useGameText(
       lang === "es" && (active as any)?._machine_translated === false ? false : false;
     return { name, text, machineTranslated };
   }, [category, id, lang]);
+}
+
+/**
+ * Returns a localized string for a curated content key, falling back to EN then to the
+ * provided fallback. Use for content like ARCHETYPES.wants, COMBOS.title, SYNERGIES.why
+ * that is duplicated across i18n JSON.
+ */
+export function useCuratedText(key: string, fallback: string): string {
+  const { lang } = useI18n();
+  return useMemo(() => {
+    const v = lookup(UI[lang], key) ?? lookup(UI.en, key);
+    return v ?? fallback;
+  }, [key, fallback, lang]);
+}
+
+/** Returns a localized string array (e.g. conditions/risks list) with EN + fallback chain. */
+export function useCuratedList(key: string, fallback: string[]): string[] {
+  const { lang } = useI18n();
+  return useMemo(() => {
+    const v = lookupRaw(UI[lang], key) ?? lookupRaw(UI.en, key);
+    if (Array.isArray(v) && v.every((x) => typeof x === "string")) return v as string[];
+    return fallback;
+  }, [key, fallback, lang]);
+}
+
+/** Non-hook curated string resolver. */
+export function getCuratedText(lang: Lang, key: string, fallback: string): string {
+  return lookup(UI[lang], key) ?? lookup(UI.en, key) ?? fallback;
+}
+
+/** Non-hook curated array resolver. */
+export function getCuratedList(lang: Lang, key: string, fallback: string[]): string[] {
+  const v = lookupRaw(UI[lang], key) ?? lookupRaw(UI.en, key);
+  if (Array.isArray(v) && v.every((x) => typeof x === "string")) return v as string[];
+  return fallback;
 }
 
 /** Non-hook resolver for use inside loops/utilities that already know the lang. */

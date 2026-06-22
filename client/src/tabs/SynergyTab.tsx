@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react";
 import { useApp } from "@/lib/appContext";
 import {
-  JOKER_MAP, synergiesFor, SYNERGY_KIND_ORDER, SYNERGY_KIND_LABELS, ENGINE_LABELS,
+  JOKER_MAP, synergiesFor, synergyKey, SYNERGY_KIND_ORDER, SYNERGY_KIND_LABELS, ENGINE_LABELS,
   SynergyKind,
 } from "@/lib/helpers";
 import { JokerCombobox } from "@/components/JokerCombobox";
 import { LName, LText } from "@/components/Localized";
-import { useT } from "@/lib/i18n";
+import { useT, useLabels, useCuratedText, useGameText } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const KIND_ACCENT: Record<SynergyKind, string> = {
@@ -18,9 +18,45 @@ const KIND_ACCENT: Record<SynergyKind, string> = {
   trap_unless_enabled: "border-l-destructive",
 };
 
+interface SynergyRowProps {
+  c: ReturnType<typeof synergiesFor>[number];
+  kind: SynergyKind;
+  selected: string;
+  onSelect: (id: string) => void;
+  engineLabel: string;
+}
+
+function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProps) {
+  const p = JOKER_MAP[c.partnerId];
+  const key = synergyKey(c.a, c.b);
+  const why = useCuratedText(`ui.synergy.${key}.why`, c.why);
+  const partnerName = useGameText("jokers", c.partnerId);
+  return (
+    <div
+      className={cn("casino-card border-l-2 p-3.5", KIND_ACCENT[kind])}
+      data-testid={`synergy-${selected}-${c.partnerId}`}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <button
+          onClick={() => onSelect(c.partnerId)}
+          className="font-display text-sm font-semibold text-accent hover:underline"
+          data-testid={`button-select-partner-${c.partnerId}`}
+        >
+          {partnerName.name ?? p?.name ?? c.partnerId}
+        </button>
+        <span className="rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          {engineLabel}
+        </span>
+      </div>
+      <p className="mt-2 text-xs leading-relaxed text-foreground/80">{why}</p>
+    </div>
+  );
+}
+
 export function SynergyTab() {
   const { openJokerDetail } = useApp();
   const t = useT();
+  const labels = useLabels();
   const [selected, setSelected] = useState<string>("blueprint");
 
   const grouped = useMemo(() => {
@@ -64,7 +100,7 @@ export function SynergyTab() {
           {SYNERGY_KIND_ORDER.map((k) => (
             <div key={k} className="flex items-center gap-2">
               <span className={cn("h-3 w-1 rounded-full border-l-2", KIND_ACCENT[k])} />
-              <span>{SYNERGY_KIND_LABELS[k]}</span>
+              <span>{labels.synergyKind[k] ?? SYNERGY_KIND_LABELS[k]}</span>
             </div>
           ))}
         </div>
@@ -91,33 +127,19 @@ export function SynergyTab() {
                   kind === "trap_unless_enabled" ? "text-[hsl(0_60%_70%)]" :
                   "text-foreground/90",
                 )}>
-                  {SYNERGY_KIND_LABELS[kind]}
+                  {labels.synergyKind[kind] ?? SYNERGY_KIND_LABELS[kind]}
                 </h3>
                 <div className="grid gap-2.5 md:grid-cols-2">
-                  {list.map((c) => {
-                    const p = JOKER_MAP[c.partnerId];
-                    return (
-                      <div
-                        key={c.partnerId}
-                        className={cn("casino-card border-l-2 p-3.5", KIND_ACCENT[kind])}
-                        data-testid={`synergy-${selected}-${c.partnerId}`}
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <button
-                            onClick={() => setSelected(c.partnerId)}
-                            className="font-display text-sm font-semibold text-accent hover:underline"
-                            data-testid={`button-select-partner-${c.partnerId}`}
-                          >
-                            {p?.name ?? c.partnerId}
-                          </button>
-                          <span className="rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                            {ENGINE_LABELS[c.engine]}
-                          </span>
-                        </div>
-                        <p className="mt-2 text-xs leading-relaxed text-foreground/80">{c.why}</p>
-                      </div>
-                    );
-                  })}
+                  {list.map((c) => (
+                    <SynergyRow
+                      key={c.partnerId}
+                      c={c}
+                      kind={kind}
+                      selected={selected}
+                      onSelect={setSelected}
+                      engineLabel={labels.engine[c.engine] ?? ENGINE_LABELS[c.engine]}
+                    />
+                  ))}
                 </div>
               </section>
             );

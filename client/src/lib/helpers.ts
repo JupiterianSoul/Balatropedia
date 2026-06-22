@@ -139,13 +139,18 @@ export function reliability(j: Joker): Level {
 }
 
 // ---- Synergy lookups ----
-export function synergiesFor(id: string): { partnerId: string; kind: SynergyKind; engine: Synergy["engine"]; why: string }[] {
-  const out: { partnerId: string; kind: SynergyKind; engine: Synergy["engine"]; why: string }[] = [];
+export function synergiesFor(id: string): { partnerId: string; kind: SynergyKind; engine: Synergy["engine"]; why: string; a: string; b: string }[] {
+  const out: { partnerId: string; kind: SynergyKind; engine: Synergy["engine"]; why: string; a: string; b: string }[] = [];
   for (const s of SYNERGIES) {
-    if (s.a === id) out.push({ partnerId: s.b, kind: s.kind, engine: s.engine, why: s.why });
-    else if (s.b === id) out.push({ partnerId: s.a, kind: s.kind, engine: s.engine, why: s.why });
+    if (s.a === id) out.push({ partnerId: s.b, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b });
+    else if (s.b === id) out.push({ partnerId: s.a, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b });
   }
   return out;
+}
+
+/** Stable canonical i18n key for a synergy pair (order-independent). */
+export function synergyKey(a: string, b: string): string {
+  return [a, b].sort().join("__");
 }
 
 // Find a "why" explaining an anti-synergy pair, if present in SYNERGIES.
@@ -187,82 +192,94 @@ export function groupedPartners(j: Joker): Record<PartnerCategory, Joker[]> {
 }
 
 // ---- Example use cases derived from stage / role / tags ----
-export function exampleUseCases(j: Joker): string[] {
-  const out: string[] = [];
-  if (j.stage.includes("early")) {
-    out.push(`Early-game pickup: a low-cost ${ROLE_LABELS[j.mainRole].toLowerCase()} piece to stabilize your score while you assemble a real engine.`);
-  }
-  if (j.mainRole === "payoff") {
-    out.push("Endgame multiplier engine when its enabling condition is reliably met every scored hand.");
-  }
-  if (j.tags.includes("pivot")) {
-    out.push("Pivot piece when your primary scaling axis bricks — slot it in to redirect the build.");
-  }
-  if (j.mainRole === "economy") {
-    out.push("Economy snowball: bank the extra income early, then reinvest it into your win condition.");
-  }
+// Rule-based variant: returns structured rule keys + ids so the UI can localize.
+export interface UseCaseRule {
+  rule: "early_pickup" | "endgame_payoff" | "pivot_piece" | "economy_snowball" | "late_commit" | "pairs_partners";
+  role?: Role;
+  partners?: number;
+}
+
+export function exampleUseCaseRules(j: Joker): UseCaseRule[] {
+  const out: UseCaseRule[] = [];
+  if (j.stage.includes("early")) out.push({ rule: "early_pickup", role: j.mainRole });
+  if (j.mainRole === "payoff") out.push({ rule: "endgame_payoff" });
+  if (j.tags.includes("pivot")) out.push({ rule: "pivot_piece" });
+  if (j.mainRole === "economy") out.push({ rule: "economy_snowball" });
   if (out.length === 0) {
-    if (j.stage.includes("late")) out.push("Late-game commitment: bring it online once the supporting pieces are in place.");
-    out.push(`Pairs naturally with ${j.partners.length} curated partners — see Best Partners below.`);
+    if (j.stage.includes("late")) out.push({ rule: "late_commit" });
+    out.push({ rule: "pairs_partners", partners: j.partners.length });
   }
   return out.slice(0, 3);
+}
+
+// EN-text variant kept for backwards compatibility.
+export function exampleUseCases(j: Joker): string[] {
+  return exampleUseCaseRules(j).map((r) => {
+    switch (r.rule) {
+      case "early_pickup":
+        return `Early-game pickup: a low-cost ${ROLE_LABELS[r.role!].toLowerCase()} piece to stabilize your score while you assemble a real engine.`;
+      case "endgame_payoff":
+        return "Endgame multiplier engine when its enabling condition is reliably met every scored hand.";
+      case "pivot_piece":
+        return "Pivot piece when your primary scaling axis bricks — slot it in to redirect the build.";
+      case "economy_snowball":
+        return "Economy snowball: bank the extra income early, then reinvest it into your win condition.";
+      case "late_commit":
+        return "Late-game commitment: bring it online once the supporting pieces are in place.";
+      case "pairs_partners":
+        return `Pairs naturally with ${r.partners} curated partners — see Best Partners below.`;
+    }
+  });
 }
 
 // ---- "Why play this?" rule-based reasoning ----
 export interface WhyBullet {
   text: string;
-  rule: string; // subtler caption: which rule produced this
+  rule: string;
 }
 
-export function whyPlayThis(j: Joker): WhyBullet[] {
-  const out: WhyBullet[] = [];
+export interface WhyRule {
+  rule: "core_role" | "best_partners" | "fits_archetypes" | "setup_risk" | "anti_warning";
+  role?: Role;
+  scaling?: Scaling;
+  partnerIds?: string[];
+  archetypeIds?: Archetype[];
+  setup?: Level;
+  risk?: Level;
+  antiIds?: string[];
+}
 
-  // Core role + scaling
-  out.push({
-    text: `Core role: ${ROLE_LABELS[j.mainRole]}. Scales by ${SCALING_LABELS[j.scaling].toLowerCase()}.`,
-    rule: "from mainRole + scaling",
-  });
-
-  // Best partners — top 3 from joker.partners mapped to names
-  const partnerNames = j.partners.slice(0, 3).map((id) => jokerName(id)).filter(Boolean);
-  if (partnerNames.length > 0) {
-    out.push({
-      text: `Best partners: ${partnerNames.join(", ")}.`,
-      rule: "top 3 from partners",
-    });
-  }
-
-  // Fits archetypes — ARCHETYPES whose coreJokers/scalers/enablers include this joker
-  const fits = ARCHETYPES.filter(
-    (a) =>
-      a.enablers.includes(j.id) ||
-      a.scalers.includes(j.id) ||
-      (j.archetypes as string[]).includes(a.id),
-  ).map((a) => a.name);
-  const uniqueFits = Array.from(new Set(fits));
-  if (uniqueFits.length > 0) {
-    out.push({
-      text: `Fits archetypes: ${uniqueFits.slice(0, 4).join(", ")}.`,
-      rule: "archetypes containing this joker",
-    });
-  }
-
-  // Setup + risk
-  out.push({
-    text: `Setup: ${LEVEL_LABELS[j.setupDifficulty]}. Risk: ${LEVEL_LABELS[j.risk]}.`,
-    rule: "from setupDifficulty + risk",
-  });
-
-  // Anti-synergies watch out
-  if (j.antiSynergies.length > 0) {
-    const antiNames = j.antiSynergies.map((id) => jokerName(id));
-    out.push({
-      text: `Watch out for: ${antiNames.join(", ")}.`,
-      rule: "from antiSynergies",
-    });
-  }
-
+export function whyPlayThisRules(j: Joker): WhyRule[] {
+  const out: WhyRule[] = [];
+  out.push({ rule: "core_role", role: j.mainRole, scaling: j.scaling });
+  const partnerIds = j.partners.slice(0, 3);
+  if (partnerIds.length > 0) out.push({ rule: "best_partners", partnerIds });
+  const fitIds = ARCHETYPES.filter(
+    (a) => a.enablers.includes(j.id) || a.scalers.includes(j.id) || (j.archetypes as string[]).includes(a.id),
+  ).map((a) => a.id);
+  const uniqueFits = Array.from(new Set(fitIds));
+  if (uniqueFits.length > 0) out.push({ rule: "fits_archetypes", archetypeIds: uniqueFits.slice(0, 4) });
+  out.push({ rule: "setup_risk", setup: j.setupDifficulty, risk: j.risk });
+  if (j.antiSynergies.length > 0) out.push({ rule: "anti_warning", antiIds: j.antiSynergies });
   return out;
+}
+
+// EN-text variant kept for backwards compatibility.
+export function whyPlayThis(j: Joker): WhyBullet[] {
+  return whyPlayThisRules(j).map((r) => {
+    switch (r.rule) {
+      case "core_role":
+        return { text: `Core role: ${ROLE_LABELS[r.role!]}. Scales by ${SCALING_LABELS[r.scaling!].toLowerCase()}.`, rule: "from mainRole + scaling" };
+      case "best_partners":
+        return { text: `Best partners: ${r.partnerIds!.map(jokerName).join(", ")}.`, rule: "top 3 from partners" };
+      case "fits_archetypes":
+        return { text: `Fits archetypes: ${r.archetypeIds!.map((id) => ARCHETYPE_LABELS[id] ?? id).join(", ")}.`, rule: "archetypes containing this joker" };
+      case "setup_risk":
+        return { text: `Setup: ${LEVEL_LABELS[r.setup!]}. Risk: ${LEVEL_LABELS[r.risk!]}.`, rule: "from setupDifficulty + risk" };
+      case "anti_warning":
+        return { text: `Watch out for: ${r.antiIds!.map(jokerName).join(", ")}.`, rule: "from antiSynergies" };
+    }
+  });
 }
 
 // ---- Run analysis (My Run tab) ----
@@ -303,7 +320,8 @@ export function impliedArchetypes(selection: string[]): ImpliedArchetype[] {
 export interface AntiWarning {
   a: string; // joker that lists b as anti
   b: string;
-  why: string;
+  why: string;          // EN fallback (already-curated SYNERGIES.why or generic EN sentence)
+  fromSynergy: boolean; // true if a matching SYNERGIES.why was found
 }
 
 // Any pair in the selection where one lists the other in antiSynergies.
@@ -319,8 +337,9 @@ export function antiSynergyWarnings(selection: string[]): AntiWarning[] {
         const key = [idA, idB].sort().join("|");
         if (seen.has(key)) continue;
         seen.add(key);
-        const why = antiSynergyReason(idA, idB) ?? `${jokerName(idA)} undercuts or competes with ${jokerName(idB)}.`;
-        out.push({ a: idA, b: idB, why });
+        const fromSynergy = antiSynergyReason(idA, idB);
+        const why = fromSynergy ?? `${jokerName(idA)} undercuts or competes with ${jokerName(idB)}.`;
+        out.push({ a: idA, b: idB, why, fromSynergy: fromSynergy != null });
       }
     }
   }

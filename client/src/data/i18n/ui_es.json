@@ -155,7 +155,22 @@
       "engine_enhancement": "mejora",
       "engine_suit_unification": "unificación de palo",
       "engine_scaling": "escalado",
-      "risk_prefix": "Riesgo"
+      "risk_prefix": "Riesgo",
+      "archetype_flush": "Color",
+      "archetype_straight": "Escalera",
+      "archetype_high_card": "Carta alta",
+      "archetype_pair": "Pareja",
+      "archetype_two_pair": "Doble pareja",
+      "archetype_three_of_a_kind": "Trío",
+      "archetype_four_of_a_kind": "Póker",
+      "archetype_face_card": "Figura",
+      "archetype_held_in_hand": "Retenida en mano",
+      "archetype_steel": "Acero",
+      "archetype_glass": "Cristal",
+      "archetype_discard": "Descarte",
+      "archetype_deck_growth": "Crecimiento del mazo",
+      "archetype_economy_snowball": "Bola de nieve económica",
+      "archetype_retrigger_engine": "Motor de reactivación"
     },
     "filters": {
       "rarity": "Rareza",
@@ -263,7 +278,8 @@
       "decks_diff_high": "Alta",
       "vouchers_subtitle": "16 pares de cupones. Comprar un cupón de nivel 1 desbloquea su mejora de nivel 2 en una tienda posterior.",
       "vouchers_tier_label": "Nivel {{tier}}",
-      "vouchers_no_upgrade": "Sin mejora de nivel 2"
+      "vouchers_no_upgrade": "Sin mejora de nivel 2",
+      "myrun_anti_generic": "{{a}} debilita o entra en conflicto con {{b}}."
     },
     "sheet": {
       "why_play": "¿Por qué jugarlo?",
@@ -288,6 +304,26 @@
       "it_triggers_on": "Se activa con",
       "and_provides": "y aporta valor de",
       "value_to_build": "a una build."
+    },
+    "usecase": {
+      "early_pickup": "Pillada temprana: una pieza {{role}} barata para estabilizar tu puntuación mientras montas un motor de verdad.",
+      "endgame_payoff": "Motor de multiplicador para el endgame cuando su condición activadora se cumple de forma fiable en cada mano jugada.",
+      "pivot_piece": "Pieza pivote cuando tu eje principal de escalado se cae — métela para redirigir la build.",
+      "economy_snowball": "Bola de nieve económica: embolsa los ingresos extra pronto y reinviértelos en tu condición de victoria.",
+      "late_commit": "Compromiso de partida tardía: actívala cuando las piezas de apoyo ya estén en su sitio.",
+      "pairs_partners": "Combina de forma natural con {{partners}} compañeros recomendados — mira Mejores compañeros abajo."
+    },
+    "why": {
+      "core_role": "Rol principal: {{role}}. Escala mediante {{scaling}}.",
+      "core_role_rule": "desde rol principal + escalado",
+      "best_partners": "Mejores compañeros: {{partners}}.",
+      "best_partners_rule": "top 3 de partners",
+      "fits_archetypes": "Encaja en arquetipos: {{archetypes}}.",
+      "fits_archetypes_rule": "arquetipos que contienen este Comodín",
+      "setup_risk": "Montaje: {{setup}}. Riesgo: {{risk}}.",
+      "setup_risk_rule": "desde dificultad de montaje + riesgo",
+      "anti_warning": "Cuidado con: {{anti}}.",
+      "anti_warning_rule": "desde antiSynergies"
     },
     "favStar": {
       "remove": "Quitar de favoritos",
@@ -420,6 +456,769 @@
       "sign_in": "Iniciar sesión",
       "sign_out": "Cerrar sesión",
       "signed_out": "Sesión cerrada"
+    },
+    "archetype": {
+      "flush": {
+        "wants": "Consistencia de color a cinco cartas del mismo palo en cada mano. Sube de nivel la mano Color y acumula recompensas de palo.",
+        "oftenLacks": "XMult bruto sin El Ídolo. Añade Cavendish o Blueprint+El Ídolo para desbloquear el techo de fin de partida."
+      },
+      "straight": {
+        "wants": "Consistencia de escalera. Búsqueda de manos mediante el descarte más recompensas que abarcan varios rangos.",
+        "oftenLacks": "XMult de alto nivel. Añade Cavendish o Driver's License una vez que haya mejoras en el mazo."
+      },
+      "high_card": {
+        "wants": "Puntuación en una sola carta con un bono plano masivo y X mult en una o dos cartas de recompensa.",
+        "oftenLacks": "Consistencia. Añade piezas de tamaño de mano o reactivación para que la única carta puntuada pague varias veces."
+      },
+      "pair": {
+        "wants": "Recompensas fiables en dos cartas con sinergias de rango o de figuras.",
+        "oftenLacks": "Niveles de mano. Usa los Planetas agresivamente o pivota hacia la Doble pareja para escalar la salida de Fichas."
+      },
+      "two_pair": {
+        "wants": "Puntuación en cuatro cartas. Combina bien con recompensas específicas de rango y descartes para ensamblar ambas parejas.",
+        "oftenLacks": "Escalado de Mult. Inserta una recompensa multiplicativa como El Ídolo o Cavendish."
+      },
+      "three_of_a_kind": {
+        "wants": "Tres rangos iguales por mano. Fuerte con multiplicadores específicos de rango y reactivaciones.",
+        "oftenLacks": "Velocidad de configuración. Suele ser lento en mantener la consistencia sin duplicación estilo DNA."
+      },
+      "four_of_a_kind": {
+        "wants": "Mano de gran recompensa con densidad de rango. Se combina mejor con Comodines que apuntan a un rango específico.",
+        "oftenLacks": "Fiabilidad — difícil de ensamblar de forma natural. DNA + tamaño de mano lo hace sostenible."
+      },
+      "face_card": {
+        "wants": "Densidad de figuras que sinergiza con Comodines de recompensa y reactivación.",
+        "oftenLacks": "Fichas. Añade Stone Joker o un Comodín +Fichas para que el mult de figuras tenga algo que multiplicar."
+      },
+      "held_in_hand": {
+        "wants": "Las cartas retenidas durante la puntuación activan bonos de retenida en mano. El tamaño de mano es el recurso clave.",
+        "oftenLacks": "Tamaño de mano. Compra vales de tamaño de mano agresivamente y evita las penalizaciones de tamaño de mano."
+      },
+      "steel": {
+        "wants": "Muchas cartas de Acero en el mazo para que X1.5 por carta de Acero retenida en mano se acumule.",
+        "oftenLacks": "Acceso a Tarots. Sin Tarots consistentes, el número de cartas de Acero se estanca demasiado bajo."
+      },
+      "glass": {
+        "wants": "Rompe las cartas de Cristal para hacer crecer permanentemente Glass Joker. Escalado de alta varianza.",
+        "oftenLacks": "Estabilidad defensiva. Usa piezas de consistencia para evitar que una carta puntuada rota arruine una ronda."
+      },
+      "discard": {
+        "wants": "Más descartes para encontrar manos y monetizar los descartes como economía.",
+        "oftenLacks": "Recompensa ofensiva. El descarte puro es economía — combínalo con un motor XMult para realmente eliminar las ciegas."
+      },
+      "deck_growth": {
+        "wants": "Añadir cartas permanentemente (a menudo mejoradas) para hacer crecer los Comodines de escalado.",
+        "oftenLacks": "Tempo. Las primeras antes se sienten lentas; comprométete solo cuando la economía soporte comprar cada sobre."
+      },
+      "economy_snowball": {
+        "wants": "Maximizar los ingresos para inundar la tienda con Comodines y mejoras.",
+        "oftenLacks": "Recompensa ofensiva. Inserta un Comodín XMult premium (Cavendish, Triboulet) una vez que el interés esté al máximo."
+      },
+      "retrigger_engine": {
+        "wants": "Varias fuentes de reactivación apiladas para que cada carta puntuada dispare 2 o 3 veces.",
+        "oftenLacks": "Recompensa base. Las reactivaciones multiplican los efectos existentes — sin una recompensa real, estás triplicando cero."
+      }
+    },
+    "combo": {
+      "face_card_engine": {
+        "title": "Motor de mult de figuras",
+        "conditions": [
+          "Densidad de figuras del 30%+ en el mazo",
+          "Tarots usados para convertir cartas bajas en figuras"
+        ],
+        "risks": [
+          "Lento en arrancar antes de que las tres piezas centrales estén en su lugar",
+          "Se bloquea si Triboulet nunca aparece"
+        ],
+        "why": "Pareidolia convierte cada carta puntuada en figura. Sock & Buskin la reactiva. Triboulet aplica X2 por cada activación de figura. El resultado es un escalado multiplicativo que crece linealmente con el tamaño de mano.",
+        "pivotOut": "Si Triboulet no ha aparecido antes de la ante 5, pivota a una estructura mult plano + XMult (Cavendish, Blueprint) y trata las piezas de figuras como relleno."
+      },
+      "held_in_hand_steel": {
+        "title": "Baron Acero Retenido en mano",
+        "conditions": [
+          "Bonos de tamaño de mano (evitar Stuntman)",
+          "Tarots de mejora de Acero accesibles"
+        ],
+        "risks": [
+          "Escalado lento sin acceso a Tarots",
+          "Steel Joker falla si la tienda niega las mejoras"
+        ],
+        "why": "Mime dobla el X1.5 por Rey retenido de Baron y el X1.5 de las cartas de Acero — cada Rey y carta de Acero retenidos pagan dos veces durante la fase retenida en mano, apilándose multiplicativamente.",
+        "pivotOut": "Abandona Steel Joker si las mejoras nunca aparecen; mantén Baron + Mime + Raised Fist como línea puramente retenida en mano."
+      },
+      "retrigger_idol": {
+        "title": "Ráfaga de reactivación El Ídolo",
+        "conditions": [
+          "Elige un objetivo El Ídolo que puedas encontrar (figura + palo común)",
+          "Juega la carta elegida en primer lugar al puntuar"
+        ],
+        "risks": [
+          "El objetivo de El Ídolo puede no ser una figura — elige un Rey o Reina del mismo palo",
+          "Dependencia de una sola carta"
+        ],
+        "why": "Hanging Chad activa la carta delantera tres veces. Si la delantera es el objetivo de El Ídolo, son tres X2 — y Sock reactiva de nuevo si es figura. Una sola carta lleva toda la mano.",
+        "pivotOut": "Si no puedes encontrar un objetivo El Ídolo de figura, cambia a una estructura mult plano construida en torno a Fibonacci."
+      },
+      "flush_mono": {
+        "title": "Apilamiento Color mono-palo",
+        "conditions": [
+          "Dos palos fusionados en uno mediante Smeared",
+          "Mano Color subida de nivel 3+"
+        ],
+        "risks": [
+          "Sin Smeared, los conflictos de palo limitan la fiabilidad del Color",
+          "El rango objetivo de El Ídolo debe solaparse con el mazo"
+        ],
+        "why": "Smeared reduce a la mitad tu número efectivo de palos. Greedy y Wrathful ganan +4 Mult por carta del palo fusionado, y El Ídolo dispara en cada coincidencia. Los Colores se convierten en volcados de multiplicadores de cinco cartas.",
+        "pivotOut": "Si Smeared nunca aparece, acepta Colores inconsistentes y pivota hacia el escalado Carta alta vía Fibonacci."
+      },
+      "straight_train": {
+        "title": "Escalera por descartes",
+        "conditions": [
+          "Mano Escalera subida de nivel",
+          "Descartes disponibles para encontrar la escalera"
+        ],
+        "risks": [
+          "Green Joker entra en conflicto con la dependencia del descarte",
+          "Fibonacci cubre cartas bajas/medias pero no 6, 7, J, Q, K"
+        ],
+        "why": "Drunkard da descartes extra para ensamblar escaleras. Fibonacci paga +8 Mult por As/2/3/5/8 puntuado. Hack dobla los activadores de 2/3/4/5, por lo que la recompensa de Fibonacci dispara dos veces en los rangos que se solapan.",
+        "pivotOut": "Si las escaleras dejan de aparecer, redirige Fibonacci hacia una línea Carta alta o Doble pareja donde su cobertura de rango siga siendo relevante."
+      },
+      "discard_economy": {
+        "title": "Bola de nieve de ingresos por descarte",
+        "conditions": [
+          "Elige un rango Mail-in Rebate que robes a menudo",
+          "Evita Green Joker"
+        ],
+        "risks": [
+          "Economía pura; necesita una estructura de daño a su lado",
+          "Las ciegas Jefa que bloquean los descartes destruyen esta línea"
+        ],
+        "why": "Tres fuentes de ingresos independientes disparan cada ronda: interés de fin de ronda, reembolsos basados en descarte y bonos de descarte de figuras. Se compone mediante el techo de interés en poder de compra en tienda.",
+        "pivotOut": "Cuando el interés esté al máximo y la tienda saturada, reemplaza las piezas económicas por recompensas XMult de fin de partida."
+      },
+      "scaling_snowball": {
+        "title": "Crecimiento de mazo Hologram",
+        "conditions": [
+          "Abre cada sobre Estándar",
+          "Juega una sola carta en la primera mano para DNA"
+        ],
+        "risks": [
+          "Comienzo lento — necesita muchas rondas para componerse",
+          "Se bloquea si los sobres Estándar nunca aparecen"
+        ],
+        "why": "Cada carta añadida al mazo alimenta Hologram. DNA duplica una carta cada ronda. Constellation escala con el uso de Planetas. Los tres acumulan XMult discretamente sin esfuerzo por mano.",
+        "pivotOut": "Si el flujo de sobres es pobre, vende Hologram y consolida en una estructura de recompensa (Cavendish + Blueprint)."
+      },
+      "retrigger_engine_general": {
+        "title": "Motor de reactivación genérico",
+        "conditions": [
+          "Algún Comodín de recompensa plano o X para amplificar",
+          "Mezcla de fases puntuadas y retenidas en mano"
+        ],
+        "risks": [
+          "Sin una recompensa real, las reactivaciones triplican cero",
+          "La reducción de tamaño de mano de Stuntman perjudica a Mime"
+        ],
+        "why": "Tres fuentes de reactivación cubren las tres fases — figuras puntuadas (Sock), carta puntuada delantera (Chad), retenida en mano (Mime). Inserta cualquier Comodín de recompensa y disparará 2 a 3× por ronda.",
+        "pivotOut": "Si ningún Comodín de recompensa aparece antes de la ante 6, abandona Mime y elige un Comodín XMult estático como Cavendish de red de seguridad."
+      },
+      "glass_loop": {
+        "title": "Bucle de rotura Glass Joker",
+        "conditions": [
+          "Mejoras de Cristal aplicadas mediante Tarots",
+          "Mantén una estructura defensiva para sobrevivir a la varianza"
+        ],
+        "risks": [
+          "Las cartas de Cristal se pierden permanentemente cuando se rompen",
+          "Riesgo de bloquear cartas de puntuación críticas"
+        ],
+        "why": "Hack reactiva las cartas bajas dos veces, doblando las posibilidades de romper Cristal por ronda de puntuación. Cada rotura otorga +X0.75 Mult permanente a Glass Joker. A largo plazo, esta línea supera a la mayoría de competidores XMult.",
+        "pivotOut": "Si los fragmentos de Cristal se agotan o la puntuación se vuelve demasiado poco fiable, pivota hacia una línea de crecimiento de mazo donde la atribución del mazo no es una desventaja."
+      },
+      "high_card_fib": {
+        "title": "Carta alta Fibonacci",
+        "conditions": [
+          "Evita figuras al puntuar",
+          "Mano Carta alta subida de nivel"
+        ],
+        "risks": [
+          "Ride the Bus se reinicia con cualquier figura",
+          "Tiene un techo más bajo que los motores de figuras al final"
+        ],
+        "why": "Los tres Comodines recompensan mantenerse alejado de las figuras. Fibonacci paga mult plano en rangos bajos comunes, Green Joker crece por mano, Ride the Bus crece por mano sin figuras. Triple escalado gracias a una disciplina limpia.",
+        "pivotOut": "Si necesitas figuras accidentalmente para eliminar una ciega, abandona Ride the Bus y acepta la pérdida de consistencia."
+      },
+      "economy_planet": {
+        "title": "Economía de Planetas",
+        "conditions": [
+          "Dinero disponible para comprar cada Planeta",
+          "El escalado de nivel de mano importa más que el Mult por carta"
+        ],
+        "risks": [
+          "Ninguna recompensa ofensiva por sí sola",
+          "Requiere suerte en tienda para la densidad de Planetas"
+        ],
+        "why": "Planet Merchant dobla las tasas de Planetas. Satellite paga 1$ por Planeta único usado. Constellation gana X0.1 por Planeta usado. Un solo eje te paga, sube de nivel tus manos y escala XMult — tres retornos por cada Planeta comprado.",
+        "pivotOut": "Una vez que Constellation sea suficientemente grande para llevar las rondas solo, vende Satellite y Planet Merchant por Comodines premium de fin de partida."
+      },
+      "stone_chip_wall": {
+        "title": "Muro de Fichas de Piedra",
+        "conditions": [
+          "Convierte cartas basura en Piedras mediante Tarots",
+          "Corrige el tamaño de mano si se combina con retenida en mano"
+        ],
+        "risks": [
+          "Stuntman + Mime/Baron es una trampa",
+          "Las Fichas solas son insuficientes en antes altas"
+        ],
+        "why": "Stone Joker convierte cada carta de Piedra en +25 Fichas por mano puntuada. Stuntman da +250 Fichas de suelo. Los totales de Fichas combinados alcanzan cómodamente los requisitos de ciega mientras cualquier Comodín XMult lleva el lado del mult.",
+        "pivotOut": "Vende Stuntman en el momento en que te comprometas con una construcción retenida en mano; mantén Stone Joker como muro de Fichas."
+      },
+      "economy_pure": {
+        "title": "Bola de nieve de intereses",
+        "conditions": [
+          "Mantén una reserva de 30$+ antes de cada ciega",
+          "Compra cada 9 que veas en los sobres Estándar para hacer crecer Cloud 9",
+          "Derrota las ciegas Jefa consistentemente para aumentar el pago de Rocket",
+          "Mantén el techo de interés mediante To the Moon (+1$ por cada 5$)"
+        ],
+        "risks": [
+          "La economía pura no genera daño hasta que se inserte un Comodín de recompensa",
+          "Bootstraps/Bull solo tienen valor si el dinero permanece sin gastar",
+          "Las ciegas Jefa que fuerzan el gasto matan el tempo de escalada de Rocket"
+        ],
+        "why": "Cloud 9 paga según la densidad de 9 en el mazo, Rocket crece por cada ciega Jefa derrotada, y To the Moon rompe el techo normal de interés. Bull convierte el dinero retenido en Fichas cada mano mientras Bootstraps maneja el Mult plano desde la misma reserva. Las cinco fuentes de ingresos son pasivas y se componen — en la ante 6 la construcción genera 20 a 30$ por ronda en ingresos pasivos mientras Bull y Bootstraps cubren conjuntamente ambos ejes de puntuación desde el mismo monedero.",
+        "pivotOut": "Una vez que el interés esté al máximo y la tienda saturada, vende Cloud 9 o Rocket por un Comodín XMult premium de fin de partida como Cavendish o Triboulet."
+      },
+      "bootstraps_broke": {
+        "title": "Bootstraps sin blanca",
+        "conditions": [
+          "Gasta hasta 4$ antes de cada mano para activar la generación de Tarot de Vagabond",
+          "Mantén el número de descartes en 0 para el +15 Mult de Mystic Summit",
+          "Deja que el bono de Fichas de Banner de los descartes no usados se apile con Mystic Summit"
+        ],
+        "risks": [
+          "Requiere mantenerse deliberadamente sin dinero, limitando las opciones de tienda",
+          "La generación de Tarot de Vagabond solo dispara cuando tienes ≤4$ — mal gestionar el dinero la bloquea",
+          "Mystic Summit y los Comodines de economía de descarte son mutuamente excluyentes"
+        ],
+        "why": "Bootstraps da +2 Mult por cada 5$ que tengas, pero Vagabond te empuja hacia la pobreza — la tensión se resuelve mediante un ciclo: gasta hasta ≤4$ para activar el Tarot gratuito de Vagabond, luego usa ese Tarot para mejoras o valor de Planeta antes del fin de ronda. Mystic Summit recompensa llegar a 0 descartes. Banner recompensa retener descartes. Elige un solo eje de descarte por partida — las líneas de cero descarte apilan simultáneamente Mystic Summit y el bono de descarte-retenido de Banner.",
+        "pivotOut": "Si Vagabond nunca aparece, reemplázalo con Satellite o Golden Joker y ejecuta una estructura económica estándar con Bootstraps y Bull."
+      },
+      "hand_only_discipline": {
+        "title": "Puño de hierro (sin descarte)",
+        "conditions": [
+          "Nunca uses descartes — Burglar los elimina, garantizando que Mystic Summit siempre dispare",
+          "Ramen empieza en X2 y nunca decae cuando los descartes son 0",
+          "Banner da +30 Fichas por descarte restante — los +3 manos de Burglar mantiene el pool de Banner lleno"
+        ],
+        "risks": [
+          "Sin acceso al descarte, la consistencia de mano depende enteramente de la suerte de robo y el tamaño de mano",
+          "El −1 mano por ciega de Burglar entra en conflicto con las estrategias de muchas manos",
+          "El suelo X2 de Ramen es potente al principio pero no escala tarde — se necesita otra pieza XMult"
+        ],
+        "why": "Burglar convierte los descartes en 3 manos extra por ciega, garantizando que siempre tengas jugadas disponibles sin descartar jamás. El +15 Mult de Mystic Summit dispara en cada mano ya que los descartes siempre son 0. Ramen nunca decae ya que no se realizan descartes. Banner recolecta Fichas del equivalente a 3-descartes que el juego acredita al inicio de la ciega. Green Joker acumula +1 Mult por mano jugada y nunca pierde valor. En conjunto la construcción puntúa mediante un bucle limpio de muchas manos sin conflictos de economía de descarte.",
+        "pivotOut": "Si Ramen cae por debajo de X1.5 por descartes accidentales, véndelo e inserta Cavendish o The Trio para un suelo XMult estático."
+      },
+      "joker_stencil_empty": {
+        "title": "Construcción Stencil ajustada",
+        "conditions": [
+          "Mantén el total de Comodines en 3 (Stencil + 2 más) para un mínimo X2 de Stencil",
+          "Los Comodines de alto valor de venta (Egg, acumulación de Gift Card) inflan Swashbuckler",
+          "Brainstorm copia el Comodín más a la izquierda para duplicación XMult gratuita"
+        ],
+        "risks": [
+          "Stencil recompensa menos Comodines — cada ranura adicional comprada reduce el XMult",
+          "Madness destruye Comodines aleatoriamente, pudiendo golpear al propio Stencil",
+          "El Mult de Swashbuckler depende del valor de venta de los Comodines retenidos — venderlos por dinero baja el Mult"
+        ],
+        "why": "Joker Stencil da X1 Mult por ranura de Comodín vacía incluida él mismo — una configuración de 3 Comodines con 2 ranuras vacías da X2. Swashbuckler convierte el valor de venta de los dos Comodines retenidos (Stencil + Brainstorm) en Mult plano. Brainstorm copia Stencil para un segundo X2, produciendo X4 total desde un equipo ajustado de 3 Comodines. El creciente valor de venta de Egg infla Swashbuckler pasivamente incluso sin ser usado.",
+        "pivotOut": "Una vez encontrado un segundo Comodín premium (Cavendish, Triboulet), añádelo y acepta el decaimiento de Stencil — la ganancia neta de puntuación del nuevo Comodín supera el XMult perdido."
+      },
+      "pair_specialist": {
+        "title": "Motor de recompensa Pareja",
+        "conditions": [
+          "Llena el mazo con alta densidad de figuras (Reyes, Reinas) para el solapamiento Photograph + The Duo",
+          "Juega la figura primero como primera carta puntuada para el triple proc Hanging Chad + Photograph",
+          "DNA puede duplicar el rango objetivo de la Pareja para manos Pareja casi garantizadas"
+        ],
+        "risks": [
+          "Photograph solo dispara una vez por mano en la primera figura — ordena la mano con cuidado",
+          "Sly y Jolly son solo Mult/Fichas planas; sin el X2 de The Duo el techo es bajo",
+          "Spare Trousers requiere Doble pareja, no Pareja simple — funciona sobre un tipo de mano distinto"
+        ],
+        "why": "The Duo suministra X2 en cualquier mano que contenga una Pareja — casi siempre activo. Jolly Joker añade +8 Mult y Sly Joker añade +50 Fichas en la misma condición de activación. Photograph aplica X2 a la primera figura, así que un lead Rey con Hanging Chad da tres procs X2 desde una sola carta antes de que The Duo dispare. The Duo + Photograph solos producen X4 desde una mano de Pareja con un lead de figura.",
+        "pivotOut": "Si la densidad de figuras es insuficiente para Photograph, reemplázalo con The Tribe y transiciona a un híbrido Color-Pareja usando Four Fingers."
+      },
+      "three_of_a_kind_specialist": {
+        "title": "Motor The Trio",
+        "conditions": [
+          "Usa DNA para apilar un único rango a 8+ copias para un Trío garantizado",
+          "El rango objetivo de El Ídolo debe solaparse con el rango duplicado para X2 por carta coincidente",
+          "Sube de nivel la mano Trío mediante cartas Planeta — las Fichas base altas hacen el +100 de Wily decisivo"
+        ],
+        "risks": [
+          "Sin DNA, el Trío es inconsistente en un mazo de 52 cartas",
+          "El Full satisface The Trio pero diluye la estrategia de objetivo de DNA",
+          "El rango+palo de El Ídolo rota — no siempre se alineará con el rango triplicado"
+        ],
+        "why": "The Trio entrega X3 en Trío y Full — disparando junto al +12 Mult de Zany Joker y el +100 Fichas de Wily Joker crea un paquete de puntuación completo en tres ejes desde un solo tipo de mano. DNA garantiza que el rango elegido inunde el mazo, haciendo el Trío trivialmente consistente. El Ídolo apilado encima convierte cada carta coincidente en procs X2 adicionales, y Blueprint junto a The Trio dobla el X3 a X9 cuando se posiciona correctamente.",
+        "pivotOut": "Si DNA no está disponible, reemplaza Wily Joker con Hanging Chad y pivota hacia una construcción Pareja de figuras donde el requisito de solapamiento de rango es menos rígido."
+      },
+      "straight_flush_endgame": {
+        "title": "Escalera de color final de partida",
+        "conditions": [
+          "Four Fingers + Shortcut reduce la Escalera de color a cualquier 4 cartas aproximadamente secuenciales",
+          "Smeared Joker colapsa el requisito de palo a 2 palos efectivos",
+          "Séance genera una carta Espectral por cada Escalera de color — úsala para copias Wraith/Ankh",
+          "Sube de nivel la mano Escalera de color mediante sobres Celestiales"
+        ],
+        "risks": [
+          "Requiere tres Comodines habilitadores específicos antes de que el motor esté activo",
+          "Séance genera Espectrales aleatorios — puede que no siempre toque Wraith o cartas útiles",
+          "The Order y The Tribe ambos requieren sus tipos de mano respectivos, pero la Escalera de color satisface a ambos"
+        ],
+        "why": "Four Fingers + Shortcut convierte la Escalera de color de una mano raramente afortunada en una jugada de 4 cartas casi garantizada. Smeared Joker dobla la disponibilidad de cartas al fusionar palos. Séance convierte cada Escalera de color en un Espectral gratuito — a lo largo de una partida completa esto genera 5 a 10+ Espectrales potentes. The Order (X3) y The Tribe (X2) disparan simultáneamente en la Escalera de color para un XMult base gratuito de X6 antes de que ningún otro Comodín contribuya.",
+        "pivotOut": "Si Séance nunca aparece, usa el trío habilitador (Four Fingers + Shortcut + Smeared) para ejecutar una construcción Color pura con The Tribe y Ancient Joker en su lugar."
+      },
+      "steel_marble_chip_wall": {
+        "title": "Muro de Acero-Marble",
+        "conditions": [
+          "Marble Joker añade cartas de Piedra pasivamente cada ciega — apunta a 10+ Piedras para Stone Joker",
+          "Cartas de Acero aplicadas mediante Tarots a cartas retenidas — Steel Joker las cuenta todas",
+          "Stuntman proporciona +250 Fichas de suelo; evita combinaciones Mime/Baron (conflicto de tamaño de mano)",
+          "Driver's License desbloquea X3 cuando hay 16+ cartas mejoradas en el mazo"
+        ],
+        "risks": [
+          "Stuntman reduce el tamaño de mano en 2, entrando en conflicto con piezas de retenida en mano como Mime",
+          "Marble Joker hace crecer el tamaño del mazo, aumentando la varianza de robo",
+          "Driver's License requiere 16 cartas mejoradas — lento de activar sin densidad de Tarots"
+        ],
+        "why": "Marble Joker construye pasivamente el recuento de Piedras hacia el escalado de Fichas de Stone Joker, mientras las cartas de Acero añadidas mediante Tarots hacen crecer el XMult de Steel Joker. Stuntman añade un suelo de +250 Fichas. Driver's License se activa cuando las mejoras de Piedra y Acero alcanzan el umbral de 16 cartas. La construcción no necesita condiciones por mano — acumula Fichas y XMult pasivamente a través de las ciegas mientras los Tarots convierten el mazo.",
+        "pivotOut": "Si el acceso a Tarots es pobre y el umbral de Driver's License es inalcanzable, vende Stuntman y céntrate puramente en Stone Joker + Marble Joker + Blueprint para una línea dominante en Fichas pero más simple."
+      },
+      "sixth_sense_spectral_loop": {
+        "title": "Bucle de economía Espectral",
+        "conditions": [
+          "Empieza cada ronda con una sola jugada de 6 para la generación Espectral de Sixth Sense",
+          "Cartomancer crea un Tarot al inicio de cada ciega — mantén una ranura de consumible libre",
+          "Perkeo duplica un consumible en cada tienda — guarda Tarots/Planetas entre visitas a la tienda",
+          "Certificate añade una carta sellada cada ronda — el sello Rojo reactiva, el sello Dorado gana dinero"
+        ],
+        "risks": [
+          "Requiere una gestión ajustada de las ranuras de consumibles — máximo 2 ranuras disponibles",
+          "Sixth Sense necesita un 6 disponible en mano como primera jugada cada ronda",
+          "El Mult de Fortune Teller escala solo con Tarots usados, no con Espectrales"
+        ],
+        "why": "Sixth Sense genera un Espectral por ronda destruyendo un 6, afinando el mazo simultáneamente. Cartomancer añade un Tarot en cada entrada de ciega. Perkeo duplica un consumible aleatorio al final de la tienda, convirtiendo un Tarot o Planeta en dos. Certificate proporciona una carta sellada gratuita cada ronda. A lo largo de una partida, esto genera 20+ consumibles — suficiente para mejorar completamente el mazo, maximizar el Mult de Fortune Teller y usar Planetas repetidamente para alimentar Constellation.",
+        "pivotOut": "Si Sixth Sense no está disponible, reemplázalo con Hallucination (50% de Tarot en cada sobre abierto) y ejecuta una línea triple-Tarot Cartomancer + Perkeo + Fortune Teller."
+      },
+      "wee_joker_scaling": {
+        "title": "Motor de Fichas Wee Joker",
+        "conditions": [
+          "Maximiza los 2 en el mazo — la duplicación DNA de 2s es ideal",
+          "Hack reactiva cada 2 jugado, doblando el crecimiento de Wee Joker a +16 Fichas por 2",
+          "La ventana activa de Seltzer dobla todos los activadores de cartas durante 10 manos — maximiza los 2 durante Seltzer",
+          "Blueprint copia Wee Joker, doblando la velocidad de acumulación de Fichas"
+        ],
+        "risks": [
+          "Wee Joker es solo escalado de Fichas — necesita una fuente XMult para convertir las grandes Fichas en daño",
+          "Seltzer tiene tiempo limitado (10 manos); planifica la adquisición cerca de las ciegas Jefa para valor máximo",
+          "El requisito de jugada única de DNA entra en conflicto con las manos de puntuación — planifica la ronda de duplicación con cuidado"
+        ],
+        "why": "Cada 2 jugado añade permanentemente +8 Fichas a Wee Joker. Hack reactiva cada 2 una vez extra, haciendo que cada 2 añada +16 por ronda. Blueprint copia Wee Joker, doblando la tasa de acumulación a +32 por 2 por mano. La ventana de 10 manos de Seltzer reactiva cada carta incluyendo los 2, comprimiendo meses de crecimiento en una corta ráfaga. Con 4+ 2s en una mano bajo Seltzer + Hack + Blueprint, Wee Joker puede ganar cientos de Fichas en una sola ronda.",
+        "pivotOut": "Una vez que la base de Fichas de Wee Joker sea suficientemente grande para llevar las ciegas solo en Fichas, vende Seltzer y reemplázalo con Stone Joker o Stuntman para solidificar el fundamento de Fichas."
+      },
+      "madness_sacrifice": {
+        "title": "Motor de Sacrificio",
+        "conditions": [
+          "Riff-Raff genera 2 Comodines Comunes cada ciega — llenan el pool de sacrificio aleatorio de Madness",
+          "Ceremonial Dagger posicionado a la izquierda de un Común de Riff-Raff se alimenta de esos Comunes por Mult de doble valor de venta",
+          "Mantén el total de Comodines bajo (3 a 4) para que Madness sacrifique Comunes de Riff-Raff y no los motores",
+          "Campfire crece X0.25 por Comodín vendido — combina con ventas de Comodines pre-jefa para una ráfaga"
+        ],
+        "risks": [
+          "El sacrificio de Madness es aleatorio — Ceremonial Dagger, Blueprint o el propio Madness podría ser objetivo",
+          "Los Comunes de Riff-Raff necesitan una ranura de Comodín libre para aparecer; el consumo de Madness crea esta ranura naturalmente",
+          "Campfire se reinicia al derrotar la ciega Jefa — el timing del pico de venta pre-jefa es esencial"
+        ],
+        "why": "Riff-Raff inunda el roster de Comodines con Comunes gratuitos cada ciega. Madness consume un Comodín aleatorio por una ganancia de XMult de X0.5 — los Comunes de Riff-Raff sirven como combustible desechable, absorbiendo la destrucción aleatoria de Madness. Ceremonial Dagger sacrifica el Común de Riff-Raff a su derecha por Mult plano de doble valor de venta cada ciega. Juntos los tres forman un bucle de sacrificio auto-renovable: Riff-Raff crea el combustible, Ceremonial Dagger lo quema por Mult, Madness convierte las muertes aleatorias en pilas de XMult.",
+        "pivotOut": "Si Madness destruye un Comodín motor clave dos veces, vende Madness y ejecuta Ceremonial Dagger + Riff-Raff solos como una línea de escalado Mult plano estable."
+      },
+      "ancient_joker_suit_rotation": {
+        "title": "Rotación de palo Ancient",
+        "conditions": [
+          "Smeared Joker reduce el palo rotatorio de Ancient de 1-de-4 a 1-de-2 de cobertura",
+          "Four Fingers reduce el Color a 4 cartas, asegurando que las cartas puntuadas coincidan con el palo activo de Ancient más a menudo",
+          "El objetivo rotatorio de El Ídolo ocasionalmente se alinea con el palo de Ancient para X1.5 × X2 = X3 por carta",
+          "Bloodstone añade X1.5 probabilístico en cartas de Corazón — combina con la fusión Corazón-Diamante de Smeared"
+        ],
+        "risks": [
+          "El palo de Ancient Joker rota cada ronda — las rondas donde tu mazo va contra el palo activo pierden valor",
+          "El alineamiento de El Ídolo con Ancient es ocasional, no garantizado",
+          "Smeared entra en conflicto con Flower Pot (que necesita los cuatro palos) — no se puede ejecutar ambos"
+        ],
+        "why": "Ancient Joker aplica X1.5 por carta puntuada del palo activo, pero la rotación penaliza los mazos de un solo palo. Smeared Joker colapsa cuatro palos a dos, garantizando que aproximadamente el 50% de las cartas puntuadas activen X1.5 en cualquier ronda. Four Fingers aumenta el número promedio de cartas puntuadas por mano en construcciones Color, multiplicando directamente la salida de Ancient. Cuando el objetivo rotatorio de El Ídolo coincide con el palo activo de Ancient, cada carta coincidente toca X1.5 × X2 = X3 — un doble gratuito que recompensa la cobertura flexible de palos.",
+        "pivotOut": "Si la rotación de El Ídolo es demasiado poco fiable para alinearse con Ancient, reemplázalo con The Tribe para un X2 plano en cada mano Color, manteniendo el núcleo de consistencia Smeared + Four Fingers."
+      }
+    },
+    "synergy": {
+      "blueprint__brainstorm": {
+        "why": "Par de copias bloqueadas por posición. Apílalos alrededor de tu motor XMult más fuerte para multiplicar su salida tres veces en el mismo paso de puntuación."
+      },
+      "blueprint__the_idol": {
+        "why": "Cada coincidencia de El Ídolo es X2 — Blueprint dobla la toma en la misma mano puntuada, convirtiendo las cartas coincidentes en escalado X4 por carta."
+      },
+      "brainstorm__triboulet": {
+        "why": "Posiciona Triboulet en el extremo izquierdo para que Brainstorm lo copie. Cada Rey y Reina puntuados aplican dos multiplicadores X2 apilados."
+      },
+      "baron__mime": {
+        "why": "El X1.5 por Rey retenido de Baron es reaplicado por Mime en la fase retenida en mano, convirtiendo cada Rey en X2.25."
+      },
+      "mime__steel_joker": {
+        "why": "Las cartas de Acero activan su X1.5 una vez en retenida en mano. Mime reactiva, doblando gratis la presión de Acero."
+      },
+      "sock_and_buskin__triboulet": {
+        "why": "Sock reactiva cada figura puntuada, y cada reactivación reaaplica el X2 de Triboulet — el bucle de escalado canónico de figuras."
+      },
+      "pareidolia__triboulet": {
+        "why": "Pareidolia hace que cada carta puntuada cuente como figura, así el X2 de Triboulet dispara en toda la mano en vez de solo en Reyes y Reinas."
+      },
+      "midas_mask__pareidolia": {
+        "why": "Midas convierte las figuras puntuadas en Oro; Pareidolia significa que cada carta es admisible, aumentando los ingresos cada mano."
+      },
+      "greedy_joker__smeared_joker": {
+        "why": "Smeared fusiona Diamantes con Corazones, doblando el número de cartas que activan el +4 Mult de Greedy."
+      },
+      "smeared_joker__the_idol": {
+        "why": "Reduce a la mitad el pool de palos efectivo, por lo que el objetivo rango+palo de El Ídolo aparece aproximadamente el doble de veces por barajado."
+      },
+      "glass_joker__hack": {
+        "why": "Hack reactiva las cartas bajas dos veces, doblando las posibilidades de romper Cristal cada mano y acelerando las pilas permanentes X0.75 de Glass Joker."
+      },
+      "fibonacci__hack": {
+        "why": "2, 3 y 5 son tanto rangos Fibonacci como rangos Hack — cada proc Fibonacci dispara dos veces."
+      },
+      "mime__raised_fist": {
+        "why": "Mime reactiva la fase retenida en mano, así el mult plano de Raised Fist se aplica dos veces desde una sola carta baja retenida en mano."
+      },
+      "hanging_chad__the_idol": {
+        "why": "Lidera con la carta objetivo de El Ídolo: Hanging Chad la activa tres veces, apilando tres multiplicaciones X2 desde una sola carta puntuada."
+      },
+      "dna__the_idol": {
+        "why": "DNA duplica permanentemente lo que juegas solo. Elige una carta objetivo de El Ídolo y farmea sus procs X2 saturando el mazo."
+      },
+      "dna__hologram": {
+        "why": "Cada carta clonada por DNA hace crecer Hologram en X0.25 — un bucle de escalado XMult gratuito."
+      },
+      "astronomer__constellation": {
+        "why": "Astronomer hace gratuitas todas las cartas Planeta y los sobres Celestiales; cada Planeta gratuito alimenta la acumulación XMult de X0.1-por-uso de Constellation — los dos convierten el dinero ahorrado en escalado exponencial gratuito a lo largo de la partida."
+      },
+      "astronomer__satellite": {
+        "why": "Satellite escala los ingresos con Planetas únicos usados; Planet Merchant garantiza que veas más variedad de Planetas."
+      },
+      "drunkard__mail_in_rebate": {
+        "why": "Más descartes significan más oportunidades de deshacerse de rangos de reembolso por dinero cada ronda."
+      },
+      "drunkard__faceless_joker": {
+        "why": "Más descartes facilitan alcanzar el umbral de 3 figuras, especialmente en mazos ricos en figuras."
+      },
+      "baron__stuntman": {
+        "why": "Stuntman reduce el tamaño de mano en 2, destruyendo el multiplicador por-Rey de Baron. Solo úsalos juntos si corriges el tamaño de mano agresivamente."
+      },
+      "ride_the_bus__triboulet": {
+        "why": "Ride the Bus se reinicia en cualquier figura puntuada — Triboulet quiere puntuar figuras. Se cancelan activamente."
+      },
+      "drunkard__green_joker": {
+        "why": "Green Joker pierde mult por descarte, deshaciendo el propósito entero de Drunkard. Elige una dirección."
+      },
+      "steel_joker__vampire": {
+        "why": "Vampire consume las mejoras de tus cartas. Cada carta consumida reduce la pila permanente de Steel Joker."
+      },
+      "greedy_joker__pareidolia": {
+        "why": "Una vez que todo es una figura, los Comodines específicos de palo como Greedy dejan de diferenciar su bono de forma fiable en construcciones mixtas."
+      },
+      "constellation__perkeo": {
+        "why": "Perkeo duplica los consumibles Planeta como copias Negativas; Constellation se beneficia de las jugadas de Planeta extra para XMult gratuito."
+      },
+      "seltzer__triboulet": {
+        "why": "Seltzer dobla cada carta puntuada durante 10 manos. Concentra Triboulet durante las ciegas Jefa, luego pivota cuando expire."
+      },
+      "golden_joker__midas_mask": {
+        "why": "Dos fuentes de ingresos apiladas — Midas convierte figuras en oro mientras Golden Joker paga soporte pasivo de interés de fin de ronda."
+      },
+      "driver_gloves__stone_joker": {
+        "why": "Las Piedras cuentan como cartas Mejoradas hacia el umbral de Driver's License y alimentan individualmente las Fichas de Stone Joker. Dos recompensas desde una sola conversión."
+      },
+      "blueprint__obelisk": {
+        "why": "Una vez que Obelisk ha acumulado un enorme XMult, Blueprint lo copia — pero solo comprométete cuando hayas realmente dejado de jugar tu mano más jugada."
+      },
+      "photograph__sock_and_buskin": {
+        "why": "Sock and Buskin reactiva cada figura puntuada; Photograph activa en la PRIMERA figura — tras la reactivación, la ventana de activación de Photograph dispara de nuevo, entregando dos ticks X2 desde una sola figura."
+      },
+      "smiley_face__sock_and_buskin": {
+        "why": "Cada reactivación por Sock and Buskin repite la figura puntuada completa, doblando cada Comodín Mult plano por figura incluyendo el +5 Mult de Smiley Face — cinco figuras en un Color dan +50 Mult en vez de +25."
+      },
+      "scary_face__sock_and_buskin": {
+        "why": "Sock and Buskin reactiva cada figura; cada reactivación también dobla el bono de +30 Fichas de Scary Face, cubriendo el lado de Fichas que el motor de mult-figuras de Sock típicamente carece."
+      },
+      "dusk__the_idol": {
+        "why": "Dusk reactiva todas las cartas puntuadas en la última mano de la ronda; si la carta objetivo de El Ídolo está en esa mano, cada reactivación dispara otro X2, apilándose multiplicativamente en una mano que ya entrega la recompensa en ráfaga."
+      },
+      "acrobat__dusk": {
+        "why": "Ambos efectos se activan en la última mano de la ronda — Acrobat contribuye X3 y Dusk reactiva cada carta jugada, dejando que el X3 de Acrobat se aplique a un paso de puntuación doblado en la misma mano."
+      },
+      "hanging_chad__triboulet": {
+        "why": "Hanging Chad activa la primera carta puntuada tres veces en total; si esa carta es un Rey o Reina, Triboulet aplica su X2 tres veces en secuencia — X2×X2×X2 = X8 desde una sola figura bien colocada."
+      },
+      "hack__wee_joker": {
+        "why": "Hack reactiva cada 2 jugado una vez extra; cada reactivación cuenta como un 2 puntuado adicional, doblando la acumulación permanente de +8 Fichas por 2 puntuado de Wee Joker — un 2 jugado da +16 Fichas de crecimiento permanente en vez de +8."
+      },
+      "even_steven__hack": {
+        "why": "2 y 4 son tanto rangos Even Steven como rangos Hack — cada 2 o 4 jugado dispara el +4 Mult de Even Steven dos veces, efectivamente +8 Mult por carta par baja puntuada."
+      },
+      "seltzer__the_idol": {
+        "why": "Seltzer reactiva cada carta puntuada durante 10 manos; cada reactivación vuelve a disparar el X2 de El Ídolo en cartas coincidentes, convirtiendo una sola carta objetivo de El Ídolo en X4 por copia activada durante la ventana Seltzer."
+      },
+      "mime__shoot_the_moon": {
+        "why": "Shoot the Moon da +13 Mult por Reina retenida en mano durante la fase retenida en mano; Mime reactiva esa fase, dando +26 Mult por Reina retenida gratis desde una sola fase retenida en mano."
+      },
+      "mime__reserved_parking": {
+        "why": "Reserved Parking se activa por figura retenida en mano durante la fase retenida en mano; Mime reactiva la fase retenida en mano, doblando el tiro de ingreso 1-de-2 de cada figura y aproximadamente doblando el dinero pasivo ganado."
+      },
+      "hanging_chad__photograph": {
+        "why": "Photograph dispara una vez por mano en la primera figura puntuada; Hanging Chad reactiva la primera carta puntuada dos veces extra — si la carta delantera es una figura, el X2 de Photograph se aplica en los tres pasos."
+      },
+      "blueprint__triboulet": {
+        "why": "Blueprint copia el Comodín a su derecha; posicionado inmediatamente a la izquierda de Triboulet dispara el X2-por-Rey/Reina de Triboulet una segunda vez en el mismo paso de puntuación, convirtiendo cada figura en X4 por activación."
+      },
+      "brainstorm__the_idol": {
+        "why": "Posiciona El Ídolo en el extremo izquierdo; Brainstorm lo copia, aplicando X2 por carta coincidente dos veces en el mismo paso de puntuación — una carta objetivo de El Ídolo pasa de X2 a X4 sin coste extra."
+      },
+      "blueprint__the_duo": {
+        "why": "The Duo aplica X2 cuando una Pareja aparece en la mano; Blueprint lo copia para entregar un segundo X2 en la misma mano, haciendo de cada mano con Pareja una pila XMult X4 gratuita."
+      },
+      "the_order__the_tribe": {
+        "why": "Ambos Comodines XMult condicionales disparan simultáneamente en manos de Escalera de color — The Tribe contribuye X2 y The Order contribuye X3, apilándose a X6 en cada Escalera de color puntuada."
+      },
+      "ancient_joker__smeared_joker": {
+        "why": "Ancient Joker aplica X1.5 por carta puntuada del palo activo; Smeared Joker colapsa cuatro palos a dos, así aproximadamente la mitad de tu mazo activa X1.5 en cualquier mano independientemente de la rotación de palo."
+      },
+      "bloodstone__oops_all_6s": {
+        "why": "¡Oops! All 6s dobla el proc de Corazón 1-de-2 de Bloodstone a garantizado — cada carta de Corazón puntuada se convierte en un tick X1.5 seguro, convirtiendo los Colores de Corazón en un motor multiplicativo X1.5-por-carta fiable."
+      },
+      "baseball_card__constellation": {
+        "why": "Baseball Card da X1.5 Mult por Comodín Poco común poseído; Constellation es Poco común y uno de los escaladores XMult más fuertes del juego — poseer ambos da X1.5 de Baseball Card por la presencia de Constellation, mientras Constellation se compone independientemente mediante Planetas."
+      },
+      "cavendish__dna": {
+        "why": "La duplicación de jugada única de DNA puede apuntar a cualquier carta — clonar un As en un mazo saturado de cuatro copias garantiza manos consistentes de alto valor mientras Cavendish proporciona la recompensa X3 en cada mano puntuada que emerja."
+      },
+      "marble_joker__stone_joker": {
+        "why": "Marble Joker añade una carta de Piedra al mazo cada ciega; cada Piedra añadida hace crecer Stone Joker en +25 Fichas por mano puntuada — el escalado pasivo por número de ciegas entrega un motor de Fichas gratuito sin esfuerzo por mano."
+      },
+      "perkeo__sixth_sense": {
+        "why": "Sixth Sense produce una carta Espectral cada ronda sacrificando un 6; Perkeo duplica un consumible aleatorio al final de cada tienda — guardar el Espectral entre visitas a la tienda garantiza una copia Espectral Negativa gratuita, doblando efectivamente cada proc de Sixth Sense a lo largo de la partida."
+      },
+      "cartomancer__fortune_teller": {
+        "why": "Cartomancer crea un Tarot gratuito en cada selección de ciega; cada Tarot usado añade permanentemente +1 Mult a Fortune Teller — los dos forman un bucle cerrado donde la generación de Tarots se traduce directamente en mult plano permanente."
+      },
+      "certificate__steel_joker": {
+        "why": "Certificate añade una carta aleatoria sellada a tu mano al inicio de cada ronda; cuando esas cartas añadidas llevan sellos Morados o son mejoradas manualmente a Acero, el XMult de Steel Joker crece gratis cada ronda sin gasto de Tarot."
+      },
+      "erosion__trading_card": {
+        "why": "Trading Card destruye la primera carta de descarte único cada ronda y gana 3$; cada carta destruida hace crecer permanentemente Erosion en +4 Mult — escalado de mult pasivo gratuito cada ronda que también proporciona ingresos."
+      },
+      "four_fingers__smeared_joker": {
+        "why": "Four Fingers reduce el requisito de Color a 4 cartas; Smeared Joker reduce a la mitad el pool de palos — juntos casi cualquier cuatro cartas de un mazo de dos palos forman un Color, haciendo las construcciones Color de 5 cartas casi incondicionales."
+      },
+      "four_fingers__shortcut": {
+        "why": "Shortcut permite escaleras con huecos; Four Fingers reduce el número a 4 — cualquier cuatro cartas aproximadamente secuenciales forman una Escalera, desbloqueando la Escalera de color como un tipo de mano casi gratuito cuando se combina con Smeared."
+      },
+      "burglar__mystic_summit": {
+        "why": "Burglar elimina todos los descartes al inicio de la ciega; Mystic Summit requiere exactamente 0 descartes restantes para su bono de +15 Mult — Burglar garantiza que Mystic Summit dispare en cada mano sin ningún esfuerzo de disciplina."
+      },
+      "card_sharp__loyalty_card": {
+        "why": "Loyalty Card quiere que juegues tu 6ª mano en grande; Card Sharp da X3 en jugadas repetidas del mismo tipo de mano — crean tensión de ciclo donde el activador X4 de Loyalty fuerza una elección de mano que podría reiniciar o entrar en conflicto con el bono de misma-mano de Card Sharp."
+      },
+      "oops_all_6s__space_joker": {
+        "why": "La mejora de nivel gratuita 1-de-4 de Space Joker pasa a 2-de-4 (50%) mediante ¡Oops! All 6s, convirtiendo la mejora de nivel pasiva en un motor casi fiable que hace crecer las Fichas base y el mult casi cada otra mano."
+      },
+      "bull__to_the_moon": {
+        "why": "To the Moon eleva el techo efectivo de interés, permitiéndote guardar más dinero de forma rentable; Bull convierte cada dólar retenido en +2 Fichas por mano puntuada — la misma reserva de dinero que gana más interés también entrega más Fichas cada mano."
+      },
+      "cloud_9__rocket": {
+        "why": "Ambas son fuentes de ingresos pasivos de fin de ronda que se apilan independientemente — Cloud 9 escala con la densidad de 9 mientras Rocket escala con las ciegas Jefa derrotadas, cubriendo las fases temprana y tardía de la partida con curvas de ingresos distintas."
+      },
+      "delayed_gratification__golden_joker": {
+        "why": "Delayed Gratification paga 2$ por descarte no usado si no se usan descartes; los 4$ de fin de ronda de Golden Joker se apilan encima — ejecutar ambos en una construcción limpia de cero descarte genera 4$ + (descartes × 2$) pasivamente cada ronda."
+      },
+      "greedy_joker__rough_gem": {
+        "why": "Rough Gem gana 1$ por Diamante puntuado; Greedy Joker gana +3 Mult por Diamante puntuado — cada carta de Diamante puntuada hace avanzar simultáneamente los ingresos y la puntuación, un raro doble pago por carta."
+      },
+      "golden_ticket__midas_mask": {
+        "why": "Midas Mask convierte permanentemente las figuras puntuadas en Oro; Golden Ticket gana 4$ cada vez que se puntúa una carta de Oro — una vez que las figuras están convertidas, cada figura puntuada devuelve 4$ además de su contribución a la puntuación."
+      },
+      "business_card__pareidolia": {
+        "why": "Business Card tiene 1 de cada 2 posibilidades de pagar 2$ por figura puntuada; Pareidolia hace que cada carta sea una figura — en una mano de 5 cartas, el ingreso esperado por mano salta de 1 a 2 cartas admisibles a las 5, aproximadamente triplicando los ingresos de Business Card."
+      },
+      "gift_card__swashbuckler": {
+        "why": "Gift Card añade 1$ de valor de venta a cada Comodín cada ronda; Swashbuckler convierte el valor de venta total de Comodines en Mult plano — Gift Card infla pasivamente el Mult de Swashbuckler en 1$ por Comodín por ronda, componiéndose multiplicativamente a lo largo de la partida."
+      },
+      "perkeo__vagabond": {
+        "why": "Vagabond crea un Tarot cuando juegas con ≤4$; Perkeo duplica un consumible aleatorio al final de la tienda — gastar deliberadamente hasta el umbral de Vagabond antes de ir de tiendas activa entonces Perkeo en el Tarot generado, produciendo efectivamente dos Tarots por el coste de una mano planificada de saldo bajo."
+      },
+      "pareidolia__sock_and_buskin": {
+        "why": "Pareidolia hace que cada carta sea una figura; Sock and Buskin reactiva cada figura puntuada — la combinación reactiva cada carta jugada en cualquier mano, doblando efectivamente todas las contribuciones de puntuación por carta."
+      },
+      "pareidolia__scary_face": {
+        "why": "Con Pareidolia activo cada carta puntuada es admisible para los +30 Fichas de Scary Face, convirtiendo una mano de 5 cartas en un suelo garantizado de +150 Fichas además de las Fichas de mano base — una base de Fichas consistente para cualquier construcción."
+      },
+      "pareidolia__smiley_face": {
+        "why": "Pareidolia hace que cada carta sea una figura, así el +5 Mult de Smiley Face dispara en cada una de las cinco cartas puntuadas — baseline de +25 Mult plano en cualquier mano, apilándose con Comodines de palo y mejora de nivel de mano como suelo fiable."
+      },
+      "canio__pareidolia": {
+        "why": "Canio gana X1 Mult permanentemente cada vez que se destruye una figura; Pareidolia hace que cada carta sea una figura — cualquier carta que se destruya (rotura de Cristal, Sixth Sense consumiendo un 6, kills de trading card) ahora hace avanzar el multiplicador de Canio, expandiendo drásticamente el pool de cartas elegibles para destrucción."
+      },
+      "dusk__triboulet": {
+        "why": "Dusk reactiva todas las cartas puntuadas en la última mano; Triboulet dispara X2 por Rey o Reina puntuados — la reactivación de última mano dobla cada aplicación X2 de Triboulet, convirtiendo una última mano de dos Reyes de X4 a X8 sin coste extra."
+      },
+      "drunkard__hit_the_road": {
+        "why": "Hit the Road gana X0.5 Mult por Jota descartada cada ronda; Drunkard da +1 descarte por ronda — el descarte extra habilita una oportunidad más de descarte de Jota, empujando consistentemente el crecimiento por ronda de Hit the Road de X1.5 a X2 por mazo de 3 Jotas."
+      },
+      "merry_andy__yorick": {
+        "why": "Yorick gana X1 Mult por 23 cartas descartadas; Merry Andy añade +3 descartes por ronda — los descartes extra a lo largo de una partida completa comprimen el umbral de 23 cartas de Yorick de ~6 rondas a ~4 rondas, acelerando su pila XMult permanente."
+      },
+      "castle__drunkard": {
+        "why": "Castle gana +3 Fichas por carta descartada de su palo rotatorio; Drunkard añade +1 descarte por ronda — cada descarte extra genera una oportunidad adicional de escalado de Fichas cada ronda si la carta descartada coincide con el palo activo de Castle."
+      },
+      "burnt_joker__faceless_joker": {
+        "why": "Burnt Joker mejora el tipo de mano de póker descartada cada ronda como mejora de nivel gratuita; Faceless Joker paga 5$ por descartar 3+ figuras simultáneamente — ambas recompensas disparan desde la misma acción de descarte sin competir por recursos."
+      },
+      "hit_the_road__yorick": {
+        "why": "Ambos Comodines escalan su XMult desde el volumen de descarte — Yorick se acumula permanentemente a lo largo de la partida mientras Hit the Road se reinicia cada ronda pero paga rápidamente dentro del presupuesto de descarte de una sola ronda, cubriendo los ejes de escalado a largo plazo y en ráfaga."
+      },
+      "mystic_summit__ramen": {
+        "why": "Ramen pierde X0.01 Mult por descarte y Mystic Summit solo se activa a cero descartes — ejecutar ambos impone una disciplina de cero descarte que preserva el techo X2 de Ramen y garantiza que el +15 Mult de Mystic Summit dispare en cada mano de la ronda."
+      },
+      "hack__vampire": {
+        "why": "Hack reactiva cada 2 a 5 jugado; si alguna de esas cartas bajas está mejorada, cada reactivación cuenta como una activación adicional de carta mejorada para la acumulación XMult de Vampire, doblando la tasa de crecimiento de Vampire en cartas mejoradas de rango bajo."
+      },
+      "driver_gloves__marble_joker": {
+        "why": "Marble Joker añade una carta de Piedra al mazo cada ciega — las cartas de Piedra cuentan como cartas Mejoradas hacia el umbral de 16 cartas de Driver's License; juntos alcanzan pasivamente el umbral X3 sin ningún gasto de Tarot."
+      },
+      "glass_joker__seltzer": {
+        "why": "Seltzer reactiva cada carta jugada durante 10 manos; las cartas de Cristal tienen su probabilidad de destrucción aplicada en cada reactivación — cada mano con Seltzer activo aproximadamente dobla el número de roturas de Cristal, acelerando la pila XMult permanente de Glass Joker en una ráfaga concentrada."
+      },
+      "lucky_cat__oops_all_6s": {
+        "why": "Lucky Cat crece X0.25 Mult por proc de carta Lucky; ¡Oops! All 6s dobla la probabilidad de activación 1-de-5 a 2-de-5 — casi doblando el crecimiento promedio de Lucky Cat por ronda y convirtiéndolo de un escalador lento en un motor XMult de mitad de partida."
+      },
+      "driver_gloves__steel_joker": {
+        "why": "Las cartas de Acero contadas por Steel Joker para XMult también cuentan hacia el umbral de 16 cartas mejoradas de Driver's License — apilar mejoras de Acero simultáneamente hace crecer el motor XMult y desbloquea el X3 plano, dos recompensas desde una sola campaña de mejora."
+      },
+      "smeared_joker__vampire": {
+        "why": "Vampire crece de cartas mejoradas puntuadas y no le importa el palo — Smeared Joker no tiene interacción directa, pero en construcciones Color Smeared aumenta el número de cartas puntuadas por mano, elevando indirectamente el número de activaciones de cartas mejoradas por ronda."
+      },
+      "lusty_joker__smeared_joker": {
+        "why": "Smeared Joker fusiona Corazones con Diamantes; Lusty Joker recompensa las cartas de Corazón puntuadas — cada Diamante en la mano ahora cuenta como Corazón, doblando el número de cartas que activan el +3 Mult de Lusty en construcciones Color Corazón-Diamante."
+      },
+      "gluttonous_joker__smeared_joker": {
+        "why": "Smeared Joker fusiona Tréboles con Picas; Gluttonous Joker recompensa las cartas de Trébol — cada Pica ahora activa el +3 Mult de Gluttonous, doblando efectivamente las recompensas de palo oscuro en construcciones Color Pica/Trébol."
+      },
+      "blackboard__smeared_joker": {
+        "why": "Blackboard da X3 Mult cuando todas las cartas retenidas son Picas o Tréboles; Smeared fusiona Picas y Tréboles en un palo efectivo — cualquier mano compuesta de cartas de palo oscuro ahora satisface Blackboard incondicionalmente."
+      },
+      "smeared_joker__wrathful_joker": {
+        "why": "Smeared fusiona Picas y Tréboles; Wrathful recompensa las Picas puntuadas — cada Trébol ahora cuenta como Pica, doblando el número de activaciones +3 Mult de Wrathful en construcciones Trébol/Pica y haciendo Wrathful viable junto a Gluttonous."
+      },
+      "flower_pot__four_fingers": {
+        "why": "Flower Pot requiere los cuatro palos en una mano para X3; Four Fingers reduce el requisito de tamaño de mano a 4 cartas — una mano de 4 cartas con una carta de cada palo satisface Flower Pot, y la quinta ranura liberada puede contener una carta clave para otra recompensa."
+      },
+      "ancient_joker__the_idol": {
+        "why": "Ancient Joker rota su palo activo cada ronda; El Ídolo rota su objetivo rango+palo cada ronda — cuando se alinean en el mismo palo en la misma ronda, la carta coincidente entrega X1.5 de Ancient y X2 de El Ídolo para una ráfaga X3 por carta."
+      },
+      "hologram__marble_joker": {
+        "why": "Marble Joker añade una carta de Piedra al mazo cada ciega; cada carta añadida hace crecer Hologram en X0.25 — sin gastar un céntimo ni abrir sobres, Marble impulsa el XMult de Hologram hacia arriba en X0.25 cada ciega."
+      },
+      "acrobat__obelisk": {
+        "why": "Obelisk construye XMult evitando tu mano más jugada; Acrobat proporciona X3 en la última mano por ronda — en una construcción Obelisk estacionado donde siempre juegas una última mano fuera de tipo, el X3 de Acrobat dispara exactamente cuando el XMult acumulado de Obelisk está en su punto más alto."
+      },
+      "burglar__green_joker": {
+        "why": "Burglar elimina todos los descartes al inicio de la ciega; Green Joker crece por mano y disminuye por descarte — Burglar garantiza que nunca se gasten descartes, protegiendo el escalado de Green Joker de la erosión mientras proporciona manos extra para un crecimiento más rápido."
+      },
+      "blueprint__supernova": {
+        "why": "Supernova añade Mult igual al número de veces que el tipo de mano actual ha sido jugado en esta partida; Blueprint lo copia, aplicando ese mismo bono de Mult una segunda vez — tarde en una partida especializada esto dobla un recuento acumulado potencialmente masivo."
+      },
+      "joker_stencil__swashbuckler": {
+        "why": "Joker Stencil recompensa las ranuras de Comodín vacías con XMult; Swashbuckler convierte el valor de venta de otros Comodines en Mult plano — los dos construyen desde direcciones opuestas y solo coexisten en una construcción ajustada de alto valor de Comodines donde cada ranura gana el máximo valor de venta."
+      },
+      "madness__riff_raff": {
+        "why": "Madness destruye un Comodín aleatorio en cada ciega no-Jefa por una ganancia de XMult de X0.5; Riff-Raff genera dos Comodines Comunes cada ciega — la salida de Riff-Raff alimenta el motor de destrucción de Madness para que tus Comodines valiosos estén protegidos por Comunes desechables absorbiendo el golpe."
+      },
+      "joker_stencil__madness": {
+        "why": "Madness destruye Comodines (reduciendo tu número) lo que aumenta el XMult de Joker Stencil — pero Madness elige aleatoriamente y podría destruir al propio Stencil o tus otros motores; solo viable en una configuración de 2 Comodines estrictamente controlada donde aceptas el riesgo."
+      },
+      "riff_raff__showman": {
+        "why": "Showman permite Comodines duplicados en la tienda; Riff-Raff genera Comodines Comunes al entrar en la ciega — combinado con Abstract Joker o Brainstorm, la habilitación de duplicados puede producir múltiples copias de un Comodín Común clave para una recompensa apilada."
+      },
+      "credit_card__throwback": {
+        "why": "Throwback gana X0.25 Mult por ciega saltada; Credit Card permite ir hasta 20$ de deuda — el margen de deuda te deja comprar piezas clave sin dinero, permitiéndote saltar ciegas marginalmente beneficiosas y cosechar pilas de Throwback incluso en las primeras antes con poco dinero."
+      }
+    },
+    "glossary": {
+      "chips": {
+        "term": "Fichas",
+        "def": "El número azul — puntuación aditiva plana antes de aplicar el mult. Los tipos de mano y las cartas puntuadas contribuyen Fichas."
+      },
+      "mult": {
+        "term": "Mult",
+        "def": "El número rojo — multiplicador aditivo plano. Puntuación final = Fichas × mult."
+      },
+      "xmult": {
+        "term": "XMult",
+        "def": "Un multiplicador aplicado al valor de mult. Dos fuentes X2 se apilan como X4 (multiplicativamente), no como X3 (aditivamente)."
+      },
+      "retrigger": {
+        "term": "Reactivación",
+        "def": "Hacer que una carta o efecto se aplique más de una vez en un solo paso de puntuación. A menudo el tipo de escalado de mayor impacto del juego."
+      },
+      "scaling": {
+        "term": "Escalado",
+        "def": "Cualquier fuente de crecimiento que aumenta a lo largo de una partida, ya sea por mano (lineal) o componiéndose (exponencial). Los motores que escalan superan a los Comodines estáticos al final."
+      },
+      "consistency": {
+        "term": "Consistencia",
+        "def": "La frecuencia con que una construcción alcanza su mano o condición objetivo. Los descartes, el tamaño de mano y el afinado del mazo aumentan la consistencia."
+      },
+      "economy": {
+        "term": "Economía",
+        "def": "Generación de dinero. Interés, descuentos en tienda, ingresos de fin de ronda y cartas de oro. Financia las mejoras que se traducen en daño más tarde."
+      },
+      "held_in_hand": {
+        "term": "Retenida en mano",
+        "def": "La fase tras la puntuación donde las cartas que aún están en tu mano pueden activar efectos (los Reyes de Baron, el X1.5 de las cartas de Acero)."
+      },
+      "thinning": {
+        "term": "Afinado",
+        "def": "Eliminar cartas débiles o basura de tu mazo para robar tus cartas importantes más a menudo. Los Tarots y los Espectrales son las herramientas principales."
+      },
+      "pivot": {
+        "term": "Pivote",
+        "def": "Cambiar el eje de escalado principal de tu construcción a mitad de partida, generalmente cuando un Comodín clave no aparece o uno mejor aparece en la tienda."
+      },
+      "payoff": {
+        "term": "Recompensa",
+        "def": "Un Comodín que convierte una condición habilitadora en puntuación real (p. ej., Triboulet convirtiendo figuras en XMult). Las recompensas necesitan habilitadores para funcionar."
+      },
+      "enabler": {
+        "term": "Habilitador",
+        "def": "Un Comodín o carta que hace fiable una condición (p. ej., Pareidolia habilitando las recompensas de figuras en cada carta). Los habilitadores sin recompensas no hacen nada solos."
+      },
+      "tempo": {
+        "term": "Tempo",
+        "def": "La velocidad con que una construcción se pone en marcha en relación con la dificultad de la ante. Las construcciones de escalado lento necesitan estructuras defensivas para sobrevivir las primeras antes."
+      }
     }
   }
 }
