@@ -19,7 +19,6 @@ import { SoundToggle } from "@/components/SoundToggle";
 import { useI18n, useT } from "@/lib/i18n";
 import { LibraryTab } from "@/tabs/LibraryTab";
 import { MyRunTab } from "@/tabs/MyRunTab";
-import { ShopTab } from "@/tabs/ShopTab";
 import { SynergyTab } from "@/tabs/SynergyTab";
 import { CombosTab } from "@/tabs/CombosTab";
 import { ArchetypesTab } from "@/tabs/ArchetypesTab";
@@ -40,7 +39,7 @@ import { AboutTab } from "@/tabs/AboutTab";
 
 const NAV_GROUPS: NavGroup[] = [
   { key: "library", tabs: ["library"] },
-  { key: "run", tabs: ["myrun", "shop"] },
+  { key: "run", tabs: ["myrun"] },
   { key: "build", tabs: ["synergies", "combos", "archetypes", "compare", "skeleton"] },
   { key: "game", tabs: ["decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
   { key: "more", tabs: ["heatmap", "glossary", "help", "about", "settings"] },
@@ -198,7 +197,6 @@ export default function Home() {
             <div className="mount-fade" key={tab}>
               <TabsContent value="library" className="mt-0"><LibraryTab /></TabsContent>
               <TabsContent value="myrun" className="mt-0"><MyRunTab /></TabsContent>
-              <TabsContent value="shop" className="mt-0"><ShopTab /></TabsContent>
               <TabsContent value="synergies" className="mt-0"><SynergyTab /></TabsContent>
               <TabsContent value="combos" className="mt-0"><CombosTab /></TabsContent>
               <TabsContent value="archetypes" className="mt-0"><ArchetypesTab /></TabsContent>

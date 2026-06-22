@@ -28,7 +28,6 @@
     "nav": {
       "library": "Biblioteca",
       "myrun": "Mi Partida",
-      "shop": "Tienda",
       "synergies": "Sinergias",
       "combos": "Combos",
       "archetypes": "Arquetipos",
@@ -68,7 +67,6 @@
       "add": "Añadir",
       "remove": "Quitar",
       "clear": "Limpiar",
-      "roll_shop": "Girar tienda",
       "use_in_run": "Usar en mi partida",
       "load_run": "Cargar partida",
       "close": "Cerrar",
@@ -256,10 +254,6 @@
       "fav_sign_in_note": "Inicia sesión para guardar favoritos de forma permanente. Por ahora solo duran esta sesión.",
       "fav_add_saved_note": "Añadir una nota guardada…",
       "fav_add_session_note": "Añadir una nota (solo esta sesión)…",
-      "shop_title": "Tienda",
-      "shop_added": "Añadido a Mi partida",
-      "shop_already": "Ya está en tu partida",
-      "shop_run_full": "Partida llena",
       "decks_title": "Mazos",
       "decks_set": "Mazo definido en Mi partida",
       "decks_sort_by": "Ordenar por",
@@ -282,11 +276,6 @@
       "fav_empty": "Aún no hay favoritos. Marca Jokers y combos para guardarlos aquí. Las notas solo se guardan en esta sesión: se reiniciarán al recargar.",
       "fav_jokers": "Comodines",
       "fav_combos": "Combos",
-      "shop_subtitle": "Genera una tienda usando las probabilidades de rareza de Balatro: común 70 %, poco común 25 %, raro 5 %.",
-      "shop_empty_pre": "Pulsa ",
-      "shop_empty_post": " para repartir tres comodines. Añade los que te gusten directamente a Mi partida.",
-      "shop_in_run": "En tu partida",
-      "shop_add_to_run": "Añadir a Mi partida",
       "decks_subtitle": "15 mazos iniciales: elige el motor de build que se adapte a tu plan.",
       "decks_sort_prefix": "Ordenar: {{val}}",
       "decks_diff_low": "Baja",
@@ -1270,9 +1259,18 @@
       "theme": {
         "title": "Tema",
         "hint": "Solo afecta a superficies; los colores de identidad de Balatro (mult rojo, chip azul, money dorado) quedan fijos.",
-        "felt": { "label": "Fieltro", "desc": "Mesa de casino verde por defecto." },
-        "midnight": { "label": "Medianoche", "desc": "Azul-negro profundo, poco fatigante." },
-        "parchment": { "label": "Pergamino", "desc": "Mesa clara color crema." }
+        "felt": {
+          "label": "Fieltro",
+          "desc": "Mesa de casino verde por defecto."
+        },
+        "midnight": {
+          "label": "Medianoche",
+          "desc": "Azul-negro profundo, poco fatigante."
+        },
+        "parchment": {
+          "label": "Pergamino",
+          "desc": "Mesa clara color crema."
+        }
       },
       "screenshake": {
         "title": "Efecto de juice",
@@ -1323,11 +1321,6 @@
         "title": "My Run",
         "body": "Construye el set de Jokers que de verdad estás jugando. Elige un deck, un stake, vouchers y hasta 10 slots. La columna derecha se actualiza en vivo con sinergias curadas, arquetipos implícitos, sinergias probables (partners / arquetipo / tags compartidos) y avisos de anti-sinergia.",
         "tip": "Las sinergias probables aparecen en dorado aunque no haya entrada curada; se infieren de los metadatos de cada Joker para que siempre recibas feedback."
-      },
-      "shop": {
-        "title": "Tienda",
-        "body": "Simula un reroll de tienda. Añade Jokers candidatos y la página puntúa cuánto encajan con tu run actual; basado en densidad de sinergia con lo ya equipado y tu arquetipo activo.",
-        "tip": "Úsalo antes de gastar dinero en el juego: pon aquí los Jokers visibles en la tienda y compara puntuaciones."
       },
       "synergies": {
         "title": "Sinergias",
