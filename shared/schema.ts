@@ -63,39 +63,39 @@ export const strongPassword = z
   .regex(/[^A-Za-z0-9]/, "At least one symbol");
 
 export const signupSchema = z.object({
-  email: z.string().email(),
-  password: strongPassword,
+  email: z.string().email().max(254),
+  password: strongPassword.max(200),
 });
 
 export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1, "Password is required"),
+  email: z.string().email().max(254),
+  password: z.string().min(1, "Password is required").max(200),
 });
 export type SignupInput = z.infer<typeof signupSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 
 export const insertFavoriteSchema = z.object({
-  jokerId: z.string().min(1),
-  note: z.string().optional().nullable(),
+  jokerId: z.string().min(1).max(80),
+  note: z.string().max(2000).optional().nullable(),
 });
 export type InsertFavorite = z.infer<typeof insertFavoriteSchema>;
 
 export const updateFavoriteSchema = z.object({
-  note: z.string().nullable(),
+  note: z.string().max(2000).nullable(),
 });
 
 export const insertRunSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  jokerIds: z.array(z.string()),
-  notes: z.string().optional().nullable(),
+  name: z.string().min(1, "Name is required").max(80),
+  jokerIds: z.array(z.string().max(80)).max(5),
+  notes: z.string().max(2000).optional().nullable(),
   meta: runMetaSchema.nullable().optional(),
 });
 export type InsertRun = z.infer<typeof insertRunSchema>;
 
 export const updateRunSchema = z.object({
-  name: z.string().min(1).optional(),
-  jokerIds: z.array(z.string()).optional(),
-  notes: z.string().nullable().optional(),
+  name: z.string().min(1).max(80).optional(),
+  jokerIds: z.array(z.string().max(80)).max(5).optional(),
+  notes: z.string().max(2000).nullable().optional(),
   meta: runMetaSchema.nullable().optional(),
 });
 

@@ -2,7 +2,7 @@ import { users, sessions, favorites, runs } from "@shared/schema";
 import type { User, Session, Favorite, Run } from "@shared/schema";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, lt, count } from "drizzle-orm";
 
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is required (Neon connection string).");
@@ -70,8 +70,13 @@ export interface IStorage {
   updateFavorite(id: number, userId: number, note: string | null): Promise<Favorite | undefined>;
   deleteFavorite(id: number, userId: number): Promise<void>;
 
+  countFavorites(userId: number): Promise<number>;
+
   getRuns(userId: number): Promise<Run[]>;
   getRun(id: number, userId: number): Promise<Run | undefined>;
+  countRuns(userId: number): Promise<number>;
+
+  deleteExpiredSessions(now: number): Promise<void>;
   createRun(userId: number, name: string, jokerIds: string, notes: string | null, meta: string | null): Promise<Run>;
   updateRun(id: number, userId: number, patch: Partial<{ name: string; jokerIds: string; notes: string | null; meta: string | null }>): Promise<Run | undefined>;
   deleteRun(id: number, userId: number): Promise<void>;
@@ -135,6 +140,10 @@ export class DatabaseStorage implements IStorage {
   async deleteFavorite(id: number, userId: number): Promise<void> {
     await db.delete(favorites).where(and(eq(favorites.id, id), eq(favorites.userId, userId)));
   }
+  async countFavorites(userId: number): Promise<number> {
+    const rows = await db.select({ c: count() }).from(favorites).where(eq(favorites.userId, userId));
+    return Number(rows[0]?.c ?? 0);
+  }
 
   async getRuns(userId: number): Promise<Run[]> {
     return db.select().from(runs).where(eq(runs.userId, userId)).orderBy(desc(runs.createdAt));
@@ -162,6 +171,14 @@ export class DatabaseStorage implements IStorage {
   }
   async deleteRun(id: number, userId: number): Promise<void> {
     await db.delete(runs).where(and(eq(runs.id, id), eq(runs.userId, userId)));
+  }
+  async countRuns(userId: number): Promise<number> {
+    const rows = await db.select({ c: count() }).from(runs).where(eq(runs.userId, userId));
+    return Number(rows[0]?.c ?? 0);
+  }
+
+  async deleteExpiredSessions(now: number): Promise<void> {
+    await db.delete(sessions).where(lt(sessions.expiresAt, now));
   }
 }
 
