@@ -139,7 +139,7 @@ export function StarToggle({
       type="button"
       onClick={(e) => {
         e.stopPropagation();
-        playSound(active ? "toggle_off" : "coin");
+        playSound(active ? "toggle_off" : "favorite");
         onToggle();
       }}
       aria-label={active ? t("ui.favStar.remove") : t("ui.favStar.add")}

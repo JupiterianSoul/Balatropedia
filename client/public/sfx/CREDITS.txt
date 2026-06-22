@@ -1,0 +1,12 @@
+Sound effects in this directory come from three CC0 (public domain) packs by
+Kenney Vleugels (kenney.nl):
+
+  - Kenney Casino Audio   https://kenney.nl/assets/casino-audio
+  - Kenney UI Audio       https://kenney.nl/assets/ui-audio
+  - Kenney Music Jingles  https://kenney.nl/assets/music-jingles
+
+License: Creative Commons Zero (CC0 1.0)
+         https://creativecommons.org/publicdomain/zero/1.0/
+
+No attribution is required, but it is appreciated. Thanks to Kenney for the
+free assets.

@@ -16,7 +16,7 @@ import { EntityDetailSheet } from "@/components/EntityDetailSheet";
 import { UserButton } from "@/components/UserButton";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SoundToggle } from "@/components/SoundToggle";
-import { playSound, playRandom } from "@/lib/sound";
+import { playSound } from "@/lib/sound";
 import { useI18n, useT } from "@/lib/i18n";
 import { LibraryTab } from "@/tabs/LibraryTab";
 import { MyRunTab } from "@/tabs/MyRunTab";
@@ -85,7 +85,7 @@ export default function Home() {
     <div className="flex min-h-[100dvh] bg-background">
       <Tabs
         value={tab}
-        onValueChange={(v) => { playRandom(["flip", "deal", "chip"]); setTab(v); }}
+        onValueChange={(v) => { playSound("tab_switch"); setTab(v); }}
         className="flex min-h-[100dvh] w-full"
       >
         {/* Desktop sidebar; persistent vertical nav, hidden on mobile */}

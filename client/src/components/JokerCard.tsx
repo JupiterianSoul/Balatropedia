@@ -3,7 +3,7 @@ import { Joker } from "@/lib/helpers";
 import { useGameText, useI18n } from "@/lib/i18n";
 import { RolePill, RiskBadge, StageBadge, StarToggle, RarityBadge } from "./primitives";
 import { JokerSprite } from "./JokerSprite";
-import { playSound, playRandom } from "@/lib/sound";
+import { playSound } from "@/lib/sound";
 import { FormattedBalatroText } from "@/lib/balatroText";
 
 export function JokerCard({ joker }: { joker: Joker }) {
@@ -18,7 +18,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
     <div
       role="button"
       tabIndex={0}
-      onClick={() => { playRandom(["chip", "chip_stack", "flip", "deal"]); openJokerDetail(joker.id); }}
+      onClick={() => { playSound("card_place"); openJokerDetail(joker.id); }}
       onMouseEnter={() => playSound("hover")}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
