@@ -16,7 +16,6 @@ import { EntityDetailSheet } from "@/components/EntityDetailSheet";
 import { UserButton } from "@/components/UserButton";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SoundToggle } from "@/components/SoundToggle";
-import { playSound } from "@/lib/sound";
 import { useI18n, useT } from "@/lib/i18n";
 import { LibraryTab } from "@/tabs/LibraryTab";
 import { MyRunTab } from "@/tabs/MyRunTab";
@@ -68,7 +67,7 @@ export default function Home() {
   const Brand = (
     <button
       type="button"
-      onClick={() => { playSound("click"); handleSelect("library"); }}
+      onClick={() => handleSelect("library")}
       className="flex w-full shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]"
       data-testid="button-logo"
       aria-label="Balatropedia home"
@@ -85,7 +84,7 @@ export default function Home() {
     <div className="flex min-h-[100dvh] bg-background">
       <Tabs
         value={tab}
-        onValueChange={(v) => { playSound("tab_switch"); setTab(v); }}
+        onValueChange={(v) => setTab(v)}
         className="flex min-h-[100dvh] w-full"
       >
         {/* Desktop sidebar; persistent vertical nav, hidden on mobile */}
@@ -126,7 +125,7 @@ export default function Home() {
                     className="balatro-tab flex shrink-0 items-center justify-center !px-2 !py-2"
                     aria-label="Open menu"
                     data-testid="button-mobile-menu"
-                    onClick={() => playSound("click")}
+
                   >
                     <Menu className="h-5 w-5" strokeWidth={2.5} />
                   </button>
@@ -158,7 +157,7 @@ export default function Home() {
               {/* mobile logo + wordmark */}
               <button
                 type="button"
-                onClick={() => { playSound("click"); setTab("library"); }}
+                onClick={() => setTab("library")}
                 className="flex shrink-0 items-center gap-2 transition-transform hover:scale-[1.02]"
                 aria-label="Balatropedia home"
               >

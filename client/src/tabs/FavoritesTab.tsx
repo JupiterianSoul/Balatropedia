@@ -53,7 +53,8 @@ function JokerFavRow({
     <div
       className="balatro-card balatro-hover group flex cursor-pointer flex-col p-3.5 transition-transform"
       data-testid={`fav-joker-${j.id}`}
-      onClick={() => { playSound("card_place"); onOpen(); }}
+      data-sound="card_place"
+      onClick={() => onOpen()}
       onMouseEnter={() => playSound("hover")}
       role="button"
       tabIndex={0}
@@ -94,7 +95,8 @@ function JokerFavRow({
         <RiskBadge level={j.risk} />
         <button
           type="button"
-          onClick={(e) => { e.stopPropagation(); setNoteOpen((o) => !o); playSound("toggle_on"); }}
+          data-sound="toggle_on"
+          onClick={(e) => { e.stopPropagation(); setNoteOpen((o) => !o); }}
           className="ml-auto inline-flex items-center gap-1 rounded-md border border-border bg-card/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground"
           data-testid={`fav-note-toggle-joker-${j.id}`}
           aria-expanded={noteOpen}
@@ -185,7 +187,8 @@ function ComboFavRow({
       <div className="mt-3 flex items-center justify-end border-t border-border pt-2.5">
         <button
           type="button"
-          onClick={() => { setNoteOpen((o) => !o); playSound("toggle_on"); }}
+          data-sound="toggle_on"
+          onClick={() => setNoteOpen((o) => !o)}
           className="inline-flex items-center gap-1 rounded-md border border-border bg-card/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground"
           data-testid={`fav-note-toggle-combo-${c.id}`}
           aria-expanded={noteOpen}

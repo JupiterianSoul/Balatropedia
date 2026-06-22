@@ -167,8 +167,19 @@ function ensurePool(name: SoundName): HTMLAudioElement[] | null {
 
 // ── Public API ──────────────────────────────────────────────────────────────
 
+// Per-sound dedup window. Prevents the same sound firing twice in rapid
+// succession when both the global delegation and a component onClick handler
+// fire for the same user gesture. 40 ms is short enough that legitimate
+// rapid-fire (hover spam, chip cascade) still stacks via the pool.
+const DEDUP_MS = 40;
+const lastPlayedAt: Partial<Record<SoundName, number>> = {};
+
 export function playSound(name: SoundName) {
   if (!enabled) return;
+  const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+  const last = lastPlayedAt[name] ?? -Infinity;
+  if (now - last < DEDUP_MS) return;
+  lastPlayedAt[name] = now;
   const pool = ensurePool(name);
   if (!pool) return;
   const idx = pointers[name] ?? 0;
@@ -207,4 +218,102 @@ export function getSoundVolume(): number { return volume; }
 export function setSoundVolume(v: number) {
   volume = Math.max(0, Math.min(1, v));
   persist(STORAGE_KEY_VOLUME, String(volume));
+}
+
+// ── Global delegation ───────────────────────────────────────────────────────
+// Most components do not wire playSound() themselves. To guarantee every
+// interactive click makes a sound, we install a single capture-phase listener
+// at the document level that fires BEFORE any onClick handler runs.
+//
+// Resolution order :
+//   1. Element (or ancestor) has data-no-sound  -> skip
+//   2. Element (or ancestor) has data-sound="x" -> play x
+//   3. Otherwise pick a default sound from role/tag/type :
+//        - role="tab"                     -> tab_switch
+//        - role="switch" / type=checkbox  -> toggle_on / toggle_off (by state)
+//        - role="option" / role="menuitem"-> select
+//        - <select>                       -> select
+//        - default                         -> click
+//
+// We also handle keyboard activation (Enter / Space on focused button-like
+// element) by listening to keydown on the same capture phase.
+
+let delegationInstalled = false;
+
+function findInteractive(target: EventTarget | null): HTMLElement | null {
+  if (!(target instanceof Element)) return null;
+  // Closest match for anything clickable. We deliberately include [role=tab],
+  // [role=switch], [role=option], [role=menuitem], [role=button], plus native
+  // button / a / input / select / summary / label.
+  return target.closest<HTMLElement>(
+    'button, a[href], input, select, textarea, summary, label, ' +
+    '[role="button"], [role="tab"], [role="switch"], [role="checkbox"], ' +
+    '[role="radio"], [role="menuitem"], [role="menuitemradio"], ' +
+    '[role="menuitemcheckbox"], [role="option"], [role="link"], ' +
+    '[data-sound], [data-clickable="true"]'
+  );
+}
+
+function resolveSound(el: HTMLElement): SoundName | null {
+  // opt-out via attribute on element or any ancestor
+  if (el.closest('[data-no-sound]')) return null;
+
+  // explicit override
+  const ov = el.closest<HTMLElement>('[data-sound]');
+  if (ov) {
+    const v = ov.getAttribute('data-sound');
+    if (v && v in SOUND_FILES) return v as SoundName;
+  }
+
+  const role = el.getAttribute('role');
+  const tag = el.tagName.toLowerCase();
+  const type = (el.getAttribute('type') || '').toLowerCase();
+
+  if (role === 'tab') return 'tab_switch';
+  if (role === 'switch' || role === 'checkbox' || type === 'checkbox') {
+    const nativeChecked = (el as HTMLInputElement).checked === true;
+    const ariaChecked = el.getAttribute('aria-checked') === 'true';
+    const stateChecked = el.getAttribute('data-state') === 'checked';
+    const checked = nativeChecked || ariaChecked || stateChecked;
+    // PRE-click state ; clicking flips it, so play the OPPOSITE sound.
+    return checked ? 'toggle_off' : 'toggle_on';
+  }
+  if (role === 'option' || role === 'menuitem' || role === 'menuitemradio' ||
+      role === 'menuitemcheckbox') return 'select';
+  if (tag === 'select') return 'select';
+  if (tag === 'summary') return 'card_fan';
+
+  return 'click';
+}
+
+function handlePointer(e: Event) {
+  if (!enabled) return;
+  const el = findInteractive(e.target);
+  if (!el) return;
+  // disabled elements should not chirp
+  if ((el as HTMLButtonElement).disabled) return;
+  if (el.getAttribute('aria-disabled') === 'true') return;
+  const s = resolveSound(el);
+  if (s) playSound(s);
+}
+
+function handleKey(e: KeyboardEvent) {
+  if (!enabled) return;
+  if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+  const el = findInteractive(e.target);
+  if (!el) return;
+  if ((el as HTMLButtonElement).disabled) return;
+  if (el.getAttribute('aria-disabled') === 'true') return;
+  const s = resolveSound(el);
+  if (s) playSound(s);
+}
+
+export function installGlobalSoundDelegation() {
+  if (delegationInstalled) return;
+  if (typeof document === 'undefined') return;
+  delegationInstalled = true;
+  // capture phase = runs before component onClick handlers, so even if a
+  // handler calls stopPropagation() we have already fired the sound.
+  document.addEventListener('pointerdown', handlePointer, { capture: true });
+  document.addEventListener('keydown', handleKey as EventListener, { capture: true });
 }

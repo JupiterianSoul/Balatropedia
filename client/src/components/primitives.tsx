@@ -137,6 +137,7 @@ export function StarToggle({
   return (
     <button
       type="button"
+      data-no-sound
       onClick={(e) => {
         e.stopPropagation();
         playSound(active ? "toggle_off" : "favorite");

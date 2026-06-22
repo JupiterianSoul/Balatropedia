@@ -6,7 +6,6 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Languages, Check } from "lucide-react";
-import { playSound } from "@/lib/sound";
 
 const LANGS: Lang[] = ["en", "fr", "es"];
 
@@ -38,7 +37,7 @@ export function LanguageSwitcher() {
           return (
             <DropdownMenuItem
               key={l}
-              onSelect={() => { setLang(l); playSound("click"); }}
+              onSelect={() => setLang(l)}
               data-testid={`lang-${l}`}
               data-active={active}
               className="flex items-center justify-between gap-2 text-xs font-semibold uppercase tracking-wide"

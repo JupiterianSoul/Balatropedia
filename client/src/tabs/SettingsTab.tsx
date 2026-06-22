@@ -8,7 +8,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { isSoundEnabled, setSoundEnabled, getSoundVolume, setSoundVolume, playSound } from "@/lib/sound";
+import { isSoundEnabled, setSoundEnabled, getSoundVolume, setSoundVolume } from "@/lib/sound";
 import { useI18n, useT, type Lang } from "@/lib/i18n";
 import { useTheme, THEME_OPTIONS, type Theme } from "@/lib/theme";
 import { useShake, SHAKE_DEFAULTS } from "@/lib/screenshake";
@@ -51,7 +51,6 @@ export function SettingsTab() {
     const next = (v[0] ?? 50) / 100;
     setVolume(next);
     setSoundVolume(next);
-    playSound("click");
   }
 
   function handleResetFavorites() {
@@ -83,7 +82,7 @@ export function SettingsTab() {
           <Languages className="h-3.5 w-3.5 text-accent" />
           <SectionLabel>{t("ui.settings.language")}</SectionLabel>
         </div>
-        <Select value={lang} onValueChange={(v) => { setLang(v as Lang); playSound("click"); }}>
+        <Select value={lang} onValueChange={(v) => setLang(v as Lang)}>
           <SelectTrigger className="w-full sm:w-64" data-testid="select-language">
             <SelectValue />
           </SelectTrigger>
@@ -111,7 +110,7 @@ export function SettingsTab() {
               <button
                 key={opt.value}
                 type="button"
-                onClick={() => { setTheme(opt.value as Theme); playSound("click"); }}
+                onClick={() => setTheme(opt.value as Theme)}
                 className={`flex flex-col items-start gap-1 rounded-md border-2 px-3 py-2.5 text-left transition-colors ${
                   active
                     ? "border-accent bg-accent/10"
@@ -141,7 +140,7 @@ export function SettingsTab() {
           <Button
             variant={shakeEnabled ? "default" : "outline"}
             size="sm"
-            onClick={() => { setShakeEnabled(!shakeEnabled); playSound("click"); }}
+            onClick={() => setShakeEnabled(!shakeEnabled)}
             data-testid="button-shake-toggle"
           >
             {shakeEnabled ? t("ui.settings.on") : t("ui.settings.off")}
