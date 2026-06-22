@@ -1,29 +1,8 @@
-/**
- * Formats Balatro joker/consumable text by:
- *  - Substituting `#N#` placeholders with each joker's default base-game values
- *    from `data/joker_values.json` (sourced from the official Balatro Fandom wiki).
- *  - Colorizing common scoring tokens with the authentic Balatro palette:
- *      +N Mult / +Mult       → red    (var(--bal-mult))
- *      XN Mult / ×N Mult     → red    (var(--bal-mult))
- *      +N Chips / +Chips     → blue   (var(--bal-chip))
- *      $N / -$N              → gold   (var(--bal-money))
- *      N in N chance         → green  (var(--bal-green))
- *      "Joker"               → red
- *      "Tarot"               → purple
- *      "Spectral"            → cyan-ish (planet)
- *      "Planet"              → blue-ish
- *      Suits (Heart, Diamond, Spade, Club) → suit color
- */
 import { Fragment, type ReactNode } from "react";
 import JOKER_VALUES from "@/data/joker_values.json";
 
 const VALUES: Record<string, string[]> = JOKER_VALUES as Record<string, string[]>;
 
-/**
- * Per-language localization of the few named tokens that appear as #N# in the
- * official Balatro localization files (suit names, hand names, rank, etc.).
- * Numeric values are language-agnostic; only named tokens need this map.
- */
 type TokenLang = "en" | "fr" | "es";
 const NAMED_TOKENS: Record<TokenLang, Record<string, string>> = {
   en: {},
@@ -73,12 +52,6 @@ const NAMED_TOKENS: Record<TokenLang, Record<string, string>> = {
   },
 };
 
-/**
- * Substitute `#N#` placeholders with the joker's default values.
- * If no values are known, strip the placeholders. The visible numbers come
- * from the official Balatro wiki defaults; in-game they update based on run
- * state, but the displayed defaults are what new players see in shop tooltips.
- */
 function substitutePlaceholders(s: string, id?: string, lang?: TokenLang): string {
   const vals = id ? VALUES[id] : undefined;
   const tokenMap = lang ? NAMED_TOKENS[lang] : undefined;
@@ -90,9 +63,9 @@ function substitutePlaceholders(s: string, id?: string, lang?: TokenLang): strin
     if (tokenMap && tokenMap[raw]) return tokenMap[raw];
     return raw;
   });
-  // Collapse double spaces left from missing values.
+
   out = out.replace(/\s{2,}/g, " ").trim();
-  // Tidy up artefacts like "+ Mult" → "+ Mult" (leave as-is) and "$ " → "$".
+
   out = out.replace(/\$ /g, "$");
   return out;
 }
@@ -126,46 +99,34 @@ const TAG_COLORS: Record<string, string> = {
   Stone: "hsl(var(--bal-grey))",
 };
 
-/**
- * Tokenize the text into colored spans.
- * Strategy: run a series of ordered regexes; each match is captured as a colored token.
- * Anything in-between stays as plain text.
- */
 export function tokenizeBalatroText(raw: string, id?: string, lang?: TokenLang): Token[] {
   const text = substitutePlaceholders(raw, id, lang);
   if (!text) return [];
 
-  // Patterns are tried in this order; first match wins for a given position.
-  // We use a unified scan: collect all matches with their indices, sort by start,
-  // resolve overlaps by keeping earliest then longest.
   const patterns: { re: RegExp; type: Token["type"]; getText?: (m: RegExpExecArray) => string; tag?: (m: RegExpExecArray) => string }[] = [
-    // X N Mult or XN Mult  → red. Example: "X3 Mult", "X Mult" (after strip).
+
     { re: /\b[Xx]\s*\d*(?:\.\d+)?\s*Mult\b/g, type: "mult" },
-    // ×N Mult
+
     { re: /×\s*\d*(?:\.\d+)?\s*Mult\b/g, type: "mult" },
-    // +/- N Mult  → red
+
     { re: /[+\-]\s*\d*(?:\.\d+)?\s*Mult\b/g, type: "mult" },
-    // bare "Mult" (e.g. "added to Mult") → red
+
     { re: /\bMult\b/g, type: "mult" },
 
-    // +/- N Chips → blue
     { re: /[+\-]\s*\d*(?:\.\d+)?\s*Chips\b/g, type: "chips" },
-    // bare "Chips" → blue
+
     { re: /\bChips\b/g, type: "chips" },
 
-    // -$N or $N → gold
     { re: /-?\$\s*\d*(?:\.\d+)?/g, type: "money" },
 
-    // "N in N chance"  → green
     { re: /\b\d*\s*in\s*\d*\s*chance\b/gi, type: "chance" },
 
-    // Named tags: Joker / Tarot / Spectral / Planet / Hearts / Diamond etc.
     {
       re: /\b(Jokers?|Tarots?|Spectrals?|Planets?|Hearts?|Diamonds?|Spades?|Clubs?|Gold|Steel|Glass|Stone)\b/g,
       type: "tag",
       tag: (m) => {
         const w = m[1];
-        // normalize plural
+
         const key = w.replace(/s$/, "");
         return key;
       },
@@ -186,7 +147,6 @@ export function tokenizeBalatroText(raw: string, id?: string, lang?: TokenLang):
     }
   }
 
-  // Resolve overlaps: sort by start ASC, then by length DESC (prefer longer match).
   matches.sort((a, b) => a.start - b.start || b.end - b.start - (a.end - a.start));
 
   const picked: Match[] = [];
@@ -197,7 +157,6 @@ export function tokenizeBalatroText(raw: string, id?: string, lang?: TokenLang):
     cursor = m.end;
   }
 
-  // Build tokens by walking the string with picked matches.
   const tokens: Token[] = [];
   let i = 0;
   for (const m of picked) {
@@ -214,7 +173,6 @@ export function tokenizeBalatroText(raw: string, id?: string, lang?: TokenLang):
   return tokens;
 }
 
-/** Render a Balatro effect string into colored React nodes. */
 export function FormattedBalatroText({
   text,
   className,
@@ -223,9 +181,9 @@ export function FormattedBalatroText({
 }: {
   text: string;
   className?: string;
-  /** Optional joker/consumable id used to look up default #N# values. */
+
   id?: string;
-  /** Optional active UI language so named tokens get translated. */
+
   lang?: TokenLang;
 }) {
   const tokens = tokenizeBalatroText(text, id, lang);
@@ -256,7 +214,7 @@ export function FormattedBalatroText({
   );
 }
 
-/** Convenience: returns nodes only (no wrapping span). */
 export function formattedBalatroNodes(text: string, id?: string, lang?: TokenLang): ReactNode {
   return <FormattedBalatroText text={text} id={id} lang={lang} />;
 }
+

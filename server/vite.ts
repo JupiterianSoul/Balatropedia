@@ -42,7 +42,6 @@ export async function setupVite(server: Server, app: Express) {
         "index.html",
       );
 
-      // always reload the index.html file from disk incase it changes
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
       template = template.replace(
         `src="/src/main.tsx"`,
@@ -56,3 +55,4 @@ export async function setupVite(server: Server, app: Express) {
     }
   });
 }
+

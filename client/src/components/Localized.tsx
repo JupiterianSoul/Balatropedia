@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import { useGameText, useI18n } from "@/lib/i18n";
 import { FormattedBalatroText } from "@/lib/balatroText";
 
-/** Categories whose `text` field uses Balatro's #N# placeholder + scoring tokens. */
 const FORMATTED_CATEGORIES = new Set([
   "jokers",
   "tarots",
@@ -16,16 +15,6 @@ const FORMATTED_CATEGORIES = new Set([
   "blinds",
 ]);
 
-/**
- * Render a game entity's localized NAME. Falls back to `fallback` (the raw EN
- * `name` field from the static dataset) when no translation exists.
- *
- * Usage:
- *   <LName category="jokers" id={j.id} fallback={j.name} />
- *
- * `category` is one of: jokers | decks | stakes | tarots | planets | spectrals
- *   | vouchers | enhancements | editions | seals | tags | blinds
- */
 export function LName({
   category,
   id,
@@ -44,12 +33,6 @@ export function LName({
   return <Tag>{value}</Tag>;
 }
 
-/**
- * Render a game entity's localized TEXT/effect/summary, with fallback to the
- * raw EN copy from the static dataset (joker.summary, voucher.effect, ...).
- *
- * Renders inside a <span> by default so it can be dropped into any layout.
- */
 export function LText({
   category,
   id,
@@ -63,7 +46,7 @@ export function LText({
   fallback?: string;
   className?: string;
   as?: keyof JSX.IntrinsicElements;
-  /** If true, render plain text (no #N# stripping, no colorization). */
+
   raw?: boolean;
 }): ReactNode {
   const { text } = useGameText(category, id);
@@ -79,3 +62,4 @@ export function LText({
     </Tag>
   );
 }
+

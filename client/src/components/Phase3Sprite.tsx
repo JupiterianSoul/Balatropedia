@@ -2,13 +2,6 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { getPhase3Sprite, type Phase3Category } from "@/lib/phase3Sprites";
 
-/**
- * Lazy, pixel-art rendered sprite for any phase-3 entity (deck, stake, tarot,
- * planet, spectral, voucher, enhancement, edition, seal, tag).
- *
- * Falls back gracefully to a neutral square showing the entity's initial when
- * the sprite is missing in the manifest OR the proxied image 404s.
- */
 export function Phase3Sprite({
   category,
   id,
@@ -21,7 +14,7 @@ export function Phase3Sprite({
   id: string;
   name: string;
   size?: number;
-  /** optional hex accent for the fallback monogram + border */
+
   accent?: string;
   className?: string;
 }) {
@@ -64,3 +57,4 @@ export function Phase3Sprite({
     </div>
   );
 }
+

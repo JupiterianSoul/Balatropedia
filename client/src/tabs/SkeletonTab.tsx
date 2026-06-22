@@ -21,7 +21,7 @@ export function SkeletonTab() {
   const jokers = ids.map((id) => JOKER_MAP[id]).filter(Boolean) as Joker[];
 
   const analysis = useMemo(() => {
-    // categories present
+
     const present = ENGINE_CATEGORIES.map((cat) => ({
       ...cat,
       jokers: jokers.filter((j) => cat.matches(j)),
@@ -29,10 +29,8 @@ export function SkeletonTab() {
     const covered = present.filter((c) => c.jokers.length > 0);
     const missing = present.filter((c) => c.jokers.length === 0);
 
-    // "what you have" summary by category
     const have = covered.map((c) => `${c.jokers.length} ${c.label.toLowerCase()}${c.jokers.length > 1 ? "s" : ""}`);
 
-    // diagnosis rules
     const rules: { fired: boolean; key: string; n?: number }[] = [];
     const allSameArch = jokers.length > 1 && (() => {
       const sets = jokers.map((j) => new Set(j.archetypes));
@@ -57,7 +55,6 @@ export function SkeletonTab() {
       else diagnosis = "ui.skel.dx_developing";
     }
 
-    // suggested next category = first missing
     const nextCat = missing[0] ?? null;
     const suggestions = nextCat
       ? JOKERS.filter((j) => nextCat.matches(j) && !ids.includes(j.id)).slice(0, 3)
@@ -68,7 +65,7 @@ export function SkeletonTab() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
-      {/* selector */}
+      {}
       <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
         <div>
           <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -89,7 +86,7 @@ export function SkeletonTab() {
         </div>
       </div>
 
-      {/* analysis */}
+      {}
       <div className="space-y-5">
         {jokers.length === 0 ? (
           <div className="rounded-md border border-dashed border-border py-16 text-center">
@@ -97,7 +94,7 @@ export function SkeletonTab() {
           </div>
         ) : (
           <>
-            {/* Diagnosis banner */}
+            {}
             <div className="casino-card flex items-center gap-3 border-l-2 border-l-accent p-4" data-testid="text-diagnosis">
               <Info className="h-5 w-5 shrink-0 text-accent" />
               <div>
@@ -140,7 +137,7 @@ export function SkeletonTab() {
               </div>
             </div>
 
-            {/* Suggested next */}
+            {}
             {analysis.nextCat && (
               <div className="casino-card p-4">
                 <SectionLabel>{t("ui.skel.suggested_next")}</SectionLabel>
@@ -156,7 +153,7 @@ export function SkeletonTab() {
               </div>
             )}
 
-            {/* Why this analysis */}
+            {}
             <Collapsible open={whyOpen} onOpenChange={setWhyOpen}>
               <CollapsibleTrigger className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground" data-testid="button-why-analysis">
                 <Info className="h-3.5 w-3.5" />
@@ -182,3 +179,4 @@ export function SkeletonTab() {
     </div>
   );
 }
+

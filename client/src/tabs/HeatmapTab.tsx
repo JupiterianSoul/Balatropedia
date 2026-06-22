@@ -8,18 +8,17 @@ import { JOKER_MAP, heatmapFor } from "@/lib/helpers";
 import { LName } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
-// Color scale: dark oxblood for negative, charcoal mid (neutral), muted gold for positive.
 function chipStyle(score: number): React.CSSProperties {
   if (score < 0) {
-    // oxblood; secondary hue 350
+
     return { backgroundColor: "hsl(350 45% 26%)", color: "hsl(350 60% 82%)", borderColor: "hsl(350 45% 40%)" };
   }
   if (score === 0) {
     return { backgroundColor: "hsl(150 8% 16%)", color: "hsl(45 12% 68%)", borderColor: "hsl(150 10% 24%)" };
   }
-  // positive; muted gold, intensity scales with score (1..6)
+
   const t = Math.min(score / 6, 1);
-  const light = 24 + t * 26; // 24% -> 50%
+  const light = 24 + t * 26;
   return {
     backgroundColor: `hsl(42 55% ${light}%)`,
     color: score >= 3 ? "hsl(150 16% 8%)" : "hsl(42 55% 80%)",
@@ -67,7 +66,7 @@ export function HeatmapTab() {
         </Button>
       </div>
 
-      {/* Legend */}
+      {}
       <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
         <span>{t("ui.tabs.heatmap_scale")}</span>
         <span className="rounded-sm border px-1.5 py-0.5" style={chipStyle(-3)}>{t("ui.tabs.heatmap_clash")}</span>
@@ -77,7 +76,7 @@ export function HeatmapTab() {
         <span className="rounded-sm border px-1.5 py-0.5" style={chipStyle(6)}>+6</span>
       </div>
 
-      {/* How to read; short explainer so users understand what the tiles mean */}
+      {}
       <div className="casino-card p-3 text-xs text-muted-foreground" data-testid="heatmap-howto">
         <div className="mb-1.5 font-pixel text-[11px] uppercase tracking-wider text-accent">
           {t("ui.tabs.heatmap_how_title")}
@@ -116,3 +115,4 @@ export function HeatmapTab() {
     </div>
   );
 }
+

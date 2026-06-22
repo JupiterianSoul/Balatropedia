@@ -2,10 +2,6 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { getSpriteUrl } from "@/lib/sprites";
 
-/**
- * Pixel-art joker sprite framed in a dark casino-felt tile.
- * Falls back to the joker's initial monogram if the sprite is missing or fails to load.
- */
 export function JokerSprite({
   jokerId,
   name,
@@ -40,7 +36,7 @@ export function JokerSprite({
           className="h-full w-full object-contain p-1"
           style={{
             imageRendering: "pixelated",
-            // some browsers prefer crisp-edges
+
             // @ts-expect-error vendor fallback
             WebkitImageRendering: "crisp-edges",
           }}
@@ -57,3 +53,4 @@ export function JokerSprite({
     </div>
   );
 }
+

@@ -9,7 +9,6 @@ import { JOKERS, JOKER_MAP, type Rarity } from "@/lib/helpers";
 import { LName, LText } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
-// Balatro shop rarity weights (no legendary in shop).
 const WEIGHTS: { rarity: Rarity; weight: number }[] = [
   { rarity: "common", weight: 70 },
   { rarity: "uncommon", weight: 25 },
@@ -132,3 +131,4 @@ export function ShopTab() {
     </div>
   );
 }
+

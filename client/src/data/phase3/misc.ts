@@ -40,9 +40,6 @@ export type Tag = {
   comboIdeas?: string[];
 };
 
-// ─────────────────────────────────────────────
-// ENHANCEMENTS (8)
-// ─────────────────────────────────────────────
 export const ENHANCEMENTS: Enhancement[] = [
   {
     id: "bonus",
@@ -222,9 +219,6 @@ export const ENHANCEMENTS: Enhancement[] = [
   },
 ];
 
-// ─────────────────────────────────────────────
-// EDITIONS (4)
-// ─────────────────────────────────────────────
 export const EDITIONS: Edition[] = [
   {
     id: "foil",
@@ -319,9 +313,6 @@ export const EDITIONS: Edition[] = [
   },
 ];
 
-// ─────────────────────────────────────────────
-// SEALS (4)
-// ─────────────────────────────────────────────
 export const SEALS: Seal[] = [
   {
     id: "red_seal",
@@ -413,9 +404,6 @@ export const SEALS: Seal[] = [
   },
 ];
 
-// ─────────────────────────────────────────────
-// TAGS (24)
-// ─────────────────────────────────────────────
 export const TAGS: Tag[] = [
   {
     id: "uncommon_tag",
@@ -826,3 +814,4 @@ export const TAGS: Tag[] = [
     ],
   },
 ];
+

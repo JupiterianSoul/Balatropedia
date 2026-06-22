@@ -2,16 +2,6 @@ import {
   createContext, useContext, useEffect, useMemo, useState, type ReactNode,
 } from "react";
 
-/**
- * Theme variants for Balatropedia.
- *
- * - "felt"     ; default green-felt casino dark (current canon Balatro look)
- * - "midnight" ; deep black/blue dark variant (high contrast, low fatigue)
- * - "parchment"; light vintage card-table theme (cream surfaces, dark text)
- *
- * Implemented as data attribute on <html>, so :root[data-theme="X"] selectors
- * in index.css can re-map shadcn tokens while preserving Balatro identity vars.
- */
 export type Theme = "felt" | "midnight" | "parchment";
 
 const STORAGE_KEY = "balatro-theme";
@@ -31,7 +21,7 @@ function readStoredTheme(): Theme {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw && VALID_THEMES.includes(raw as Theme)) return raw as Theme;
   } catch {
-    /* sandboxed iframe; fall through */
+
   }
   return DEFAULT_THEME;
 }
@@ -39,7 +29,7 @@ function readStoredTheme(): Theme {
 function applyTheme(t: Theme) {
   if (typeof document === "undefined") return;
   document.documentElement.setAttribute("data-theme", t);
-  // Parchment is the only light variant; keep .dark on html for the other two.
+
   if (t === "parchment") {
     document.documentElement.classList.remove("dark");
     document.documentElement.classList.add("light");
@@ -55,7 +45,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     applyTheme(theme);
     if (typeof window !== "undefined" && window.localStorage) {
-      try { window.localStorage.setItem(STORAGE_KEY, theme); } catch { /* ignore */ }
+      try { window.localStorage.setItem(STORAGE_KEY, theme); } catch {  }
     }
   }, [theme]);
 
@@ -78,3 +68,4 @@ export const THEME_OPTIONS: { value: Theme; labelKey: string; descriptionKey: st
   { value: "midnight",  labelKey: "ui.settings.theme.midnight.label",  descriptionKey: "ui.settings.theme.midnight.desc" },
   { value: "parchment", labelKey: "ui.settings.theme.parchment.label", descriptionKey: "ui.settings.theme.parchment.desc" },
 ];
+

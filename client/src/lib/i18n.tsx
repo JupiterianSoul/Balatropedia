@@ -21,7 +21,6 @@ const GAME: Record<Lang, GameBundle> = {
   es: gameEs as unknown as GameBundle,
 };
 
-/** Resolve a dotted key (e.g. "ui.auth.signin") inside a bundle object. */
 function lookup(bundle: UiBundle, key: string): string | undefined {
   const parts = key.split(".");
   let cur: any = bundle;
@@ -32,7 +31,6 @@ function lookup(bundle: UiBundle, key: string): string | undefined {
   return typeof cur === "string" ? cur : undefined;
 }
 
-/** Resolve a dotted key and return the raw value (string | array | object | undefined). */
 function lookupRaw(bundle: UiBundle, key: string): unknown {
   const parts = key.split(".");
   let cur: any = bundle;
@@ -48,7 +46,6 @@ function interpolate(s: string, vars?: Record<string, string | number>): string 
   return s.replace(/\{\{(\w+)\}\}/g, (_, k) => (vars[k] != null ? String(vars[k]) : `{{${k}}}`));
 }
 
-/** Detect an initial language from the browser, falling back to English. */
 function detectLang(): Lang {
   if (typeof navigator !== "undefined") {
     const nav = (navigator.language || (navigator as any).userLanguage || "en").toLowerCase();
@@ -70,7 +67,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const { user, isSignedIn } = useAuth();
   const [lang, setLangState] = useState<Lang>(detectLang);
 
-  // When the signed-in user has a stored language, adopt it.
   useEffect(() => {
     const userLang = user?.language as Lang | undefined;
     if (userLang && (userLang === "en" || userLang === "fr" || userLang === "es")) {
@@ -82,7 +78,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     (l: Lang) => {
       setLangState(l);
       if (isSignedIn) {
-        // Persist to the account; ignore failures (lang still applies for the session).
+
         apiRequest("PATCH", "/api/auth/language", { language: l })
           .then(() => {
             queryClient.setQueryData(["/api/auth/me"], (prev: any) =>
@@ -114,17 +110,10 @@ export function useI18n(): I18nState {
   return ctx;
 }
 
-/** Returns the translation function bound to the active language. */
 export function useT() {
   return useI18n().t;
 }
 
-/**
- * Translated enum-label maps with the SAME SHAPE as the static constants in
- * helpers.ts (ROLE_LABELS, HAND_LABELS, etc.). Components that previously read
- * those English-only constants can swap to these to get localized labels with
- * minimal call-site churn (e.g. `RARITY_LABELS[r]` → `labels.rarity[r]`).
- */
 export function useLabels() {
   const { t } = useI18n();
   return useMemo(() => {
@@ -178,12 +167,6 @@ function normalizeId(id: string): string {
     .replace(/^_+|_+$/g, "");
 }
 
-/**
- * Resolve a localized game entity's name + text.
- * category: jokers | decks | stakes | tarots | planets | spectrals | vouchers |
- *           enhancements | editions | seals | tags | blinds
- * Falls back to English content, then to the raw id.
- */
 export function useGameText(
   category: string,
   id: string,
@@ -205,11 +188,6 @@ export function useGameText(
   }, [category, id, lang]);
 }
 
-/**
- * Returns a localized string for a curated content key, falling back to EN then to the
- * provided fallback. Use for content like ARCHETYPES.wants, COMBOS.title, SYNERGIES.why
- * that is duplicated across i18n JSON.
- */
 export function useCuratedText(key: string, fallback: string): string {
   const { lang } = useI18n();
   return useMemo(() => {
@@ -218,7 +196,6 @@ export function useCuratedText(key: string, fallback: string): string {
   }, [key, fallback, lang]);
 }
 
-/** Returns a localized string array (e.g. conditions/risks list) with EN + fallback chain. */
 export function useCuratedList(key: string, fallback: string[]): string[] {
   const { lang } = useI18n();
   return useMemo(() => {
@@ -228,19 +205,16 @@ export function useCuratedList(key: string, fallback: string[]): string[] {
   }, [key, fallback, lang]);
 }
 
-/** Non-hook curated string resolver. */
 export function getCuratedText(lang: Lang, key: string, fallback: string): string {
   return lookup(UI[lang], key) ?? lookup(UI.en, key) ?? fallback;
 }
 
-/** Non-hook curated array resolver. */
 export function getCuratedList(lang: Lang, key: string, fallback: string[]): string[] {
   const v = lookupRaw(UI[lang], key) ?? lookupRaw(UI.en, key);
   if (Array.isArray(v) && v.every((x) => typeof x === "string")) return v as string[];
   return fallback;
 }
 
-/** Non-hook resolver for use inside loops/utilities that already know the lang. */
 export function getGameText(lang: Lang, category: string, id: string): { name: string; text: string } {
   const tryGet = (l: Lang) => {
     const cat = GAME[l]?.[category];
@@ -251,3 +225,4 @@ export function getGameText(lang: Lang, category: string, id: string): { name: s
   const en = tryGet("en");
   return { name: active?.name ?? en?.name ?? id, text: active?.text ?? en?.text ?? "" };
 }
+

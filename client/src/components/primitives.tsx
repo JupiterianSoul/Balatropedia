@@ -7,7 +7,6 @@ import {
 import { useLabels, useT, useGameText } from "@/lib/i18n";
 import { playSound } from "@/lib/sound";
 
-/* ---- Rarity badge (Balatro chunky sticker) ---- */
 const RARITY_TONE: Record<Rarity, string> = {
   common: "bg-gradient-to-b from-[hsl(40_14%_85%)] to-[hsl(40_14%_70%)] text-[hsl(198_18%_9%)] border-[hsl(198_18%_9%)]",
   uncommon: "bg-gradient-to-b from-[hsl(206_100%_60%)] to-[hsl(206_100%_45%)] text-white border-[hsl(198_18%_9%)]",
@@ -33,7 +32,6 @@ export function RarityBadge({ rarity, size = "sm", className }: { rarity: Rarity
   );
 }
 
-/* ---- Role pill (Balatro chunky chip) ---- */
 export function RolePill({ role, className }: { role: Role; className?: string }) {
   const labels = useLabels();
   return (
@@ -52,7 +50,6 @@ export function RolePill({ role, className }: { role: Role; className?: string }
   );
 }
 
-/* ---- Level badge with severity coloring ---- */
 const LEVEL_TONE: Record<Level, string> = {
   low: "bg-gradient-to-b from-[hsl(144_50%_60%)] to-[hsl(144_50%_42%)] text-white",
   med: "bg-gradient-to-b from-[hsl(45_85%_65%)] to-[hsl(45_85%_50%)] text-[hsl(198_18%_9%)]",
@@ -121,7 +118,6 @@ export function ScalingBadge({ scaling }: { scaling: Scaling }) {
   );
 }
 
-/* ---- Star favorite toggle ---- */
 export function StarToggle({
   active,
   onToggle,
@@ -156,7 +152,6 @@ export function StarToggle({
   );
 }
 
-/* ---- Clickable joker chip; opens detail ---- */
 export function JokerChip({
   id,
   onClick,
@@ -213,7 +208,6 @@ export function JokerChip({
   return content;
 }
 
-/* ---- Level indicator dots (for compare) ---- */
 export function LevelDots({ level }: { level: Level }) {
   const labels = useLabels();
   const filled = level === "high" ? 3 : level === "med" ? 2 : 1;
@@ -233,7 +227,6 @@ export function LevelDots({ level }: { level: Level }) {
   );
 }
 
-/* ---- Section heading ---- */
 export function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-accent/80">
@@ -241,3 +234,4 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
     </h4>
   );
 }
+

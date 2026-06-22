@@ -9,14 +9,11 @@ import { cn } from "@/lib/utils";
 import { JOKERS, JOKER_MAP } from "@/lib/helpers";
 import { useT, useGameText } from "@/lib/i18n";
 
-/** Localized name for selected-value display (used in trigger button). */
 function SelectedName({ id }: { id: string }) {
   const { name } = useGameText("jokers", id);
   return <>{name || JOKER_MAP[id]?.name || id}</>;
 }
 
-/** Per-row command item with localized name; localized text is used as the
- *  cmdk search value so users can search in their active language. */
 function LocalizedItem({
   joker,
   testId,
@@ -32,8 +29,7 @@ function LocalizedItem({
 }) {
   const { name } = useGameText("jokers", joker.id);
   const label = name || joker.name;
-  // Include the EN name as a hidden keyword so search still works for users
-  // who know the EN names while their UI is in FR/ES.
+
   const value = `${label} ${joker.name}`;
   return (
     <CommandItem
@@ -49,7 +45,6 @@ function LocalizedItem({
   );
 }
 
-/* Single-select combobox */
 export function JokerCombobox({
   value,
   onChange,
@@ -103,7 +98,6 @@ export function JokerCombobox({
   );
 }
 
-/* Multi-select combobox with a max cap */
 export function JokerMultiCombobox({
   values,
   onChange,
@@ -167,3 +161,4 @@ export function JokerMultiCombobox({
     </Popover>
   );
 }
+

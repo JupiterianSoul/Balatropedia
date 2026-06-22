@@ -2,13 +2,13 @@ export type Tarot = {
   id: string;
   name: string;
   effect: string;
-  whenToUse: string;     // concrete trigger or sequencing tip
-  bestWith: string[];    // joker IDs that synergize
+  whenToUse: string;
+  bestWith: string[];
   category: "card_modify" | "economy" | "scaling" | "utility" | "consumable_gen";
-  deepStrategy?: string[];       // 4-6 bullets ≤160 chars each
-  bestTimingNotes?: string;      // 1-2 sentences ≤240 chars
-  commonMistakes?: string[];     // 1-3 bullets
-  comboIdeas?: string[];         // 1-3 short ideas
+  deepStrategy?: string[];
+  bestTimingNotes?: string;
+  commonMistakes?: string[];
+  comboIdeas?: string[];
 };
 
 export const TAROTS: Tarot[] = [
@@ -571,3 +571,4 @@ export const TAROTS: Tarot[] = [
     ],
   },
 ];
+

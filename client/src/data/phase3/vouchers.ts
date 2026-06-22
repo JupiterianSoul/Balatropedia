@@ -2,10 +2,10 @@ export type Voucher = {
   id: string;
   name: string;
   tier: 1 | 2;
-  prerequisite?: string;   // voucher id required for tier-2
+  prerequisite?: string;
   effect: string;
   valueTier: "S" | "A" | "B" | "C";
-  notes: string;           // ≤ 200 chars
+  notes: string;
   deepStrategy?: string[];
   bestTimingNotes?: string;
   commonMistakes?: string[];
@@ -13,7 +13,7 @@ export type Voucher = {
 };
 
 export const VOUCHERS: Voucher[] = [
-  // --- Overstock pair ---
+
   {
     id: "overstock",
     name: "Overstock",
@@ -62,7 +62,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Clearance Sale pair ---
   {
     id: "clearance_sale",
     name: "Clearance Sale",
@@ -111,7 +110,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Hone pair ---
   {
     id: "hone",
     name: "Hone",
@@ -160,7 +158,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Reroll Surplus pair ---
   {
     id: "reroll_surplus",
     name: "Reroll Surplus",
@@ -209,7 +206,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Crystal Ball pair ---
   {
     id: "crystal_ball",
     name: "Crystal Ball",
@@ -258,7 +254,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Telescope pair ---
   {
     id: "telescope",
     name: "Telescope",
@@ -307,7 +302,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Grabber pair ---
   {
     id: "grabber",
     name: "Grabber",
@@ -356,7 +350,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Wasteful pair ---
   {
     id: "wasteful",
     name: "Wasteful",
@@ -405,7 +398,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Tarot Merchant pair ---
   {
     id: "tarot_merchant",
     name: "Tarot Merchant",
@@ -454,7 +446,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Planet Merchant pair ---
   {
     id: "planet_merchant",
     name: "Planet Merchant",
@@ -503,7 +494,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Seed Money pair ---
   {
     id: "seed_money",
     name: "Seed Money",
@@ -552,7 +542,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Blank pair ---
   {
     id: "blank",
     name: "Blank",
@@ -600,7 +589,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Magic Trick pair ---
   {
     id: "magic_trick",
     name: "Magic Trick",
@@ -649,7 +637,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Hieroglyph pair ---
   {
     id: "hieroglyph",
     name: "Hieroglyph",
@@ -698,7 +685,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Director's Cut pair ---
   {
     id: "directors_cut",
     name: "Director's Cut",
@@ -747,7 +733,6 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 
-  // --- Paint Brush pair ---
   {
     id: "paint_brush",
     name: "Paint Brush",
@@ -796,3 +781,4 @@ export const VOUCHERS: Voucher[] = [
     ],
   },
 ];
+

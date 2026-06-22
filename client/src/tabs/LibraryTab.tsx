@@ -82,7 +82,7 @@ export function LibraryTab() {
 
   return (
     <div className="space-y-5">
-      {/* Search + sort row */}
+      {}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -109,7 +109,7 @@ export function LibraryTab() {
         </Select>
       </div>
 
-      {/* Filters */}
+      {}
       <Collapsible open={filtersOpen} onOpenChange={setFiltersOpen}>
         <div className="flex items-center justify-between">
           <CollapsibleTrigger asChild>
@@ -165,7 +165,7 @@ export function LibraryTab() {
         </CollapsibleContent>
       </Collapsible>
 
-      {/* Results */}
+      {}
       <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span data-testid="text-result-count" className="tabular">{t("ui.tabs.library_result_count", { shown: filtered.length, total: JOKERS.length })}</span>
       </div>
@@ -185,3 +185,4 @@ export function LibraryTab() {
     </div>
   );
 }
+

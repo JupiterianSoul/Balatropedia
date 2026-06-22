@@ -36,7 +36,7 @@ export function useDetail(): DetailState {
   return ctx;
 }
 
-/** Convenience hook returning just the opener. */
 export function useOpenDetail() {
   return useDetail().openDetail;
 }
+

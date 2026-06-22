@@ -78,7 +78,7 @@ export function JokerDetailSheet() {
               </SheetHeader>
 
               <div className="mt-6 space-y-6">
-                {/* Why play this? */}
+                {}
                 <section className="rounded-md border border-accent/25 bg-accent/[0.04] p-3.5" data-testid="section-why-play">
                   <div className="mb-2.5 flex items-center gap-1.5">
                     <Sparkles className="h-3.5 w-3.5 text-accent" />
@@ -91,7 +91,7 @@ export function JokerDetailSheet() {
                   </ul>
                 </section>
 
-                {/* Role in a build */}
+                {}
                 <section>
                   <SectionLabel>{t("ui.sheet.role_in_build")}</SectionLabel>
                   <p className="text-sm leading-relaxed text-foreground/85">
@@ -102,13 +102,13 @@ export function JokerDetailSheet() {
                   </p>
                 </section>
 
-                {/* Notes (why strong/weak) */}
+                {}
                 <section>
                   <SectionLabel>{t("ui.sheet.strong_weak")}</SectionLabel>
                   <p className="text-sm leading-relaxed text-foreground/85">{j.notes}</p>
                 </section>
 
-                {/* Best partners grouped */}
+                {}
                 <section>
                   <SectionLabel>{t("ui.sheet.best_partners")}</SectionLabel>
                   {j.partners.length === 0 ? (
@@ -133,7 +133,7 @@ export function JokerDetailSheet() {
                   )}
                 </section>
 
-                {/* Anti-synergies */}
+                {}
                 {j.antiSynergies.length > 0 && (
                   <section>
                     <SectionLabel>{t("ui.sheet.anti_synergies")}</SectionLabel>
@@ -145,7 +145,7 @@ export function JokerDetailSheet() {
                   </section>
                 )}
 
-                {/* Example use cases */}
+                {}
                 <section>
                   <SectionLabel>{t("ui.sheet.example_use")}</SectionLabel>
                   <ul className="space-y-1.5">
@@ -155,7 +155,7 @@ export function JokerDetailSheet() {
                   </ul>
                 </section>
 
-                {/* Beginner callout */}
+                {}
                 <section className="rounded-md border border-accent/30 bg-accent/5 p-3">
                   <div className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-accent">
                     {t("ui.sheet.for_new_players")}
@@ -163,7 +163,7 @@ export function JokerDetailSheet() {
                   <p className="text-sm leading-relaxed text-foreground/90">{j.beginner}</p>
                 </section>
 
-                {/* Note */}
+                {}
                 {isSignedIn && isFavoriteJoker(j.id) ? (
                   <section>
                     <SectionLabel>{t("ui.sheet.your_note_fav")}</SectionLabel>
@@ -205,7 +205,6 @@ export function JokerDetailSheet() {
   );
 }
 
-// ---- Localized "Why play this?" bullet ----
 function WhyBulletRow({ rule }: { rule: WhyRule }) {
   const t = useT();
   const labels = useLabels();
@@ -250,7 +249,6 @@ function WhyBulletRow({ rule }: { rule: WhyRule }) {
   );
 }
 
-// ---- Localized example use-case row ----
 function UseCaseRow({ rule }: { rule: UseCaseRule }) {
   const t = useT();
   const labels = useLabels();
@@ -284,13 +282,12 @@ function UseCaseRow({ rule }: { rule: UseCaseRule }) {
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-// ---- Localized AntiChip; fetches localized name + curated synergy "why" ----
 function AntiChipRow({ jokerAId, jokerBId, onClick }: { jokerAId: string; jokerBId: string; onClick: (id: string) => void }) {
   const t = useT();
   const ja = JOKER_MAP[jokerAId];
   const localized = useGameText("jokers", jokerBId);
   const name = localized.name || JOKER_MAP[jokerBId]?.name || jokerBId;
-  const nameA = ja?.name ?? jokerAId; // fallback EN for interpolation if no synergy match
+  const nameA = ja?.name ?? jokerAId;
 
   const enFallback = antiSynergyReason(jokerAId, jokerBId);
   const synKey = synergyKey(jokerAId, jokerBId);
@@ -317,3 +314,4 @@ function AntiChipRow({ jokerAId, jokerBId, onClick }: { jokerAId: string; jokerB
     </Tooltip>
   );
 }
+

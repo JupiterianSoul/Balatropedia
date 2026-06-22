@@ -11,12 +11,6 @@ import {
 } from "@/lib/entities";
 import type { Phase3Category } from "@/lib/phase3Sprites";
 
-/**
- * Clickable chip for any game entity. Shows the localized name + sprite and
- * opens the appropriate detail surface on click. Jokers route through the
- * existing JokerDetailSheet (appContext); all other kinds go through the
- * global EntityDetailSheet (detailContext).
- */
 export function EntityChip({
   kind,
   id,
@@ -64,3 +58,4 @@ export function EntityChip({
     </button>
   );
 }
+

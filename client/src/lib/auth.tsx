@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: async (input: LoginInput) => {
       const res = await apiRequest("POST", "/api/auth/login", input);
       const json = await res.json();
-      // Set the token immediately so any follow-up calls in this tick are authed.
+
       if (json.token) setAuthToken(json.token as string);
       return json.user as PublicUser;
     },
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: async (input: SignupInput) => {
       const res = await apiRequest("POST", "/api/auth/signup", input);
       const json = await res.json();
-      // Set the token immediately so any follow-up calls in this tick are authed.
+
       if (json.token) setAuthToken(json.token as string);
       return json.user as PublicUser;
     },
@@ -92,3 +92,4 @@ export function useAuth() {
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }
+

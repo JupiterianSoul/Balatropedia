@@ -2,15 +2,6 @@ import { Github, ExternalLink, Heart, BookOpen, AlertTriangle, FlaskConical } fr
 import { SectionLabel } from "@/components/primitives";
 import { useT } from "@/lib/i18n";
 
-/**
- * About tab; project info, source attributions, and an honest accuracy disclaimer.
- *
- * Every strategy claim in Synergies / Combos / Tips is cross-referenced against
- * community-trusted sources (Balatro Fandom Wiki, dood.gg, Balatro HQ, Mobalytics,
- * Two Average Gamers). Per-entry citations render inline via <SourceCitations />.
- * This tab consolidates the full source list + project metadata.
- */
-
 interface SourceLink {
   name: string;
   url: string;
@@ -70,7 +61,7 @@ export function AboutTab() {
         <p className="text-sm text-muted-foreground">{t("ui.about.subtitle")}</p>
       </header>
 
-      {/* What this is */}
+      {}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <BookOpen className="h-3.5 w-3.5 text-accent" />
@@ -81,7 +72,7 @@ export function AboutTab() {
         </p>
       </section>
 
-      {/* Accuracy / sources */}
+      {}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <FlaskConical className="h-3.5 w-3.5 text-accent" />
@@ -112,7 +103,7 @@ export function AboutTab() {
         </p>
       </section>
 
-      {/* Disclaimer */}
+      {}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <AlertTriangle className="h-3.5 w-3.5 text-[hsl(45_85%_60%)]" />
@@ -134,7 +125,7 @@ export function AboutTab() {
         </a>
       </section>
 
-      {/* Credits */}
+      {}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <Heart className="h-3.5 w-3.5 text-[hsl(0_70%_60%)]" />
@@ -191,3 +182,4 @@ export function AboutTab() {
     </div>
   );
 }
+

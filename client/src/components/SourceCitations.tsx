@@ -2,14 +2,6 @@ import { ExternalLink } from "lucide-react";
 import type { SynergySource } from "@/data/jokers";
 import { useT } from "@/lib/i18n";
 
-/**
- * Inline citation chip strip; renders one external-link chip per community source
- * (Balatro Wiki, dood.gg, Balatro HQ, Mobalytics, etc.).
- *
- * Used under synergy "why" blurbs and combo strategy writeups to make the
- * provenance of strategy claims visible and verifiable. When sources are empty,
- * renders nothing.
- */
 export function SourceCitations({
   sources,
   className = "",
@@ -41,3 +33,4 @@ export function SourceCitations({
     </div>
   );
 }
+

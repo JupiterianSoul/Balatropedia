@@ -35,7 +35,6 @@ export function VouchersTab() {
   const [tier, setTier] = useState<string | null>(null);
   const t = useT();
 
-  // Pair tier-1 → tier-2 by prerequisite.
   const rows = useMemo(() => {
     const tier1 = VOUCHERS.filter((v) => v.tier === 1);
     return tier1.map((base) => ({
@@ -91,3 +90,4 @@ export function VouchersTab() {
     </div>
   );
 }
+

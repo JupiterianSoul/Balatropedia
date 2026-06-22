@@ -5,22 +5,22 @@ import { useAuth } from "@/lib/auth";
 import type { Favorite } from "@shared/schema";
 
 interface AppState {
-  // joker favorites
+
   favoriteJokers: Set<string>;
   isFavoriteJoker: (id: string) => boolean;
   toggleFavoriteJoker: (id: string) => void;
-  // combo favorites (session-only; no backend table for combos)
+
   favoriteCombos: Set<string>;
   isFavoriteCombo: (id: string) => boolean;
   toggleFavoriteCombo: (id: string) => void;
-  // notes (session-only key/value; persistent per-favorite notes handled separately)
+
   notes: Record<string, string>;
   setNote: (key: string, value: string) => void;
-  // per-favorite persistent notes (signed in only)
+
   favorites: Favorite[];
   favoriteNote: (jokerId: string) => string;
   setFavoriteNote: (jokerId: string, note: string) => void;
-  // detail sheet
+
   selectedJokerId: string | null;
   openJokerDetail: (id: string) => void;
   closeJokerDetail: () => void;
@@ -31,13 +31,11 @@ const AppContext = createContext<AppState | null>(null);
 export function AppProvider({ children }: { children: ReactNode }) {
   const { isSignedIn } = useAuth();
 
-  // ── Session-only fallback state (signed out) ──
   const [localFavoriteJokers, setLocalFavoriteJokers] = useState<Set<string>>(new Set());
   const [favoriteCombos, setFavoriteCombos] = useState<Set<string>>(new Set());
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [selectedJokerId, setSelectedJokerId] = useState<string | null>(null);
 
-  // ── Server favorites (signed in) ──
   const { data: serverFavorites = [] } = useQuery<Favorite[]>({
     queryKey: ["/api/favorites"],
     enabled: isSignedIn,
@@ -151,3 +149,4 @@ export function useApp() {
   if (!ctx) throw new Error("useApp must be used within AppProvider");
   return ctx;
 }
+

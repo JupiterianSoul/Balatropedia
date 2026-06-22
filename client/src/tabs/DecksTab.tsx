@@ -66,7 +66,7 @@ export function DecksTab() {
         </div>
       </div>
 
-      {/* Difficulty filter */}
+      {}
       <div className="flex flex-wrap gap-1.5">
         <FilterPill label={t("ui.common.all")} active={!diff} onClick={() => setDiff(null)} testId="filter-deck-all" />
         {DIFFS.map((d) => (
@@ -74,7 +74,7 @@ export function DecksTab() {
         ))}
       </div>
 
-      {/* Grid */}
+      {}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {decks.map((d) => (
           <div
@@ -119,3 +119,4 @@ export function DecksTab() {
     </div>
   );
 }
+
