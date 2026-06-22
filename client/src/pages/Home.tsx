@@ -59,17 +59,17 @@ export default function Home() {
     <div className="flex min-h-[100dvh] flex-col">
       <Tabs value={tab} onValueChange={setTab} className="flex min-h-[100dvh] flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-30 border-b-4 border-black bg-[hsl(155_38%_15%)]/95 backdrop-blur supports-[backdrop-filter]:bg-[hsl(155_38%_15%)]/85">
+        <header className="sticky top-0 z-30 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90">
           <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:gap-6">
             {/* logo + title */}
             <div className="flex items-center gap-3">
               <Logo className="h-9 w-9 shrink-0" />
               <div className="leading-tight">
-                <h1 className="font-pixel text-lg font-semibold tracking-tight">
+                <h1 className="font-display text-2xl font-bold tracking-tight leading-none">
                   <span className="mult-text">{t("ui.header.title_a")}</span>{" "}
                   <span className="chips-text">{t("ui.header.title_b")}</span>
                 </h1>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="mt-1 font-display text-[11px] uppercase tracking-[0.18em] text-[hsl(45_85%_60%)]/80">
                   {t("ui.header.tagline")}
                 </p>
               </div>

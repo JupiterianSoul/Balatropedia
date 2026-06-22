@@ -34,7 +34,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-start gap-2.5">
           <JokerSprite jokerId={joker.id} name={displayName} size={48} className="h-12 w-12 sm:h-14 sm:w-14" />
-          <h3 className="min-w-0 font-pixel text-base font-semibold leading-tight text-accent">
+          <h3 className="min-w-0 font-display text-base font-bold leading-tight gold-text">
             {displayName}
           </h3>
         </div>
@@ -54,7 +54,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
           <RolePill key={r} role={r} />
         ))}
         {extra > 0 && (
-          <span className="inline-flex items-center rounded-full border border-border px-1.5 py-0.5 text-[11px] text-muted-foreground">
+          <span className="font-display inline-flex items-center rounded-md border-2 border-[hsl(198_18%_9%)] bg-gradient-to-b from-[hsl(198_14%_25%)] to-[hsl(198_14%_15%)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white/90 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.2),0_2px_0_hsl(198_18%_4%)]">
             +{extra}
           </span>
         )}
