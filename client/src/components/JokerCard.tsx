@@ -18,7 +18,8 @@ export function JokerCard({ joker }: { joker: Joker }) {
     <div
       role="button"
       tabIndex={0}
-      onClick={() => { playSound("card_place"); openJokerDetail(joker.id); }}
+      data-sound="card_place"
+      onClick={() => openJokerDetail(joker.id)}
       onMouseEnter={() => playSound("hover")}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

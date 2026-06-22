@@ -39,7 +39,6 @@ export function NavList({ groups, currentTab, onSelect, favCount }: NavListProps
   const t = useT();
 
   function go(v: TabValue) {
-    playSound("tab_switch");
     onSelect(v);
   }
 
@@ -53,6 +52,7 @@ export function NavList({ groups, currentTab, onSelect, favCount }: NavListProps
             <button
               key={group.key}
               type="button"
+              data-sound="tab_switch"
               onClick={() => go(v)}
               onMouseEnter={() => playSound("hover")}
               className={`balatro-tab w-full justify-start whitespace-nowrap text-left font-pixel ${isActiveGroup ? "is-active" : ""}`}
@@ -79,6 +79,7 @@ export function NavList({ groups, currentTab, onSelect, favCount }: NavListProps
                   <button
                     key={v}
                     type="button"
+                    data-sound="tab_switch"
                     onClick={() => go(v)}
                     onMouseEnter={() => playSound("hover")}
                     className={`rounded px-3 py-2 text-left text-sm transition-colors hover:bg-[hsl(150_16%_10%)] ${
@@ -99,6 +100,7 @@ export function NavList({ groups, currentTab, onSelect, favCount }: NavListProps
       })}
       <button
         type="button"
+        data-sound="tab_switch"
         onClick={() => go("favorites")}
         onMouseEnter={() => playSound("hover")}
         className={`balatro-tab mt-2 flex w-full items-center justify-start gap-2 whitespace-nowrap text-left font-pixel ${currentTab === "favorites" ? "is-active" : ""}`}
