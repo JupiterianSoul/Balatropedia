@@ -3,6 +3,7 @@ import { Joker } from "@/lib/helpers";
 import { useGameText } from "@/lib/i18n";
 import { RolePill, RiskBadge, StageBadge, StarToggle, RarityBadge } from "./primitives";
 import { JokerSprite } from "./JokerSprite";
+import { playSound } from "@/lib/sound";
 
 export function JokerCard({ joker }: { joker: Joker }) {
   const { openJokerDetail, isFavoriteJoker, toggleFavoriteJoker } = useApp();
@@ -15,7 +16,8 @@ export function JokerCard({ joker }: { joker: Joker }) {
     <div
       role="button"
       tabIndex={0}
-      onClick={() => openJokerDetail(joker.id)}
+      onClick={() => { playSound("chip"); openJokerDetail(joker.id); }}
+      onMouseEnter={() => playSound("hover")}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();

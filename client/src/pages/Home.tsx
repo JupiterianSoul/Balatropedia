@@ -7,6 +7,8 @@ import { JokerDetailSheet } from "@/components/JokerDetailSheet";
 import { EntityDetailSheet } from "@/components/EntityDetailSheet";
 import { UserButton } from "@/components/UserButton";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { SoundToggle } from "@/components/SoundToggle";
+import { playSound } from "@/lib/sound";
 import { useI18n, useT } from "@/lib/i18n";
 import { LibraryTab } from "@/tabs/LibraryTab";
 import { MyRunTab } from "@/tabs/MyRunTab";
@@ -57,7 +59,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
-      <Tabs value={tab} onValueChange={setTab} className="flex min-h-[100dvh] flex-col">
+      <Tabs value={tab} onValueChange={(v) => { playSound("click"); setTab(v); }} className="flex min-h-[100dvh] flex-col">
         {/* Header */}
         <header className="sticky top-0 z-30 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90">
           <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:gap-6">
@@ -84,6 +86,7 @@ export default function Home() {
                     value={tabItem.value}
                     data-testid={`tab-${tabItem.value}`}
                     className="balatro-tab whitespace-nowrap font-pixel"
+                    onMouseEnter={() => playSound("hover")}
                   >
                     {t(`ui.nav.${tabItem.value}`)}
                   </TabsTrigger>
@@ -102,6 +105,7 @@ export default function Home() {
                 <span className="tabular">{favCount}</span>
               </button>
               <LanguageSwitcher />
+              <SoundToggle />
               <UserButton />
             </div>
           </div>

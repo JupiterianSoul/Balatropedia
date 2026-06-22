@@ -3,22 +3,12 @@
 @tailwind utilities;
 
 /* ============================================================
-   AUTHENTIC BALATRO THEME — palette + font sourced from the
-   game's globals.lua (localthunk / Playstack) and the m6x11plus
-   font (Daniel Linssen, free with attribution).
-
-   Canonical hex values from G.C:
-     MULT     #fe5f55  (red)
-     CHIPS    #009dff  (blue)
-     MONEY    #f0c040  (gold)
-     PURPLE   #9b59b6  (planet / consumable)
-     GREEN    #4f6367  (deep felt) / #50c878 (hand-remaining)
-     IMPORTANT/FILTER  #ff9a00  (orange highlight)
-     UI.BACKGROUND_INACTIVE  #374244
-     UI.BACKGROUND_LIGHT     #fff7e8
+   AUTHENTIC BALATRO THEME — palette + UIBox constants ported
+   verbatim from globals.lua G.C and engine/ui.lua.
+   Source: github.com/idkhan/Balatro3DS/globals.lua (line 316+)
+   Font: m6x11plus (Daniel Linssen, free w/ attribution)
    ============================================================ */
 
-/* ---- m6x11plus self-hosted ---- */
 @font-face {
   font-family: "m6x11plus";
   src: url("/fonts/m6x11plus.ttf") format("truetype");
@@ -32,78 +22,152 @@
   --button-outline: rgba(255, 255, 255, 0.10);
   --badge-outline: rgba(0, 0, 0, 0.30);
   --opaque-button-border-intensity: 9;
-  --elevate-1: rgba(240, 192, 64, 0.06);
-  --elevate-2: rgba(240, 192, 64, 0.12);
+  --elevate-1: rgba(234, 192, 88, 0.06);
+  --elevate-2: rgba(234, 192, 88, 0.12);
 
-  /* Background: deeper Balatro table (the felt vignette) */
-  --background: 178 14% 17%;       /* #25393b — dark slate-teal */
-  --foreground: 40 50% 96%;        /* near-white off-white (UI.TEXT_LIGHT) */
-  --border: 195 8% 25%;
+  /* ────────────────────────────────────────────────────────────
+     EXACT G.C palette from globals.lua (line 316+)
+     Every value below is the in-game canonical hex.
+     ──────────────────────────────────────────────────────────── */
 
-  --card: 198 12% 23%;             /* #344546 — UI dark panel */
-  --card-foreground: 40 50% 96%;
-  --card-border: 197 9% 33%;       /* #4f6367 — UI border light */
+  /* Core score colors */
+  --bal-mult: 4 99% 66%;            /* #FE5F55 G.C.MULT/RED */
+  --bal-mult-dark: 8 76% 36%;       /* #A42615 G.C.MULT_DARK */
+  --bal-chip: 206 100% 50%;         /* #009DFF G.C.CHIPS/BLUE */
+  --bal-chip-dark: 211 83% 36%;     /* #0F53A6 G.C.CHIPS_DARK */
+  --bal-money: 41 86% 65%;          /* #F3B958 G.C.MONEY */
+  --bal-gold: 42 78% 63%;           /* #EAC058 G.C.GOLD */
+  --bal-filter: 36 100% 50%;        /* #FF9A00 G.C.FILTER/IMPORTANT */
+  --bal-orange: 38 100% 50%;        /* #FDA200 G.C.ORANGE */
+  --bal-green: 156 47% 53%;         /* #4BC292 G.C.GREEN/CHANCE */
+  --bal-pale-green: 152 33% 50%;    /* #56A887 G.C.PALE_GREEN */
+  --bal-purple: 264 26% 53%;        /* #8867A5 G.C.PURPLE */
+  --bal-yellow: 60 100% 50%;        /* #FFFF00 G.C.YELLOW */
 
-  --sidebar: 198 12% 23%;
-  --sidebar-foreground: 40 50% 96%;
-  --sidebar-border: 197 9% 33%;
-  --sidebar-primary: 4 99% 66%;
-  --sidebar-primary-foreground: 40 50% 98%;
-  --sidebar-accent: 195 8% 28%;
-  --sidebar-accent-foreground: 40 50% 96%;
-  --sidebar-ring: 45 85% 60%;
+  /* UI surfaces (the famous teal-grey panels) */
+  --bal-black: 192 9% 24%;          /* #374244 G.C.BLACK — note: NOT pure black */
+  --bal-l-black: 192 14% 35%;       /* #4F6367 G.C.L_BLACK */
+  --bal-grey: 188 10% 41%;          /* #5F7377 G.C.GREY */
+  --bal-joker-grey: 218 22% 79%;    /* #BFC7D5 G.C.JOKER_GREY */
+  --bal-white: 0 0% 100%;
+  --bal-tooltip: 195 12% 27%;       /* #3F4A4D G.C.TOOLTIP */
+  --bal-panel: 192 12% 21%;         /* #2E3A3C G.C.PANEL */
+  --bal-block-back: 198 21% 13%;    /* #1B2629 G.C.BLOCK.BACK */
+  --bal-block-shadow: 195 32% 6%;   /* #0B1415 G.C.BLOCK.SHADOW */
 
-  --popover: 198 12% 21%;
-  --popover-foreground: 40 50% 96%;
-  --popover-border: 197 9% 33%;
+  /* Voucher / booster / stickers */
+  --bal-voucher: 17 53% 55%;        /* #CB724C G.C.VOUCHER */
+  --bal-booster: 232 38% 56%;       /* #646EB7 G.C.BOOSTER */
+  --bal-eternal: 330 53% 56%;       /* #C75985 G.C.ETERNAL */
+  --bal-perishable: 232 33% 47%;    /* #4F5DA1 G.C.PERISHABLE */
+  --bal-rental: 38 47% 48%;         /* #B18F43 G.C.RENTAL */
 
-  /* Primary surface: mult red — Balatro's hero brand colour */
-  --primary: 4 99% 66%;            /* #fe5f55 G.C.MULT */
-  --primary-foreground: 40 50% 98%;
+  /* Rarity (G.C.RARITY indices) */
+  --bal-rarity-common: 206 100% 50%;   /* #009DFF blue */
+  --bal-rarity-uncommon: 156 47% 53%;  /* #4BC292 green */
+  --bal-rarity-rare: 4 99% 66%;        /* #FE5F55 red */
+  --bal-rarity-legendary: 295 35% 58%; /* #B26CBB purple */
 
-  /* Secondary: chip blue */
-  --secondary: 206 100% 50%;       /* #009dff G.C.CHIPS */
-  --secondary-foreground: 40 50% 98%;
+  /* SECONDARY_SET (consumable backdrops) */
+  --bal-set-tarot: 273 47% 66%;        /* #A782D1 */
+  --bal-set-planet: 190 82% 44%;       /* #13AFCE */
+  --bal-set-spectral: 220 95% 63%;     /* #4584FA */
+  --bal-set-voucher: 18 98% 58%;       /* #FD682B */
+  --bal-set-edition: 165 39% 47%;      /* #4CA893 */
 
-  --muted: 195 8% 26%;
-  --muted-foreground: 40 14% 78%;
+  /* UI sub-table */
+  --bal-ui-text-light: 0 0% 100%;          /* WHITE */
+  --bal-ui-text-dark: 192 14% 35%;         /* #4F6367 */
+  --bal-ui-text-inactive: 0 0% 53%;        /* #888888 */
+  --bal-ui-bg-light: 180 32% 78%;          /* #B8D8D8 */
+  --bal-ui-bg-dark: 182 16% 55%;           /* #7A9E9F */
+  --bal-ui-bg-inactive: 0 0% 40%;          /* #666666 */
+  --bal-ui-outline-light: 0 0% 85%;        /* #D8D8D8 */
 
-  /* Accent: money gold */
-  --accent: 45 85% 60%;            /* #f0c040 G.C.MONEY */
-  --accent-foreground: 198 18% 13%;
+  /* Suit colors (default high-contrast set) */
+  --bal-suit-hearts: 4 99% 66%;        /* #FE5F55 */
+  --bal-suit-diamonds: 4 99% 66%;      /* #FE5F55 */
+  --bal-suit-spades: 192 26% 22%;      /* #374649 */
+  --bal-suit-clubs: 196 12% 30%;       /* #424E54 */
 
-  --destructive: 4 99% 66%;        /* same as MULT in Balatro */
-  --destructive-foreground: 40 50% 98%;
+  /* Background (game uses BACKGROUND.D for the felt) */
+  --bal-bg-d: 192 9% 24%;              /* #374244 — actual game felt */
 
-  --input: 195 8% 28%;
-  --ring: 45 85% 60%;
+  /* ────────────────────────────────────────────────────────────
+     Theme tokens (shadcn) → mapped onto Balatro vars
+     ──────────────────────────────────────────────────────────── */
+  --background: 192 9% 18%;            /* darker felt for vignette contrast */
+  --foreground: 0 0% 100%;             /* UI.TEXT_LIGHT */
+  --border: var(--bal-l-black);
 
-  /* Canonical Balatro signal colors (G.C) */
-  --bal-mult: 4 99% 66%;           /* #fe5f55 */
-  --bal-chip: 206 100% 50%;        /* #009dff */
-  --bal-gold: 45 85% 60%;          /* #f0c040 */
-  --bal-purple: 282 33% 53%;       /* #9b59b6 G.C.PURPLE */
-  --bal-green: 144 50% 55%;        /* #50c878 G.C.GREEN */
-  --bal-orange: 35 100% 50%;       /* #ff9a00 G.C.IMPORTANT/FILTER */
-  --bal-edition: 165 75% 60%;      /* foil teal */
-  --bal-felt: 168 30% 18%;         /* deep table teal */
-  --bal-felt-light: 168 25% 28%;
-  --bal-black: 198 18% 9%;         /* G.C.BLACK */
+  --card: var(--bal-panel);
+  --card-foreground: var(--bal-ui-text-light);
+  --card-border: var(--bal-l-black);
 
-  --chart-1: 4 99% 66%;
-  --chart-2: 45 85% 60%;
-  --chart-3: 206 100% 50%;
-  --chart-4: 144 50% 55%;
-  --chart-5: 282 33% 53%;
+  --sidebar: var(--bal-panel);
+  --sidebar-foreground: var(--bal-ui-text-light);
+  --sidebar-border: var(--bal-l-black);
+  --sidebar-primary: var(--bal-mult);
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: var(--bal-black);
+  --sidebar-accent-foreground: var(--bal-ui-text-light);
+  --sidebar-ring: var(--bal-gold);
 
-  /* Body uses a clean readable sans so long descriptions stay legible.
-     Display/headings/buttons use the pixel m6x11plus font for the
-     authentic Balatro feel. */
+  --popover: var(--bal-tooltip);
+  --popover-foreground: var(--bal-ui-text-light);
+  --popover-border: var(--bal-l-black);
+
+  --primary: var(--bal-mult);
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: var(--bal-chip);
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: var(--bal-black);
+  --muted-foreground: 218 22% 79%;        /* JOKER_GREY */
+
+  --accent: var(--bal-gold);
+  --accent-foreground: 192 9% 18%;
+
+  --destructive: var(--bal-mult);
+  --destructive-foreground: 0 0% 100%;
+
+  --input: var(--bal-black);
+  --ring: var(--bal-gold);
+
+  --chart-1: var(--bal-mult);
+  --chart-2: var(--bal-gold);
+  --chart-3: var(--bal-chip);
+  --chart-4: var(--bal-green);
+  --chart-5: var(--bal-purple);
+
+  /* ────────────────────────────────────────────────────────────
+     TYPOGRAPHY — m6x11plus is the game font.
+     Game text scales (from card.lua): 0.32 / 0.4 / 0.55 / 0.8 / 1.0 / 1.5
+     Mapping to pixels: 1.0 ≈ 36px (the game's base unit).
+     ──────────────────────────────────────────────────────────── */
   --font-sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-serif: "m6x11plus", Silkscreen, VT323, Georgia, serif;
   --font-display: "m6x11plus", Silkscreen, VT323, Georgia, serif;
   --font-mono: "Geist Mono", Menlo, monospace;
-  --radius: 0.5rem;
+
+  /* Balatro scale → px */
+  --bal-text-xs: 11px;        /* scale 0.32 */
+  --bal-text-sm: 14px;        /* scale 0.4 */
+  --bal-text-md: 20px;        /* scale 0.55 */
+  --bal-text-lg: 28px;        /* scale 0.8 */
+  --bal-text-xl: 36px;        /* scale 1.0 */
+  --bal-text-2xl: 54px;       /* scale 1.5 */
+
+  /* UIBox constants (from engine/ui.lua) */
+  --bal-r: 0.5rem;            /* r = 0.1 → ~8px corner */
+  --bal-r-sm: 0.375rem;       /* r = 0.08 */
+  --bal-emboss: 4px;          /* emboss = 0.05 → drop shadow */
+  --bal-emboss-deep: 6px;     /* emboss = 0.1 */
+  --bal-padding: 0.625rem;    /* padding = 0.1 */
+  --bal-padding-sm: 0.375rem; /* padding = 0.05 */
+
+  --radius: var(--bal-r);
 
   --shadow-2xs: none;
   --shadow-xs: none;
@@ -117,72 +181,52 @@
   --spacing: 0.25rem;
 
   --sidebar-primary-border: hsl(var(--sidebar-primary));
-  --sidebar-primary-border: hsl(
-    from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
-  );
-  --sidebar-accent-border: hsl(var(--sidebar-accent));
-  --sidebar-accent-border: hsl(
-    from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
-  );
   --primary-border: hsl(var(--primary));
-  --primary-border: hsl(
-    from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
-  );
   --secondary-border: hsl(var(--secondary));
-  --secondary-border: hsl(
-    from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
-  );
   --muted-border: hsl(var(--muted));
-  --muted-border: hsl(
-    from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
-  );
   --accent-border: hsl(var(--accent));
-  --accent-border: hsl(
-    from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
-  );
   --destructive-border: hsl(var(--destructive));
-  --destructive-border: hsl(
-    from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
-  );
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
 
-  html {
-    font-feature-settings: "ss01", "cv11";
-  }
+  html { font-feature-settings: "ss01", "cv11"; }
 
-  /* All headings get the pixel display font with a hard drop shadow */
+  /* Pixel-font defaults for all headings */
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     letter-spacing: 0.04em;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6);
     -webkit-font-smoothing: none;
     -moz-osx-font-smoothing: grayscale;
+    image-rendering: pixelated;
   }
 
-  /* Pixel-font helper: when applied, disable smoothing so the
-     m6x11plus glyphs render as crispy pixels. */
   .font-pixel, .font-display {
     -webkit-font-smoothing: none;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* ─── Balatro felt-table background ───
+     The game uses BACKGROUND.D (#374244) with a radial vignette
+     (warm at top, mult-red haze at bottom corners) and a subtle
+     dot pattern for the felt texture. */
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    /* Balatro felt-table background: deep teal with a soft yellow vignette
-       at the top and a subtle dot grid (matches the in-game felt texture). */
     background-color: hsl(var(--background));
     background-image:
-      radial-gradient(ellipse 80% 60% at 50% 0%, hsla(45, 85%, 60%, 0.10), transparent 70%),
-      radial-gradient(ellipse 60% 80% at 50% 100%, hsla(4, 99%, 50%, 0.08), transparent 70%),
-      radial-gradient(circle at center, transparent 0, hsla(198, 18%, 5%, 0.45) 100%),
-      radial-gradient(hsla(155, 30%, 60%, 0.06) 1px, transparent 1px);
-    background-size: auto, auto, auto, 12px 12px;
-    background-position: center top, center bottom, center, center;
+      /* Warm top vignette (sunset glow) */
+      radial-gradient(ellipse 90% 50% at 50% 0%, hsla(42, 78%, 63%, 0.10), transparent 70%),
+      /* Mult-red corner haze */
+      radial-gradient(ellipse 50% 70% at 0% 100%, hsla(4, 99%, 66%, 0.07), transparent 70%),
+      radial-gradient(ellipse 50% 70% at 100% 100%, hsla(206, 100%, 50%, 0.06), transparent 70%),
+      /* Center darkening vignette */
+      radial-gradient(circle at center, transparent 0, hsla(195, 32%, 6%, 0.55) 110%),
+      /* Felt dot grid */
+      radial-gradient(hsla(192, 14%, 35%, 0.18) 1.5px, transparent 1.5px);
+    background-size: auto, auto, auto, auto, 14px 14px;
+    background-position: center top, left bottom, right bottom, center, center;
     background-attachment: fixed;
     min-height: 100dvh;
     text-rendering: optimizeLegibility;
@@ -190,7 +234,7 @@
 }
 
 @layer components {
-  /* ── Font helpers ──────────────────────────────────────────────────── */
+  /* ─── Font helpers ─────────────────────────────────────────── */
   .font-display {
     font-family: var(--font-display);
     letter-spacing: 0.04em;
@@ -200,191 +244,204 @@
     letter-spacing: 0.05em;
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.7);
   }
-  .font-body {
-    font-family: var(--font-sans);
-    letter-spacing: 0.02em;
-  }
+  .font-body { font-family: var(--font-sans); letter-spacing: 0.01em; }
 
-  /* ── Balatro score-style neon text ────────────────────────────────────
-     The in-game score uses a hard black drop shadow + coloured halo
-     so the chunky pixel letters punch off the felt. */
+  /* Balatro text scale helpers (m6x11plus at game-accurate sizes) */
+  .text-bal-xs { font-size: var(--bal-text-xs); line-height: 1.1; }
+  .text-bal-sm { font-size: var(--bal-text-sm); line-height: 1.1; }
+  .text-bal-md { font-size: var(--bal-text-md); line-height: 1.0; }
+  .text-bal-lg { font-size: var(--bal-text-lg); line-height: 1.0; }
+  .text-bal-xl { font-size: var(--bal-text-xl); line-height: 1.0; }
+  .text-bal-2xl { font-size: var(--bal-text-2xl); line-height: 1.0; }
+
+  /* ─── Score-text (the iconic Balatro coloured score) ───
+     Hard black drop shadow + coloured halo, exactly matching the
+     in-game DynaText. Bumped halo intensity to match the CRT bloom. */
   .mult-text {
     color: hsl(var(--bal-mult));
     text-shadow:
-      0 0 14px hsl(var(--bal-mult) / 0.55),
-      2px 2px 0 #000,
-      1px 1px 0 #000;
+      0 0 18px hsl(var(--bal-mult) / 0.65),
+      0 0 6px hsl(var(--bal-mult) / 0.4),
+      2px 2px 0 #000, 1px 1px 0 #000;
   }
   .chips-text {
     color: hsl(var(--bal-chip));
     text-shadow:
-      0 0 14px hsl(var(--bal-chip) / 0.55),
-      2px 2px 0 #000,
-      1px 1px 0 #000;
+      0 0 18px hsl(var(--bal-chip) / 0.65),
+      0 0 6px hsl(var(--bal-chip) / 0.4),
+      2px 2px 0 #000, 1px 1px 0 #000;
   }
-  .gold-text {
+  .gold-text, .money-text {
     color: hsl(var(--bal-gold));
     text-shadow:
-      0 0 14px hsl(var(--bal-gold) / 0.55),
-      2px 2px 0 #000,
-      1px 1px 0 #000;
+      0 0 18px hsl(var(--bal-gold) / 0.65),
+      0 0 6px hsl(var(--bal-gold) / 0.4),
+      2px 2px 0 #000, 1px 1px 0 #000;
   }
   .purple-text {
     color: hsl(var(--bal-purple));
     text-shadow:
-      0 0 14px hsl(var(--bal-purple) / 0.55),
-      2px 2px 0 #000,
-      1px 1px 0 #000;
+      0 0 18px hsl(var(--bal-purple) / 0.65),
+      0 0 6px hsl(var(--bal-purple) / 0.4),
+      2px 2px 0 #000, 1px 1px 0 #000;
   }
   .green-text {
     color: hsl(var(--bal-green));
     text-shadow:
-      0 0 14px hsl(var(--bal-green) / 0.55),
-      2px 2px 0 #000,
-      1px 1px 0 #000;
+      0 0 18px hsl(var(--bal-green) / 0.65),
+      0 0 6px hsl(var(--bal-green) / 0.4),
+      2px 2px 0 #000, 1px 1px 0 #000;
   }
   .orange-text {
-    color: hsl(var(--bal-orange));
+    color: hsl(var(--bal-filter));
     text-shadow:
-      0 0 14px hsl(var(--bal-orange) / 0.55),
-      2px 2px 0 #000,
-      1px 1px 0 #000;
+      0 0 18px hsl(var(--bal-filter) / 0.65),
+      0 0 6px hsl(var(--bal-filter) / 0.4),
+      2px 2px 0 #000, 1px 1px 0 #000;
+  }
+  .white-text {
+    color: hsl(var(--bal-white));
+    text-shadow:
+      0 0 14px hsla(0, 0%, 100%, 0.4),
+      2px 2px 0 #000, 1px 1px 0 #000;
   }
 
-  /* ── Tilted/shaky hover for joker cards (matches in-game card juice) ─ */
+  /* ─── Card hover juice (ported from Card:hover in card.lua) ───
+     The game tilts the card by ~hover_tilt radians + scales 1.05.
+     We mimic with a rotate/translate/scale that uses Balatro's
+     elastic-out easing (cubic-bezier(0.34, 1.56, 0.64, 1)). */
   .balatro-hover {
-    transition: transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center bottom;
   }
   .balatro-hover:hover,
   .balatro-hover:focus-visible {
-    transform: rotate(-2.5deg) translateY(-6px) scale(1.04);
+    transform: rotate(-2.5deg) translateY(-8px) scale(1.05);
     outline: none;
     z-index: 2;
   }
 
-  /* Pixelated sprite edges. */
-  .pixelated {
-    image-rendering: pixelated;
-  }
+  .pixelated { image-rendering: pixelated; }
 
-  /* ── In-game tab button (UIBox_button look) ───────────────────────────
-     Inactive = dark panel; active = mult-red fill with chunky white
-     emboss, matching the "Play / Discard" buttons. */
+  /* ─── UIBox button (the iconic chunky tab/action button) ───
+     Direct port of UIBox_button with r=0.1, emboss=0.1, outline=1.
+     Inactive: dark panel. Active: mult-red with deep emboss. */
   .balatro-tab {
-    @apply rounded-md border-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider;
+    @apply rounded-md border-2 px-4 py-1.5 text-xs font-bold uppercase tracking-wider;
     font-family: var(--font-display);
-    border-color: hsl(195 8% 18%);
-    background: linear-gradient(180deg, hsl(195 8% 30%) 0%, hsl(195 8% 22%) 100%);
-    color: hsl(40 14% 75%);
+    border-color: hsl(var(--bal-block-shadow));
+    background: linear-gradient(180deg, hsl(var(--bal-l-black)) 0%, hsl(var(--bal-black)) 100%);
+    color: hsl(var(--bal-joker-grey));
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.10),
-      0 3px 0 hsl(198 18% 5%),
-      0 4px 0 hsl(198 18% 0%);
+      inset 0 1px 0 hsl(0 0% 100% / 0.12),
+      0 var(--bal-emboss) 0 hsl(var(--bal-block-shadow)),
+      0 calc(var(--bal-emboss) + 2px) 4px rgba(0, 0, 0, 0.5);
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
     transition:
       transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1),
-      background 120ms ease,
-      color 120ms ease,
-      box-shadow 120ms ease;
+      background 120ms ease, color 120ms ease, box-shadow 120ms ease;
   }
   .balatro-tab:hover {
     transform: translateY(-1px);
-    color: hsl(var(--accent));
+    color: hsl(var(--bal-gold));
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.18),
+      0 calc(var(--bal-emboss) + 1px) 0 hsl(var(--bal-block-shadow)),
+      0 calc(var(--bal-emboss) + 3px) 6px rgba(0, 0, 0, 0.55);
   }
   .balatro-tab:active {
-    transform: translateY(2px);
+    transform: translateY(3px);
     box-shadow:
       inset 0 1px 0 hsl(0 0% 100% / 0.10),
-      0 1px 0 hsl(198 18% 5%);
+      0 1px 0 hsl(var(--bal-block-shadow));
   }
   .balatro-tab[data-state="active"] {
-    border-color: hsl(45 85% 75%);
-    background: linear-gradient(180deg, hsl(4 99% 72%) 0%, hsl(4 99% 60%) 100%);
+    border-color: hsl(var(--bal-mult-dark));
+    background: linear-gradient(180deg, hsl(4 99% 72%) 0%, hsl(var(--bal-mult)) 100%);
     color: #fff;
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.30),
-      0 3px 0 hsl(4 99% 38%),
-      0 4px 0 hsl(198 18% 0%);
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+      inset 0 1px 0 hsl(0 0% 100% / 0.40),
+      inset 0 -2px 0 hsl(var(--bal-mult-dark) / 0.4),
+      0 var(--bal-emboss) 0 hsl(var(--bal-mult-dark)),
+      0 calc(var(--bal-emboss) + 2px) 0 hsl(var(--bal-block-shadow)),
+      0 calc(var(--bal-emboss) + 6px) 8px hsl(var(--bal-mult) / 0.35);
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45);
   }
 
-  /* ── Chunky Balatro card (UIBox root style) ───────────────────────────
-     The in-game card uses an emboss + thick black bottom shadow that
-     gives a tactile "press" feel. We layer:
-       - outer dark ring (G.C.UI.BACKGROUND_INACTIVE)
-       - thick black drop shadow (the 4px shelf)
-       - inner highlight on top edge (emboss)
-   ── */
+  /* ─── UIBox card (the joker card frame) ───
+     The in-game joker card uses: 2px outer dark border, inner inset
+     highlight (the white emboss top edge), and a thick black bottom
+     shelf (emboss = 0.05 → 4-5px). On hover it tilts and lifts. */
   .balatro-card {
-    background: linear-gradient(180deg, hsl(198 12% 26%) 0%, hsl(198 12% 20%) 100%);
-    border: 2px solid hsl(198 18% 9%);
-    border-radius: 0.5rem;
+    background: linear-gradient(180deg, hsl(var(--bal-l-black)) 0%, hsl(var(--bal-panel)) 100%);
+    border: 2px solid hsl(var(--bal-block-shadow));
+    border-radius: var(--bal-r);
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.08),
-      inset 0 0 0 1px hsl(197 9% 38%),
-      0 4px 0 hsl(198 18% 4%),
-      0 6px 8px -2px rgba(0, 0, 0, 0.55);
+      inset 0 1px 0 hsl(0 0% 100% / 0.10),
+      inset 0 0 0 1px hsl(var(--bal-l-black)),
+      inset 0 -2px 0 hsl(var(--bal-block-shadow) / 0.6),
+      0 var(--bal-emboss) 0 hsl(var(--bal-block-shadow)),
+      0 calc(var(--bal-emboss) + 4px) 10px rgba(0, 0, 0, 0.55);
     transition:
-      transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1),
-      box-shadow 160ms ease,
-      border-color 160ms ease;
+      transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 200ms ease,
+      border-color 200ms ease;
   }
   .balatro-card-interactive:hover,
   .balatro-card-interactive:focus-visible {
-    transform: translateY(-3px) rotate(-0.5deg);
-    border-color: hsl(var(--accent) / 0.7);
+    transform: translateY(-4px) rotate(-0.5deg);
+    border-color: hsl(var(--bal-gold) / 0.7);
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.10),
-      inset 0 0 0 1px hsl(var(--accent) / 0.4),
-      0 7px 0 hsl(198 18% 4%),
-      0 12px 12px -2px rgba(0, 0, 0, 0.5);
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      inset 0 0 0 1px hsl(var(--bal-gold) / 0.45),
+      inset 0 -2px 0 hsl(var(--bal-block-shadow) / 0.6),
+      0 calc(var(--bal-emboss) + 4px) 0 hsl(var(--bal-block-shadow)),
+      0 calc(var(--bal-emboss) + 10px) 16px rgba(0, 0, 0, 0.5),
+      0 0 24px -4px hsl(var(--bal-gold) / 0.25);
     outline: none;
   }
   .balatro-card-interactive:active {
     transform: translateY(2px);
     box-shadow:
       inset 0 1px 0 hsl(0 0% 100% / 0.08),
-      inset 0 0 0 1px hsl(197 9% 38%),
-      0 1px 0 hsl(198 18% 4%);
+      inset 0 0 0 1px hsl(var(--bal-l-black)),
+      0 1px 0 hsl(var(--bal-block-shadow));
   }
 
-  /* Casino content card alias — kept for legacy components */
-  .casino-card {
-    @apply balatro-card;
-  }
-  .casino-card-interactive {
-    @apply balatro-card-interactive;
-  }
+  .casino-card { @apply balatro-card; }
+  .casino-card-interactive { @apply balatro-card-interactive; }
 
-  /* ── Filter pill (in-game small chip) ─────────────────────────────── */
+  /* ─── Filter pill (the in-game small chip) ─── */
   .pill-active {
     box-shadow:
-      0 0 0 2px hsl(var(--accent)),
-      0 0 16px -2px hsl(var(--accent) / 0.55),
-      0 2px 0 hsl(198 18% 4%);
-    background: linear-gradient(180deg, hsl(45 85% 65%) 0%, hsl(45 85% 55%) 100%) !important;
-    color: hsl(198 18% 9%) !important;
+      0 0 0 2px hsl(var(--bal-gold)),
+      0 0 18px -2px hsl(var(--bal-gold) / 0.6),
+      0 2px 0 hsl(var(--bal-block-shadow));
+    background: linear-gradient(180deg, hsl(45 85% 68%) 0%, hsl(var(--bal-gold)) 100%) !important;
+    color: hsl(var(--bal-black)) !important;
     text-shadow: none !important;
   }
 
   .gold-underline {
-    border-bottom: 3px solid hsl(var(--accent));
-    box-shadow: 0 4px 0 -2px hsl(45 85% 35%);
+    border-bottom: 3px solid hsl(var(--bal-gold));
+    box-shadow: 0 4px 0 -2px hsl(38 47% 38%);
   }
 
-  /* ── Juice animations from G.juice_up (in-game scale bounce on appear) */
+  /* ─── juice_up animation (from Moveable:juice_up source) ───
+     The game's juice_up does scale_bounce(amount, rotation) using
+     elastic-out easing. We port the keyframe as a one-shot. */
   .mount-fade {
     animation: balatroJuiceUp 540ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
   @keyframes balatroJuiceUp {
-    0%   { opacity: 0; transform: translateY(8px) scale(0.92); }
-    60%  { opacity: 1; transform: translateY(-2px) scale(1.04); }
-    100% { opacity: 1; transform: translateY(0)   scale(1.00); }
+    0%   { opacity: 0; transform: translateY(10px) scale(0.88) rotate(-1deg); }
+    50%  { opacity: 1; transform: translateY(-3px) scale(1.06) rotate(0.5deg); }
+    100% { opacity: 1; transform: translateY(0) scale(1.00) rotate(0); }
   }
 
-  /* Idle shimmer / wobble for headline numbers (mirrors G.C.PRIMARY juice) */
+  /* Idle hover shimmer for headlines */
   .balatro-wobble {
-    animation: balatroWobble 3s ease-in-out infinite;
+    animation: balatroWobble 3.5s ease-in-out infinite;
     transform-origin: center;
   }
   @keyframes balatroWobble {
@@ -392,28 +449,50 @@
     50%      { transform: rotate( 1deg) scale(1.03); }
   }
 
-  /* Sticker / chip badge (Balatro voucher tag) */
+  /* Card click bounce (Card:click source) */
+  .balatro-click {
+    animation: balatroClick 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes balatroClick {
+    0%   { transform: scale(1.00); }
+    40%  { transform: scale(0.94); }
+    100% { transform: scale(1.00); }
+  }
+
+  /* ─── Voucher/booster sticker (the gold corner tag) ─── */
   .balatro-sticker {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider;
+    @apply inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider;
     font-family: var(--font-display);
-    background: linear-gradient(180deg, hsl(45 85% 65%) 0%, hsl(45 85% 50%) 100%);
-    color: hsl(198 18% 9%);
-    border: 1.5px solid hsl(198 18% 9%);
+    background: linear-gradient(180deg, hsl(45 85% 68%) 0%, hsl(var(--bal-gold)) 100%);
+    color: hsl(var(--bal-black));
+    border: 2px solid hsl(var(--bal-block-shadow));
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.4),
-      0 2px 0 hsl(198 18% 4%);
-    text-shadow: 0 1px 0 hsl(45 85% 80%);
+      inset 0 1px 0 hsl(0 0% 100% / 0.45),
+      0 var(--bal-emboss) 0 hsl(var(--bal-block-shadow));
+    text-shadow: 0 1px 0 hsl(45 85% 82%);
   }
 
   /* Tabular numerals + small-caps */
   .tabular { font-variant-numeric: tabular-nums; }
   .small-caps { font-variant: small-caps; letter-spacing: 0.04em; }
+
+  /* ─── Sound icon toggle (top-right) ─── */
+  .balatro-sound-toggle {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-md border-2;
+    border-color: hsl(var(--bal-block-shadow));
+    background: linear-gradient(180deg, hsl(var(--bal-l-black)) 0%, hsl(var(--bal-black)) 100%);
+    color: hsl(var(--bal-joker-grey));
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.12),
+      0 2px 0 hsl(var(--bal-block-shadow));
+    transition: transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .balatro-sound-toggle:hover { transform: translateY(-1px); color: hsl(var(--bal-gold)); }
+  .balatro-sound-toggle:active { transform: translateY(2px); }
 }
 
 @layer utilities {
-  input[type='search']::-webkit-search-cancel-button {
-    @apply hidden;
-  }
+  input[type='search']::-webkit-search-cancel-button { @apply hidden; }
 
   [contenteditable][data-placeholder]:empty::before {
     content: attr(data-placeholder);
@@ -434,13 +513,8 @@
     z-index: -1;
   }
 
-  .toggle-elevate.toggle-elevated::before {
-    background-color: var(--elevate-2);
-  }
-
-  .border.toggle-elevate::before {
-    inset: -1px;
-  }
+  .toggle-elevate.toggle-elevated::before { background-color: var(--elevate-2); }
+  .border.toggle-elevate::before { inset: -1px; }
 
   .hover-elevate:not(.no-default-hover-elevate),
   .active-elevate:not(.no-default-active-elevate),
