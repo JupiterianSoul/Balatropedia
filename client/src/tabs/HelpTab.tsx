@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  BookOpen, Sparkles, Layers3, Tags, ShoppingBag, GitCompare, Grid3x3,
+  BookOpen, Sparkles, Layers3, Tags, GitCompare, Grid3x3,
   CircleDollarSign, Spade, Skull, Ticket, Wand2, Settings as SettingsIcon, Map, BookMarked, Star, FlaskConical,
 } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -15,7 +15,6 @@ const SECTIONS: HelpSection[] = [
   { key: "overview",    icon: <BookOpen className="h-3.5 w-3.5" /> },
   { key: "library",     icon: <Layers3 className="h-3.5 w-3.5" /> },
   { key: "myrun",       icon: <FlaskConical className="h-3.5 w-3.5" /> },
-  { key: "shop",        icon: <ShoppingBag className="h-3.5 w-3.5" /> },
   { key: "synergies",   icon: <Sparkles className="h-3.5 w-3.5" /> },
   { key: "combos",      icon: <Wand2 className="h-3.5 w-3.5" /> },
   { key: "archetypes",  icon: <Tags className="h-3.5 w-3.5" /> },

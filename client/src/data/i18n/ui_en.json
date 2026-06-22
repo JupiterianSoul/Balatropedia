@@ -28,7 +28,6 @@
     "nav": {
       "library": "Library",
       "myrun": "My Run",
-      "shop": "Shop",
       "synergies": "Synergies",
       "combos": "Combos",
       "archetypes": "Archetypes",
@@ -68,7 +67,6 @@
       "add": "Add",
       "remove": "Remove",
       "clear": "Clear",
-      "roll_shop": "Roll Shop",
       "use_in_run": "Use in My Run",
       "load_run": "Load Run",
       "close": "Close",
@@ -256,10 +254,6 @@
       "fav_sign_in_note": "Sign in to save favorites permanently. Right now they only last this session.",
       "fav_add_saved_note": "Add a saved note…",
       "fav_add_session_note": "Add a note (session only)…",
-      "shop_title": "Shop",
-      "shop_added": "Added to My Run",
-      "shop_already": "Already in your run",
-      "shop_run_full": "Run is full",
       "decks_title": "Decks",
       "decks_set": "Deck set in My Run",
       "decks_sort_by": "Sort by",
@@ -282,11 +276,6 @@
       "fav_empty": "No favorites yet. Star Jokers and Combos to save them here. Notes are kept in this session only; they'll reset on refresh.",
       "fav_jokers": "Jokers",
       "fav_combos": "Combos",
-      "shop_subtitle": "Roll a shop using Balatro's rarity weights; common 70%, uncommon 25%, rare 5%.",
-      "shop_empty_pre": "Hit ",
-      "shop_empty_post": " to deal three jokers. Add the ones you like straight into My Run.",
-      "shop_in_run": "In your run",
-      "shop_add_to_run": "Add to My Run",
       "decks_subtitle": "15 starting decks; pick the build engine that fits your plan.",
       "decks_sort_prefix": "Sort: {{val}}",
       "decks_diff_low": "Low",
@@ -1270,9 +1259,18 @@
       "theme": {
         "title": "Theme",
         "hint": "Affects surfaces and chrome only; Balatro identity colors (mult red, chip blue, money gold) stay locked.",
-        "felt": { "label": "Felt", "desc": "Default green casino table." },
-        "midnight": { "label": "Midnight", "desc": "Deep blue-black, low fatigue." },
-        "parchment": { "label": "Parchment", "desc": "Light cream card-table." }
+        "felt": {
+          "label": "Felt",
+          "desc": "Default green casino table."
+        },
+        "midnight": {
+          "label": "Midnight",
+          "desc": "Deep blue-black, low fatigue."
+        },
+        "parchment": {
+          "label": "Parchment",
+          "desc": "Light cream card-table."
+        }
       },
       "screenshake": {
         "title": "Screen juice",
@@ -1323,11 +1321,6 @@
         "title": "My Run",
         "body": "Build the joker set you're actually running. Pick a deck, stake, vouchers, and up to 10 joker slots. The right column live-updates with: curated synergies (hand-tuned pairs), implied archetypes, likely-synergy heuristics (partners / shared archetype / shared tags), and anti-synergy warnings.",
         "tip": "Likely synergies appear in gold even when no curated entry exists; they're inferred from each joker's metadata so you always get feedback."
-      },
-      "shop": {
-        "title": "Shop",
-        "body": "Simulate a shop reroll. Add candidate jokers and the page scores how well each one fits your current run; based on synergy density with what's already slotted and your active archetype tilt.",
-        "tip": "Use it before you commit money in-game: drop the jokers shown in the shop here and compare scores."
       },
       "synergies": {
         "title": "Synergies",

@@ -28,7 +28,6 @@
     "nav": {
       "library": "Bibliothèque",
       "myrun": "Ma Partie",
-      "shop": "Boutique",
       "synergies": "Synergies",
       "combos": "Combos",
       "archetypes": "Archétypes",
@@ -68,7 +67,6 @@
       "add": "Ajouter",
       "remove": "Retirer",
       "clear": "Effacer",
-      "roll_shop": "Relancer la boutique",
       "use_in_run": "Utiliser dans ma partie",
       "load_run": "Charger la partie",
       "close": "Fermer",
@@ -256,10 +254,6 @@
       "fav_sign_in_note": "Connectez-vous pour sauvegarder vos favoris durablement. Pour l'instant, ils ne durent que cette session.",
       "fav_add_saved_note": "Ajouter une note enregistrée…",
       "fav_add_session_note": "Ajouter une note (session uniquement)…",
-      "shop_title": "Boutique",
-      "shop_added": "Ajouté à Ma partie",
-      "shop_already": "Déjà dans votre partie",
-      "shop_run_full": "Partie pleine",
       "decks_title": "Decks",
       "decks_set": "Deck défini dans Ma partie",
       "decks_sort_by": "Trier par",
@@ -282,11 +276,6 @@
       "fav_empty": "Aucun favori pour l'instant. Ajoutez des Jokers et des combos en favoris pour les retrouver ici. Les notes ne sont gardées que pour cette session; elles seront réinitialisées au rechargement.",
       "fav_jokers": "Jokers",
       "fav_combos": "Combos",
-      "shop_subtitle": "Générez une boutique avec les probabilités de rareté de Balatro; commun 70 %, peu commun 25 %, rare 5 %.",
-      "shop_empty_pre": "Appuyez sur ",
-      "shop_empty_post": " pour distribuer trois jokers. Ajoutez ceux que vous aimez directement à Ma partie.",
-      "shop_in_run": "Dans votre partie",
-      "shop_add_to_run": "Ajouter à Ma partie",
       "decks_subtitle": "15 decks de départ; choisissez le moteur de build qui correspond à votre plan.",
       "decks_sort_prefix": "Trier : {{val}}",
       "decks_diff_low": "Faible",
@@ -1270,9 +1259,18 @@
       "theme": {
         "title": "Thème",
         "hint": "Affecte uniquement les surfaces; les couleurs d’identité Balatro (mult rouge, chip bleu, money or) restent verrouillées.",
-        "felt": { "label": "Feutre", "desc": "Table de casino verte par défaut." },
-        "midnight": { "label": "Minuit", "desc": "Bleu-noir profond, peu fatigant." },
-        "parchment": { "label": "Parchemin", "desc": "Table claire couleur crème." }
+        "felt": {
+          "label": "Feutre",
+          "desc": "Table de casino verte par défaut."
+        },
+        "midnight": {
+          "label": "Minuit",
+          "desc": "Bleu-noir profond, peu fatigant."
+        },
+        "parchment": {
+          "label": "Parchemin",
+          "desc": "Table claire couleur crème."
+        }
       },
       "screenshake": {
         "title": "Effet de juice",
@@ -1323,11 +1321,6 @@
         "title": "My Run",
         "body": "Construis le set de Jokers que tu joues vraiment. Choisis un deck, un stake, des vouchers et jusqu'à 10 slots. La colonne de droite se met à jour en direct avec : synergies triées, archétypes implicites, synergies probables (partenaires / archétype partagé / tags partagés) et avertissements d'anti-synergie.",
         "tip": "Les synergies probables apparaissent en or même sans entrée triée; elles sont déduites des métadonnées de chaque Joker pour que tu aies toujours du feedback."
-      },
-      "shop": {
-        "title": "Boutique",
-        "body": "Simule un reroll de boutique. Ajoute des Jokers candidats et la page note à quel point chacun colle à ta run actuelle; basé sur la densité de synergie avec ce qui est déjà slotté et ton archétype actif.",
-        "tip": "Utilise-le avant d'engager de l'argent en jeu : pose ici les Jokers visibles dans la boutique et compare les scores."
       },
       "synergies": {
         "title": "Synergies",
