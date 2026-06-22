@@ -6,7 +6,7 @@ services:
     plan: free
     buildCommand: npm install --omit=dev
     startCommand: NODE_ENV=production node dist/index.cjs
-    healthCheckPath: /api/auth/me
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production

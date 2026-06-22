@@ -82,6 +82,11 @@ async function requireUser(req: Request, res: Response, next: NextFunction) {
 const spriteCache = new Map<string, { buf: Buffer; type: string }>();
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
+  // ── Health check (always 200 OK, no auth) ─────────────────────────────────
+  app.get("/api/health", (_req, res) => {
+    res.status(200).json({ ok: true });
+  });
+
   // ── Sprite proxy ──────────────────────────────────────────────────────────
   // Wikia blocks cross-origin <img> loads (returns 404 when an Origin header is
   // present). Proxy the image server-side (no Origin header) and stream it back
