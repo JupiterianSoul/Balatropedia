@@ -29,11 +29,14 @@ export function CompareTab() {
     { label: "Reliability", render: (j) => <LevelDots level={reliability(j)} /> },
     {
       label: "Best partners", render: (j) => (
-        <div className="flex flex-wrap gap-1">
-          {j.partners.slice(0, 3).map((p) => (
-            <button key={p} onClick={() => openJokerDetail(p)} className="text-xs text-accent hover:underline" data-testid={`compare-partner-${j.id}-${p}`}>
-              {jokerName(p)}
-            </button>
+        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+          {j.partners.slice(0, 3).map((p, idx) => (
+            <span key={p} className="text-xs">
+              <button onClick={() => openJokerDetail(p)} className="text-accent hover:underline" data-testid={`compare-partner-${j.id}-${p}`}>
+                {jokerName(p)}
+              </button>
+              {idx < Math.min(j.partners.length, 3) - 1 && <span className="text-muted-foreground">,</span>}
+            </span>
           ))}
           {j.partners.length === 0 && <span className="text-xs text-muted-foreground">—</span>}
         </div>
