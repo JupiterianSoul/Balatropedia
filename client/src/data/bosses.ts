@@ -1,4 +1,4 @@
-// Canonical Balatro boss blinds — static, curated dataset (28 entries).
+// Canonical Balatro boss blinds; static, curated dataset (28 entries).
 // "Finals" (Acorn / Heart / Vessel / Leaf) only appear at Ante 8.
 
 export interface BossBlind {
@@ -6,7 +6,7 @@ export interface BossBlind {
   name: string;
   anteRange: string; // e.g. "Ante 1+", "Ante 2+", "Ante 8 only"
   effect: string;
-  counters: string[]; // 2–3 counter-strategy bullets
+  counters: string[]; // 2-3 counter-strategy bullets
   counterJokers: string[]; // joker ids / types that help
 }
 
@@ -48,7 +48,7 @@ export const BOSSES: BossBlind[] = [
     id: "the_wall",
     name: "The Wall",
     anteRange: "Ante 2+",
-    effect: "Extra-large blind — roughly double the usual chip requirement.",
+    effect: "Extra-large blind; roughly double the usual chip requirement.",
     counters: [
       "Bring a real multiplier engine online before facing it.",
       "Bank a strong leveled hand and high-mult jokers.",
@@ -183,7 +183,7 @@ export const BOSSES: BossBlind[] = [
     effect: "All face cards are debuffed (score nothing).",
     counters: [
       "Avoid face-card engines for this blind.",
-      "Pareidolia interaction is risky — lean on number-card scaling instead.",
+      "Pareidolia interaction is risky; lean on number-card scaling instead.",
     ],
     counterJokers: ["fibonacci", "the_idol", "smeared_joker"],
   },
@@ -215,7 +215,7 @@ export const BOSSES: BossBlind[] = [
     anteRange: "Ante 2+",
     effect: "You only get one hand for the entire round.",
     counters: [
-      "Set up a single devastating hand — over-level and stack XMult.",
+      "Set up a single devastating hand; over-level and stack XMult.",
       "Make sure discards have arranged the perfect hand first.",
     ],
     counterJokers: ["the_idol", "blueprint", "brainstorm"],
@@ -260,7 +260,7 @@ export const BOSSES: BossBlind[] = [
     effect: "All face cards are drawn face down.",
     counters: [
       "Don't depend on seeing face cards; play around hidden royals.",
-      "Pareidolia turns everything into a face card, complicating this — plan accordingly.",
+      "Pareidolia turns everything into a face card, complicating this; plan accordingly.",
     ],
     counterJokers: ["sock_and_buskin", "the_idol", "stuntman"],
   },
@@ -304,7 +304,7 @@ export const BOSSES: BossBlind[] = [
     effect: "Very large blind with base Chips and Mult heavily reduced.",
     counters: [
       "Only a fully online XMult engine reliably clears this.",
-      "Stack multiplicative jokers — flat mult won't cut it.",
+      "Stack multiplicative jokers; flat mult won't cut it.",
     ],
     counterJokers: ["the_idol", "blueprint", "brainstorm"],
   },

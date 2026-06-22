@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import { playSound } from "@/lib/sound";
+import { playSound, playRandom } from "@/lib/sound";
 import { useT } from "@/lib/i18n";
 
 type TabValue = string;
@@ -17,15 +17,29 @@ interface NavListProps {
 }
 
 /**
- * Shared vertical nav list — used in both the mobile sheet and the desktop sidebar.
+ * Shared vertical nav list ; used in both the mobile sheet and the desktop sidebar.
  * Group labels (multi-tab groups) act as small-caps section headers.
  * Single-tab groups render as flat top-level buttons.
+ *
+ * Each multi-tab section header (Library, Run, Build, Game, More) gets its
+ * own accent color. The corresponding active sub-item uses the same color
+ * via inline style, so the entire section is visually coherent.
  */
+const NAV_SECTION_COLORS: Record<string, { header: string; active: string }> = {
+  library: { header: "hsl(45 85% 60% / 0.7)",  active: "hsl(45 85% 60%)"  },
+  run:     { header: "hsl(0 70% 62% / 0.75)",  active: "hsl(0 70% 62%)"   },
+  build:   { header: "hsl(210 75% 65% / 0.75)", active: "hsl(210 75% 65%)" },
+  game:    { header: "hsl(145 55% 58% / 0.75)", active: "hsl(145 55% 58%)" },
+  more:    { header: "hsl(270 55% 68% / 0.75)", active: "hsl(270 55% 68%)" },
+};
+function navSectionColor(key: string) {
+  return NAV_SECTION_COLORS[key] ?? { header: "hsl(45 85% 60% / 0.7)", active: "hsl(45 85% 60%)" };
+}
 export function NavList({ groups, currentTab, onSelect, favCount }: NavListProps) {
   const t = useT();
 
   function go(v: TabValue) {
-    playSound("click");
+    playRandom(["click", "click_alt", "chip"]);
     onSelect(v);
   }
 
@@ -49,28 +63,36 @@ export function NavList({ groups, currentTab, onSelect, favCount }: NavListProps
             </button>
           );
         }
+        const color = navSectionColor(group.key);
         return (
           <div key={group.key} className="flex flex-col gap-0.5">
-            <div className="px-2 pt-2 text-[10px] uppercase tracking-[0.2em] text-[hsl(45_85%_60%)]/70">
+            <div
+              className="px-2 pt-2 text-[10px] uppercase tracking-[0.2em]"
+              style={{ color: color.header }}
+            >
               {t(`ui.nav.group.${group.key}`)}
             </div>
             <div className="flex flex-col gap-0.5 pl-1">
-              {group.tabs.map((v) => (
-                <button
-                  key={v}
-                  type="button"
-                  onClick={() => go(v)}
-                  onMouseEnter={() => playSound("hover")}
-                  className={`rounded px-3 py-2 text-left text-sm transition-colors hover:bg-[hsl(150_16%_10%)] ${
-                    currentTab === v
-                      ? "gold-text bg-[hsl(150_16%_10%)]"
-                      : "text-[hsl(45_15%_85%)]"
-                  }`}
-                  data-testid={`nav-${v}`}
-                >
-                  {t(`ui.nav.${v}`)}
-                </button>
-              ))}
+              {group.tabs.map((v) => {
+                const active = currentTab === v;
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => go(v)}
+                    onMouseEnter={() => playSound("hover")}
+                    className={`rounded px-3 py-2 text-left text-sm transition-colors hover:bg-[hsl(150_16%_10%)] ${
+                      active
+                        ? "bg-[hsl(150_16%_10%)] font-semibold"
+                        : "text-[hsl(45_15%_85%)]"
+                    }`}
+                    style={active ? { color: color.active } : undefined}
+                    data-testid={`nav-${v}`}
+                  >
+                    {t(`ui.nav.${v}`)}
+                  </button>
+                );
+              })}
             </div>
           </div>
         );

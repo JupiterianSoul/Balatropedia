@@ -33,7 +33,7 @@ const SECTIONS: HelpSection[] = [
 ];
 
 /**
- * Help / Tutorial tab — each section explains one feature.
+ * Help / Tutorial tab; each section explains one feature.
  * All content goes through i18n: ui.help.<key>.title / .body / .tip
  */
 export function HelpTab() {

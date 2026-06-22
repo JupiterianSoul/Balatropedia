@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { ThemeProvider } from "./lib/theme";
+import { ShakeProvider } from "./lib/screenshake";
 
 if (!window.location.hash) {
   window.location.hash = "#/";
@@ -12,6 +13,8 @@ if (!window.location.hash) {
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
-    <App />
+    <ShakeProvider>
+      <App />
+    </ShakeProvider>
   </ThemeProvider>,
 );

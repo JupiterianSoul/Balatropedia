@@ -85,7 +85,7 @@ export function Chip({ children, className }: { children: React.ReactNode; class
   );
 }
 
-/* ── Small joker sprite + tooltip (recommended / bestWith) — clickable, opens detail ── */
+/* ── Small joker sprite + tooltip (recommended / bestWith); clickable, opens detail ── */
 export function JokerSpriteChip({ id, size = 30 }: { id: string; size?: number }) {
   const { openJokerDetail } = useApp();
   const j = JOKER_MAP[id];

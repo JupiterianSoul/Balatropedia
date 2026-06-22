@@ -5,9 +5,9 @@ import {
 /**
  * Theme variants for Balatropedia.
  *
- * - "felt"      — default green-felt casino dark (current canon Balatro look)
- * - "midnight"  — deep black/blue dark variant (high contrast, low fatigue)
- * - "parchment" — light vintage card-table theme (cream surfaces, dark text)
+ * - "felt"     ; default green-felt casino dark (current canon Balatro look)
+ * - "midnight" ; deep black/blue dark variant (high contrast, low fatigue)
+ * - "parchment"; light vintage card-table theme (cream surfaces, dark text)
  *
  * Implemented as data attribute on <html>, so :root[data-theme="X"] selectors
  * in index.css can re-map shadcn tokens while preserving Balatro identity vars.
@@ -31,7 +31,7 @@ function readStoredTheme(): Theme {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw && VALID_THEMES.includes(raw as Theme)) return raw as Theme;
   } catch {
-    /* sandboxed iframe — fall through */
+    /* sandboxed iframe; fall through */
   }
   return DEFAULT_THEME;
 }

@@ -9,7 +9,7 @@ interface AppState {
   favoriteJokers: Set<string>;
   isFavoriteJoker: (id: string) => boolean;
   toggleFavoriteJoker: (id: string) => void;
-  // combo favorites (session-only — no backend table for combos)
+  // combo favorites (session-only; no backend table for combos)
   favoriteCombos: Set<string>;
   isFavoriteCombo: (id: string) => boolean;
   toggleFavoriteCombo: (id: string) => void;

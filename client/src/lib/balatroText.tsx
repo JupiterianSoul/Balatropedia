@@ -76,7 +76,7 @@ const NAMED_TOKENS: Record<TokenLang, Record<string, string>> = {
 /**
  * Substitute `#N#` placeholders with the joker's default values.
  * If no values are known, strip the placeholders. The visible numbers come
- * from the official Balatro wiki defaults — in-game they update based on run
+ * from the official Balatro wiki defaults; in-game they update based on run
  * state, but the displayed defaults are what new players see in shop tooltips.
  */
 function substitutePlaceholders(s: string, id?: string, lang?: TokenLang): string {

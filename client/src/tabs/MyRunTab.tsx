@@ -130,7 +130,7 @@ export function MyRunTab() {
   const archetypes = suggestedArchetypes(slots);
   const warnings = antiSynergyWarnings(slots);
   // Likely synergies inferred from partners / shared archetype / shared tags
-  // — fills the gap when no curated SYNERGIES pair matches the selection.
+  //; fills the gap when no curated SYNERGIES pair matches the selection.
   const likely = heuristicSynergies(slots);
 
   function handleAdd(id: string) {
@@ -293,7 +293,7 @@ export function MyRunTab() {
           )}
         </section>
 
-        {/* Heuristic / "likely" synergies — only shown when there are pairs to surface */}
+        {/* Heuristic / "likely" synergies; only shown when there are pairs to surface */}
         {likely.length > 0 && (
           <section className="casino-card p-4">
             <div className="mb-2.5 flex items-center gap-1.5">

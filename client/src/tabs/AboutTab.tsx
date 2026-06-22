@@ -3,7 +3,7 @@ import { SectionLabel } from "@/components/primitives";
 import { useT } from "@/lib/i18n";
 
 /**
- * About tab — project info, source attributions, and an honest accuracy disclaimer.
+ * About tab; project info, source attributions, and an honest accuracy disclaimer.
  *
  * Every strategy claim in Synergies / Combos / Tips is cross-referenced against
  * community-trusted sources (Balatro Fandom Wiki, dood.gg, Balatro HQ, Mobalytics,
@@ -24,37 +24,37 @@ const SOURCES: SourceLink[] = [
     note: "Joker effects, base values, retrigger rules (CC-BY-SA).",
   },
   {
-    name: "dood.gg — Joker Synergy Guide",
+    name: "dood.gg; Joker Synergy Guide",
     url: "https://dood.gg/en/balatro/guides/joker-synergy/",
     note: "Community-validated joker pairings (Baron+Mime, Hologram+DNA, etc.).",
   },
   {
-    name: "dood.gg — Deck Strategies",
+    name: "dood.gg; Deck Strategies",
     url: "https://dood.gg/en/balatro/guides/deck-strategies/",
     note: "Per-deck strategy notes (Checkered, Abandoned, Plasma).",
   },
   {
-    name: "dood.gg — Poker Hands",
+    name: "dood.gg; Poker Hands",
     url: "https://dood.gg/en/balatro/guides/poker-hands/",
     note: "Base chip/mult tables and hand frequency tiers.",
   },
   {
-    name: "Balatro HQ — Advanced Strategies",
+    name: "Balatro HQ; Advanced Strategies",
     url: "https://www.balatrohq.com/guides/advanced-strategies/",
     note: "Blueprint/Brainstorm scaling, Mime+Stencil, joker positioning rules.",
   },
   {
-    name: "Mobalytics — Joker Tier List",
+    name: "Mobalytics; Joker Tier List",
     url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/",
     note: "Tier rankings, Brainstorm/Seltzer/Hack analysis.",
   },
   {
-    name: "Two Average Gamers — Strategy Guide",
+    name: "Two Average Gamers; Strategy Guide",
     url: "https://www.twoaveragegamers.com/balatro-strategy-guide-the-joker-combos-that-actually-win-runs/",
     note: "Win-rate-validated combos (Cavendish stacking, Mr. Bones insurance).",
   },
   {
-    name: "TheGamer — Joker Tier List",
+    name: "TheGamer; Joker Tier List",
     url: "https://www.thegamer.com/balatro-joker-tier-list/",
     note: "Editorial tier list cross-reference.",
   },
@@ -161,7 +161,7 @@ export function AboutTab() {
               rel="noopener noreferrer"
               className="text-accent hover:underline"
             >
-              Daniel Linssen — m6x11plus
+              Daniel Linssen; m6x11plus
               <ExternalLink className="ml-1 inline h-3 w-3 opacity-60" />
             </a>
           </li>

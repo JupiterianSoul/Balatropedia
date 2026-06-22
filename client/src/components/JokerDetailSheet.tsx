@@ -284,7 +284,7 @@ function UseCaseRow({ rule }: { rule: UseCaseRule }) {
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-// ---- Localized AntiChip — fetches localized name + curated synergy "why" ----
+// ---- Localized AntiChip; fetches localized name + curated synergy "why" ----
 function AntiChipRow({ jokerAId, jokerBId, onClick }: { jokerAId: string; jokerBId: string; onClick: (id: string) => void }) {
   const t = useT();
   const ja = JOKER_MAP[jokerAId];

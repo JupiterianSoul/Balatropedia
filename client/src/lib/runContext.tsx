@@ -6,7 +6,7 @@ import { createContext, useContext, useState, useCallback, ReactNode } from "rea
  */
 interface RunState {
   slots: string[]; // joker ids currently in the run
-  slotCap: number; // 1–10
+  slotCap: number; // 1-10
   setSlotCap: (n: number) => void;
   addToRun: (id: string) => boolean; // returns false if full or duplicate
   removeFromRun: (id: string) => void;

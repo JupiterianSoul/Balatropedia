@@ -138,6 +138,32 @@ export function reliability(j: Joker): Level {
   return "med";
 }
 
+// ---- Beginner-friendliness composite score (lower = easier) ----
+// Combines setup difficulty, risk, scaling complexity, consistency and rarity.
+// Used by LibraryTab's "Beginner-friendly" sort so the order actually differs from A-Z.
+export function beginnerScore(j: Joker): number {
+  const setup = { low: 0, med: 2, high: 4 }[j.setupDifficulty];
+  const risk = { low: 0, med: 1, high: 3 }[j.risk];
+  const scalingMap: Record<Scaling, number> = {
+    static: 0,
+    linear: 0,
+    conditional: 1,
+    multiplicative: 2,
+    exponential: 3,
+  };
+  const scaling = scalingMap[j.scaling];
+  // Higher consistency makes the Joker easier to use; invert (2 - rank).
+  const consistencyPenalty = 2 - LEVEL_RANK[j.consistency];
+  const rarityMap: Record<Rarity, number> = {
+    common: 0,
+    uncommon: 1,
+    rare: 2,
+    legendary: 3,
+  };
+  const rarity = j.rarity ? rarityMap[j.rarity] : 0;
+  return setup + risk + scaling + consistencyPenalty + rarity;
+}
+
 // ---- Synergy lookups ----
 export interface SynergyConnection {
   partnerId: string;
@@ -231,13 +257,13 @@ export function exampleUseCases(j: Joker): string[] {
       case "endgame_payoff":
         return "Endgame multiplier engine when its enabling condition is reliably met every scored hand.";
       case "pivot_piece":
-        return "Pivot piece when your primary scaling axis bricks — slot it in to redirect the build.";
+        return "Pivot piece when your primary scaling axis bricks; slot it in to redirect the build.";
       case "economy_snowball":
         return "Economy snowball: bank the extra income early, then reinvest it into your win condition.";
       case "late_commit":
         return "Late-game commitment: bring it online once the supporting pieces are in place.";
       case "pairs_partners":
-        return `Pairs naturally with ${r.partners} curated partners — see Best Partners below.`;
+        return `Pairs naturally with ${r.partners} curated partners; see Best Partners below.`;
     }
   });
 }
@@ -328,7 +354,7 @@ export function impliedArchetypes(selection: string[]): ImpliedArchetype[] {
 }
 
 /**
- * Looser archetype detection — surfaces an archetype as soon as ANY joker in
+ * Looser archetype detection; surfaces an archetype as soon as ANY joker in
  * selection lists it in `joker.archetypes`. Threshold scales with selection size:
  *  - 1 selected joker  → 1 match needed
  *  - 2+ selected jokers → 2 matches needed
@@ -357,7 +383,7 @@ export function suggestedArchetypes(selection: string[]): ImpliedArchetype[] {
 }
 
 /**
- * Heuristic synergy detector — surfaces "likely" synergies when no curated
+ * Heuristic synergy detector; surfaces "likely" synergies when no curated
  * SYNERGY entry exists for the pair. Reasons (in priority order):
  *   1. Either joker lists the other in its `partners` array.
  *   2. Both jokers share at least one archetype.

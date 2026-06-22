@@ -1,5 +1,5 @@
 /**
- * Balatropedia logo — the base Joker sprite from the official game art.
+ * Balatropedia logo; the base Joker sprite from the official game art.
  * Pixel-art is preserved via `image-rendering: pixelated`.
  */
 const JOKER_SPRITE_URL =
