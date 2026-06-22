@@ -1,53 +1,129 @@
-// Balatro-style SFX, fully synthesized via the Web Audio API.
-// No external assets (cannot redistribute the game audio). Each sound is
-// designed to evoke a specific Balatro moment by stacking multi-layer
-// envelopes, noise bursts, FM, and chip-like clacks.
+// Balatro-style SFX using real recorded samples (Kenney CC0 audio packs).
 //
-// 24 distinct sounds, all genuinely different waveforms/envelopes/timbres
-// (NOT pitch-shifted variants of the same recipe):
+// Design rules :
+//   1. Each SoundName maps to EXACTLY ONE audio file, deterministically.
+//      Same action = same sound. Never randomized.
+//   2. Samples live in client/public/sfx/*.ogg and are served as static assets.
+//   3. We use HTMLAudioElement pooling : each sound holds N pre-cloned audio
+//      instances so rapid retriggering (hover spam, chip cascade) does not
+//      cancel itself.
+//   4. State (enabled, volume) persists in localStorage when available.
 //
-//   click        snappy tactile chip-tap (default UI click)
-//   click_alt    softer paper-stack click (for secondary UI)
-//   hover        airy pixel tick (no fatigue on rapid hover)
-//   chip         chunky chip-on-felt (body + clack overtones)
-//   chip_stack   2-chip stack landing (two staggered clacks)
-//   flip         card-flip swoosh (filtered noise + tone glide)
-//   shuffle      multi-card riffle (long noise wash)
-//   deal         single card-deal whoosh (short noise + pop)
-//   toggle       UI confirm two-step ding (rising)
-//   toggle_off   UI cancel two-step ding (falling)
-//   coin         ka-ching, money/economy gained
-//   coin_lose    descending coin clink, money lost
-//   joker        joker trigger riff (4-note flourish)
-//   joker_evil   minor-mode flourish (debuffed/eraser)
-//   scoring      chip scoring tick (used per-chip pop)
-//   xmult        XMult trigger (fast vibrato xWhirl)
-//   win          rising major triad fanfare
-//   lose         muted negative blip
-//   seal_gold    golden seal sparkle (high-freq shimmer)
-//   seal_red     red seal stamp (low thunk)
-//   tarot        tarot card whoosh (filtered noise + chord)
-//   planet       planet level-up hum (rising sine sweep)
-//   spectral     spectral card hiss (FM dissonance)
-//   error        soft error buzz (sawtooth bite)
-//
-// State persists in localStorage when available; otherwise in memory only.
+// SoundName  ; semantic intent                                ; file
+//   click          primary button press                       click.ogg
+//   click_alt      secondary press (less prominent)           click_alt.ogg
+//   click_heavy    deep press / commit                        click_heavy.ogg
+//   hover          mouse rollover                             hover.ogg
+//   select         dropdown / select item                     select.ogg
+//   toggle_on      toggle / switch turning on                 toggle_on.ogg
+//   toggle_off     toggle / switch turning off                toggle_off.ogg
+//   tab_switch     top-level tab change                       tab_switch.ogg
+//   card_place     joker card placed / chosen                 card_place.ogg
+//   card_slide     joker card slide (combobox commit)         card_slide.ogg
+//   card_shove     joker card removed                         card_shove.ogg
+//   card_fan       opening combobox / fanning cards           card_fan.ogg
+//   shuffle        shop reroll / full shuffle                 shuffle.ogg
+//   pack_open      pack / booster open                        pack_open.ogg
+//   pack_take      take card from pack                        pack_take.ogg
+//   chip           chip lay (favorite toggle on)              chip.ogg
+//   chip_stack     stack of chips (multi-favorite)            chip_stack.ogg
+//   chip_collide   chip clash                                 chip_collide.ogg
+//   chip_handle    chips moving                               chip_handle.ogg
+//   dice_shake     reroll shake                               dice_shake.ogg
+//   dice_throw     random pick                                dice_throw.ogg
+//   notify         small toast / inline notification          notify.ogg
+//   favorite       star added (jingle)                        favorite.ogg
+//   win            success / win jingle                       win.ogg
+//   error          error / invalid action                     error.ogg
 
 export type SoundName =
-  | "click" | "click_alt" | "hover" | "chip" | "chip_stack" | "flip"
-  | "shuffle" | "deal" | "toggle" | "toggle_off" | "coin" | "coin_lose"
-  | "joker" | "joker_evil" | "scoring" | "xmult" | "win" | "lose"
-  | "seal_gold" | "seal_red" | "tarot" | "planet" | "spectral" | "error";
+  | "click" | "click_alt" | "click_heavy" | "hover"
+  | "select" | "toggle_on" | "toggle_off" | "tab_switch"
+  | "card_place" | "card_slide" | "card_shove" | "card_fan"
+  | "shuffle" | "pack_open" | "pack_take"
+  | "chip" | "chip_stack" | "chip_collide" | "chip_handle"
+  | "dice_shake" | "dice_throw"
+  | "notify" | "favorite" | "win" | "error";
 
 const STORAGE_KEY_ENABLED = "balatro_sound_enabled";
 const STORAGE_KEY_VOLUME = "balatro_sound_volume";
 
-let audioCtx: AudioContext | null = null;
-let masterGain: GainNode | null = null;
-let enabled = true;
-let volume = 0.6; // 0..1 master volume scalar (multiplied with per-tone gain)
+// Per-sound volume scaling. Recorded levels vary; this normalizes perceived
+// loudness so the master volume slider behaves predictably.
+const PER_SOUND_GAIN: Record<SoundName, number> = {
+  click: 0.7,
+  click_alt: 0.7,
+  click_heavy: 0.8,
+  hover: 0.35,
+  select: 0.7,
+  toggle_on: 0.8,
+  toggle_off: 0.8,
+  tab_switch: 0.75,
+  card_place: 0.9,
+  card_slide: 0.9,
+  card_shove: 0.9,
+  card_fan: 0.85,
+  shuffle: 0.85,
+  pack_open: 0.85,
+  pack_take: 0.85,
+  chip: 0.9,
+  chip_stack: 0.95,
+  chip_collide: 0.85,
+  chip_handle: 0.85,
+  dice_shake: 0.75,
+  dice_throw: 0.85,
+  notify: 0.6,
+  favorite: 0.7,
+  win: 0.7,
+  error: 0.65,
+};
 
-// Persistence (best-effort; sandboxed iframes block localStorage)
+// File path map (relative to the site root ; served from public/sfx).
+const SOUND_FILES: Record<SoundName, string> = {
+  click:        "/sfx/click.ogg",
+  click_alt:    "/sfx/click_alt.ogg",
+  click_heavy:  "/sfx/click_heavy.ogg",
+  hover:        "/sfx/hover.ogg",
+  select:       "/sfx/select.ogg",
+  toggle_on:    "/sfx/toggle_on.ogg",
+  toggle_off:   "/sfx/toggle_off.ogg",
+  tab_switch:   "/sfx/tab_switch.ogg",
+  card_place:   "/sfx/card_place.ogg",
+  card_slide:   "/sfx/card_slide.ogg",
+  card_shove:   "/sfx/card_shove.ogg",
+  card_fan:     "/sfx/card_fan.ogg",
+  shuffle:      "/sfx/shuffle.ogg",
+  pack_open:    "/sfx/pack_open.ogg",
+  pack_take:    "/sfx/pack_take.ogg",
+  chip:         "/sfx/chip.ogg",
+  chip_stack:   "/sfx/chip_stack.ogg",
+  chip_collide: "/sfx/chip_collide.ogg",
+  chip_handle:  "/sfx/chip_handle.ogg",
+  dice_shake:   "/sfx/dice_shake.ogg",
+  dice_throw:   "/sfx/dice_throw.ogg",
+  notify:       "/sfx/notify.ogg",
+  favorite:     "/sfx/favorite.ogg",
+  win:          "/sfx/win.ogg",
+  error:        "/sfx/error.ogg",
+};
+
+// Pool size : how many parallel instances we keep per sound. Sounds that fire
+// rapidly (hover, click) need more headroom. Heavy one-shots can stay at 1.
+const POOL_SIZE: Partial<Record<SoundName, number>> = {
+  hover: 6,
+  click: 4,
+  click_alt: 4,
+  chip: 4,
+  chip_stack: 3,
+  card_place: 3,
+  card_slide: 3,
+};
+const DEFAULT_POOL_SIZE = 2;
+
+let enabled = true;
+let volume = 0.6; // 0..1 master volume
+
+// Persistence (best-effort ; sandboxed iframes may block localStorage)
 try {
   if (typeof window !== "undefined" && window.localStorage) {
     const e = window.localStorage.getItem(STORAGE_KEY_ENABLED);
@@ -68,295 +144,61 @@ function persist(key: string, value: string) {
   } catch { /* sandbox blocks storage */ }
 }
 
-function ctx(): AudioContext | null {
-  if (typeof window === "undefined") return null;
-  if (!audioCtx) {
-    try {
-      const AC = window.AudioContext || (window as any).webkitAudioContext;
-      audioCtx = new AC();
-      masterGain = audioCtx.createGain();
-      masterGain.gain.value = volume;
-      masterGain.connect(audioCtx.destination);
-    } catch {
-      return null;
-    }
+// ── Pool ────────────────────────────────────────────────────────────────────
+// pools[name] = array of HTMLAudioElement ; pointers[name] = next index to use.
+
+const pools: Partial<Record<SoundName, HTMLAudioElement[]>> = {};
+const pointers: Partial<Record<SoundName, number>> = {};
+
+function ensurePool(name: SoundName): HTMLAudioElement[] | null {
+  if (typeof window === "undefined" || typeof Audio === "undefined") return null;
+  if (pools[name]) return pools[name]!;
+  const size = POOL_SIZE[name] ?? DEFAULT_POOL_SIZE;
+  const arr: HTMLAudioElement[] = [];
+  for (let i = 0; i < size; i++) {
+    const a = new Audio(SOUND_FILES[name]);
+    a.preload = "auto";
+    arr.push(a);
   }
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume().catch(() => {});
-  }
-  return audioCtx;
-}
-
-// ── Primitives ──────────────────────────────────────────────────────────────
-
-function envelopedTone(
-  ac: AudioContext,
-  destination: AudioNode,
-  freqStart: number,
-  freqEnd: number | null,
-  duration: number,
-  type: OscillatorType,
-  peak: number,
-  startOffset = 0,
-  attack = 0.005,
-) {
-  const now = ac.currentTime + startOffset;
-  const osc = ac.createOscillator();
-  const gain = ac.createGain();
-  osc.type = type;
-  osc.frequency.setValueAtTime(freqStart, now);
-  if (freqEnd !== null && freqEnd > 0) {
-    osc.frequency.exponentialRampToValueAtTime(Math.max(20, freqEnd), now + duration);
-  }
-  gain.gain.setValueAtTime(0, now);
-  gain.gain.linearRampToValueAtTime(peak, now + attack);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-  osc.connect(gain);
-  gain.connect(destination);
-  osc.start(now);
-  osc.stop(now + duration + 0.05);
-}
-
-/** Quick band-passed noise burst, backbone of "chip clack" and "shuffle". */
-function noiseBurst(
-  ac: AudioContext,
-  destination: AudioNode,
-  duration: number,
-  peak: number,
-  filterFreq: number,
-  filterQ = 4,
-  startOffset = 0,
-  filterType: BiquadFilterType = "bandpass",
-) {
-  const now = ac.currentTime + startOffset;
-  const len = Math.floor(ac.sampleRate * duration);
-  const buf = ac.createBuffer(1, len, ac.sampleRate);
-  const ch = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) ch[i] = Math.random() * 2 - 1;
-  const src = ac.createBufferSource();
-  src.buffer = buf;
-  const filter = ac.createBiquadFilter();
-  filter.type = filterType;
-  filter.frequency.value = filterFreq;
-  filter.Q.value = filterQ;
-  const gain = ac.createGain();
-  gain.gain.setValueAtTime(0, now);
-  gain.gain.linearRampToValueAtTime(peak, now + 0.003);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-  src.connect(filter);
-  filter.connect(gain);
-  gain.connect(destination);
-  src.start(now);
-  src.stop(now + duration + 0.02);
-}
-
-/** FM-modulated tone for richer timbres (xmult, spectral). */
-function fmTone(
-  ac: AudioContext,
-  destination: AudioNode,
-  carrierFreq: number,
-  modulatorFreq: number,
-  modulatorDepth: number,
-  duration: number,
-  peak: number,
-  startOffset = 0,
-) {
-  const now = ac.currentTime + startOffset;
-  const carrier = ac.createOscillator();
-  const modulator = ac.createOscillator();
-  const modGain = ac.createGain();
-  const outGain = ac.createGain();
-  carrier.frequency.value = carrierFreq;
-  modulator.frequency.value = modulatorFreq;
-  modGain.gain.value = modulatorDepth;
-  modulator.connect(modGain);
-  modGain.connect(carrier.frequency);
-  outGain.gain.setValueAtTime(0, now);
-  outGain.gain.linearRampToValueAtTime(peak, now + 0.005);
-  outGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-  carrier.connect(outGain);
-  outGain.connect(destination);
-  carrier.start(now);
-  modulator.start(now);
-  carrier.stop(now + duration + 0.05);
-  modulator.stop(now + duration + 0.05);
+  pools[name] = arr;
+  pointers[name] = 0;
+  return arr;
 }
 
 // ── Public API ──────────────────────────────────────────────────────────────
 
 export function playSound(name: SoundName) {
   if (!enabled) return;
-  const ac = ctx();
-  if (!ac || !masterGain) return;
-  const out = masterGain;
+  const pool = ensurePool(name);
+  if (!pool) return;
+  const idx = pointers[name] ?? 0;
+  const a = pool[idx];
+  pointers[name] = (idx + 1) % pool.length;
 
-  switch (name) {
-    case "click":
-      envelopedTone(ac, out, 520, 360, 0.05, "square", 0.10);
-      envelopedTone(ac, out, 280, 220, 0.04, "square", 0.06, 0.025);
-      break;
-
-    case "click_alt":
-      // Softer paper-stack click, lower body
-      envelopedTone(ac, out, 320, 240, 0.06, "triangle", 0.07);
-      noiseBurst(ac, out, 0.03, 0.04, 1200, 2);
-      break;
-
-    case "hover":
-      envelopedTone(ac, out, 920, null, 0.022, "sine", 0.045);
-      break;
-
-    case "chip":
-      noiseBurst(ac, out, 0.06, 0.10, 2200, 3);
-      envelopedTone(ac, out, 180, 110, 0.10, "triangle", 0.10);
-      envelopedTone(ac, out, 1400, 900, 0.04, "square", 0.05, 0.005);
-      break;
-
-    case "chip_stack":
-      // Two staggered chip clacks, simulating chip-on-chip landing
-      noiseBurst(ac, out, 0.05, 0.09, 2400, 3);
-      envelopedTone(ac, out, 200, 130, 0.08, "triangle", 0.09);
-      noiseBurst(ac, out, 0.05, 0.07, 1800, 3, 0.07);
-      envelopedTone(ac, out, 160, 100, 0.08, "triangle", 0.08, 0.07);
-      break;
-
-    case "flip":
-      noiseBurst(ac, out, 0.08, 0.07, 3400, 1.5);
-      envelopedTone(ac, out, 380, 720, 0.08, "triangle", 0.06);
-      break;
-
-    case "shuffle":
-      // Multi-card riffle: layered noise washes at different filter freqs
-      noiseBurst(ac, out, 0.18, 0.09, 1400, 2);
-      noiseBurst(ac, out, 0.14, 0.07, 2600, 2, 0.05);
-      noiseBurst(ac, out, 0.12, 0.06, 3800, 2, 0.10);
-      break;
-
-    case "deal":
-      // Single card-deal: short noise puff + tonal pop
-      noiseBurst(ac, out, 0.05, 0.08, 2800, 1.5);
-      envelopedTone(ac, out, 600, 420, 0.05, "triangle", 0.05, 0.005);
-      break;
-
-    case "toggle":
-      envelopedTone(ac, out, 660, null, 0.04, "square", 0.07);
-      envelopedTone(ac, out, 990, null, 0.06, "square", 0.07, 0.04);
-      break;
-
-    case "toggle_off":
-      // Inverse: high then low
-      envelopedTone(ac, out, 880, null, 0.04, "square", 0.07);
-      envelopedTone(ac, out, 520, null, 0.06, "square", 0.07, 0.04);
-      break;
-
-    case "coin":
-      envelopedTone(ac, out, 1400, 1900, 0.06, "square", 0.08);
-      envelopedTone(ac, out, 2100, 2600, 0.07, "square", 0.07, 0.04);
-      envelopedTone(ac, out, 1800, 1500, 0.10, "sine", 0.05, 0.08);
-      noiseBurst(ac, out, 0.05, 0.04, 4800, 4);
-      break;
-
-    case "coin_lose":
-      // Descending coin clink
-      envelopedTone(ac, out, 1800, 1300, 0.08, "square", 0.07);
-      envelopedTone(ac, out, 1200, 800, 0.10, "square", 0.06, 0.05);
-      noiseBurst(ac, out, 0.04, 0.03, 3200, 4, 0.02);
-      break;
-
-    case "joker":
-      envelopedTone(ac, out, 440, null, 0.08, "square", 0.09);
-      envelopedTone(ac, out, 660, null, 0.08, "square", 0.09, 0.08);
-      envelopedTone(ac, out, 880, null, 0.08, "square", 0.09, 0.16);
-      envelopedTone(ac, out, 1175, null, 0.12, "square", 0.09, 0.24);
-      break;
-
-    case "joker_evil":
-      // Minor-mode 4-note descent for debuff/eraser triggers
-      envelopedTone(ac, out, 440, null, 0.10, "sawtooth", 0.08);
-      envelopedTone(ac, out, 415, null, 0.10, "sawtooth", 0.08, 0.09);
-      envelopedTone(ac, out, 370, null, 0.10, "sawtooth", 0.08, 0.18);
-      envelopedTone(ac, out, 311, null, 0.18, "sawtooth", 0.08, 0.27);
-      break;
-
-    case "scoring":
-      // Quick rising chip pop, designed to be played per-chip in a burst
-      envelopedTone(ac, out, 880, 1320, 0.05, "square", 0.06);
-      break;
-
-    case "xmult":
-      // FM whirl evoking xMult trigger
-      fmTone(ac, out, 660, 880, 240, 0.18, 0.08);
-      envelopedTone(ac, out, 1320, 1760, 0.12, "triangle", 0.05, 0.06);
-      break;
-
-    case "win":
-      envelopedTone(ac, out, 523, null, 0.18, "triangle", 0.10);
-      envelopedTone(ac, out, 659, null, 0.18, "triangle", 0.10, 0.09);
-      envelopedTone(ac, out, 784, null, 0.22, "triangle", 0.10, 0.18);
-      envelopedTone(ac, out, 1047, null, 0.30, "square", 0.08, 0.30);
-      break;
-
-    case "lose":
-      envelopedTone(ac, out, 320, 180, 0.18, "sawtooth", 0.10);
-      envelopedTone(ac, out, 240, 140, 0.20, "sawtooth", 0.08, 0.06);
-      break;
-
-    case "seal_gold":
-      // High-freq shimmer + bell
-      envelopedTone(ac, out, 2200, 2800, 0.10, "sine", 0.06);
-      envelopedTone(ac, out, 3200, 4200, 0.08, "sine", 0.04, 0.03);
-      noiseBurst(ac, out, 0.08, 0.03, 6000, 6, 0.04, "highpass");
-      break;
-
-    case "seal_red":
-      // Low thunk stamp
-      envelopedTone(ac, out, 110, 70, 0.18, "sine", 0.12);
-      noiseBurst(ac, out, 0.06, 0.06, 600, 2);
-      break;
-
-    case "tarot":
-      // Chord whoosh
-      noiseBurst(ac, out, 0.12, 0.05, 1800, 1.2);
-      envelopedTone(ac, out, 440, null, 0.18, "triangle", 0.05);
-      envelopedTone(ac, out, 554, null, 0.18, "triangle", 0.05);
-      envelopedTone(ac, out, 659, null, 0.18, "triangle", 0.05);
-      break;
-
-    case "planet":
-      // Rising sine hum, level-up feel
-      envelopedTone(ac, out, 220, 440, 0.32, "sine", 0.09);
-      envelopedTone(ac, out, 330, 660, 0.28, "sine", 0.05, 0.05);
-      break;
-
-    case "spectral":
-      // FM dissonance, ghostly
-      fmTone(ac, out, 330, 467, 180, 0.30, 0.07);
-      noiseBurst(ac, out, 0.20, 0.03, 800, 1, 0.05, "lowpass");
-      break;
-
-    case "error":
-      // Soft sawtooth buzz, brief
-      envelopedTone(ac, out, 220, 180, 0.10, "sawtooth", 0.10);
-      envelopedTone(ac, out, 165, 130, 0.10, "sawtooth", 0.08, 0.05);
-      break;
+  try {
+    a.currentTime = 0;
+    a.volume = volume * (PER_SOUND_GAIN[name] ?? 1);
+    // play() returns a Promise in modern browsers ; swallow autoplay rejections.
+    const p = a.play();
+    if (p && typeof p.catch === "function") p.catch(() => { /* user gesture pending */ });
+  } catch {
+    /* ignore */
   }
 }
 
-/**
- * Picks a random sound from a small bucket. Cycles through variant SFX so
- * UI interactions feel lively instead of repeating the same chirp every time.
- */
+// Back-compat helper kept so existing call sites compile, but it now plays the
+// FIRST sound only (deterministic) ; the user explicitly does not want random
+// SFX per interaction.
 export function playRandom(names: SoundName[]) {
   if (names.length === 0) return;
-  const pick = names[Math.floor(Math.random() * names.length)];
-  playSound(pick);
+  playSound(names[0]);
 }
 
 export function isSoundEnabled(): boolean { return enabled; }
 
 export function setSoundEnabled(v: boolean) {
   enabled = v;
-  if (v) playSound("toggle");
+  if (v) playSound("toggle_on");
   persist(STORAGE_KEY_ENABLED, v ? "1" : "0");
 }
 
@@ -364,6 +206,5 @@ export function getSoundVolume(): number { return volume; }
 
 export function setSoundVolume(v: number) {
   volume = Math.max(0, Math.min(1, v));
-  if (masterGain) masterGain.gain.value = volume;
   persist(STORAGE_KEY_VOLUME, String(volume));
 }

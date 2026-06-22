@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import { playSound, playRandom } from "@/lib/sound";
+import { playSound } from "@/lib/sound";
 import { useT } from "@/lib/i18n";
 
 type TabValue = string;
@@ -39,7 +39,7 @@ export function NavList({ groups, currentTab, onSelect, favCount }: NavListProps
   const t = useT();
 
   function go(v: TabValue) {
-    playRandom(["click", "click_alt", "chip"]);
+    playSound("tab_switch");
     onSelect(v);
   }
 
