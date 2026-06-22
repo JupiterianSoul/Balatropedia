@@ -399,7 +399,7 @@
       "rarity_def": "Les Jokers existent en quatre raretés — Commun, Peu commun, Rare, Légendaire. Les raretés supérieures apparaissent moins souvent dans la boutique et ont des effets plus puissants ou plus complexes. Les Légendaires ne peuvent apparaître qu'à partir de la carte L'Âme."
     },
     "runmeta": {
-      "deck": "Deck",
+      "deck": "Paquet",
       "stake": "Mise",
       "select_stake": "Choisir une mise…",
       "none": "Aucune",
