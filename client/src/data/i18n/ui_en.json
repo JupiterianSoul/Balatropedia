@@ -1392,6 +1392,15 @@
         "body": "Everything you've starred; jokers and combos in one place. Add notes to remember why you favorited each one.",
         "tip": "Sign in to keep favorites across devices; otherwise they live only in this browser session."
       }
+    },
+    "kofi": {
+      "footer": "Support development on Ko-fi",
+      "footer_note": "Tips help cover server costs and keep Balatropedia free for everyone.",
+      "section_label": "Support",
+      "title": "Enjoying Balatropedia?",
+      "tagline": "If this tool helps you cook your runs, you can tip the dev a coffee. Donations go toward supporting me and upgrading the servers so more people can use the app without hiccups.",
+      "cta": "Buy me a coffee on Ko-fi",
+      "aria": "Support development on Ko-fi (opens in a new tab)"
     }
   }
 }

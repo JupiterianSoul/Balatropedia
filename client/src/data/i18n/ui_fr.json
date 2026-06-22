@@ -1392,6 +1392,15 @@
         "body": "Tout ce que tu as étoilé; Jokers et combos au même endroit. Ajoute des notes pour te rappeler pourquoi tu as mis en favori.",
         "tip": "Connecte-toi pour garder tes favoris entre appareils ; sinon ils ne vivent que dans cette session de navigateur."
       }
+    },
+    "kofi": {
+      "footer": "Soutenir le développement sur Ko-fi",
+      "footer_note": "Les dons couvrent les frais de serveur et gardent Balatropedia gratuit pour tous.",
+      "section_label": "Soutien",
+      "title": "Balatropedia te plaît ?",
+      "tagline": "Si cet outil t'aide à optimiser tes runs, tu peux offrir un café au dev. Les dons servent à me soutenir et à améliorer les serveurs pour que plus de joueurs puissent utiliser l'app sans accrocs.",
+      "cta": "Offrir un café sur Ko-fi",
+      "aria": "Soutenir le développement sur Ko-fi (ouvre un nouvel onglet)"
     }
   }
 }

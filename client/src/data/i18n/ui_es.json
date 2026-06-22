@@ -1392,6 +1392,15 @@
         "body": "Todo lo que has marcado con estrella; Jokers y combos en un sitio. Añade notas para recordar por qué marcaste cada uno.",
         "tip": "Inicia sesión para mantener favoritos entre dispositivos; si no, viven solo en esta sesión del navegador."
       }
+    },
+    "kofi": {
+      "footer": "Apoya el desarrollo en Ko-fi",
+      "footer_note": "Las propinas ayudan a cubrir los costes del servidor y mantienen Balatropedia gratis para todos.",
+      "section_label": "Apoyo",
+      "title": "¿Te gusta Balatropedia?",
+      "tagline": "Si esta herramienta te ayuda a optimizar tus partidas, puedes invitarme a un café. Las donaciones sirven para apoyarme y mejorar los servidores para que más gente pueda usar la app sin problemas.",
+      "cta": "Invítame a un café en Ko-fi",
+      "aria": "Apoya el desarrollo en Ko-fi (abre en una nueva pestaña)"
     }
   }
 }

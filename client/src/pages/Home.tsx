@@ -36,6 +36,7 @@ import { GlossaryTab } from "@/tabs/GlossaryTab";
 import { SettingsTab } from "@/tabs/SettingsTab";
 import { HelpTab } from "@/tabs/HelpTab";
 import { AboutTab } from "@/tabs/AboutTab";
+import { KofiFooterButton } from "@/components/KofiButton";
 
 const NAV_GROUPS: NavGroup[] = [
   { key: "library", tabs: ["library"] },
@@ -214,6 +215,7 @@ export default function Home() {
               <TabsContent value="help" className="mt-0"><HelpTab /></TabsContent>
               <TabsContent value="about" className="mt-0"><AboutTab /></TabsContent>
               <TabsContent value="settings" className="mt-0"><SettingsTab /></TabsContent>
+              <KofiFooterButton />
             </div>
           </main>
 

@@ -1,6 +1,7 @@
 import { Github, ExternalLink, Heart, BookOpen, AlertTriangle, FlaskConical } from "lucide-react";
 import { SectionLabel } from "@/components/primitives";
 import { useT } from "@/lib/i18n";
+import { KofiSupportCard } from "@/components/KofiButton";
 
 interface SourceLink {
   name: string;
@@ -124,6 +125,8 @@ export function AboutTab() {
           <ExternalLink className="h-3 w-3 opacity-60" />
         </a>
       </section>
+
+      <KofiSupportCard />
 
       {}
       <section className="casino-card p-4">
