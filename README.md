@@ -1,9 +1,7 @@
-# Balatro Joker Synergy Explorer
+# Balatropedia
 
-An interactive reference and build-planning tool for [Balatro](https://www.playbalatro.com/) Jokers.
-Browse the Joker library, explore curated synergies, diagnose your run "skeleton",
-study archetypes, stakes, boss blinds, consumables, and more — with a Balatro-styled
-pixel UI and full English / French / Spanish localization.
+The unofficial [Balatro](https://www.playbalatro.com/) reference — jokers, synergies, combos, decks, stakes, vouchers, boss blinds, and build helpers.
+A Balatro-styled pixel UI with full English / French / Spanish localization.
 
 ## Tech Stack
 

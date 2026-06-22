@@ -42,12 +42,20 @@
       "compare": "Comparer",
       "skeleton": "Squelette",
       "favorites": "Favoris",
-      "glossary": "Glossaire"
+      "glossary": "Glossaire",
+      "group": {
+        "library": "Bibliothèque",
+        "build": "Construction",
+        "game": "Jeu",
+        "run": "Partie",
+        "more": "Plus",
+        "favorites": "Favoris"
+      }
     },
     "header": {
-      "title_a": "Explorateur de Synergies",
-      "title_b": "Joker",
-      "tagline": "Les 150 Jokers · Synergies sélectionnées · Aides à la construction",
+      "title_a": "Balatro",
+      "title_b": "pedia",
+      "tagline": "",
       "footer": "Un compagnon de stratégie fait par des fans · Données Joker sélectionnées et éditoriales · Favoris et notes enregistrés sur votre compte"
     },
     "btn": {

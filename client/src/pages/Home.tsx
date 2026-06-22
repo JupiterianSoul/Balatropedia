@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, X } from "lucide-react";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Star, X, ChevronDown } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useApp } from "@/lib/appContext";
 import { JokerDetailSheet } from "@/components/JokerDetailSheet";
@@ -28,24 +34,38 @@ import { SkeletonTab } from "@/tabs/SkeletonTab";
 import { FavoritesTab } from "@/tabs/FavoritesTab";
 import { GlossaryTab } from "@/tabs/GlossaryTab";
 
-const TABS = [
-  { value: "library", label: "Library" },
-  { value: "myrun", label: "My Run" },
-  { value: "shop", label: "Shop" },
-  { value: "synergies", label: "Synergies" },
-  { value: "combos", label: "Combos" },
-  { value: "archetypes", label: "Archetypes" },
-  { value: "decks", label: "Decks" },
-  { value: "stakes", label: "Stakes" },
-  { value: "consumables", label: "Consumables" },
-  { value: "vouchers", label: "Vouchers" },
-  { value: "modifiers", label: "Modifiers" },
-  { value: "heatmap", label: "Heatmap" },
-  { value: "bosses", label: "Boss Blinds" },
-  { value: "compare", label: "Compare" },
-  { value: "skeleton", label: "Skeleton" },
-  { value: "favorites", label: "Favorites" },
-  { value: "glossary", label: "Glossary" },
+// Grouped navigation — 17 tabs collapsed into 6 top-level groups for a cleaner header.
+// Single-tab groups render as a flat button; multi-tab groups render as a dropdown.
+type TabValue =
+  | "library"
+  | "myrun"
+  | "shop"
+  | "synergies"
+  | "combos"
+  | "archetypes"
+  | "decks"
+  | "stakes"
+  | "consumables"
+  | "vouchers"
+  | "modifiers"
+  | "heatmap"
+  | "bosses"
+  | "compare"
+  | "skeleton"
+  | "favorites"
+  | "glossary";
+
+type NavGroup = {
+  key: string;
+  tabs: TabValue[];
+};
+
+const NAV_GROUPS: NavGroup[] = [
+  { key: "library", tabs: ["library"] },
+  { key: "run", tabs: ["myrun", "shop"] },
+  { key: "build", tabs: ["synergies", "combos", "archetypes", "compare", "skeleton"] },
+  { key: "game", tabs: ["decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
+  { key: "more", tabs: ["heatmap", "glossary"] },
 ];
 
 export default function Home() {
@@ -62,48 +82,91 @@ export default function Home() {
       <Tabs value={tab} onValueChange={(v) => { playSound("click"); setTab(v); }} className="flex min-h-[100dvh] flex-col">
         {/* Header */}
         <header className="sticky top-0 z-30 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90">
-          <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:gap-6">
-            {/* logo + title */}
-            <div className="flex items-center gap-3">
-              <Logo className="h-9 w-9 shrink-0" />
-              <div className="leading-tight">
-                <h1 className="font-display text-2xl font-bold tracking-tight leading-none">
-                  <span className="mult-text">{t("ui.header.title_a")}</span>{" "}
-                  <span className="chips-text">{t("ui.header.title_b")}</span>
-                </h1>
-                <p className="mt-1 font-display text-[11px] uppercase tracking-[0.18em] text-[hsl(45_85%_60%)]/80">
-                  {t("ui.header.tagline")}
-                </p>
-              </div>
-            </div>
+          <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 md:gap-5">
+            {/* logo + wordmark */}
+            <button
+              type="button"
+              onClick={() => { playSound("click"); setTab("library"); }}
+              className="flex shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]"
+              data-testid="button-logo"
+              aria-label="Balatropedia home"
+            >
+              <Logo className="h-10 w-10 shrink-0 drop-shadow-[2px_2px_0_hsl(198_18%_4%)]" />
+              <h1 className="font-pixel text-[26px] font-bold leading-none tracking-tight">
+                <span className="mult-text">{t("ui.header.title_a")}</span>
+                <span className="chips-text">{t("ui.header.title_b")}</span>
+              </h1>
+            </button>
 
-            {/* centered tab bar */}
-            <div className="-mx-4 flex-1 overflow-x-auto px-4 lg:mx-0 lg:flex lg:justify-start lg:px-0">
-              <TabsList className="h-auto w-max gap-1 bg-transparent p-1" data-testid="tabs-main">
-                {TABS.map((tabItem) => (
-                  <TabsTrigger
-                    key={tabItem.value}
-                    value={tabItem.value}
-                    data-testid={`tab-${tabItem.value}`}
-                    className="balatro-tab whitespace-nowrap font-pixel"
-                    onMouseEnter={() => playSound("hover")}
-                  >
-                    {t(`ui.nav.${tabItem.value}`)}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </div>
+            {/* grouped nav — dropdowns for multi-tab groups, flat buttons for singletons */}
+            <nav className="-mx-4 flex flex-1 items-center gap-1 overflow-x-auto px-4 md:mx-0 md:px-0" data-testid="nav-main">
+              {NAV_GROUPS.map((group) => {
+                const isActiveGroup = group.tabs.includes(tab as TabValue);
+                if (group.tabs.length === 1) {
+                  const v = group.tabs[0];
+                  return (
+                    <button
+                      key={group.key}
+                      type="button"
+                      onClick={() => { playSound("click"); setTab(v); }}
+                      onMouseEnter={() => playSound("hover")}
+                      className="balatro-tab whitespace-nowrap font-pixel"
+                      data-testid={`nav-group-${group.key}`}
+                      data-state={isActiveGroup ? "active" : "inactive"}
+                    >
+                      {t(`ui.nav.group.${group.key}`)}
+                    </button>
+                  );
+                }
+                return (
+                  <DropdownMenu key={group.key}>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        onMouseEnter={() => playSound("hover")}
+                        className="balatro-tab flex items-center gap-1 whitespace-nowrap font-pixel"
+                        data-testid={`nav-group-${group.key}`}
+                        data-state={isActiveGroup ? "active" : "inactive"}
+                      >
+                        {t(`ui.nav.group.${group.key}`)}
+                        <ChevronDown className="h-3.5 w-3.5 opacity-70" strokeWidth={2.5} />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="start"
+                      className="min-w-[180px] border-2 border-black bg-[hsl(178_14%_13%)] p-1 font-pixel shadow-[0_6px_0_hsl(198_18%_4%)]"
+                    >
+                      {group.tabs.map((v) => (
+                        <DropdownMenuItem
+                          key={v}
+                          onSelect={() => { playSound("click"); setTab(v); }}
+                          className={`cursor-pointer rounded px-3 py-2 text-sm focus:bg-[hsl(150_16%_10%)] ${tab === v ? "gold-text" : "text-[hsl(45_15%_85%)]"}`}
+                          data-testid={`nav-item-${v}`}
+                        >
+                          {t(`ui.nav.${v}`)}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                );
+              })}
 
-            {/* favorites count + user button */}
-            <div className="flex items-center gap-2">
+              {/* favorites — always visible with count badge */}
               <button
-                onClick={() => setTab("favorites")}
-                className="hidden items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-accent/40 hover:text-foreground lg:flex"
-                data-testid="badge-favorites-count"
+                type="button"
+                onClick={() => { playSound("click"); setTab("favorites"); }}
+                onMouseEnter={() => playSound("hover")}
+                className="balatro-tab flex items-center gap-1.5 whitespace-nowrap font-pixel"
+                data-testid="nav-group-favorites"
+                data-state={tab === "favorites" ? "active" : "inactive"}
               >
-                <Star className={favCount > 0 ? "h-4 w-4 fill-accent text-accent" : "h-4 w-4"} />
+                <Star className={`h-3.5 w-3.5 ${favCount > 0 ? "fill-[hsl(45_85%_60%)] text-[hsl(45_85%_60%)]" : ""}`} strokeWidth={2.5} />
                 <span className="tabular">{favCount}</span>
               </button>
+            </nav>
+
+            {/* right-side controls */}
+            <div className="flex shrink-0 items-center gap-2">
               <LanguageSwitcher />
               <SoundToggle />
               <UserButton />

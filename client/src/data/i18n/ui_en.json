@@ -42,12 +42,20 @@
       "compare": "Compare",
       "skeleton": "Skeleton",
       "favorites": "Favorites",
-      "glossary": "Glossary"
+      "glossary": "Glossary",
+      "group": {
+        "library": "Library",
+        "build": "Build",
+        "game": "Game",
+        "run": "Run",
+        "more": "More",
+        "favorites": "Favorites"
+      }
     },
     "header": {
-      "title_a": "Joker Synergy",
-      "title_b": "Explorer",
-      "tagline": "All 150 Jokers · Curated synergies · Build helpers",
+      "title_a": "Balatro",
+      "title_b": "pedia",
+      "tagline": "",
       "footer": "A fan-made strategy companion · Joker data is curated and editorial · Favorites & notes are saved to your account"
     },
     "btn": {
