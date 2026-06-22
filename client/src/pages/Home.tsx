@@ -35,6 +35,8 @@ import { CompareTab } from "@/tabs/CompareTab";
 import { SkeletonTab } from "@/tabs/SkeletonTab";
 import { FavoritesTab } from "@/tabs/FavoritesTab";
 import { GlossaryTab } from "@/tabs/GlossaryTab";
+import { SettingsTab } from "@/tabs/SettingsTab";
+import { HelpTab } from "@/tabs/HelpTab";
 
 // Grouped navigation — 17 tabs collapsed into 5 logical groups + Favorites.
 // Same structure renders in both the mobile sheet and the desktop sidebar.
@@ -43,7 +45,7 @@ const NAV_GROUPS: NavGroup[] = [
   { key: "run", tabs: ["myrun", "shop"] },
   { key: "build", tabs: ["synergies", "combos", "archetypes", "compare", "skeleton"] },
   { key: "game", tabs: ["decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
-  { key: "more", tabs: ["heatmap", "glossary"] },
+  { key: "more", tabs: ["heatmap", "glossary", "help", "settings"] },
 ];
 
 export default function Home() {
@@ -215,6 +217,8 @@ export default function Home() {
               <TabsContent value="skeleton" className="mt-0"><SkeletonTab /></TabsContent>
               <TabsContent value="favorites" className="mt-0"><FavoritesTab /></TabsContent>
               <TabsContent value="glossary" className="mt-0"><GlossaryTab /></TabsContent>
+              <TabsContent value="help" className="mt-0"><HelpTab /></TabsContent>
+              <TabsContent value="settings" className="mt-0"><SettingsTab /></TabsContent>
             </div>
           </main>
 

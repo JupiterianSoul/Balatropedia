@@ -24,8 +24,9 @@ import { useApp } from "@/lib/appContext";
 import { useToast } from "@/hooks/use-toast";
 import {
   JOKER_MAP,
-  activeSynergies, impliedArchetypes, antiSynergyWarnings, synergyKey, ARCHETYPES,
-  type Archetype,
+  activeSynergies, antiSynergyWarnings, synergyKey,
+  heuristicSynergies, suggestedArchetypes,
+  type Archetype, type HeuristicSynergy,
 } from "@/lib/helpers";
 import { useT, useLabels, useCuratedText, useGameText } from "@/lib/i18n";
 
@@ -46,6 +47,45 @@ function RunSynergyRow({ s, labels }: { s: ReturnType<typeof activeSynergies>[nu
       </div>
       <p className="mt-1 text-xs leading-relaxed text-foreground/75">{why}</p>
       <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted-foreground/60">{labels.synergyKind[s.kind]}</p>
+    </li>
+  );
+}
+
+function RunLikelyRow({ h, labels, t }: {
+  h: HeuristicSynergy;
+  labels: ReturnType<typeof useLabels>;
+  t: ReturnType<typeof useT>;
+}) {
+  const aText = useGameText("jokers", h.a);
+  const bText = useGameText("jokers", h.b);
+  let reasonLabel = "";
+  let reasonDetail: string | null = null;
+  if (h.reasonKey === "partner") {
+    reasonLabel = t("ui.tabs.myrun_reason_partner");
+  } else if (h.reasonKey === "archetype") {
+    reasonLabel = t("ui.tabs.myrun_reason_archetype");
+    // Translate the first archetype id via labels.archetype if available
+    const firstArch = h.detail.split(",")[0] as Archetype;
+    reasonDetail = (labels.archetype as Record<string, string>)[firstArch] ?? firstArch;
+  } else if (h.reasonKey === "tag") {
+    reasonLabel = t("ui.tabs.myrun_reason_tag");
+    // Translate the role tag via labels.role
+    const firstTag = h.detail.split(",")[0];
+    reasonDetail = (labels.role as Record<string, string>)[firstTag] ?? firstTag;
+  }
+  return (
+    <li className="rounded-md border border-[hsl(45_85%_60%)]/30 bg-[hsl(45_85%_60%)]/[0.06] p-2.5">
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="text-sm font-medium text-foreground">{aText.name}</span>
+        <span className="text-xs text-muted-foreground">+</span>
+        <span className="text-sm font-medium text-foreground">{bText.name}</span>
+        <span className="rounded-sm border border-[hsl(45_85%_60%)]/30 bg-[hsl(45_85%_60%)]/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-[hsl(45_85%_60%)]">
+          {reasonLabel}
+        </span>
+      </div>
+      {reasonDetail ? (
+        <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted-foreground/70">{reasonDetail}</p>
+      ) : null}
     </li>
   );
 }
@@ -86,8 +126,12 @@ export function MyRunTab() {
   const [runNotes, setRunNotes] = useState("");
 
   const synergies = activeSynergies(slots);
-  const archetypes = impliedArchetypes(slots);
+  // Use looser archetype detection so even early/varied builds surface a direction.
+  const archetypes = suggestedArchetypes(slots);
   const warnings = antiSynergyWarnings(slots);
+  // Likely synergies inferred from partners / shared archetype / shared tags
+  // — fills the gap when no curated SYNERGIES pair matches the selection.
+  const likely = heuristicSynergies(slots);
 
   function handleAdd(id: string) {
     const ok = addToRun(id);
@@ -153,7 +197,7 @@ export function MyRunTab() {
 
         {/* Add joker */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="min-w-[220px] flex-1">
+          <div className="min-w-0 flex-1 sm:min-w-[220px]">
             <JokerCombobox
               value={picker}
               onChange={handleAdd}
@@ -248,6 +292,22 @@ export function MyRunTab() {
             </ul>
           )}
         </section>
+
+        {/* Heuristic / "likely" synergies — only shown when there are pairs to surface */}
+        {likely.length > 0 && (
+          <section className="casino-card p-4">
+            <div className="mb-2.5 flex items-center gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-[hsl(45_85%_60%)]" />
+              <SectionLabel>{t("ui.tabs.myrun_likely_synergies")}</SectionLabel>
+              <span className="ml-auto tabular text-xs text-muted-foreground">{likely.length}</span>
+            </div>
+            <ul className="space-y-2">
+              {likely.map((h, i) => (
+                <RunLikelyRow key={i} h={h} labels={labels} t={t} />
+              ))}
+            </ul>
+          </section>
+        )}
 
         <section className="casino-card p-4">
           <div className="mb-2.5 flex items-center gap-1.5">

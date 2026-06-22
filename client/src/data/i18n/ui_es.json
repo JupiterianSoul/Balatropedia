@@ -50,7 +50,9 @@
         "run": "Partida",
         "more": "Más",
         "favorites": "Favoritos"
-      }
+      },
+      "settings": "Ajustes",
+      "help": "Ayuda"
     },
     "header": {
       "title_a": "Balatro",
@@ -287,7 +289,11 @@
       "vouchers_subtitle": "16 pares de cupones. Comprar un cupón de nivel 1 desbloquea su mejora de nivel 2 en una tienda posterior.",
       "vouchers_tier_label": "Nivel {{tier}}",
       "vouchers_no_upgrade": "Sin mejora de nivel 2",
-      "myrun_anti_generic": "{{a}} debilita o entra en conflicto con {{b}}."
+      "myrun_anti_generic": "{{a}} debilita o entra en conflicto con {{b}}.",
+      "myrun_likely_synergies": "Sinergias probables",
+      "myrun_reason_partner": "Compañero listado",
+      "myrun_reason_archetype": "Arquetipo compartido",
+      "myrun_reason_tag": "Rol compartido"
     },
     "sheet": {
       "why_play": "¿Por qué jugarlo?",
@@ -1226,6 +1232,129 @@
       "tempo": {
         "term": "Tempo",
         "def": "La velocidad con que una construcción se pone en marcha en relación con la dificultad de la ante. Las construcciones de escalado lento necesitan estructuras defensivas para sobrevivir las primeras antes."
+      }
+    },
+    "settings": {
+      "title": "Ajustes",
+      "subtitle": "Idioma, sonido, cuenta y datos para Balatropedia.",
+      "language": "Idioma",
+      "language_hint": "Cambia toda la interfaz y el texto de los Jokers. ES está parcialmente traducido por máquina.",
+      "sound": "Sonido",
+      "sound_enabled": "Efectos de sonido",
+      "sound_enabled_hint": "Volteos de cartas, golpes de fichas, activaciones de Jokers.",
+      "on": "Activado",
+      "off": "Desactivado",
+      "volume_hint": "Volumen maestro de todos los efectos de sonido.",
+      "account_data": "Cuenta y datos",
+      "favorites_count": "Favoritos guardados",
+      "jokers": "jokers",
+      "combos": "combos",
+      "reset": "Limpiar",
+      "reset_done": "Favoritos limpiados.",
+      "reset_confirm_title": "¿Limpiar todos los favoritos?",
+      "reset_confirm_desc": "Esto elimina cada Joker y combo marcado. La acción no se puede deshacer.",
+      "signed_in_as": "Sesión iniciada como",
+      "signout": "Cerrar sesión",
+      "signed_out": "Sesión cerrada.",
+      "signout_failed": "Fallo al cerrar sesión",
+      "sign_in_to_sync": "Inicia sesión (arriba del menú) para sincronizar favoritos y runs guardadas entre dispositivos.",
+      "about": "Acerca de",
+      "source_code": "Código fuente en GitHub",
+      "disclaimer": "Balatropedia es una referencia no oficial creada por un fan. Balatro y todos sus assets pertenecen a LocalThunk y Playstack."
+    },
+    "help": {
+      "title": "Ayuda y Tutorial",
+      "subtitle": "Elige una función a la izquierda para aprender qué hace y cómo usarla.",
+      "tip_label": "Tip",
+      "overview": {
+        "title": "Vista general",
+        "body": "Balatropedia es una referencia no oficial para Balatro. Cada Joker, deck, stake, voucher, boss blind, consumible y modificador está indexado con sinergias y arquetipos seleccionados a mano. Usa el menú lateral para saltar entre herramientas — la mayoría son pura referencia, algunas (My Run, Compare, Skeleton) ayudan a planificar una run real.",
+        "tip": "Marca con estrella cualquier cosa para añadirla a Favoritos. Inicia sesión para sincronizar entre dispositivos."
+      },
+      "library": {
+        "title": "Biblioteca",
+        "body": "Índice buscable de los 150 Jokers con descripciones, scaling, arquetipos y tags. Los filtros viven detrás del botón Filtros — pulsa para abrirlos. Alterna Mosaico/Cuadrícula/Lista desde la barra superior.",
+        "tip": "Usa los filtros para acotar por rol, rareza, stage o tipo de mano. Combina varios — se aplican como Y lógico."
+      },
+      "myrun": {
+        "title": "My Run",
+        "body": "Construye el set de Jokers que de verdad estás jugando. Elige un deck, un stake, vouchers y hasta 10 slots. La columna derecha se actualiza en vivo con sinergias curadas, arquetipos implícitos, sinergias probables (partners / arquetipo / tags compartidos) y avisos de anti-sinergia.",
+        "tip": "Las sinergias probables aparecen en dorado aunque no haya entrada curada — se infieren de los metadatos de cada Joker para que siempre recibas feedback."
+      },
+      "shop": {
+        "title": "Tienda",
+        "body": "Simula un reroll de tienda. Añade Jokers candidatos y la página puntúa cuánto encajan con tu run actual — basado en densidad de sinergia con lo ya equipado y tu arquetipo activo.",
+        "tip": "Úsalo antes de gastar dinero en el juego: pon aquí los Jokers visibles en la tienda y compara puntuaciones."
+      },
+      "synergies": {
+        "title": "Sinergias",
+        "body": "Todas las parejas curadas de Jokers, agrupadas por motor (XMult stack, retrigger, scaling, etc.). Cada entrada explica por qué la pareja funciona y de qué tipo de sinergia es.",
+        "tip": "Pulsa cualquier nombre de Joker para abrir su ficha con el resto de partners."
+      },
+      "combos": {
+        "title": "Combos",
+        "body": "Setups multi-Joker (3+ piezas) que producen un motor de salida conocido. Cada combo lista los Jokers requeridos, la mano objetivo y la dificultad de setup.",
+        "tip": "Los Combos son la versión larga de las Sinergias — úsalos como metas de build en vez de parejas ad-hoc."
+      },
+      "archetypes": {
+        "title": "Arquetipos",
+        "body": "Direcciones estratégicas de build (Flush, Steel, High Card, Retrigger Engine, etc.). Cada arquetipo lista enablers (cartas que lo posibilitan) y scalers (cartas que pagan), más lo que suele faltarle.",
+        "tip": "Cuando My Run muestra un arquetipo, significa que al menos dos de tus Jokers son su núcleo. Añade un scaler o enabler de su lista para comprometerte."
+      },
+      "compare": {
+        "title": "Comparar",
+        "body": "Comparación lado a lado de 2 a 4 Jokers. Útil para decisiones de tienda cuando dos opciones están cerca. Compara scaling, stage, arquetipos, partners y anti-sinergias.",
+        "tip": "Añade un Joker a Comparar desde cualquier ficha mediante el botón Comparar."
+      },
+      "skeleton": {
+        "title": "Esqueleto",
+        "body": "Construye una plantilla de 5 Jokers por slot de motor (Chips / Flat Mult / XMult / Retrigger / Consistencia). Elige un Joker por slot para ver qué tan bien se sostiene el esqueleto.",
+        "tip": "Trata el Esqueleto como un plano, no como una receta — muchas runs cambian los roles de slot a mitad de partida."
+      },
+      "decks": {
+        "title": "Decks",
+        "body": "Todos los decks base y desbloqueables con su efecto inicial y arquetipos preferidos.",
+        "tip": "Elige un deck antes de rellenar My Run — algunos arquetipos solo florecen en decks específicos."
+      },
+      "stakes": {
+        "title": "Stakes",
+        "body": "Los ocho stakes del Blanco al Dorado, con lo que cada uno cambia (tamaño de Blinds, scaling de tienda, Tags restringidos, etc.) y la curva de dificultad.",
+        "tip": "Los stakes altos castigan setups lentos — prioriza Jokers de stage temprano por encima del Black Stake."
+      },
+      "bosses": {
+        "title": "Boss Blinds",
+        "body": "Todos los Boss Blinds con su efecto, las manos/Jokers que desactivan y cómo contrarrestarlos. Planifica una ronda antes.",
+        "tip": "Reserva consumibles y Jokers de alto impacto para Boss Blinds. Algunos (The Pillar, The Plant) cuentean fuertemente arquetipos concretos."
+      },
+      "vouchers": {
+        "title": "Vouchers",
+        "body": "Todos los vouchers, su coste y su upgrade. Útil para decisiones de compra a media-tardía.",
+        "tip": "Muchos arquetipos (Steel, Glass, Discard) necesitan un voucher específico para escalar — revisa el campo `oftenLacks` del arquetipo."
+      },
+      "consumables": {
+        "title": "Consumibles",
+        "body": "Tarots, Planetas y Espectrales, con sus efectos y las builds que más ayudan.",
+        "tip": "Las cartas de Planeta suben de nivel manos de forma permanente — prioriza las de tu mano de scoring. Los Espectrales son situacionales pero potentes."
+      },
+      "modifiers": {
+        "title": "Modificadores",
+        "body": "Enhancements (Bonus, Mult, Wild, Glass, Steel, Stone, Gold, Lucky), Ediciones (Foil, Holographic, Polychrome, Negative) y Sellos (Rojo, Morado, Azul, Dorado).",
+        "tip": "Apilar enhancement + edición + sello en una carta puede producir salidas absurdas. Planifica Negative en Jokers que no quieras vender."
+      },
+      "heatmap": {
+        "title": "Heatmap",
+        "body": "Elige cualquier Joker y mira cómo se empareja con todos los demás, coloreado por fuerza de sinergia.",
+        "tip": "Verde = fuerte, rojo = anti, gris = neutro. Úsalo para descubrir partners inesperados."
+      },
+      "glossary": {
+        "title": "Glosario",
+        "body": "Definiciones de cada término específico de Balatro usado en la app — Mult, Chips, XMult, Retrigger, nivel de mano, etc.",
+        "tip": "Ábrelo a la par que My Run mientras aprendes el juego."
+      },
+      "favorites": {
+        "title": "Favoritos",
+        "body": "Todo lo que has marcado con estrella — Jokers y combos en un sitio. Añade notas para recordar por qué marcaste cada uno.",
+        "tip": "Inicia sesión para mantener favoritos entre dispositivos; si no, viven solo en esta sesión del navegador."
       }
     }
   }
