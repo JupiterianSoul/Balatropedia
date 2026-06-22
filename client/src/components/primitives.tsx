@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import {
   Level, Role, Scaling, Stage, JOKER_MAP, Rarity,
 } from "@/lib/helpers";
-import { useLabels, useT } from "@/lib/i18n";
+import { useLabels, useT, useGameText } from "@/lib/i18n";
 
 /* ---- Rarity badge ---- */
 const RARITY_TONE: Record<Rarity, string> = {
@@ -154,7 +154,8 @@ export function JokerChip({
 }) {
   const t = useT();
   const j = JOKER_MAP[id];
-  const name = j?.name ?? id;
+  const localized = useGameText("jokers", id);
+  const name = localized.name || j?.name || id;
   const toneCls =
     tone === "anti"
       ? "border-destructive/60 text-[hsl(0_60%_70%)] hover:border-destructive"
@@ -181,7 +182,7 @@ export function JokerChip({
   );
 
   if (tone === "anti") {
-    const reason = j?.summary ?? t("ui.chip.generic_conflict");
+    const reason = localized.text || j?.summary || t("ui.chip.generic_conflict");
     return (
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>

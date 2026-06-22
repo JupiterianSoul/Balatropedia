@@ -26,28 +26,31 @@ const SORTED_JOKER_IDS = [...KNOWN_JOKER_IDS].sort((a, b) => b.length - a.length
  * Render a free-text combo idea, turning any embedded joker id (snake_case)
  * into an inline clickable chip that opens that joker.
  */
-function ComboText({ text }: { text: string }) {
+/** Inline localized joker link rendered inside ComboText. */
+function InlineJokerLink({ id }: { id: string }) {
   const { openJokerDetail } = useApp();
+  const { name } = useGameText("jokers", id);
+  const label = name || JOKER_MAP[id]?.name || humanize(id);
+  return (
+    <button
+      type="button"
+      onClick={() => openJokerDetail(id)}
+      data-testid={`combo-jokerlink-${id}`}
+      className="font-medium text-accent underline decoration-dotted underline-offset-2 hover:decoration-solid"
+    >
+      {label}
+    </button>
+  );
+}
+
+function ComboText({ text }: { text: string }) {
   // Tokenize on snake_case identifier candidates.
   const parts = text.split(/([a-z][a-z0-9]*(?:_[a-z0-9]+)+)/g);
   return (
     <span>
       {parts.map((part, i) => {
         const isId = SORTED_JOKER_IDS.includes(part);
-        if (isId) {
-          const name = JOKER_MAP[part]?.name ?? humanize(part);
-          return (
-            <button
-              key={i}
-              type="button"
-              onClick={() => openJokerDetail(part)}
-              data-testid={`combo-jokerlink-${part}`}
-              className="font-medium text-accent underline decoration-dotted underline-offset-2 hover:decoration-solid"
-            >
-              {name}
-            </button>
-          );
-        }
+        if (isId) return <InlineJokerLink key={i} id={part} />;
         return <Fragment key={i}>{part}</Fragment>;
       })}
     </span>

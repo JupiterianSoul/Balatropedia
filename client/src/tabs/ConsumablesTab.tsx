@@ -6,6 +6,7 @@ import { SPECTRALS } from "@/data/phase3/spectrals";
 import { Phase3Sprite } from "@/components/Phase3Sprite";
 import { Chip, RiskBadgeP3, JokerSpriteRow, SearchInput } from "@/components/phase3Primitives";
 import { SectionLabel } from "@/components/primitives";
+import { LName, LText } from "@/components/Localized";
 import { humanize } from "@/lib/utils";
 import { useOpenDetail } from "@/lib/detailContext";
 import { useT } from "@/lib/i18n";
@@ -59,10 +60,10 @@ function TarotsGrid() {
         {list.map((t) => (
           <CardShell key={t.id} testId={`card-tarot-${t.id}`}>
             <EntityHeader kind="tarot" id={t.id} category="tarots" name={t.name}>
-              <h3 className="font-display text-sm text-accent">{t.name}</h3>
+              <h3 className="font-display text-sm text-accent"><LName category="tarots" id={t.id} fallback={t.name} /></h3>
               <Chip className="mt-1 border-accent/30 bg-accent/10 text-accent">{TAROT_CAT_KEY[t.category] ? tr(TAROT_CAT_KEY[t.category]) : humanize(t.category)}</Chip>
             </EntityHeader>
-            <p className="text-xs leading-relaxed text-foreground/85">{t.effect}</p>
+            <LText category="tarots" id={t.id} fallback={t.effect} as="p" className="text-xs leading-relaxed text-foreground/85" />
             <div>
               <SectionLabel>{tr("ui.cons.when_to_use")}</SectionLabel>
               <p className="text-xs leading-relaxed text-foreground/70">{t.whenToUse}</p>
@@ -92,7 +93,7 @@ function PlanetsGrid() {
         {list.map((p) => (
           <CardShell key={p.id} testId={`card-planet-${p.id}`}>
             <EntityHeader kind="planet" id={p.id} category="planets" name={p.name}>
-              <h3 className="font-display text-sm text-accent">{p.name}</h3>
+              <h3 className="font-display text-sm text-accent"><LName category="planets" id={p.id} fallback={p.name} /></h3>
               <p className="mt-0.5 text-xs text-muted-foreground">{t("ui.cons.buffs")} <span className="text-foreground/80">{p.hand}</span></p>
             </EntityHeader>
             <span className="inline-flex w-fit items-center rounded-sm border border-accent/40 bg-accent/10 px-2 py-0.5 text-[11px] font-semibold text-accent tabular">
@@ -125,11 +126,11 @@ function SpectralsGrid() {
           <CardShell key={s.id} testId={`card-spectral-${s.id}`}>
             <EntityHeader kind="spectral" id={s.id} category="spectrals" name={s.name}>
               <div className="flex items-center justify-between gap-2">
-                <h3 className="truncate font-display text-sm text-accent">{s.name}</h3>
+                <h3 className="truncate font-display text-sm text-accent"><LName category="spectrals" id={s.id} fallback={s.name} /></h3>
                 <RiskBadgeP3 risk={s.risk} />
               </div>
             </EntityHeader>
-            <p className="text-xs leading-relaxed text-foreground/85">{s.effect}</p>
+            <LText category="spectrals" id={s.id} fallback={s.effect} as="p" className="text-xs leading-relaxed text-foreground/85" />
             <div>
               <SectionLabel>{t("ui.cons.sequencing")}</SectionLabel>
               <p className="text-xs leading-relaxed text-foreground/70">{s.sequencing}</p>

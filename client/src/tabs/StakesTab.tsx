@@ -7,6 +7,7 @@ import { DifficultyBadge } from "@/components/phase3Primitives";
 import { SectionLabel } from "@/components/primitives";
 import { useState } from "react";
 import { useOpenDetail } from "@/lib/detailContext";
+import { LName } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
 export function StakesTab() {
@@ -54,7 +55,7 @@ export function StakesTab() {
                     className="font-display text-base"
                     style={{ color: s.color === "#ffffff" ? "hsl(var(--foreground))" : s.color }}
                   >
-                    {s.name}
+                    <LName category="stakes" id={s.id} fallback={s.name} />
                   </h3>
                   <div className="mt-1 flex items-center gap-2">
                     <span className="text-[11px] uppercase tracking-wide text-muted-foreground tabular">{t("ui.stakes.tier")} {idx + 1}</span>

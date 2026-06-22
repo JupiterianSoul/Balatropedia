@@ -3,6 +3,7 @@ import { JokerSprite } from "@/components/JokerSprite";
 import { useApp } from "@/lib/appContext";
 import { JOKER_MAP } from "@/lib/helpers";
 import { BOSSES } from "@/data/bosses";
+import { LName, LText } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
 export function BossBlindsTab() {
@@ -24,14 +25,14 @@ export function BossBlindsTab() {
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Skull className="h-4 w-4 text-[hsl(0_55%_64%)]" />
-                <h3 className="font-display text-base text-accent">{b.name}</h3>
+                <h3 className="font-display text-base text-accent"><LName category="blinds" id={b.id} fallback={b.name} /></h3>
               </div>
               <span className="shrink-0 rounded-sm border border-border bg-card px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
                 {b.anteRange}
               </span>
             </div>
 
-            <p className="mt-2.5 text-sm leading-relaxed text-foreground/85">{b.effect}</p>
+            <LText category="blinds" id={b.id} fallback={b.effect} as="p" className="mt-2.5 text-sm leading-relaxed text-foreground/85" />
 
             <div className="mt-3">
               <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-[hsl(145_45%_60%)]">
@@ -64,7 +65,7 @@ export function BossBlindsTab() {
                         data-testid={`boss-joker-${b.id}-${id}`}
                       >
                         <JokerSprite jokerId={id} name={j.name} size={22} className="h-[22px] w-[22px] rounded-full" />
-                        <span className="text-xs text-foreground/90">{j.name}</span>
+                        <span className="text-xs text-foreground/90"><LName category="jokers" id={j.id} fallback={j.name} /></span>
                       </button>
                     );
                   })}

@@ -5,6 +5,7 @@ import { Phase3Sprite } from "@/components/Phase3Sprite";
 import { ValueTierBadge } from "@/components/phase3Primitives";
 import { FilterPill } from "@/components/FilterPills";
 import { useOpenDetail } from "@/lib/detailContext";
+import { LName, LText } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 
 const TIERS = ["S", "A", "B", "C"] as const;
@@ -21,10 +22,10 @@ function VoucherNode({ v }: { v: Voucher }) {
       <Phase3Sprite category="vouchers" id={v.id} name={v.name} size={56} className="h-14 w-14" />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <h3 className="truncate font-pixel text-sm text-accent">{v.name}</h3>
+          <h3 className="truncate font-pixel text-sm text-accent"><LName category="vouchers" id={v.id} fallback={v.name} /></h3>
           <ValueTierBadge tier={v.valueTier} className="ml-auto shrink-0" />
         </div>
-        <p className="mt-1 text-xs leading-relaxed text-foreground/80">{v.effect}</p>
+        <LText category="vouchers" id={v.id} fallback={v.effect} as="p" className="mt-1 text-xs leading-relaxed text-foreground/80" />
       </div>
     </button>
   );

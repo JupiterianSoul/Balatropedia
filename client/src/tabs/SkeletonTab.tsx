@@ -7,6 +7,7 @@ import {
 import { JokerMultiCombobox } from "@/components/JokerCombobox";
 import { JokerChip, SectionLabel } from "@/components/primitives";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { LName } from "@/components/Localized";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -78,7 +79,7 @@ export function SkeletonTab() {
         <div className="flex flex-wrap gap-1.5">
           {jokers.map((j) => (
             <span key={j.id} className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2 py-1 text-xs">
-              <button onClick={() => openJokerDetail(j.id)} className="text-foreground/90 hover:text-accent">{j.name}</button>
+              <button onClick={() => openJokerDetail(j.id)} className="text-foreground/90 hover:text-accent"><LName category="jokers" id={j.id} fallback={j.name} /></button>
               <button onClick={() => setIds(ids.filter((x) => x !== j.id))} aria-label={t("ui.skel.remove_aria")} data-testid={`skeleton-remove-${j.id}`}>
                 <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
               </button>

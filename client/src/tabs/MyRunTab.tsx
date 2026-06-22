@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { JokerCombobox } from "@/components/JokerCombobox";
 import { JokerSprite } from "@/components/JokerSprite";
 import { SectionLabel } from "@/components/primitives";
+import { LName } from "@/components/Localized";
 import { RunMetaSelectors } from "@/components/RunMetaSelectors";
 import { useRun } from "@/lib/runContext";
 import type { SavedRun } from "@/lib/useRuns";
@@ -164,7 +165,7 @@ export function MyRunTab() {
                       onClick={() => openJokerDetail(j.id)}
                       className="min-w-0 flex-1 truncate text-left font-display text-sm text-accent hover:underline"
                     >
-                      {j.name}
+                      <LName category="jokers" id={j.id} fallback={j.name} />
                     </button>
                     <button
                       onClick={() => removeFromRun(j.id)}
