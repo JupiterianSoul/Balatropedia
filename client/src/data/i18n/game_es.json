@@ -2,1650 +2,1325 @@
   "jokers": {
     "joker": {
       "name": "Joker",
-      "text": "+#1# Mult",
-      "_machine_translated": false
+      "text": "+#1# Mult"
     },
     "greedy_joker": {
-      "name": "Greedy Joker",
-      "text": "Played cards with #2# suit give +#1# Mult when scored",
-      "_machine_translated": false
+      "name": "Comodín Codicioso",
+      "text": "Las cartas jugadas con el palo #2# dan +#1# Mult al anotarse"
     },
     "lusty_joker": {
-      "name": "Lusty Joker",
-      "text": "Played cards with #2# suit give +#1# Mult when scored",
-      "_machine_translated": false
+      "name": "Comodín Lujurioso",
+      "text": "Las cartas jugadas con el palo #2# dan +#1# Mult al anotarse"
     },
     "wrathful_joker": {
-      "name": "Wrathful Joker",
-      "text": "Played cards with #2# suit give +#1# Mult when scored",
-      "_machine_translated": false
+      "name": "Comodín Iracundo",
+      "text": "Las cartas jugadas con el palo #2# dan +#1# Mult al anotarse"
     },
     "gluttonous_joker": {
-      "name": "Gluttonous Joker",
-      "text": "Played cards with #2# suit give +#1# Mult when scored",
-      "_machine_translated": false
+      "name": "Comodín Glotón",
+      "text": "Las cartas jugadas con el palo #2# dan +#1# Mult al anotarse"
     },
     "jolly_joker": {
-      "name": "Jolly Joker",
-      "text": "+#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Alegre",
+      "text": "+#1# Mult si la mano jugada contiene una #2#"
     },
     "zany_joker": {
-      "name": "Zany Joker",
-      "text": "+#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Extravagante",
+      "text": "+#1# Mult si la mano jugada contiene un #2#"
     },
     "mad_joker": {
-      "name": "Mad Joker",
-      "text": "+#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Loco",
+      "text": "+#1# Mult si la mano jugada contiene un #2#"
     },
     "crazy_joker": {
-      "name": "Crazy Joker",
-      "text": "+#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Chiflado",
+      "text": "+#1# Mult si la mano jugada contiene una #2#"
     },
     "droll_joker": {
-      "name": "Droll Joker",
-      "text": "+#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Gracioso",
+      "text": "+#1# Mult si la mano jugada contiene una #2#"
     },
     "sly_joker": {
-      "name": "Sly Joker",
-      "text": "+#1# Chips if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Astuto",
+      "text": "+#1# Fichas si la mano jugada contiene una #2#"
     },
     "wily_joker": {
-      "name": "Wily Joker",
-      "text": "+#1# Chips if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Taimado",
+      "text": "+#1# Fichas si la mano jugada contiene un #2#"
     },
     "clever_joker": {
-      "name": "Clever Joker",
-      "text": "+#1# Chips if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Listo",
+      "text": "+#1# Fichas si la mano jugada contiene un #2#"
     },
     "devious_joker": {
-      "name": "Devious Joker",
-      "text": "+#1# Chips if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Pícaro",
+      "text": "+#1# Fichas si la mano jugada contiene una #2#"
     },
     "crafty_joker": {
-      "name": "Crafty Joker",
-      "text": "+#1# Chips if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "Comodín Mañoso",
+      "text": "+#1# Fichas si la mano jugada contiene una #2#"
     },
     "half_joker": {
-      "name": "Half Joker",
-      "text": "+#1# Mult if played hand contains #2# or fewer cards",
-      "_machine_translated": false
+      "name": "Medio Comodín",
+      "text": "+#1# Mult si la mano jugada contiene #2# cartas o menos"
     },
     "credit_card": {
-      "name": "Credit Card",
-      "text": "Go up to -$#1# in debt",
-      "_machine_translated": false
+      "name": "Tarjeta de Crédito",
+      "text": "Permite hasta -$#1# de deuda"
     },
     "banner": {
-      "name": "Banner",
-      "text": "+#1# Chips for each remaining discard",
-      "_machine_translated": false
+      "name": "Estandarte",
+      "text": "+#1# Fichas por cada descarte restante"
     },
     "mystic_summit": {
-      "name": "Mystic Summit",
-      "text": "+#1# Mult when #2# discards remaining",
-      "_machine_translated": false
+      "name": "Cima Mística",
+      "text": "+#1# Mult cuando quedan #2# descartes"
     },
     "eight_ball": {
-      "name": "8 Ball",
-      "text": "#1# in #2# chance for each played 8 to create a Tarot card when scored (Must have room)",
-      "_machine_translated": false
+      "name": "Bola 8",
+      "text": "#1# de cada #2# posibilidades de crear una carta de Tarot por cada 8 jugado al anotarse (Necesita espacio)"
     },
     "misprint": {
-      "name": "Misprint",
-      "text": "",
-      "_machine_translated": false
+      "name": "Error de Impresión",
+      "text": ""
     },
     "raised_fist": {
-      "name": "Raised Fist",
-      "text": "Adds double the rank of lowest ranked card held in hand to Mult",
-      "_machine_translated": false
+      "name": "Puño en Alto",
+      "text": "Añade el doble del valor de la carta más baja en mano al Mult"
     },
     "chaos_the_clown": {
-      "name": "Chaos the Clown",
-      "text": "#1# free Reroll per shop",
-      "_machine_translated": false
+      "name": "Chaos el Payaso",
+      "text": "#1# Renovación gratuita por tienda"
     },
     "scary_face": {
-      "name": "Scary Face",
-      "text": "Played face cards give +#1# Chips when scored",
-      "_machine_translated": false
+      "name": "Cara de Susto",
+      "text": "Las figuras jugadas dan +#1# Fichas al anotarse"
     },
     "abstract_joker": {
-      "name": "Abstract Joker",
-      "text": "+#1# Mult for each Joker card (Currently +#2# Mult)",
-      "_machine_translated": false
+      "name": "Comodín Abstracto",
+      "text": "+#1# Mult por cada Comodín (Actualmente +#2# Mult)"
     },
     "delayed_gratification": {
-      "name": "Delayed Gratification",
-      "text": "Earn $#1# per discard if no discards are used by end of the round",
-      "_machine_translated": false
+      "name": "Gratificación Aplazada",
+      "text": "Gana $#1# por descarte si no se usa ninguno al final de la ronda"
     },
     "gros_michel": {
       "name": "Gros Michel",
-      "text": "+#1# Mult #2# in #3# chance this card is destroyed at end of round",
-      "_machine_translated": false
+      "text": "+#1# Mult #2# de cada #3# posibilidades de que esta carta sea destruida al final de la ronda"
     },
     "even_steven": {
       "name": "Even Steven",
-      "text": "Played cards with even rank give +#1# Mult when scored (10, 8, 6, 4, 2)",
-      "_machine_translated": false
+      "text": "Las cartas jugadas con valor par dan +#1# Mult al anotarse (10, 8, 6, 4, 2)"
     },
     "odd_todd": {
       "name": "Odd Todd",
-      "text": "Played cards with odd rank give +#1# Chips when scored (A, 9, 7, 5, 3)",
-      "_machine_translated": false
+      "text": "Las cartas jugadas con valor impar dan +#1# Fichas al anotarse (A, 9, 7, 5, 3)"
     },
     "scholar": {
-      "name": "Scholar",
-      "text": "Played Aces give +#2# Chips and +#1# Mult when scored",
-      "_machine_translated": false
+      "name": "Erudito",
+      "text": "Los Ases jugados dan +#2# Fichas y +#1# Mult al anotarse"
     },
     "business_card": {
-      "name": "Business Card",
-      "text": "Played face cards have a #1# in #2# chance to give $2 when scored",
-      "_machine_translated": false
+      "name": "Tarjeta de Visita",
+      "text": "Las figuras jugadas tienen #1# de cada #2# posibilidades de dar $2 al anotarse"
     },
     "supernova": {
       "name": "Supernova",
-      "text": "Adds the number of times poker hand has been played this run to Mult",
-      "_machine_translated": false
+      "text": "Añade al Mult el número de veces que se ha jugado la mano de póker en esta partida"
     },
     "ride_the_bus": {
-      "name": "Ride the Bus",
-      "text": "This Joker gains +#1# Mult per consecutive hand played without a scoring face card (Currently +#2# Mult)",
-      "_machine_translated": false
+      "name": "En el Autobús",
+      "text": "Este Comodín gana +#1# Mult por cada mano consecutiva jugada sin una figura anotada (Actualmente +#2# Mult)"
     },
     "egg": {
-      "name": "Egg",
-      "text": "Gains $#1# of sell value at end of round",
-      "_machine_translated": false
+      "name": "Huevo",
+      "text": "Gana $#1# de valor de venta al final de la ronda"
     },
     "runner": {
-      "name": "Runner",
-      "text": "Gains +#2# Chips if played hand contains a Straight (Currently +#1# Chips)",
-      "_machine_translated": false
+      "name": "Corredor",
+      "text": "Gana +#2# Fichas si la mano jugada contiene una Escalera (Actualmente +#1# Fichas)"
     },
     "ice_cream": {
-      "name": "Ice Cream",
-      "text": "+#1# Chips -#2# Chips for every hand played",
-      "_machine_translated": false
+      "name": "Helado",
+      "text": "+#1# Fichas -#2# Fichas por cada mano jugada"
     },
     "splash": {
-      "name": "Splash",
-      "text": "Every played card counts in scoring",
-      "_machine_translated": false
+      "name": "Salpicadura",
+      "text": "Todas las cartas jugadas cuentan en la puntuación"
     },
     "blue_joker": {
-      "name": "Blue Joker",
-      "text": "+#1# Chips for each remaining card in deck (Currently +#2# Chips)",
-      "_machine_translated": false
+      "name": "Comodín Azul",
+      "text": "+#1# Fichas por cada carta restante en el mazo (Actualmente +#2# Fichas)"
     },
     "faceless_joker": {
-      "name": "Faceless Joker",
-      "text": "Earn $#1# if #2# or more face cards are discarded at the same time",
-      "_machine_translated": false
+      "name": "Comodín Sin Cara",
+      "text": "Gana $#1# si se descartan #2# o más figuras a la vez"
     },
     "green_joker": {
-      "name": "Green Joker",
-      "text": "+#1# Mult per hand played -#2# Mult per discard (Currently +#3# Mult)",
-      "_machine_translated": false
+      "name": "Comodín Verde",
+      "text": "+#1# Mult por mano jugada -#2# Mult por descarte (Actualmente +#3# Mult)"
     },
     "superposition": {
-      "name": "Superposition",
-      "text": "Create a Tarot card if poker hand contains an Ace and a Straight (Must have room)",
-      "_machine_translated": false
+      "name": "Superposición",
+      "text": "Crea una carta de Tarot si la mano contiene un As y una Escalera (Necesita espacio)"
     },
     "to_do_list": {
-      "name": "To Do List",
-      "text": "Earn $#1# if poker hand is a #2#, poker hand changes at end of round",
-      "_machine_translated": false
+      "name": "Lista de Tareas",
+      "text": "Gana $#1# si la mano de póker es una #2#, la mano cambia al final de la ronda"
     },
     "cavendish": {
       "name": "Cavendish",
-      "text": "X#1# Mult #2# in #3# chance this card is destroyed at end of round",
-      "_machine_translated": false
+      "text": "X#1# Mult #2# de cada #3# posibilidades de que esta carta sea destruida al final de la ronda"
     },
     "red_card": {
-      "name": "Red Card",
-      "text": "This Joker gains +#1# Mult when any Booster Pack is skipped (Currently +#2# Mult)",
-      "_machine_translated": false
+      "name": "Tarjeta Roja",
+      "text": "Este Comodín gana +#1# Mult cuando se salta cualquier Sobre (Actualmente +#2# Mult)"
     },
     "square_joker": {
-      "name": "Square Joker",
-      "text": "This Joker gains +#2# Chips if played hand has exactly 4 cards (Currently #1# Chips)",
-      "_machine_translated": false
+      "name": "Comodín Cuadrado",
+      "text": "Este Comodín gana +#2# Fichas si la mano jugada tiene exactamente 4 cartas (Actualmente #1# Fichas)"
     },
     "riff_raff": {
       "name": "Riff-Raff",
-      "text": "When Blind is selected, create #1# Common Jokers (Must have room)",
-      "_machine_translated": false
+      "text": "Al seleccionar la Ciega, crea #1# Comodines Comunes (Necesita espacio)"
     },
     "photograph": {
-      "name": "Photograph",
-      "text": "First played face card gives X#1# Mult when scored",
-      "_machine_translated": false
+      "name": "Fotografía",
+      "text": "La primera figura jugada da X#1# Mult al anotarse"
     },
     "reserved_parking": {
-      "name": "Reserved Parking",
-      "text": "Each face card held in hand has a #2# in #3# chance to give $#1#",
-      "_machine_translated": false
+      "name": "Aparcamiento Reservado",
+      "text": "Cada figura en mano tiene #2# de cada #3# posibilidades de dar $#1#"
     },
     "mail_in_rebate": {
-      "name": "Mail-In Rebate",
-      "text": "Earn $#1# for each discarded #2#, rank changes every round",
-      "_machine_translated": false
+      "name": "Reembolso por Correo",
+      "text": "Gana $#1# por cada #2# descartada, el rango cambia cada ronda"
     },
     "hallucination": {
-      "name": "Hallucination",
-      "text": "#1# in #2# chance to create a Tarot card when any Booster Pack is opened (Must have room)",
-      "_machine_translated": false
+      "name": "Alucinación",
+      "text": "#1# de cada #2# posibilidades de crear una carta de Tarot al abrir cualquier Sobre (Necesita espacio)"
     },
     "fortune_teller": {
-      "name": "Fortune Teller",
-      "text": "+#1# Mult per Tarot card used this run (Currently +#2#)",
-      "_machine_translated": false
+      "name": "Adivino",
+      "text": "+#1# Mult por cada carta de Tarot usada en esta partida (Actualmente +#2#)"
     },
     "juggler": {
-      "name": "Juggler",
-      "text": "+#1# hand size",
-      "_machine_translated": false
+      "name": "Malabarista",
+      "text": "+#1# de tamaño de mano"
     },
     "drunkard": {
-      "name": "Drunkard",
-      "text": "+#1# discard each round",
-      "_machine_translated": false
+      "name": "Borracho",
+      "text": "+#1# descarte cada ronda"
     },
     "golden_joker": {
-      "name": "Golden Joker",
-      "text": "Earn $#1# at end of round",
-      "_machine_translated": false
+      "name": "Comodín Dorado",
+      "text": "Gana $#1# al final de la ronda"
     },
     "popcorn": {
-      "name": "Popcorn",
-      "text": "+#1# Mult -#2# Mult per round played",
-      "_machine_translated": false
+      "name": "Palomitas",
+      "text": "+#1# Mult -#2# Mult por ronda jugada"
     },
     "walkie_talkie": {
       "name": "Walkie Talkie",
-      "text": "Each played 10 or 4 gives +#1# Chips and +#2# Mult when scored",
-      "_machine_translated": false
+      "text": "Cada 10 o 4 jugado da +#1# Fichas y +#2# Mult al anotarse"
     },
     "smiley_face": {
-      "name": "Smiley Face",
-      "text": "Played face cards give +#1# Mult when scored",
-      "_machine_translated": false
+      "name": "Cara Sonriente",
+      "text": "Las figuras jugadas dan +#1# Mult al anotarse"
     },
     "golden_ticket": {
-      "name": "Golden Ticket",
-      "text": "Played Gold cards earn $#1# when scored",
-      "_machine_translated": false
+      "name": "Billete Dorado",
+      "text": "Las Cartas de Oro jugadas ganan $#1# al anotarse"
     },
     "swashbuckler": {
-      "name": "Swashbuckler",
-      "text": "Adds the sell value of all other owned Jokers to Mult (Currently +#1# Mult)",
-      "_machine_translated": false
+      "name": "Espadachín",
+      "text": "Añade el valor de venta de todos los Comodines al Mult (Actualmente +#1# Mult)"
     },
     "hanging_chad": {
       "name": "Hanging Chad",
-      "text": "Retrigger first played card used in scoring #1# additional times",
-      "_machine_translated": false
+      "text": "Reactiva la primera carta jugada usada en la puntuación #1# veces adicionales"
     },
     "shoot_the_moon": {
-      "name": "Shoot the Moon",
-      "text": "Each Queen held in hand gives +#1# Mult",
-      "_machine_translated": false
+      "name": "Tirar a la Luna",
+      "text": "Cada Reina en mano da +#1# Mult"
     },
     "joker_stencil": {
-      "name": "Joker Stencil",
-      "text": "X1 Mult for each empty Joker slot Joker Stencil included (Currently X#1# )",
-      "_machine_translated": false
+      "name": "Plantilla de Comodín",
+      "text": "X1 Mult por cada hueco de Comodín vacío, incluida la Plantilla (Actualmente X#1# )"
     },
     "four_fingers": {
-      "name": "Four Fingers",
-      "text": "All Flushes and Straights can be made with 4 cards",
-      "_machine_translated": false
+      "name": "Cuatro Dedos",
+      "text": "Todos los Colores y Escaleras pueden formarse con 4 cartas"
     },
     "mime": {
-      "name": "Mime",
-      "text": "Retrigger all card held in hand abilities",
-      "_machine_translated": false
+      "name": "Mimo",
+      "text": "Reactiva todas las habilidades de las cartas en mano"
     },
     "ceremonial_dagger": {
-      "name": "Ceremonial Dagger",
-      "text": "When Blind is selected, destroy Joker to the right and permanently add double its sell value to this Mult (Currently +#1# Mult)",
-      "_machine_translated": false
+      "name": "Daga Ceremonial",
+      "text": "Al seleccionar la Ciega, destruye el Comodín de la derecha y añade permanentemente el doble de su valor de venta a este Mult (Actualmente +#1# Mult)"
     },
     "marble_joker": {
-      "name": "Marble Joker",
-      "text": "Adds one Stone card to deck when Blind is selected",
-      "_machine_translated": false
+      "name": "Comodín de Mármol",
+      "text": "Añade una Carta de Piedra al mazo al seleccionar la Ciega"
     },
     "loyalty_card": {
-      "name": "Loyalty Card",
-      "text": "X#1# Mult every #2# hands played #3#",
-      "_machine_translated": false
+      "name": "Tarjeta de Fidelidad",
+      "text": "X#1# Mult cada #2# manos jugadas #3#"
     },
     "dusk": {
-      "name": "Dusk",
-      "text": "Retrigger all played cards in final hand of round",
-      "_machine_translated": false
+      "name": "Crepúsculo",
+      "text": "Reactiva todas las cartas jugadas en la última mano de la ronda"
     },
     "fibonacci": {
       "name": "Fibonacci",
-      "text": "Each played Ace, 2, 3, 5, or 8 gives +#1# Mult when scored",
-      "_machine_translated": false
+      "text": "Cada As, 2, 3, 5 u 8 jugado da +#1# Mult al anotarse"
     },
     "steel_joker": {
-      "name": "Steel Joker",
-      "text": "Gives X#1# Mult for each Steel Card in your full deck (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Comodín de Acero",
+      "text": "Da X#1# Mult por cada Carta de Acero en tu mazo completo (Actualmente X#2# Mult)"
     },
     "hack": {
       "name": "Hack",
-      "text": "Retrigger each played 2, 3, 4, or 5",
-      "_machine_translated": false
+      "text": "Reactiva cada 2, 3, 4 o 5 jugado"
     },
     "pareidolia": {
       "name": "Pareidolia",
-      "text": "All cards are considered face cards",
-      "_machine_translated": false
+      "text": "Todas las cartas se consideran figuras"
     },
     "space_joker": {
-      "name": "Space Joker",
-      "text": "#1# in #2# chance to upgrade level of played poker hand",
-      "_machine_translated": false
+      "name": "Comodín Espacial",
+      "text": "#1# de cada #2# posibilidades de subir de nivel la mano de póker jugada"
     },
     "burglar": {
-      "name": "Burglar",
-      "text": "When Blind is selected, gain +#1# Hands and lose all discards",
-      "_machine_translated": false
+      "name": "Ladrón",
+      "text": "Al seleccionar la Ciega, gana +#1# Manos y pierde todos los descartes"
     },
     "blackboard": {
-      "name": "Blackboard",
-      "text": "X#1# Mult if all cards held in hand are #2# or #3#",
-      "_machine_translated": false
+      "name": "Pizarra",
+      "text": "X#1# Mult si todas las cartas en mano son #2# o #3#"
     },
     "sixth_sense": {
-      "name": "Sixth Sense",
-      "text": "If first hand of round is a single 6, destroy it and create a Spectral card (Must have room)",
-      "_machine_translated": false
+      "name": "Sexto Sentido",
+      "text": "Si la primera mano de la ronda es un solo 6, destrúyelo y crea una carta Espectral (Necesita espacio)"
     },
     "constellation": {
-      "name": "Constellation",
-      "text": "This Joker gains X#1# Mult every time a Planet card is used (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Constelación",
+      "text": "Este Comodín gana X#1# Mult cada vez que se usa una carta Planeta (Actualmente X#2# Mult)"
     },
     "hiker": {
-      "name": "Hiker",
-      "text": "Every played card permanently gains +#1# Chips when scored",
-      "_machine_translated": false
+      "name": "Excursionista",
+      "text": "Cada carta jugada gana permanentemente +#1# Fichas al anotarse"
     },
     "card_sharp": {
-      "name": "Card Sharp",
-      "text": "X#1# Mult if played poker hand has already been played this round",
-      "_machine_translated": false
+      "name": "Tahúr",
+      "text": "X#1# Mult si la mano de póker jugada ya se ha jugado en esta ronda"
     },
     "madness": {
-      "name": "Madness",
-      "text": "When Small Blind or Big Blind is selected, gain X#1# Mult and destroy a random Joker (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Locura",
+      "text": "Al seleccionar la Ciega Pequeña o la Ciega Grande, gana X#1# Mult y destruye un Comodín aleatorio (Actualmente X#2# Mult)"
     },
     "seance": {
       "name": "Séance",
-      "text": "If poker hand is a #1#, create a random Spectral card (Must have room)",
-      "_machine_translated": false
+      "text": "Si la mano de póker es un #1#, crea una carta Espectral aleatoria (Necesita espacio)"
     },
     "vampire": {
-      "name": "Vampire",
-      "text": "This Joker gains X#1# Mult per scoring Enhanced card played, removes card Enhancement (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Vampiro",
+      "text": "Este Comodín gana X#1# Mult por cada carta Mejorada anotada al jugarse, elimina la Mejora (Actualmente X#2# Mult)"
     },
     "shortcut": {
-      "name": "Shortcut",
-      "text": "Allows Straights to be made with gaps of 1 rank (ex: 10 8 6 5 3)",
-      "_machine_translated": false
+      "name": "Atajo",
+      "text": "Permite formar Escaleras con huecos de 1 rango (ej: 10 8 6 5 3)"
     },
     "hologram": {
-      "name": "Hologram",
-      "text": "This Joker gains X#1# Mult every time a playing card is added to your deck (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Holograma",
+      "text": "Este Comodín gana X#1# Mult cada vez que se añade una carta al mazo (Actualmente X#2# Mult)"
     },
     "cloud_9": {
-      "name": "Cloud 9",
-      "text": "Earn $#1# for each 9 in your full deck at end of round (Currently $#2#)",
-      "_machine_translated": false
+      "name": "Nube 9",
+      "text": "Gana $#1# por cada 9 en tu mazo completo al final de la ronda (Actualmente $#2#)"
     },
     "rocket": {
-      "name": "Rocket",
-      "text": "Earn $#1# at end of round Payout increases by $#2# when Boss Blind is defeated",
-      "_machine_translated": false
+      "name": "Cohete",
+      "text": "Gana $#1# al final de la ronda El pago aumenta $#2# al derrotar la Ciega Jefa"
     },
     "midas_mask": {
-      "name": "Midas Mask",
-      "text": "All played face cards become Gold cards when scored",
-      "_machine_translated": false
+      "name": "Máscara de Midas",
+      "text": "Todas las figuras jugadas se convierten en Cartas de Oro al anotarse"
     },
     "luchador": {
       "name": "Luchador",
-      "text": "Sell this card to disable the current Boss Blind",
-      "_machine_translated": false
+      "text": "Vende esta carta para desactivar la Ciega Jefa actual"
     },
     "gift_card": {
-      "name": "Gift Card",
-      "text": "Add $#1# of sell value to every Joker and Consumable card at end of round",
-      "_machine_translated": false
+      "name": "Tarjeta Regalo",
+      "text": "Añade $#1# de valor de venta a cada Comodín y consumible al final de la ronda"
     },
     "turtle_bean": {
-      "name": "Turtle Bean",
-      "text": "+#1# hand size, reduces by #2# every round",
-      "_machine_translated": false
+      "name": "Judía Tortuga",
+      "text": "+#1# de tamaño de mano, se reduce #2# cada ronda"
     },
     "erosion": {
-      "name": "Erosion",
-      "text": "+#1# Mult for each card below #3# in your full deck (Currently +#2# Mult)",
-      "_machine_translated": false
+      "name": "Erosión",
+      "text": "+#1# Mult por cada carta por debajo de #3# en tu mazo completo (Actualmente +#2# Mult)"
     },
     "to_the_moon": {
-      "name": "To the Moon",
-      "text": "Earn an extra $#1# of interest for every $5 you have at end of round",
-      "_machine_translated": false
+      "name": "A la Luna",
+      "text": "Gana $#1# extra de interés por cada $5 que tengas al final de la ronda"
     },
     "stone_joker": {
-      "name": "Stone Joker",
-      "text": "Gives +#1# Chips for each Stone Card in your full deck (Currently +#2# Chips)",
-      "_machine_translated": false
+      "name": "Comodín de Piedra",
+      "text": "Da +#1# Fichas por cada Carta de Piedra en tu mazo completo (Actualmente +#2# Fichas)"
     },
     "lucky_cat": {
-      "name": "Lucky Cat",
-      "text": "This Joker gains X#1# Mult every time a Lucky card successfully triggers (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Gato de la Suerte",
+      "text": "Este Comodín gana X#1# Mult cada vez que una Carta de Suerte se activa con éxito (Actualmente X#2# Mult)"
     },
     "bull": {
-      "name": "Bull",
-      "text": "+#1# Chips for each $1 you have (Currently +#2# Chips)",
-      "_machine_translated": false
+      "name": "Toro",
+      "text": "+#1# Fichas por cada $1 que tengas (Actualmente +#2# Fichas)"
     },
     "diet_cola": {
-      "name": "Diet Cola",
-      "text": "Sell this card to create a free #1#",
-      "_machine_translated": false
+      "name": "Refresco Light",
+      "text": "Vende esta carta para crear un #1# gratuito"
     },
     "trading_card": {
-      "name": "Trading Card",
-      "text": "If first discard of round has only 1 card, destroy it and earn $#1#",
-      "_machine_translated": false
+      "name": "Cromo",
+      "text": "Si el primer descarte de la ronda tiene solo 1 carta, destrúyela y gana $#1#"
     },
     "flash_card": {
-      "name": "Flash Card",
-      "text": "This Joker gains +#1# Mult per reroll in the shop (Currently +#2# Mult)",
-      "_machine_translated": false
+      "name": "Tarjeta Flash",
+      "text": "Este Comodín gana +#1# Mult por cada renovación en la tienda (Actualmente +#2# Mult)"
     },
     "spare_trousers": {
-      "name": "Spare Trousers",
-      "text": "This Joker gains +#1# Mult if played hand contains a #2# (Currently +#3# Mult)",
-      "_machine_translated": false
+      "name": "Pantalones de Repuesto",
+      "text": "Este Comodín gana +#1# Mult si la mano jugada contiene un #2# (Actualmente +#3# Mult)"
     },
     "ramen": {
       "name": "Ramen",
-      "text": "X#1# Mult, loses X#2# Mult per card discarded",
-      "_machine_translated": false
+      "text": "X#1# Mult, pierde X#2# Mult por cada carta descartada"
     },
     "seltzer": {
-      "name": "Seltzer",
-      "text": "Retrigger all cards played for the next #1# hands",
-      "_machine_translated": false
+      "name": "Soda",
+      "text": "Reactiva todas las cartas jugadas durante las próximas #1# manos"
     },
     "castle": {
-      "name": "Castle",
-      "text": "This Joker gains +#1# Chips per discarded #2# card, suit changes every round (Currently +#3# Chips)",
-      "_machine_translated": false
+      "name": "Castillo",
+      "text": "Este Comodín gana +#1# Fichas por cada carta de #2# descartada, el palo cambia cada ronda (Actualmente +#3# Fichas)"
     },
     "satellite": {
-      "name": "Satellite",
-      "text": "Earn $#1# at end of round per unique Planet card used this run (Currently $#2#)",
-      "_machine_translated": false
+      "name": "Satélite",
+      "text": "Gana $#1# al final de la ronda por cada carta Planeta única usada en esta partida (Actualmente $#2#)"
     },
     "acrobat": {
-      "name": "Acrobat",
-      "text": "X#1# Mult on final hand of round",
-      "_machine_translated": false
+      "name": "Acróbata",
+      "text": "X#1# Mult en la última mano de la ronda"
     },
     "sock_and_buskin": {
       "name": "Sock and Buskin",
-      "text": "Retrigger all played face cards",
-      "_machine_translated": false
+      "text": "Reactiva todas las figuras jugadas"
     },
     "troubadour": {
-      "name": "Troubadour",
-      "text": "+#1# hand size, -#2# hand each round",
-      "_machine_translated": false
+      "name": "Trovador",
+      "text": "+#1# de tamaño de mano, -#2# mano cada ronda"
     },
     "certificate": {
-      "name": "Certificate",
-      "text": "When round begins, add a random playing card with a random seal to your hand",
-      "_machine_translated": false
+      "name": "Certificado",
+      "text": "Al comenzar la ronda, añade una carta de juego aleatoria con un sello aleatorio a tu mano"
     },
     "smeared_joker": {
-      "name": "Smeared Joker",
-      "text": "Hearts and Diamonds count as the same suit, Spades and Clubs count as the same suit",
-      "_machine_translated": false
+      "name": "Comodín Borroso",
+      "text": "Corazones y Diamantes cuentan como el mismo palo, Picas y Tréboles cuentan como el mismo palo"
     },
     "throwback": {
-      "name": "Throwback",
-      "text": "X#1# Mult for each Blind skipped this run (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Recuerdo",
+      "text": "X#1# Mult por cada Ciega saltada en esta partida (Actualmente X#2# Mult)"
     },
     "rough_gem": {
-      "name": "Rough Gem",
-      "text": "Played cards with Diamond suit earn $#1# when scored",
-      "_machine_translated": false
+      "name": "Gema en Bruto",
+      "text": "Las cartas jugadas con el palo Diamantes ganan $#1# al anotarse"
     },
     "bloodstone": {
-      "name": "Bloodstone",
-      "text": "#1# in #2# chance for played cards with Heart suit to give X#3# Mult when scored",
-      "_machine_translated": false
+      "name": "Heliotropo",
+      "text": "#1# de cada #2# posibilidades de que las cartas jugadas con palo Corazones den X#3# Mult al anotarse"
     },
     "arrowhead": {
-      "name": "Arrowhead",
-      "text": "Played cards with Spade suit give +#1# Chips when scored",
-      "_machine_translated": false
+      "name": "Punta de Flecha",
+      "text": "Las cartas jugadas con el palo Picas dan +#1# Fichas al anotarse"
     },
     "onyx_agate": {
-      "name": "Onyx Agate",
-      "text": "Played cards with Club suit give +#1# Mult when scored",
-      "_machine_translated": false
+      "name": "Ágata Ónix",
+      "text": "Las cartas jugadas con el palo Tréboles dan +#1# Mult al anotarse"
     },
     "glass_joker": {
-      "name": "Glass Joker",
-      "text": "This Joker gains X#1# Mult for every Glass Card that is destroyed (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Comodín de Cristal",
+      "text": "Este Comodín gana X#1# Mult por cada Carta de Cristal destruida (Actualmente X#2# Mult)"
     },
     "showman": {
       "name": "Showman",
-      "text": "Joker, Tarot, Planet, and Spectral cards may appear multiple times",
-      "_machine_translated": false
+      "text": "Los Comodines, Tarots, Planetas y cartas Espectrales pueden aparecer varias veces"
     },
     "flower_pot": {
-      "name": "Flower Pot",
-      "text": "X#1# Mult if poker hand contains a Diamond card, Club card, Heart card, and Spade card",
-      "_machine_translated": false
+      "name": "Maceta",
+      "text": "X#1# Mult si la mano de póker contiene una carta de Diamantes, Tréboles, Corazones y Picas"
     },
     "merry_andy": {
       "name": "Merry Andy",
-      "text": "+#1# discards each round, #2# hand size",
-      "_machine_translated": false
+      "text": "+#1# descartes cada ronda, #2# de tamaño de mano"
     },
     "oops_all_6s": {
-      "name": "Oops! All 6s",
-      "text": "Doubles all listed probabilities (ex: 1 in 3 -> 2 in 3)",
-      "_machine_translated": false
+      "name": "¡Todo 6s!",
+      "text": "Duplica todas las probabilidades indicadas (ej: 1 de cada 3 -> 2 de cada 3)"
     },
     "the_idol": {
-      "name": "The Idol",
-      "text": "Each played #2# of #3# gives X#1# Mult when scored Card changes every round",
-      "_machine_translated": false
+      "name": "El Ídolo",
+      "text": "Cada #2# de #3# jugado da X#1# Mult al anotarse La carta cambia cada ronda"
     },
     "seeing_double": {
-      "name": "Seeing Double",
-      "text": "X#1# Mult if played hand has a scoring Club card and a scoring card of any other suit",
-      "_machine_translated": false
+      "name": "Visión Doble",
+      "text": "X#1# Mult si la mano jugada tiene una carta de Tréboles y una carta de cualquier otro palo"
     },
     "matador": {
       "name": "Matador",
-      "text": "Earn $#1# if played hand triggers the Boss Blind ability",
-      "_machine_translated": false
+      "text": "Gana $#1# si la mano jugada activa la habilidad de la Ciega Jefa"
     },
     "cartomancer": {
-      "name": "Cartomancer",
-      "text": "Create a Tarot card when Blind is selected (Must have room)",
-      "_machine_translated": false
+      "name": "Cartomante",
+      "text": "Crea una carta de Tarot al seleccionar la Ciega (Necesita espacio)"
     },
     "astronomer": {
-      "name": "Astronomer",
-      "text": "All Planet cards and Celestial Packs in the shop are free",
-      "_machine_translated": false
+      "name": "Astrónomo",
+      "text": "Todas las cartas Planeta y Sobres Celestiales en la tienda son gratuitos"
     },
     "bootstraps": {
       "name": "Bootstraps",
-      "text": "+#1# Mult for every $#2# you have (Currently +#3# Mult)",
-      "_machine_translated": false
+      "text": "+#1# Mult por cada $#2# que tengas (Actualmente +#3# Mult)"
     },
     "mr_bones": {
-      "name": "Mr. Bones",
-      "text": "Prevents Death if chips scored are at least 25% of required chips self destructs",
-      "_machine_translated": false
+      "name": "Sr. Huesos",
+      "text": "Evita la muerte si las fichas anotadas son al menos el 25% de las fichas requeridas Se autodestruye"
     },
     "dna": {
-      "name": "DNA",
-      "text": "If first hand of round has only 1 card, add a permanent copy to deck and draw it to hand",
-      "_machine_translated": false
+      "name": "ADN",
+      "text": "Si la primera mano de la ronda tiene solo 1 carta, añade una copia permanente al mazo y cójela en mano"
     },
     "vagabond": {
-      "name": "Vagabond",
-      "text": "Create a Tarot card if hand is played with $#1# or less",
-      "_machine_translated": false
+      "name": "Vagabundo",
+      "text": "Crea una carta de Tarot si se juega una mano con $#1# o menos"
     },
     "baron": {
-      "name": "Baron",
-      "text": "Each King held in hand gives X#1# Mult",
-      "_machine_translated": false
+      "name": "Barón",
+      "text": "Cada Rey en mano da X#1# Mult"
     },
     "obelisk": {
-      "name": "Obelisk",
-      "text": "This Joker gains X#1# Mult per consecutive hand played without playing your most played poker hand (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Obelisco",
+      "text": "Este Comodín gana X#1# Mult por cada mano consecutiva jugada sin jugar tu mano de póker más jugada (Actualmente X#2# Mult)"
     },
     "ancient_joker": {
-      "name": "Ancient Joker",
-      "text": "Each played card with #2# suit gives X#1# Mult when scored, suit changes at end of round",
-      "_machine_translated": false
+      "name": "Comodín Ancestral",
+      "text": "Cada carta jugada con el palo #2# da X#1# Mult al anotarse, el palo cambia al final de la ronda"
     },
     "driver_gloves": {
-      "name": "Driver's License",
-      "text": "X#1# Mult if you have at least 16 Enhanced cards in your full deck (Currently #2#)",
-      "_machine_translated": false
+      "name": "Carnet de Conducir",
+      "text": "X#1# Mult si tienes al menos 16 cartas Mejoradas en tu mazo completo (Actualmente #2#)"
     },
     "campfire": {
-      "name": "Campfire",
-      "text": "This Joker gains X#1# Mult for each card sold, resets when Boss Blind is defeated (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "Hoguera",
+      "text": "Este Comodín gana X#1# Mult por cada carta vendida, se reinicia al derrotar la Ciega Jefa (Actualmente X#2# Mult)"
     },
     "baseball_card": {
-      "name": "Baseball Card",
-      "text": "Uncommon Jokers each give X#1# Mult",
-      "_machine_translated": false
+      "name": "Cromo de Béisbol",
+      "text": "Cada Comodín Poco Común da X#1# Mult"
     },
     "blueprint": {
-      "name": "Blueprint",
-      "text": "Copies ability of Joker to the right",
-      "_machine_translated": false
+      "name": "Plano",
+      "text": "Copia la habilidad del Comodín a la derecha"
     },
     "wee_joker": {
-      "name": "Wee Joker",
-      "text": "This Joker gains +#2# Chips when each played 2 is scored (Currently +#1# Chips)",
-      "_machine_translated": false
+      "name": "Comodín Pequeñín",
+      "text": "Este Comodín gana +#2# Fichas cuando cada 2 jugado se anota (Actualmente +#1# Fichas)"
     },
     "hit_the_road": {
-      "name": "Hit the Road",
-      "text": "This Joker gains X#1# Mult for every Jack discarded this round (Currently X#2# Mult)",
-      "_machine_translated": false
+      "name": "De Viaje",
+      "text": "Este Comodín gana X#1# Mult por cada J descartado en esta ronda (Actualmente X#2# Mult)"
     },
     "the_duo": {
-      "name": "The Duo",
-      "text": "X#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "El Dúo",
+      "text": "X#1# Mult si la mano jugada contiene una #2#"
     },
     "the_trio": {
-      "name": "The Trio",
-      "text": "X#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "El Trío",
+      "text": "X#1# Mult si la mano jugada contiene un #2#"
     },
     "the_family": {
-      "name": "The Family",
-      "text": "X#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "La Familia",
+      "text": "X#1# Mult si la mano jugada contiene un #2#"
     },
     "the_order": {
-      "name": "The Order",
-      "text": "X#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "La Orden",
+      "text": "X#1# Mult si la mano jugada contiene una #2#"
     },
     "the_tribe": {
-      "name": "The Tribe",
-      "text": "X#1# Mult if played hand contains a #2#",
-      "_machine_translated": false
+      "name": "La Tribu",
+      "text": "X#1# Mult si la mano jugada contiene un #2#"
     },
     "stuntman": {
-      "name": "Stuntman",
-      "text": "+#1# Chips, -#2# hand size",
-      "_machine_translated": false
+      "name": "Especialista",
+      "text": "+#1# Fichas, -#2# de tamaño de mano"
     },
     "invisible_joker": {
-      "name": "Invisible Joker",
-      "text": "After #1# rounds, sell this card to Duplicate a random Joker (Currently #2#/#1#)",
-      "_machine_translated": false
+      "name": "Comodín Invisible",
+      "text": "Tras #1# rondas, vende esta carta para duplicar un Comodín aleatorio (Actualmente #2#/#1#)"
     },
     "burnt_joker": {
-      "name": "Burnt Joker",
-      "text": "Upgrade the level of the first discarded poker hand each round",
-      "_machine_translated": false
+      "name": "Comodín Quemado",
+      "text": "Sube de nivel la primera mano de póker descartada cada ronda"
     },
     "brainstorm": {
-      "name": "Brainstorm",
-      "text": "Copies the ability of leftmost Joker",
-      "_machine_translated": false
+      "name": "Lluvia de Ideas",
+      "text": "Copia la habilidad del Comodín más a la izquierda"
     },
     "canio": {
       "name": "Canio",
-      "text": "This Joker gains X#1# Mult when a face card is destroyed (Currently X#2# Mult)",
-      "_machine_translated": false
+      "text": "Este Comodín gana X#1# Mult cuando se destruye una figura (Actualmente X#2# Mult)"
     },
     "triboulet": {
       "name": "Triboulet",
-      "text": "Played Kings and Queens each give X#1# Mult when scored",
-      "_machine_translated": false
+      "text": "Los Reyes y Reinas jugados dan X#1# Mult al anotarse"
     },
     "yorick": {
       "name": "Yorick",
-      "text": "This Joker gains X#1# Mult every #2# [#3#] cards discarded (Currently X#4# Mult)",
-      "_machine_translated": false
+      "text": "Este Comodín gana X#1# Mult cada #2# [#3#] cartas descartadas (Actualmente X#4# Mult)"
     },
     "chicot": {
       "name": "Chicot",
-      "text": "Disables effect of every Boss Blind",
-      "_machine_translated": false
+      "text": "Desactiva el efecto de todas las Ciegas Jefas"
     },
     "perkeo": {
       "name": "Perkeo",
-      "text": "Creates a Negative copy of 1 random consumable card in your possession at the end of the shop",
-      "_machine_translated": false
+      "text": "Crea una copia Negativa de 1 consumible aleatorio en tu poder al final de la tienda"
     }
   },
   "decks": {
     "red_deck": {
-      "name": "Red Deck",
-      "text": "+#1# discard every round",
-      "_machine_translated": false
+      "name": "Mazo Rojo",
+      "text": "+#1# descarte cada ronda"
     },
     "blue_deck": {
-      "name": "Blue Deck",
-      "text": "+#1# hand every round",
-      "_machine_translated": false
+      "name": "Mazo Azul",
+      "text": "+#1# mano cada ronda"
     },
     "yellow_deck": {
-      "name": "Yellow Deck",
-      "text": "Start with extra $#1#",
-      "_machine_translated": false
+      "name": "Mazo Amarillo",
+      "text": "Empieza con $#1# extra"
     },
     "green_deck": {
-      "name": "Green Deck",
-      "text": "At end of each Round: $#1# per remaining Hand $#2# per remaining Discard Earn no Interest",
-      "_machine_translated": false
+      "name": "Mazo Verde",
+      "text": "Al final de cada ronda: $#1# por Mano restante $#2# por Descarte restante Sin intereses"
     },
     "black_deck": {
-      "name": "Black Deck",
-      "text": "+#1# Joker slot -#2# hand every round",
-      "_machine_translated": false
+      "name": "Mazo Negro",
+      "text": "+#1# hueco de Comodín -#2# mano cada ronda"
     },
     "magic_deck": {
-      "name": "Magic Deck",
-      "text": "Start run with the #1# voucher and 2 copies of #2#",
-      "_machine_translated": false
+      "name": "Mazo Mágico",
+      "text": "Empieza la partida con el Vale #1# y 2 copias de #2#"
     },
     "nebula_deck": {
-      "name": "Nebula Deck",
-      "text": "Start run with the #1# voucher #2# consumable slot",
-      "_machine_translated": false
+      "name": "Mazo Nebulosa",
+      "text": "Empieza la partida con el Vale #1# #2# hueco de consumible"
     },
     "ghost_deck": {
-      "name": "Ghost Deck",
-      "text": "Spectral cards may appear in the shop, start with a Hex card",
-      "_machine_translated": false
+      "name": "Mazo Fantasma",
+      "text": "Las cartas Espectrales pueden aparecer en la tienda, empieza con una carta Hex"
     },
     "abandoned_deck": {
-      "name": "Abandoned Deck",
-      "text": "Start run with no Face Cards in your deck",
-      "_machine_translated": false
+      "name": "Mazo Abandonado",
+      "text": "Empieza la partida sin Figuras en el mazo"
     },
     "checkered_deck": {
-      "name": "Checkered Deck",
-      "text": "Start run with 26 Spades and 26 Hearts in deck",
-      "_machine_translated": false
+      "name": "Mazo a Cuadros",
+      "text": "Empieza la partida con 26 Picas y 26 Corazones en el mazo"
     },
     "zodiac_deck": {
-      "name": "Zodiac Deck",
-      "text": "Start run with #1#, #2#, and #3#",
-      "_machine_translated": false
+      "name": "Mazo del Zodíaco",
+      "text": "Empieza la partida con #1#, #2# y #3#"
     },
     "painted_deck": {
-      "name": "Painted Deck",
-      "text": "+#1# hand size, #2# Joker slot",
-      "_machine_translated": false
+      "name": "Mazo Pintado",
+      "text": "+#1# de tamaño de mano, #2# hueco de Comodín"
     },
     "anaglyph_deck": {
-      "name": "Anaglyph Deck",
-      "text": "After defeating each Boss Blind, gain a #1#",
-      "_machine_translated": false
+      "name": "Mazo Anaglifo",
+      "text": "Tras derrotar cada Ciega Jefa, gana una #1#"
     },
     "plasma_deck": {
-      "name": "Plasma Deck",
-      "text": "Balance Chips and Mult when calculating score for played hand X#1# base Blind size",
-      "_machine_translated": false
+      "name": "Mazo Plasma",
+      "text": "Equilibra las Fichas y el Mult al calcular la puntuación de la mano jugada X#1# tamaño base de Ciega"
     },
     "erratic_deck": {
-      "name": "Erratic Deck",
-      "text": "All Ranks and Suits in deck are randomized",
-      "_machine_translated": false
+      "name": "Mazo Errático",
+      "text": "Todos los Valores y Palos del mazo son aleatorizados"
     }
   },
   "stakes": {
     "white_stake": {
-      "name": "White Stake",
-      "text": "Base Difficulty",
-      "_machine_translated": false
+      "name": "Apuesta Blanca",
+      "text": "Dificultad base"
     },
     "red_stake": {
-      "name": "Red Stake",
-      "text": "Small Blind gives no reward money Applies all previous Stakes",
-      "_machine_translated": false
+      "name": "Apuesta Roja",
+      "text": "La Ciega Pequeña no da dinero de recompensa Aplica todas las Apuestas anteriores"
     },
     "green_stake": {
-      "name": "Green Stake",
-      "text": "Required score scales faster for each Ante Applies all previous Stakes",
-      "_machine_translated": false
+      "name": "Apuesta Verde",
+      "text": "La puntuación requerida escala más rápido por Ante Aplica todas las Apuestas anteriores"
     },
     "black_stake": {
-      "name": "Black Stake",
-      "text": "Shop can have Eternal Jokers (Can't be sold or destroyed) Applies all previous Stakes",
-      "_machine_translated": false
+      "name": "Apuesta Negra",
+      "text": "La tienda puede tener Comodines Eternos (No se pueden vender ni destruir) Aplica todas las Apuestas anteriores"
     },
     "blue_stake": {
-      "name": "Blue Stake",
-      "text": "-1 Discard Applies all previous Stakes",
-      "_machine_translated": false
+      "name": "Apuesta Azul",
+      "text": "-1 Descarte Aplica todas las Apuestas anteriores"
     },
     "purple_stake": {
-      "name": "Purple Stake",
-      "text": "Required score scales faster for each Ante Applies all previous Stakes",
-      "_machine_translated": false
+      "name": "Apuesta Púrpura",
+      "text": "La puntuación requerida escala más rápido por Ante Aplica todas las Apuestas anteriores"
     },
     "orange_stake": {
-      "name": "Orange Stake",
-      "text": "Shop can have Perishable Jokers (Debuffed after 5 Rounds) Applies all previous Stakes",
-      "_machine_translated": false
+      "name": "Apuesta Naranja",
+      "text": "La tienda puede tener Comodines Perecederos (Debilitados tras 5 Rondas) Aplica todas las Apuestas anteriores"
     },
     "gold_stake": {
-      "name": "Gold Stake",
-      "text": "Shop can have Rental Jokers (Costs $3 per round) Applies all previous Stakes",
-      "_machine_translated": false
+      "name": "Apuesta Dorada",
+      "text": "La tienda puede tener Comodines de Alquiler (Cuesta $3 por ronda) Aplica todas las Apuestas anteriores"
     }
   },
   "tarots": {
     "the_fool": {
-      "name": "The Fool",
-      "text": "Creates the last Tarot or Planet card used during this run The Fool excluded",
-      "_machine_translated": false
+      "name": "El Loco",
+      "text": "Crea el último Tarot o Planeta usado en esta partida, excluido El Loco"
     },
     "the_magician": {
-      "name": "The Magician",
-      "text": "Enhances #1# selected cards to #2#s",
-      "_machine_translated": false
+      "name": "El Mago",
+      "text": "Mejora #1# cartas seleccionadas a #2#s"
     },
     "the_high_priestess": {
-      "name": "The High Priestess",
-      "text": "Creates up to #1# random Planet cards (Must have room)",
-      "_machine_translated": false
+      "name": "La Suma Sacerdotisa",
+      "text": "Crea hasta #1# cartas Planeta aleatorias (Necesita espacio)"
     },
     "the_empress": {
-      "name": "The Empress",
-      "text": "Enhances #1# selected cards to #2#s",
-      "_machine_translated": false
+      "name": "La Emperatriz",
+      "text": "Mejora #1# cartas seleccionadas a #2#s"
     },
     "the_emperor": {
-      "name": "The Emperor",
-      "text": "Creates up to #1# random Tarot cards (Must have room)",
-      "_machine_translated": false
+      "name": "El Emperador",
+      "text": "Crea hasta #1# cartas de Tarot aleatorias (Necesita espacio)"
     },
     "the_hierophant": {
-      "name": "The Hierophant",
-      "text": "Enhances #1# selected cards to #2#s",
-      "_machine_translated": false
+      "name": "El Sumo Sacerdote",
+      "text": "Mejora #1# cartas seleccionadas a #2#s"
     },
     "the_lovers": {
-      "name": "The Lovers",
-      "text": "Enhances #1# selected card into a #2#",
-      "_machine_translated": false
+      "name": "Los Enamorados",
+      "text": "Mejora #1# carta seleccionada a #2#"
     },
     "the_chariot": {
-      "name": "The Chariot",
-      "text": "Enhances #1# selected card into a #2#",
-      "_machine_translated": false
+      "name": "El Carro",
+      "text": "Mejora #1# carta seleccionada a #2#"
     },
     "justice": {
-      "name": "Justice",
-      "text": "Enhances #1# selected card into a #2#",
-      "_machine_translated": false
+      "name": "La Justicia",
+      "text": "Mejora #1# carta seleccionada a #2#"
     },
     "the_hermit": {
-      "name": "The Hermit",
-      "text": "Doubles money (Max of $#1#)",
-      "_machine_translated": false
+      "name": "El Ermitaño",
+      "text": "Duplica el dinero (Máximo de $#1#)"
     },
     "the_wheel_of_fortune": {
-      "name": "The Wheel of Fortune",
-      "text": "#1# in #2# chance to add Foil, Holographic, or Polychrome edition to a random Joker",
-      "_machine_translated": false
+      "name": "La Rueda de la Fortuna",
+      "text": "#1# de cada #2# posibilidades de añadir la edición Foil, Holográfica o Policromada a un Comodín aleatorio"
     },
     "strength": {
-      "name": "Strength",
-      "text": "Increases rank of up to #1# selected cards by 1",
-      "_machine_translated": false
+      "name": "La Fuerza",
+      "text": "Aumenta el valor de hasta #1# cartas seleccionadas en 1"
     },
     "the_hanged_man": {
-      "name": "The Hanged Man",
-      "text": "Destroys up to #1# selected cards",
-      "_machine_translated": false
+      "name": "El Colgado",
+      "text": "Destruye hasta #1# cartas seleccionadas"
     },
     "death": {
-      "name": "Death",
-      "text": "Select #1# cards, convert the left card into the right card (Drag to rearrange)",
-      "_machine_translated": false
+      "name": "La Muerte",
+      "text": "Selecciona #1# cartas, convierte la de la izquierda en la de la derecha (Arrastra para reordenar)"
     },
     "temperance": {
-      "name": "Temperance",
-      "text": "Gives the total sell value of all current Jokers (Max of $#1#) (Currently $#2#)",
-      "_machine_translated": false
+      "name": "La Templanza",
+      "text": "Da el valor de venta total de todos los Comodines actuales (Máximo de $#1#) (Actualmente $#2#)"
     },
     "the_devil": {
-      "name": "The Devil",
-      "text": "Enhances #1# selected card into a #2#",
-      "_machine_translated": false
+      "name": "El Diablo",
+      "text": "Mejora #1# carta seleccionada a #2#"
     },
     "the_tower": {
-      "name": "The Tower",
-      "text": "Enhances #1# selected card into a #2#",
-      "_machine_translated": false
+      "name": "La Torre",
+      "text": "Mejora #1# carta seleccionada a #2#"
     },
     "the_star": {
-      "name": "The Star",
-      "text": "Converts up to #1# selected cards to #2#",
-      "_machine_translated": false
+      "name": "La Estrella",
+      "text": "Convierte hasta #1# cartas seleccionadas a #2#"
     },
     "the_moon": {
-      "name": "The Moon",
-      "text": "Converts up to #1# selected cards to #2#",
-      "_machine_translated": false
+      "name": "La Luna",
+      "text": "Convierte hasta #1# cartas seleccionadas a #2#"
     },
     "the_sun": {
-      "name": "The Sun",
-      "text": "Converts up to #1# selected cards to #2#",
-      "_machine_translated": false
+      "name": "El Sol",
+      "text": "Convierte hasta #1# cartas seleccionadas a #2#"
     },
     "judgement": {
-      "name": "Judgement",
-      "text": "Creates a random Joker card (Must have room)",
-      "_machine_translated": false
+      "name": "El Juicio",
+      "text": "Crea un Comodín aleatorio (Necesita espacio)"
     },
     "the_world": {
-      "name": "The World",
-      "text": "Converts up to #1# selected cards to #2#",
-      "_machine_translated": false
+      "name": "El Mundo",
+      "text": "Convierte hasta #1# cartas seleccionadas a #2#"
     }
   },
   "planets": {
     "pluto": {
-      "name": "Pluto",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "name": "Plutón",
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "mercury": {
-      "name": "Mercury",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "name": "Mercurio",
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "uranus": {
-      "name": "Uranus",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "name": "Urano",
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "venus": {
       "name": "Venus",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "saturn": {
-      "name": "Saturn",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "name": "Saturno",
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "jupiter": {
-      "name": "Jupiter",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "name": "Júpiter",
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "earth": {
-      "name": "Earth",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "name": "Tierra",
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "mars": {
-      "name": "Mars",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "name": "Marte",
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "neptune": {
-      "name": "Neptune",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "name": "Neptuno",
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "planet_x": {
-      "name": "Planet X",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "name": "Planeta X",
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "ceres": {
       "name": "Ceres",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     },
     "eris": {
       "name": "Eris",
-      "text": "(lvl.#1#) Level up #2# +#3# Mult and +#4# chips",
-      "_machine_translated": false
+      "text": "(niv.#1#) Sube de nivel #2# +#3# Mult y +#4# Fichas"
     }
   },
   "spectrals": {
     "familiar": {
       "name": "Familiar",
-      "text": "Destroy 1 random card in your hand, add #1# random Enhanced face cards to your hand",
-      "_machine_translated": false
+      "text": "Destruye 1 carta aleatoria de tu mano, añade #1# figuras Mejoradas aleatorias a tu mano"
     },
     "grim": {
-      "name": "Grim",
-      "text": "Destroy 1 random card in your hand, add #1# random Enhanced Aces to your hand",
-      "_machine_translated": false
+      "name": "Sombrío",
+      "text": "Destruye 1 carta aleatoria de tu mano, añade #1# Ases Mejorados aleatorios a tu mano"
     },
     "incantation": {
-      "name": "Incantation",
-      "text": "Destroy 1 random card in your hand, add #1# random Enhanced numbered cards to your hand",
-      "_machine_translated": false
+      "name": "Encantamiento",
+      "text": "Destruye 1 carta aleatoria de tu mano, añade #1# cartas numéricas Mejoradas aleatorias a tu mano"
     },
     "talisman": {
-      "name": "Talisman",
-      "text": "Add a Gold Seal to 1 selected card in your hand",
-      "_machine_translated": false
+      "name": "Talismán",
+      "text": "Añade un Sello de Oro a 1 carta seleccionada de tu mano"
     },
     "aura": {
       "name": "Aura",
-      "text": "Add Foil, Holographic, or Polychrome effect to 1 selected card in hand",
-      "_machine_translated": false
+      "text": "Añade el efecto Foil, Holográfico o Policromado a 1 carta seleccionada en mano"
     },
     "wraith": {
-      "name": "Wraith",
-      "text": "Creates a random Rare Joker, sets money to $0",
-      "_machine_translated": false
+      "name": "Espectro",
+      "text": "Crea un Comodín Raro aleatorio, establece el dinero a $0"
     },
     "sigil": {
-      "name": "Sigil",
-      "text": "Converts all cards in hand to a single random suit",
-      "_machine_translated": false
+      "name": "Sigilo",
+      "text": "Convierte todas las cartas en mano a un único palo aleatorio"
     },
     "ouija": {
       "name": "Ouija",
-      "text": "Converts all cards in hand to a single random rank -1 hand size",
-      "_machine_translated": false
+      "text": "Convierte todas las cartas en mano a un único valor aleatorio -1 de tamaño de mano"
     },
     "ectoplasm": {
-      "name": "Ectoplasm",
-      "text": "Add Negative to a random Joker, -#1# hand size",
-      "_machine_translated": false
+      "name": "Ectoplasma",
+      "text": "Añade Negativo a un Comodín aleatorio, -#1# de tamaño de mano"
     },
     "immolate": {
-      "name": "Immolate",
-      "text": "Destroys #1# random cards in hand, gain $#2#",
-      "_machine_translated": false
+      "name": "Inmolación",
+      "text": "Destruye #1# cartas aleatorias en mano, gana $#2#"
     },
     "ankh": {
-      "name": "Ankh",
-      "text": "Create a copy of a random Joker, destroy all other Jokers",
-      "_machine_translated": false
+      "name": "Anj",
+      "text": "Crea una copia de un Comodín aleatorio, destruye todos los demás Comodines"
     },
     "deja_vu": {
-      "name": "Deja Vu",
-      "text": "Add a Red Seal to 1 selected card in your hand",
-      "_machine_translated": false
+      "name": "Déjà Vu",
+      "text": "Añade un Sello Rojo a 1 carta seleccionada de tu mano"
     },
     "hex": {
       "name": "Hex",
-      "text": "Add Polychrome to a random Joker, destroy all other Jokers",
-      "_machine_translated": false
+      "text": "Añade Policromado a un Comodín aleatorio, destruye todos los demás Comodines"
     },
     "trance": {
       "name": "Trance",
-      "text": "Add a Blue Seal to 1 selected card in your hand",
-      "_machine_translated": false
+      "text": "Añade un Sello Azul a 1 carta seleccionada de tu mano"
     },
     "medium": {
-      "name": "Medium",
-      "text": "Add a Purple Seal to 1 selected card in your hand",
-      "_machine_translated": false
+      "name": "Médium",
+      "text": "Añade un Sello Púrpura a 1 carta seleccionada de tu mano"
     },
     "cryptid": {
-      "name": "Cryptid",
-      "text": "Create #1# copies of 1 selected card in your hand",
-      "_machine_translated": false
+      "name": "Críptido",
+      "text": "Crea #1# copias de 1 carta seleccionada de tu mano"
     },
     "the_soul": {
-      "name": "The Soul",
-      "text": "Creates a Legendary Joker (Must have room)",
-      "_machine_translated": false
+      "name": "El Alma",
+      "text": "Crea un Comodín Legendario (Necesita espacio)"
     },
     "black_hole": {
-      "name": "Black Hole",
-      "text": "Upgrade every poker hand by 1 level",
-      "_machine_translated": false
+      "name": "Agujero Negro",
+      "text": "Sube de nivel cada mano de póker 1 nivel"
     }
   },
   "vouchers": {
     "overstock": {
-      "name": "Overstock",
-      "text": "+1 card slot available in shop",
-      "_machine_translated": false
+      "name": "Excedente",
+      "text": "+1 hueco de carta disponible en la tienda"
     },
     "overstock_plus": {
-      "name": "Overstock Plus",
-      "text": "+1 card slot available in shop",
-      "_machine_translated": false
+      "name": "Excedente Plus",
+      "text": "+1 hueco de carta disponible en la tienda"
     },
     "clearance_sale": {
-      "name": "Clearance Sale",
-      "text": "All cards and packs in shop are #1#% off",
-      "_machine_translated": false
+      "name": "Liquidación",
+      "text": "Todas las cartas y sobres de la tienda tienen un #1#% de descuento"
     },
     "liquidation": {
-      "name": "Liquidation",
-      "text": "All cards and packs in shop are #1#% off",
-      "_machine_translated": false
+      "name": "Liquidación Total",
+      "text": "Todas las cartas y sobres de la tienda tienen un #1#% de descuento"
     },
     "hone": {
-      "name": "Hone",
-      "text": "Foil, Holographic, and Polychrome cards appear #1#X more often",
-      "_machine_translated": false
+      "name": "Afilado",
+      "text": "Las cartas Foil, Holográficas y Policromadas aparecen #1#X más a menudo"
     },
     "glow_up": {
-      "name": "Glow Up",
-      "text": "Foil, Holographic, and Polychrome cards appear #1#X more often",
-      "_machine_translated": false
+      "name": "Mejora de Imagen",
+      "text": "Las cartas Foil, Holográficas y Policromadas aparecen #1#X más a menudo"
     },
     "reroll_surplus": {
-      "name": "Reroll Surplus",
-      "text": "Rerolls cost $#1# less",
-      "_machine_translated": false
+      "name": "Renovaciones Extra",
+      "text": "Las renovaciones cuestan $#1# menos"
     },
     "reroll_glut": {
-      "name": "Reroll Glut",
-      "text": "Rerolls cost $#1# less",
-      "_machine_translated": false
+      "name": "Renovaciones a Granel",
+      "text": "Las renovaciones cuestan $#1# menos"
     },
     "crystal_ball": {
-      "name": "Crystal Ball",
-      "text": "+1 consumable slot",
-      "_machine_translated": false
+      "name": "Bola de Cristal",
+      "text": "+1 hueco de consumible"
     },
     "omen_globe": {
-      "name": "Omen Globe",
-      "text": "Spectral cards may appear in any of the Arcana Packs",
-      "_machine_translated": false
+      "name": "Globo del Presagio",
+      "text": "Las cartas Espectrales pueden aparecer en cualquiera de los Sobres de Arcana"
     },
     "telescope": {
-      "name": "Telescope",
-      "text": "Celestial Packs always contain the Planet card for your most played poker hand",
-      "_machine_translated": false
+      "name": "Telescopio",
+      "text": "Los Sobres Celestiales siempre contienen la carta Planeta de tu mano de póker más jugada"
     },
     "observatory": {
-      "name": "Observatory",
-      "text": "Planet cards in your consumable area give X#1# Mult for their specified poker hand",
-      "_machine_translated": false
+      "name": "Observatorio",
+      "text": "Las cartas Planeta en tu zona de consumibles dan X#1# Mult para su mano de póker específica"
     },
     "grabber": {
-      "name": "Grabber",
-      "text": "Permanently gain +#1# hand per round",
-      "_machine_translated": false
+      "name": "Gancho",
+      "text": "Gana permanentemente +#1# mano por ronda"
     },
     "nacho_tong": {
-      "name": "Nacho Tong",
-      "text": "Permanently gain +#1# hand per round",
-      "_machine_translated": false
+      "name": "Pinzas Nacho",
+      "text": "Gana permanentemente +#1# mano por ronda"
     },
     "wasteful": {
-      "name": "Wasteful",
-      "text": "Permanently gain +#1# discard each round",
-      "_machine_translated": false
+      "name": "Derrochador",
+      "text": "Gana permanentemente +#1# descarte cada ronda"
     },
     "recyclomancy": {
-      "name": "Recyclomancy",
-      "text": "Permanently gain +#1# discard each round",
-      "_machine_translated": false
+      "name": "Reciclomancia",
+      "text": "Gana permanentemente +#1# descarte cada ronda"
     },
     "tarot_merchant": {
-      "name": "Tarot Merchant",
-      "text": "Tarot cards appear #1#X more frequently in the shop",
-      "_machine_translated": false
+      "name": "Mercader de Tarot",
+      "text": "Las cartas de Tarot aparecen #1#X más frecuentemente en la tienda"
     },
     "tarot_tycoon": {
-      "name": "Tarot Tycoon",
-      "text": "Tarot cards appear #1#X more frequently in the shop",
-      "_machine_translated": false
+      "name": "Magnate del Tarot",
+      "text": "Las cartas de Tarot aparecen #1#X más frecuentemente en la tienda"
     },
     "planet_merchant": {
-      "name": "Planet Merchant",
-      "text": "Planet cards appear #1#X more frequently in the shop",
-      "_machine_translated": false
+      "name": "Mercader de Planetas",
+      "text": "Las cartas Planeta aparecen #1#X más frecuentemente en la tienda"
     },
     "planet_tycoon": {
-      "name": "Planet Tycoon",
-      "text": "Planet cards appear #1#X more frequently in the shop",
-      "_machine_translated": false
+      "name": "Magnate de Planetas",
+      "text": "Las cartas Planeta aparecen #1#X más frecuentemente en la tienda"
     },
     "seed_money": {
-      "name": "Seed Money",
-      "text": "Raise the cap on interest earned in each round to $#1#",
-      "_machine_translated": false
+      "name": "Capital Inicial",
+      "text": "Eleva el límite de interés ganado cada ronda a $#1#"
     },
     "money_tree": {
-      "name": "Money Tree",
-      "text": "Raise the cap on interest earned in each round to $#1#",
-      "_machine_translated": false
+      "name": "Árbol del Dinero",
+      "text": "Eleva el límite de interés ganado cada ronda a $#1#"
     },
     "blank": {
-      "name": "Blank",
-      "text": "Does nothing?",
-      "_machine_translated": false
+      "name": "En Blanco",
+      "text": "¿No hace nada?"
     },
     "antimatter": {
-      "name": "Antimatter",
-      "text": "+1 Joker Slot",
-      "_machine_translated": false
+      "name": "Antimateria",
+      "text": "+1 hueco de Comodín"
     },
     "magic_trick": {
-      "name": "Magic Trick",
-      "text": "Playing cards can be purchased from the shop",
-      "_machine_translated": false
+      "name": "Truco de Magia",
+      "text": "Las cartas de juego pueden comprarse en la tienda"
     },
     "illusion": {
-      "name": "Illusion",
-      "text": "Playing cards in shop may have an Enhancement, Edition, and/or a Seal",
-      "_machine_translated": false
+      "name": "Ilusión",
+      "text": "Las cartas de juego de la tienda pueden tener una Mejora, Edición y/o un Sello"
     },
     "hieroglyph": {
-      "name": "Hieroglyph",
-      "text": "-#1# Ante, -#1# hand each round",
-      "_machine_translated": false
+      "name": "Jeroglífico",
+      "text": "-#1# Ante, -#1# mano cada ronda"
     },
     "petroglyph": {
-      "name": "Petroglyph",
-      "text": "-#1# Ante, -#1# discard each round",
-      "_machine_translated": false
+      "name": "Petroglifo",
+      "text": "-#1# Ante, -#1# descarte cada ronda"
     },
     "directors_cut": {
       "name": "Director's Cut",
-      "text": "Reroll Boss Blind 1 time per Ante, $#1# per roll",
-      "_machine_translated": false
+      "text": "Renueva la Ciega Jefa 1 vez por Ante, $#1# por renovación"
     },
     "retcon": {
       "name": "Retcon",
-      "text": "Reroll Boss Blind unlimited times, $#1# per roll",
-      "_machine_translated": false
+      "text": "Renueva la Ciega Jefa ilimitadas veces, $#1# por renovación"
     },
     "paint_brush": {
-      "name": "Paint Brush",
-      "text": "+#1# hand size",
-      "_machine_translated": false
+      "name": "Pincel",
+      "text": "+#1# de tamaño de mano"
     },
     "palette": {
-      "name": "Palette",
-      "text": "+#1# hand size",
-      "_machine_translated": false
+      "name": "Paleta",
+      "text": "+#1# de tamaño de mano"
     }
   },
   "enhancements": {
     "bonus": {
-      "name": "Bonus Card",
-      "text": "",
-      "_machine_translated": false
+      "name": "Carta de Bono",
+      "text": ""
     },
     "mult": {
-      "name": "Mult Card",
-      "text": "+#1# Mult",
-      "_machine_translated": false
+      "name": "Carta de Mult",
+      "text": "+#1# Mult"
     },
     "wild": {
-      "name": "Wild Card",
-      "text": "Can be used as any suit",
-      "_machine_translated": false
+      "name": "Carta Comodín",
+      "text": "Puede usarse como cualquier palo"
     },
     "glass": {
-      "name": "Glass Card",
-      "text": "X#1# Mult #2# in #3# chance to destroy card",
-      "_machine_translated": false
+      "name": "Carta de Cristal",
+      "text": "X#1# Mult #2# de cada #3# posibilidades de destruir la carta"
     },
     "steel": {
-      "name": "Steel Card",
-      "text": "X#1# Mult while this card stays in hand",
-      "_machine_translated": false
+      "name": "Carta de Acero",
+      "text": "X#1# Mult mientras esta carta permanezca en mano"
     },
     "stone": {
-      "name": "Stone Card",
-      "text": "+#1# Chips no rank or suit",
-      "_machine_translated": false
+      "name": "Carta de Piedra",
+      "text": "+#1# Fichas sin valor ni palo"
     },
     "gold": {
-      "name": "Gold Card",
-      "text": "$#1# if this card is held in hand at end of round",
-      "_machine_translated": false
+      "name": "Carta de Oro",
+      "text": "$#1# si esta carta está en mano al final de la ronda"
     },
     "lucky": {
-      "name": "Lucky Card",
-      "text": "#1# in #3# chance for +#2# Mult #1# in #5# chance to win $#4#",
-      "_machine_translated": false
+      "name": "Carta de Suerte",
+      "text": "#1# de cada #3# posibilidades de +#2# Mult #1# de cada #5# posibilidades de ganar $#4#"
     }
   },
   "editions": {
     "foil": {
       "name": "Foil",
-      "text": "+#1# chips",
-      "_machine_translated": false
+      "text": "+#1# Fichas"
     },
     "holographic": {
-      "name": "Holographic",
-      "text": "+#1# Mult",
-      "_machine_translated": false
+      "name": "Holográfica",
+      "text": "+#1# Mult"
     },
     "polychrome": {
-      "name": "Polychrome",
-      "text": "X#1# Mult",
-      "_machine_translated": false
+      "name": "Policromada",
+      "text": "X#1# Mult"
     },
     "negative": {
-      "name": "Negative",
-      "text": "+#1# Joker slot",
-      "_machine_translated": false
+      "name": "Negativa",
+      "text": "+#1# hueco de Comodín"
     }
   },
   "seals": {
     "red_seal": {
-      "name": "Red Seal",
-      "text": "Retrigger this card 1 time",
-      "_machine_translated": false
+      "name": "Sello Rojo",
+      "text": "Reactiva esta carta 1 vez"
     },
     "blue_seal": {
-      "name": "Blue Seal",
-      "text": "Creates the Planet card for final played poker hand of round if held in hand (Must have room)",
-      "_machine_translated": false
+      "name": "Sello Azul",
+      "text": "Crea la carta Planeta de la última mano de póker jugada de la ronda si está en mano (Necesita espacio)"
     },
     "gold_seal": {
-      "name": "Gold Seal",
-      "text": "Earn $3 when this card is played and scores",
-      "_machine_translated": false
+      "name": "Sello de Oro",
+      "text": "Gana $3 cuando esta carta se juega y anota"
     },
     "purple_seal": {
-      "name": "Purple Seal",
-      "text": "Creates a Tarot card when discarded (Must have room)",
-      "_machine_translated": false
+      "name": "Sello Púrpura",
+      "text": "Crea una carta de Tarot cuando se descarta (Necesita espacio)"
     }
   },
   "tags": {
     "uncommon_tag": {
-      "name": "Uncommon Tag",
-      "text": "Shop has a free Uncommon Joker",
-      "_machine_translated": false
+      "name": "Etiqueta Poco Común",
+      "text": "La tienda tiene un Comodín Poco Común gratuito"
     },
     "rare_tag": {
-      "name": "Rare Tag",
-      "text": "Shop has a free Rare Joker",
-      "_machine_translated": false
+      "name": "Etiqueta Rara",
+      "text": "La tienda tiene un Comodín Raro gratuito"
     },
     "negative_tag": {
-      "name": "Negative Tag",
-      "text": "Next base edition shop Joker is free and becomes Negative",
-      "_machine_translated": false
+      "name": "Etiqueta Negativa",
+      "text": "El próximo Comodín de edición base de la tienda es gratuito y se vuelve Negativo"
     },
     "foil_tag": {
-      "name": "Foil Tag",
-      "text": "Next base edition shop Joker is free and becomes Foil",
-      "_machine_translated": false
+      "name": "Etiqueta Foil",
+      "text": "El próximo Comodín de edición base de la tienda es gratuito y se vuelve Foil"
     },
     "holographic_tag": {
-      "name": "Holographic Tag",
-      "text": "Next base edition shop Joker is free and becomes Holographic",
-      "_machine_translated": false
+      "name": "Etiqueta Holográfica",
+      "text": "El próximo Comodín de edición base de la tienda es gratuito y se vuelve Holográfico"
     },
     "polychrome_tag": {
-      "name": "Polychrome Tag",
-      "text": "Next base edition shop Joker is free and becomes Polychrome",
-      "_machine_translated": false
+      "name": "Etiqueta Policromada",
+      "text": "El próximo Comodín de edición base de la tienda es gratuito y se vuelve Policromado"
     },
     "investment_tag": {
-      "name": "Investment Tag",
-      "text": "After defeating the Boss Blind, gain $#1#",
-      "_machine_translated": false
+      "name": "Etiqueta de Inversión",
+      "text": "Tras derrotar la Ciega Jefa, gana $#1#"
     },
     "voucher_tag": {
-      "name": "Voucher Tag",
-      "text": "Adds one Voucher to the next shop",
-      "_machine_translated": false
+      "name": "Etiqueta de Vale",
+      "text": "Añade un Vale a la próxima tienda"
     },
     "boss_tag": {
-      "name": "Boss Tag",
-      "text": "Rerolls the Boss Blind",
-      "_machine_translated": false
+      "name": "Etiqueta de Jefe",
+      "text": "Renueva la Ciega Jefa"
     },
     "standard_tag": {
-      "name": "Standard Tag",
-      "text": "Gives a free Mega Standard Pack",
-      "_machine_translated": false
+      "name": "Etiqueta Estándar",
+      "text": "Da un Sobre Mega Estándar gratuito"
     },
     "charm_tag": {
-      "name": "Charm Tag",
-      "text": "Gives a free Mega Arcana Pack",
-      "_machine_translated": false
+      "name": "Etiqueta de Encanto",
+      "text": "Da un Sobre Mega Arcana gratuito"
     },
     "meteor_tag": {
-      "name": "Meteor Tag",
-      "text": "Gives a free Mega Celestial Pack",
-      "_machine_translated": false
+      "name": "Etiqueta de Meteoro",
+      "text": "Da un Sobre Mega Celestial gratuito"
     },
     "buffoon_tag": {
-      "name": "Buffoon Tag",
-      "text": "Gives a free Mega Buffoon Pack",
-      "_machine_translated": false
+      "name": "Etiqueta de Bufón",
+      "text": "Da un Sobre Mega Bufón gratuito"
     },
     "handy_tag": {
-      "name": "Handy Tag",
-      "text": "Gives $#1# per played hand this run (Will give $#2#)",
-      "_machine_translated": false
+      "name": "Etiqueta Práctica",
+      "text": "Da $#1# por mano jugada en esta partida (Dará $#2#)"
     },
     "garbage_tag": {
-      "name": "Garbage Tag",
-      "text": "Gives $#1# per unused discard this run (Will give $#2#)",
-      "_machine_translated": false
+      "name": "Etiqueta Basura",
+      "text": "Da $#1# por descarte sin usar en esta partida (Dará $#2#)"
     },
     "ethereal_tag": {
-      "name": "Ethereal Tag",
-      "text": "Gives a free Spectral Pack",
-      "_machine_translated": false
+      "name": "Etiqueta Etérea",
+      "text": "Da un Sobre Espectral gratuito"
     },
     "coupon_tag": {
-      "name": "Coupon Tag",
-      "text": "Initial cards and booster packs in next shop are free",
-      "_machine_translated": false
+      "name": "Etiqueta Cupón",
+      "text": "Las cartas iniciales y sobres de la próxima tienda son gratuitos"
     },
     "double_tag": {
-      "name": "Double Tag",
-      "text": "Gives a copy of the next selected Tag Double Tag excluded",
-      "_machine_translated": false
+      "name": "Etiqueta Doble",
+      "text": "Da una copia de la próxima Etiqueta seleccionada, excluida la Etiqueta Doble"
     },
     "juggle_tag": {
-      "name": "Juggle Tag",
-      "text": "+#1# hand size next round",
-      "_machine_translated": false
+      "name": "Etiqueta Malabares",
+      "text": "+#1# de tamaño de mano la próxima ronda"
     },
     "d6_tag": {
-      "name": "D6 Tag",
-      "text": "Rerolls in next shop start at $0",
-      "_machine_translated": false
+      "name": "Etiqueta D6",
+      "text": "Las renovaciones en la próxima tienda empiezan a $0"
     },
     "top_up_tag": {
-      "name": "Top-up Tag",
-      "text": "Create up to #1# Common Jokers (Must have room)",
-      "_machine_translated": false
+      "name": "Etiqueta de Recarga",
+      "text": "Crea hasta #1# Comodines Comunes (Necesita espacio)"
     },
     "speed_tag": {
-      "name": "Speed Tag",
-      "text": "Gives $#1# per skipped Blind this run (Will give $#2#)",
-      "_machine_translated": false
+      "name": "Etiqueta de Velocidad",
+      "text": "Da $#1# por Ciega saltada en esta partida (Dará $#2#)"
     },
     "orbital_tag": {
-      "name": "Orbital Tag",
-      "text": "Upgrade #1# by #2# levels",
-      "_machine_translated": false
+      "name": "Etiqueta Orbital",
+      "text": "Sube #1# #2# niveles"
     },
     "economy_tag": {
-      "name": "Economy Tag",
-      "text": "Doubles your money (Max of $#1#)",
-      "_machine_translated": false
+      "name": "Etiqueta Económica",
+      "text": "Duplica tu dinero (Máximo de $#1#)"
     }
   },
   "blinds": {
     "the_hook": {
-      "name": "The Hook",
-      "text": "Discards 2 random cards per hand played",
-      "_machine_translated": false
+      "name": "El Anzuelo",
+      "text": "Descarta 2 cartas aleatorias por mano jugada"
     },
     "the_ox": {
-      "name": "The Ox",
-      "text": "Playing a #1# sets money to $0",
-      "_machine_translated": false
+      "name": "El Buey",
+      "text": "Jugar una #1# establece el dinero a $0"
     },
     "the_house": {
-      "name": "The House",
-      "text": "First hand is drawn face down",
-      "_machine_translated": false
+      "name": "La Casa",
+      "text": "La primera mano se reparte boca abajo"
     },
     "the_wall": {
-      "name": "The Wall",
-      "text": "Extra large blind",
-      "_machine_translated": false
+      "name": "El Muro",
+      "text": "Ciega extra grande"
     },
     "the_wheel": {
-      "name": "The Wheel",
-      "text": "in 7 cards get drawn face down",
-      "_machine_translated": false
+      "name": "La Rueda",
+      "text": "1 de cada 7 cartas se reparte boca abajo"
     },
     "the_arm": {
-      "name": "The Arm",
-      "text": "Decrease level of played poker hand",
-      "_machine_translated": false
+      "name": "El Brazo",
+      "text": "Reduce el nivel de la mano de póker jugada"
     },
     "the_club": {
-      "name": "The Club",
-      "text": "All Club cards are debuffed",
-      "_machine_translated": false
+      "name": "El Club",
+      "text": "Todas las cartas de Tréboles están debilitadas"
     },
     "the_fish": {
-      "name": "The Fish",
-      "text": "Cards drawn face down after each hand played",
-      "_machine_translated": false
+      "name": "El Pez",
+      "text": "Las cartas se reparten boca abajo tras cada mano jugada"
     },
     "the_psychic": {
-      "name": "The Psychic",
-      "text": "Must play 5 cards",
-      "_machine_translated": false
+      "name": "El Psíquico",
+      "text": "Debes jugar 5 cartas"
     },
     "the_goad": {
-      "name": "The Goad",
-      "text": "All Spade cards are debuffed",
-      "_machine_translated": false
+      "name": "El Aguijón",
+      "text": "Todas las cartas de Picas están debilitadas"
     },
     "the_water": {
-      "name": "The Water",
-      "text": "Start with 0 discards",
-      "_machine_translated": false
+      "name": "El Agua",
+      "text": "Empieza con 0 descartes"
     },
     "the_window": {
-      "name": "The Window",
-      "text": "All Diamond cards are debuffed",
-      "_machine_translated": false
+      "name": "La Ventana",
+      "text": "Todas las cartas de Diamantes están debilitadas"
     },
     "the_manacle": {
-      "name": "The Manacle",
-      "text": "-1 Hand Size",
-      "_machine_translated": false
+      "name": "Los Grilletes",
+      "text": "-1 de tamaño de mano"
     },
     "the_eye": {
-      "name": "The Eye",
-      "text": "No repeat hand types this round",
-      "_machine_translated": false
+      "name": "El Ojo",
+      "text": "Sin tipos de mano repetidos en esta ronda"
     },
     "the_mouth": {
-      "name": "The Mouth",
-      "text": "Play only 1 hand type this round",
-      "_machine_translated": false
+      "name": "La Boca",
+      "text": "Juega solo 1 tipo de mano en esta ronda"
     },
     "the_plant": {
-      "name": "The Plant",
-      "text": "All face cards are debuffed",
-      "_machine_translated": false
+      "name": "La Planta",
+      "text": "Todas las figuras están debilitadas"
     },
     "the_serpent": {
-      "name": "The Serpent",
-      "text": "After Play or Discard, always draw 3 cards",
-      "_machine_translated": false
+      "name": "La Serpiente",
+      "text": "Tras jugar o descartar, siempre roba 3 cartas"
     },
     "the_pillar": {
-      "name": "The Pillar",
-      "text": "Cards played previously this Ante are debuffed",
-      "_machine_translated": false
+      "name": "El Pilar",
+      "text": "Las cartas jugadas anteriormente en este Ante están debilitadas"
     },
     "the_needle": {
-      "name": "The Needle",
-      "text": "Play only 1 hand",
-      "_machine_translated": false
+      "name": "La Aguja",
+      "text": "Juega solo 1 mano"
     },
     "the_head": {
-      "name": "The Head",
-      "text": "All Heart cards are debuffed",
-      "_machine_translated": false
+      "name": "La Cabeza",
+      "text": "Todas las cartas de Corazones están debilitadas"
     },
     "the_tooth": {
-      "name": "The Tooth",
-      "text": "Lose $1 per card played",
-      "_machine_translated": false
+      "name": "El Diente",
+      "text": "Pierde $1 por carta jugada"
     },
     "the_flint": {
-      "name": "The Flint",
-      "text": "Base Chips and Mult are halved",
-      "_machine_translated": false
+      "name": "El Pedernal",
+      "text": "Las Fichas base y el Mult se reducen a la mitad"
     },
     "the_mark": {
-      "name": "The Mark",
-      "text": "All face cards are drawn face down",
-      "_machine_translated": false
+      "name": "La Marca",
+      "text": "Todas las figuras se reparten boca abajo"
     },
     "the_tribe": {
-      "name": "Small Blind",
-      "text": "",
-      "_machine_translated": false
+      "name": "Ciega Pequeña",
+      "text": ""
     },
     "the_final_acorn": {
-      "name": "Amber Acorn",
-      "text": "Flips and shuffles all Joker cards",
-      "_machine_translated": false
+      "name": "Bellota Ámbar",
+      "text": "Gira y baraja todos los Comodines"
     },
     "the_final_heart": {
-      "name": "Crimson Heart",
-      "text": "One random Joker disabled every hand",
-      "_machine_translated": false
+      "name": "Corazón Carmesí",
+      "text": "Un Comodín aleatorio queda desactivado cada mano"
     },
     "the_final_vessel": {
-      "name": "Violet Vessel",
-      "text": "Very large blind",
-      "_machine_translated": false
+      "name": "Vasija Violeta",
+      "text": "Ciega muy grande"
     },
     "the_final_leaf": {
-      "name": "Verdant Leaf",
-      "text": "All cards debuffed until 1 Joker sold",
-      "_machine_translated": false
+      "name": "Hoja Verdosa",
+      "text": "Todas las cartas debilitadas hasta que se venda 1 Comodín"
     }
   }
 }
