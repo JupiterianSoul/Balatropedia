@@ -1,8 +1,8 @@
 # Dependencies
 node_modules/
 
-# Build output
-dist/
+# Build output (committed to repo so Render free tier doesn't need to build)
+# dist/
 
 # SQLite database
 *.db
