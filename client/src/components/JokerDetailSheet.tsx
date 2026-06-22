@@ -14,6 +14,7 @@ import { Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useGameText, useT, useLabels, useCuratedText } from "@/lib/i18n";
 import type { WhyRule, UseCaseRule } from "@/lib/helpers";
+import { FormattedBalatroText } from "@/lib/balatroText";
 
 export function JokerDetailSheet() {
   const {
@@ -62,7 +63,9 @@ export function JokerDetailSheet() {
                     size={20}
                   />
                 </div>
-                <p className="text-sm text-foreground/90">{localized.text || j.summary}</p>
+                <p className="text-sm text-foreground/90">
+                  <FormattedBalatroText text={localized.text || j.summary} />
+                </p>
                 <div className="flex flex-wrap items-center gap-1.5 pt-1">
                   {j.tags.slice(0, 4).map((tg) => (
                     <RolePill key={tg} role={tg} />
