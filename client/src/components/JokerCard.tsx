@@ -74,3 +74,4 @@ export function JokerCard({ joker }: { joker: Joker }) {
     </div>
   );
 }
+

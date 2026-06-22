@@ -1,13 +1,10 @@
-// Canonical Balatro boss blinds; static, curated dataset (28 entries).
-// "Finals" (Acorn / Heart / Vessel / Leaf) only appear at Ante 8.
-
 export interface BossBlind {
   id: string;
   name: string;
-  anteRange: string; // e.g. "Ante 1+", "Ante 2+", "Ante 8 only"
+  anteRange: string;
   effect: string;
-  counters: string[]; // 2-3 counter-strategy bullets
-  counterJokers: string[]; // joker ids / types that help
+  counters: string[];
+  counterJokers: string[];
 }
 
 export const BOSSES: BossBlind[] = [
@@ -320,3 +317,4 @@ export const BOSSES: BossBlind[] = [
     counterJokers: ["smeared_joker", "pareidolia", "the_idol"],
   },
 ];
+

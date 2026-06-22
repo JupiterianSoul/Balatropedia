@@ -87,7 +87,7 @@ export function SynergyTab() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-      {/* selector pane */}
+      {}
       <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
         <div>
           <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -121,7 +121,7 @@ export function SynergyTab() {
         </div>
       </div>
 
-      {/* connections pane */}
+      {}
       <div className="space-y-6">
         {!selected || !grouped ? (
           <div className="rounded-md border border-dashed border-border py-16 text-center">
@@ -170,3 +170,4 @@ export function SynergyTab() {
     </div>
   );
 }
+

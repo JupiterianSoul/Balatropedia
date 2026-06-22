@@ -64,12 +64,12 @@ function RunLikelyRow({ h, labels, t }: {
     reasonLabel = t("ui.tabs.myrun_reason_partner");
   } else if (h.reasonKey === "archetype") {
     reasonLabel = t("ui.tabs.myrun_reason_archetype");
-    // Translate the first archetype id via labels.archetype if available
+
     const firstArch = h.detail.split(",")[0] as Archetype;
     reasonDetail = (labels.archetype as Record<string, string>)[firstArch] ?? firstArch;
   } else if (h.reasonKey === "tag") {
     reasonLabel = t("ui.tabs.myrun_reason_tag");
-    // Translate the role tag via labels.role
+
     const firstTag = h.detail.split(",")[0];
     reasonDetail = (labels.role as Record<string, string>)[firstTag] ?? firstTag;
   }
@@ -126,11 +126,10 @@ export function MyRunTab() {
   const [runNotes, setRunNotes] = useState("");
 
   const synergies = activeSynergies(slots);
-  // Use looser archetype detection so even early/varied builds surface a direction.
+
   const archetypes = suggestedArchetypes(slots);
   const warnings = antiSynergyWarnings(slots);
-  // Likely synergies inferred from partners / shared archetype / shared tags
-  //; fills the gap when no curated SYNERGIES pair matches the selection.
+
   const likely = heuristicSynergies(slots);
 
   function handleAdd(id: string) {
@@ -168,7 +167,7 @@ export function MyRunTab() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-      {/* ── Deck builder ── */}
+      {}
       <div className="space-y-4">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
@@ -192,10 +191,10 @@ export function MyRunTab() {
           </div>
         </div>
 
-        {/* Deck / Stake / Vouchers */}
+        {}
         <RunMetaSelectors />
 
-        {/* Add joker */}
+        {}
         <div className="flex flex-wrap items-center gap-2">
           <div className="min-w-0 flex-1 sm:min-w-[220px]">
             <JokerCombobox
@@ -231,7 +230,7 @@ export function MyRunTab() {
           </div>
         </div>
 
-        {/* Slots */}
+        {}
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {Array.from({ length: slotCap }).map((_, i) => {
             const id = slots[i];
@@ -274,7 +273,7 @@ export function MyRunTab() {
         </div>
       </div>
 
-      {/* ── Analysis panel ── */}
+      {}
       <div className="space-y-5">
         <section className="casino-card p-4">
           <div className="mb-2.5 flex items-center gap-1.5">
@@ -293,7 +292,7 @@ export function MyRunTab() {
           )}
         </section>
 
-        {/* Heuristic / "likely" synergies; only shown when there are pairs to surface */}
+        {}
         {likely.length > 0 && (
           <section className="casino-card p-4">
             <div className="mb-2.5 flex items-center gap-1.5">
@@ -349,7 +348,7 @@ export function MyRunTab() {
         </section>
       </div>
 
-      {/* Save dialog */}
+      {}
       <Dialog open={saveOpen} onOpenChange={setSaveOpen}>
         <DialogContent className="sm:max-w-md" data-testid="dialog-save-run">
           <DialogHeader>
@@ -430,3 +429,4 @@ function RunLoadMenu({
     </DropdownMenu>
   );
 }
+

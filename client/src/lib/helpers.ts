@@ -6,7 +6,6 @@ import {
 export { JOKERS, SYNERGIES, COMBOS, ARCHETYPES, GLOSSARY, JOKER_MAP };
 export type { Joker, Role, Scaling, Stage, Level, SynergyKind, Archetype, HandType, Synergy, Rarity };
 
-// ---- Human-readable labels ----
 export const ROLE_LABELS: Record<Role, string> = {
   chips: "Chips",
   flat_mult: "Flat Mult",
@@ -59,9 +58,9 @@ export const RARITY_LABELS: Record<Rarity, string> = {
   rare: "Rare",
   legendary: "Legendary",
 };
-// Filter pill order (ascending rarity)
+
 export const ALL_RARITIES: Rarity[] = ["common", "uncommon", "rare", "legendary"];
-// Sort rank: legendary first → rare → uncommon → common
+
 export const RARITY_SORT_RANK: Record<Rarity, number> = {
   legendary: 0, rare: 1, uncommon: 2, common: 3,
 };
@@ -108,7 +107,6 @@ export function jokerName(id: string): string {
   return JOKER_MAP[id]?.name ?? id;
 }
 
-// ---- Synergy density: partners + appearances in combos ----
 const comboAppearances: Record<string, number> = {};
 for (const c of COMBOS) {
   for (const id of [...c.core, ...c.optional]) {
@@ -119,7 +117,6 @@ export function synergyDensity(j: Joker): number {
   return j.partners.length + (comboAppearances[j.id] ?? 0);
 }
 
-// ---- Derived metrics for Compare view ----
 const LEVEL_RANK: Record<Level, number> = { low: 0, med: 1, high: 2 };
 
 export function earlyGameValue(j: Joker): Level {
@@ -131,16 +128,13 @@ export function lateGameCeiling(j: Joker): Level {
   return "low";
 }
 export function reliability(j: Joker): Level {
-  // higher consistency + lower setup difficulty = more reliable
+
   const score = LEVEL_RANK[j.consistency] - (LEVEL_RANK[j.setupDifficulty] - 1);
   if (score >= 2) return "high";
   if (score <= 0) return "low";
   return "med";
 }
 
-// ---- Beginner-friendliness composite score (lower = easier) ----
-// Combines setup difficulty, risk, scaling complexity, consistency and rarity.
-// Used by LibraryTab's "Beginner-friendly" sort so the order actually differs from A-Z.
 export function beginnerScore(j: Joker): number {
   const setup = { low: 0, med: 2, high: 4 }[j.setupDifficulty];
   const risk = { low: 0, med: 1, high: 3 }[j.risk];
@@ -152,7 +146,7 @@ export function beginnerScore(j: Joker): number {
     exponential: 3,
   };
   const scaling = scalingMap[j.scaling];
-  // Higher consistency makes the Joker easier to use; invert (2 - rank).
+
   const consistencyPenalty = 2 - LEVEL_RANK[j.consistency];
   const rarityMap: Record<Rarity, number> = {
     common: 0,
@@ -164,7 +158,6 @@ export function beginnerScore(j: Joker): number {
   return setup + risk + scaling + consistencyPenalty + rarity;
 }
 
-// ---- Synergy lookups ----
 export interface SynergyConnection {
   partnerId: string;
   kind: SynergyKind;
@@ -184,12 +177,10 @@ export function synergiesFor(id: string): SynergyConnection[] {
   return out;
 }
 
-/** Stable canonical i18n key for a synergy pair (order-independent). */
 export function synergyKey(a: string, b: string): string {
   return [a, b].sort().join("__");
 }
 
-// Find a "why" explaining an anti-synergy pair, if present in SYNERGIES.
 export function antiSynergyReason(a: string, b: string): string | null {
   for (const s of SYNERGIES) {
     const match = (s.a === a && s.b === b) || (s.a === b && s.b === a);
@@ -200,7 +191,6 @@ export function antiSynergyReason(a: string, b: string): string | null {
   return null;
 }
 
-// ---- Partner categorization by partner mainRole ----
 export type PartnerCategory = "Enablers" | "Scalers" | "Payoffs" | "Consistency fixes" | "Economy support" | "Other";
 
 export function partnerCategory(p: Joker): PartnerCategory {
@@ -227,8 +217,6 @@ export function groupedPartners(j: Joker): Record<PartnerCategory, Joker[]> {
   return out;
 }
 
-// ---- Example use cases derived from stage / role / tags ----
-// Rule-based variant: returns structured rule keys + ids so the UI can localize.
 export interface UseCaseRule {
   rule: "early_pickup" | "endgame_payoff" | "pivot_piece" | "economy_snowball" | "late_commit" | "pairs_partners";
   role?: Role;
@@ -248,7 +236,6 @@ export function exampleUseCaseRules(j: Joker): UseCaseRule[] {
   return out.slice(0, 3);
 }
 
-// EN-text variant kept for backwards compatibility.
 export function exampleUseCases(j: Joker): string[] {
   return exampleUseCaseRules(j).map((r) => {
     switch (r.rule) {
@@ -268,7 +255,6 @@ export function exampleUseCases(j: Joker): string[] {
   });
 }
 
-// ---- "Why play this?" rule-based reasoning ----
 export interface WhyBullet {
   text: string;
   rule: string;
@@ -300,7 +286,6 @@ export function whyPlayThisRules(j: Joker): WhyRule[] {
   return out;
 }
 
-// EN-text variant kept for backwards compatibility.
 export function whyPlayThis(j: Joker): WhyBullet[] {
   return whyPlayThisRules(j).map((r) => {
     switch (r.rule) {
@@ -318,7 +303,6 @@ export function whyPlayThis(j: Joker): WhyBullet[] {
   });
 }
 
-// ---- Run analysis (My Run tab) ----
 export interface ActiveSynergy {
   a: string;
   b: string;
@@ -327,7 +311,6 @@ export interface ActiveSynergy {
   why: string;
 }
 
-// SYNERGIES whose participating jokers are a subset of the active selection.
 export function activeSynergies(selection: string[]): ActiveSynergy[] {
   const set = new Set(selection);
   return SYNERGIES.filter((s) => set.has(s.a) && set.has(s.b)).map((s) => ({
@@ -338,10 +321,9 @@ export function activeSynergies(selection: string[]): ActiveSynergy[] {
 export interface ImpliedArchetype {
   id: Archetype;
   name: string;
-  matched: string[]; // joker ids from selection in this archetype's core (enablers+scalers)
+  matched: string[];
 }
 
-// Archetypes where >= 2 of the selection are in its core (enablers + scalers).
 export function impliedArchetypes(selection: string[]): ImpliedArchetype[] {
   const set = new Set(selection);
   const out: ImpliedArchetype[] = [];
@@ -353,13 +335,6 @@ export function impliedArchetypes(selection: string[]): ImpliedArchetype[] {
   return out;
 }
 
-/**
- * Looser archetype detection; surfaces an archetype as soon as ANY joker in
- * selection lists it in `joker.archetypes`. Threshold scales with selection size:
- *  - 1 selected joker  → 1 match needed
- *  - 2+ selected jokers → 2 matches needed
- * Falls back to the strict `impliedArchetypes()` membership for the matched list.
- */
 export function suggestedArchetypes(selection: string[]): ImpliedArchetype[] {
   if (selection.length === 0) return [];
   const counts: Record<string, string[]> = {};
@@ -378,25 +353,16 @@ export function suggestedArchetypes(selection: string[]): ImpliedArchetype[] {
       out.push({ id: a.id, name: a.name, matched });
     }
   }
-  // Sort by matched count desc so the strongest archetypes appear first.
+
   return out.sort((x, y) => y.matched.length - x.matched.length);
 }
 
-/**
- * Heuristic synergy detector; surfaces "likely" synergies when no curated
- * SYNERGY entry exists for the pair. Reasons (in priority order):
- *   1. Either joker lists the other in its `partners` array.
- *   2. Both jokers share at least one archetype.
- *   3. Both jokers share at least 2 tags.
- * Excludes pairs already in curated SYNERGIES (those are returned by
- * `activeSynergies`) and any pair in an anti-synergy relation.
- */
 export interface HeuristicSynergy {
   a: string;
   b: string;
   reasonKey: "partner" | "archetype" | "tag";
-  detail: string; // e.g. shared archetype id or comma-joined tags
-  score: number;  // higher = stronger
+  detail: string;
+  score: number;
 }
 
 export function heuristicSynergies(selection: string[]): HeuristicSynergy[] {
@@ -411,44 +377,42 @@ export function heuristicSynergies(selection: string[]): HeuristicSynergy[] {
       const key = [idA, idB].sort().join("|");
       if (seen.has(key)) continue;
       seen.add(key);
-      // skip curated synergies (already shown by activeSynergies)
+
       if (synergyPairs.has(key)) continue;
       const a = JOKER_MAP[idA];
       const b = JOKER_MAP[idB];
       if (!a || !b) continue;
-      // skip anti-synergies (already shown by antiSynergyWarnings)
+
       if (a.antiSynergies.includes(idB) || b.antiSynergies.includes(idA)) continue;
 
-      // 1) partner link
       if (a.partners.includes(idB) || b.partners.includes(idA)) {
         out.push({ a: idA, b: idB, reasonKey: "partner", detail: "", score: 3 });
         continue;
       }
-      // 2) shared archetype
+
       const sharedArch = a.archetypes.filter((x) => b.archetypes.includes(x));
       if (sharedArch.length > 0) {
         out.push({ a: idA, b: idB, reasonKey: "archetype", detail: sharedArch.join(","), score: 2 + sharedArch.length });
         continue;
       }
-      // 3) shared tags (need at least 2 to avoid noise)
+
       const sharedTags = a.tags.filter((x) => b.tags.includes(x));
       if (sharedTags.length >= 2) {
         out.push({ a: idA, b: idB, reasonKey: "tag", detail: sharedTags.slice(0, 3).join(","), score: 1 + sharedTags.length * 0.5 });
       }
     }
   }
-  // strongest first, cap at 12 to keep the panel scannable
+
   return out.sort((x, y) => y.score - x.score).slice(0, 12);
 }
 
 export interface AntiWarning {
-  a: string; // joker that lists b as anti
+  a: string;
   b: string;
-  why: string;          // EN fallback (already-curated SYNERGIES.why or generic EN sentence)
-  fromSynergy: boolean; // true if a matching SYNERGIES.why was found
+  why: string;
+  fromSynergy: boolean;
 }
 
-// Any pair in the selection where one lists the other in antiSynergies.
 export function antiSynergyWarnings(selection: string[]): AntiWarning[] {
   const out: AntiWarning[] = [];
   const seen = new Set<string>();
@@ -470,15 +434,11 @@ export function antiSynergyWarnings(selection: string[]): AntiWarning[] {
   return out;
 }
 
-// ---- Heatmap pair scoring ----
-// +3 if appears together in a SYNERGY; +2 if same archetype core;
-// +1 if shared tag; -3 if in each other's antiSynergies.
 const synergyPairs = new Set<string>();
 for (const s of SYNERGIES) {
   synergyPairs.add([s.a, s.b].sort().join("|"));
 }
 
-// Map of joker id -> set of archetype ids it cores (enablers+scalers).
 const archetypeCoreOf: Record<string, Set<string>> = {};
 for (const a of ARCHETYPES) {
   for (const id of [...a.enablers, ...a.scalers]) {
@@ -517,7 +477,6 @@ export function heatmapFor(jokerId: string): HeatmapEntry[] {
   }));
 }
 
-// ---- Build skeleton engine categories ----
 export interface EngineCategory {
   key: string;
   label: string;
@@ -532,3 +491,4 @@ export const ENGINE_CATEGORIES: EngineCategory[] = [
   { key: "economy", label: "Economy", matches: (j) => j.mainRole === "economy" || j.tags.includes("economy") },
   { key: "consistency", label: "Consistency / Enabler", matches: (j) => j.mainRole === "consistency" || j.mainRole === "enabler" || j.tags.includes("consistency") || j.tags.includes("enabler") || j.tags.includes("deck_manipulation") },
 ];
+

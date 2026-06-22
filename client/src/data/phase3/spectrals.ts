@@ -3,12 +3,12 @@ export type Spectral = {
   name: string;
   effect: string;
   risk: "low" | "medium" | "high";
-  sequencing: string;       // when/why to play it
-  bestWith: string[];       // joker IDs
-  deepStrategy?: string[];       // 4-6 bullets ≤160 chars each
-  bestTimingNotes?: string;      // 1-2 sentences ≤240 chars
-  commonMistakes?: string[];     // 1-3 bullets
-  comboIdeas?: string[];         // 1-3 short ideas
+  sequencing: string;
+  bestWith: string[];
+  deepStrategy?: string[];
+  bestTimingNotes?: string;
+  commonMistakes?: string[];
+  comboIdeas?: string[];
 };
 
 export const SPECTRALS: Spectral[] = [
@@ -463,3 +463,4 @@ export const SPECTRALS: Spectral[] = [
     ],
   },
 ];
+

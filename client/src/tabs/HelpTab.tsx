@@ -32,10 +32,6 @@ const SECTIONS: HelpSection[] = [
   { key: "favorites",   icon: <Star className="h-3.5 w-3.5" /> },
 ];
 
-/**
- * Help / Tutorial tab; each section explains one feature.
- * All content goes through i18n: ui.help.<key>.title / .body / .tip
- */
 export function HelpTab() {
   const t = useT();
   const [active, setActive] = useState(SECTIONS[0].key);
@@ -48,7 +44,7 @@ export function HelpTab() {
       </header>
 
       <Tabs value={active} onValueChange={setActive} orientation="vertical" className="grid gap-4 md:grid-cols-[200px_1fr]">
-        {/* Vertical sub-nav (scrollable on mobile horizontally) */}
+        {}
         <TabsList
           className="flex h-auto w-full flex-row flex-wrap justify-start gap-1 bg-transparent p-0 md:flex-col md:flex-nowrap md:items-stretch"
           data-testid="help-subnav"
@@ -66,7 +62,7 @@ export function HelpTab() {
           ))}
         </TabsList>
 
-        {/* Content panes */}
+        {}
         <div className="min-w-0">
           {SECTIONS.map((s) => (
             <TabsContent key={s.key} value={s.key} className="mt-0 space-y-3">
@@ -75,7 +71,7 @@ export function HelpTab() {
                 <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-foreground/85">
                   {t(`ui.help.${s.key}.body`)}
                 </p>
-                {/* Optional tip box */}
+                {}
                 <div className="mt-3 rounded-md border border-accent/30 bg-accent/[0.06] px-3 py-2 text-xs text-foreground/80">
                   <span className="font-pixel text-[10px] uppercase tracking-wide text-accent">{t("ui.help.tip_label")}</span>
                   <p className="mt-1 whitespace-pre-line">{t(`ui.help.${s.key}.tip`)}</p>
@@ -88,3 +84,4 @@ export function HelpTab() {
     </div>
   );
 }
+

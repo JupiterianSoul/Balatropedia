@@ -1,13 +1,13 @@
 export type Deck = {
   id: string;
   name: string;
-  unlock?: string;              // brief unlock condition or "starting"
-  effect: string;               // one-sentence in-game effect
-  strategy: string;             // how to play around it
-  buffs: string[];              // tags like "economy", "scaling", "consistency"
-  recommendedJokers: string[];  // 3-6 joker IDs that pair well
+  unlock?: string;
+  effect: string;
+  strategy: string;
+  buffs: string[];
+  recommendedJokers: string[];
   difficulty: "low" | "medium" | "high";
-  notes?: string;               // optional 1-2 sentence depth
+  notes?: string;
   deepStrategy?: string[];
   bestTimingNotes?: string;
   commonMistakes?: string[];
@@ -466,3 +466,4 @@ export const DECKS: Deck[] = [
     ],
   },
 ];
+

@@ -7,7 +7,6 @@ import { DECKS } from "@/data/phase3/decks";
 import { STAKES } from "@/data/phase3/stakes";
 import { ENHANCEMENTS, EDITIONS, SEALS, TAGS } from "@/data/phase3/misc";
 
-/** All non-joker entity kinds map directly to a Phase3Sprite category. */
 export type EntityKind =
   | "joker"
   | "tarot"
@@ -21,7 +20,6 @@ export type EntityKind =
   | "seal"
   | "tag";
 
-/** Phase3Sprite sprite category for a given entity kind (jokers use JokerSprite instead). */
 export const KIND_TO_SPRITE_CATEGORY: Record<Exclude<EntityKind, "joker">, string> = {
   tarot: "tarots",
   planet: "planets",
@@ -35,7 +33,6 @@ export const KIND_TO_SPRITE_CATEGORY: Record<Exclude<EntityKind, "joker">, strin
   tag: "tags",
 };
 
-/** i18n game bundle category for a given entity kind. */
 export const KIND_TO_I18N_CATEGORY: Record<EntityKind, string> = {
   joker: "jokers",
   tarot: "tarots",
@@ -54,15 +51,15 @@ export interface NormalizedEntity {
   kind: EntityKind;
   id: string;
   name: string;
-  /** Primary effect / summary line. */
+
   effect: string;
-  /** Optional secondary lines keyed by a section label. */
+
   meta: { label: string; value: string }[];
-  /** Strategy / how-to-play prose, if present. */
+
   strategy?: string;
-  /** When-to-use / timing prose, if present. */
+
   whenToUse?: string;
-  /** Joker IDs this entity pairs best with. */
+
   bestWith: string[];
   deepStrategy?: string[];
   bestTimingNotes?: string;
@@ -74,7 +71,6 @@ function byId<T extends { id: string }>(arr: T[], id: string): T | undefined {
   return arr.find((e) => e.id === id);
 }
 
-/** Resolve any entity (kind + id) into a normalized shape for the detail sheet. */
 export function resolveEntity(kind: EntityKind, id: string): NormalizedEntity | null {
   switch (kind) {
     case "joker": {
@@ -183,5 +179,5 @@ export function resolveEntity(kind: EntityKind, id: string): NormalizedEntity | 
   }
 }
 
-/** Lowercased joker-id set, for matching free-text combo ideas to clickable chips. */
 export const KNOWN_JOKER_IDS: string[] = Object.keys(JOKER_MAP);
+

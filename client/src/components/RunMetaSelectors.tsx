@@ -56,7 +56,7 @@ export function RunMetaSelectors() {
   return (
     <section className="casino-card space-y-4 p-4" data-testid="run-meta-selectors">
       <div className="grid gap-4 md:grid-cols-2">
-        {/* Deck picker */}
+        {}
         <div>
           <SectionLabel>{t("ui.runmeta.deck")}</SectionLabel>
           <div className="flex flex-wrap gap-1.5">
@@ -66,7 +66,7 @@ export function RunMetaSelectors() {
                 onClick={() => setDeckId(deckId === d.id ? null : d.id)}
                 aria-pressed={deckId === d.id}
                 data-testid={`pick-deck-${d.id}`}
-                title={d.name /* tooltip stays EN; title attr can't access hooks */}
+                title={d.name }
                 className={cn(
                   "rounded-md border p-0.5 transition-all",
                   deckId === d.id
@@ -85,7 +85,7 @@ export function RunMetaSelectors() {
           )}
         </div>
 
-        {/* Stake dropdown */}
+        {}
         <div>
           <SectionLabel>{t("ui.runmeta.stake")}</SectionLabel>
           <Popover>
@@ -123,7 +123,7 @@ export function RunMetaSelectors() {
         </div>
       </div>
 
-      {/* Vouchers */}
+      {}
       <div>
         <div className="mb-1.5 flex items-center justify-between">
           <SectionLabel>{t("ui.runmeta.active_vouchers")}</SectionLabel>
@@ -187,3 +187,4 @@ export function RunMetaSelectors() {
     </section>
   );
 }
+

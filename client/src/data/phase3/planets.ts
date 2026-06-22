@@ -1,15 +1,15 @@
 export type Planet = {
   id: string;
-  name: string;            // "Pluto", "Mercury", ...\
-  hand: string;            // hand it buffs, e.g., "Flush", "Straight"
+  name: string;
+  hand: string;
   chipsPerLevel: number;
   multPerLevel: number;
-  scalingNotes: string;    // 1-2 sentence advice
-  bestWith: string[];      // joker IDs that synergize
-  deepStrategy?: string[];       // 4-6 bullets ≤160 chars each
-  bestTimingNotes?: string;      // 1-2 sentences ≤240 chars
-  commonMistakes?: string[];     // 1-3 bullets
-  comboIdeas?: string[];         // 1-3 short ideas
+  scalingNotes: string;
+  bestWith: string[];
+  deepStrategy?: string[];
+  bestTimingNotes?: string;
+  commonMistakes?: string[];
+  comboIdeas?: string[];
 };
 
 export const PLANETS: Planet[] = [
@@ -326,3 +326,4 @@ export const PLANETS: Planet[] = [
     ],
   },
 ];
+

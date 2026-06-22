@@ -12,7 +12,6 @@ import { useOpenDetail } from "@/lib/detailContext";
 import { useT } from "@/lib/i18n";
 import type { EntityKind } from "@/lib/entities";
 
-/** Clickable sprite+name header that opens the entity detail sheet. */
 function EntityHeader({
   kind, id, category, name, size = 64, children,
 }: {
@@ -167,3 +166,4 @@ export function ConsumablesTab() {
     </div>
   );
 }
+

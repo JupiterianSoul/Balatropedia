@@ -71,7 +71,7 @@ export function CompareTab() {
         </div>
       ) : (
         <>
-          {/* Desktop columnar */}
+          {}
           <div className="hidden overflow-x-auto md:block">
             <table className="w-full border-collapse">
               <thead>
@@ -105,7 +105,7 @@ export function CompareTab() {
             </table>
           </div>
 
-          {/* Mobile stacked */}
+          {}
           <div className="space-y-4 md:hidden">
             {jokers.map((j) => (
               <div key={j.id} className="casino-card p-4">
@@ -129,3 +129,4 @@ export function CompareTab() {
     </div>
   );
 }
+

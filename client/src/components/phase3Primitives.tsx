@@ -4,7 +4,6 @@ import { JokerSprite } from "@/components/JokerSprite";
 import { JOKER_MAP } from "@/lib/helpers";
 import { useApp } from "@/lib/appContext";
 
-/* ── Difficulty badge (decks + stakes) ── */
 const DIFF_TONE: Record<string, string> = {
   low: "border-[hsl(145_35%_40%)]/50 text-[hsl(145_45%_62%)] bg-[hsl(145_45%_40%)]/10",
   medium: "border-accent/40 text-accent bg-accent/10",
@@ -29,7 +28,6 @@ export function DifficultyBadge({ difficulty, className }: { difficulty: string;
   );
 }
 
-/* ── Risk badge (spectrals) ── */
 const RISK_TONE: Record<string, string> = {
   low: "border-[hsl(145_35%_40%)]/50 text-[hsl(145_45%_62%)] bg-[hsl(145_45%_40%)]/10",
   medium: "border-accent/40 text-accent bg-accent/10",
@@ -49,7 +47,6 @@ export function RiskBadgeP3({ risk }: { risk: string }) {
   );
 }
 
-/* ── Value-tier badge (vouchers): S=gold A=green B=blue C=charcoal ── */
 const VTIER_TONE: Record<string, string> = {
   S: "border-[hsl(45_85%_55%)]/60 text-[hsl(45_85%_62%)] bg-[hsl(45_85%_50%)]/12",
   A: "border-[hsl(145_45%_45%)]/55 text-[hsl(145_50%_62%)] bg-[hsl(145_45%_40%)]/10",
@@ -71,7 +68,6 @@ export function ValueTierBadge({ tier, className }: { tier: string; className?: 
   );
 }
 
-/* ── Generic chip ── */
 export function Chip({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <span
@@ -85,7 +81,6 @@ export function Chip({ children, className }: { children: React.ReactNode; class
   );
 }
 
-/* ── Small joker sprite + tooltip (recommended / bestWith); clickable, opens detail ── */
 export function JokerSpriteChip({ id, size = 30 }: { id: string; size?: number }) {
   const { openJokerDetail } = useApp();
   const j = JOKER_MAP[id];
@@ -107,7 +102,6 @@ export function JokerSpriteChip({ id, size = 30 }: { id: string; size?: number }
   );
 }
 
-/* ── Row of best-with joker sprites ── */
 export function JokerSpriteRow({ ids, size = 30 }: { ids: string[]; size?: number }) {
   if (!ids?.length) return null;
   return (
@@ -119,7 +113,6 @@ export function JokerSpriteRow({ ids, size = 30 }: { ids: string[]; size?: numbe
   );
 }
 
-/* ── Search input ── */
 export function SearchInput({
   value, onChange, placeholder, testId,
 }: { value: string; onChange: (v: string) => void; placeholder: string; testId: string }) {
@@ -134,3 +127,4 @@ export function SearchInput({
     />
   );
 }
+

@@ -2,18 +2,6 @@ import {
   createContext, useContext, useEffect, useMemo, useState, type ReactNode,
 } from "react";
 
-/**
- * Screenshake settings.
- *
- * Controls the .mount-fade juice animation (tab switch entrance) and the
- * .balatro-wobble idle shimmer. Implemented through a CSS variable
- * --shake-strength applied to <html data-shake="on|off">, so CSS can blend
- * keyframes accordingly.
- *
- * - enabled : toggles animations on/off entirely
- * - intensity : 0..1.5 ; default 0.5 (reduced from previous baseline 1.0)
- */
-
 const ENABLED_KEY = "balatro-shake-enabled";
 const INTENSITY_KEY = "balatro-shake-intensity";
 const DEFAULT_ENABLED = true;
@@ -38,7 +26,7 @@ function readStoredBool(key: string, fallback: boolean): boolean {
     if (raw === "true") return true;
     if (raw === "false") return false;
   } catch {
-    /* sandboxed iframe */
+
   }
   return fallback;
 }
@@ -52,7 +40,7 @@ function readStoredNumber(key: string, fallback: number): number {
       if (Number.isFinite(n)) return clamp(n);
     }
   } catch {
-    /* sandboxed iframe */
+
   }
   return fallback;
 }
@@ -78,7 +66,7 @@ export function ShakeProvider({ children }: { children: ReactNode }) {
       try {
         window.localStorage.setItem(ENABLED_KEY, String(enabled));
         window.localStorage.setItem(INTENSITY_KEY, String(intensity));
-      } catch { /* ignore */ }
+      } catch {  }
     }
   }, [enabled, intensity]);
 
@@ -108,3 +96,4 @@ export const SHAKE_DEFAULTS = {
   min: MIN_INTENSITY,
   max: MAX_INTENSITY,
 };
+

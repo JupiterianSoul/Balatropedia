@@ -2,10 +2,6 @@ import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 export const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 
-// In-memory bearer token. The deployed app runs in a cross-site iframe where
-// `sameSite: none` cookies are dropped, so auth is carried via an Authorization
-// header instead. The token lives only in memory (no localStorage in sandbox),
-// so it does not survive a page reload; that is expected behavior.
 let authToken: string | null = null;
 export function setAuthToken(t: string | null) {
   authToken = t;
@@ -76,3 +72,4 @@ export const queryClient = new QueryClient({
     },
   },
 });
+

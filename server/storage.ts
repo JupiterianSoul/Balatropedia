@@ -10,8 +10,6 @@ if (!process.env.DATABASE_URL) {
 const client = neon(process.env.DATABASE_URL);
 export const db = drizzle(client);
 
-// Bootstrap schema on first boot — idempotent. Use raw SQL since drizzle-kit
-// is not running at runtime. CREATE TABLE IF NOT EXISTS for all 4 tables.
 async function bootstrap() {
   await client.query(`
     CREATE TABLE IF NOT EXISTS users (
@@ -51,27 +49,27 @@ async function bootstrap() {
     )
   `);
 }
-// Fire bootstrap once. Don't block module load on errors — log them.
+
 bootstrap().catch((e) => console.error("[bootstrap] failed", e));
 
 export interface IStorage {
-  // users
+
   getUser(id: number): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(email: string, passwordHash: string): Promise<User>;
   updateUserLanguage(id: number, language: string): Promise<User | undefined>;
-  // sessions
+
   createSession(token: string, userId: number, createdAt: number, expiresAt: number): Promise<Session>;
   getSession(token: string): Promise<Session | undefined>;
   deleteSession(token: string): Promise<void>;
-  // favorites
+
   getFavorites(userId: number): Promise<Favorite[]>;
   getFavorite(id: number, userId: number): Promise<Favorite | undefined>;
   getFavoriteByJoker(userId: number, jokerId: string): Promise<Favorite | undefined>;
   createFavorite(userId: number, jokerId: string, note: string | null): Promise<Favorite>;
   updateFavorite(id: number, userId: number, note: string | null): Promise<Favorite | undefined>;
   deleteFavorite(id: number, userId: number): Promise<void>;
-  // runs
+
   getRuns(userId: number): Promise<Run[]>;
   getRun(id: number, userId: number): Promise<Run | undefined>;
   createRun(userId: number, name: string, jokerIds: string, notes: string | null, meta: string | null): Promise<Run>;
@@ -168,3 +166,4 @@ export class DatabaseStorage implements IStorage {
 }
 
 export const storage = new DatabaseStorage();
+

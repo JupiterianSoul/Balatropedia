@@ -1,6 +1,3 @@
-// Balatro Joker Synergy Explorer; curated dataset
-// Schema is intentionally flat & JSON-serializable so it can be exported to a static file later.
-
 export type Role =
   | "chips" | "flat_mult" | "xmult" | "retrigger" | "economy" | "consistency"
   | "discard_support" | "hand_size" | "held_in_hand" | "suit_support"
@@ -39,8 +36,8 @@ export interface Joker {
   stage: Stage[];
   economy: Level;
   consistency: Level;
-  partners: string[];      // joker ids
-  antiSynergies: string[]; // joker ids
+  partners: string[];
+  antiSynergies: string[];
   setupDifficulty: Level;
   risk: Level;
   notes: string;
@@ -48,10 +45,7 @@ export interface Joker {
 }
 
 export const JOKERS: Joker[] = [
-  // ════════════════════════════════════════════════════════════════
-  // COMMON (61)
-  // ════════════════════════════════════════════════════════════════
-  // ── 1. Joker ──────────────────────────────────────────────────────────────
+
   {
     id: "joker",
     name: "Joker",
@@ -70,7 +64,6 @@ export const JOKERS: Joker[] = [
     beginner: "Gives a small flat mult on every hand. Cheap and safe; replace it when you find something stronger."
   },
 
-  // ── 2. Greedy Joker ───────────────────────────────────────────────────────
   {
     id: "greedy_joker",
     name: "Greedy Joker",
@@ -90,7 +83,6 @@ export const JOKERS: Joker[] = [
     beginner: "Score Diamond cards to get extra mult. Easy and consistent in flush builds."
   },
 
-  // ── 3. Lusty Joker ────────────────────────────────────────────────────────
   {
     id: "lusty_joker",
     name: "Lusty Joker",
@@ -110,7 +102,6 @@ export const JOKERS: Joker[] = [
     beginner: "Score Heart cards to get extra mult. Works exactly like Greedy Joker but for Hearts."
   },
 
-  // ── 4. Wrathful Joker ─────────────────────────────────────────────────────
   {
     id: "wrathful_joker",
     name: "Wrathful Joker",
@@ -130,7 +121,6 @@ export const JOKERS: Joker[] = [
     beginner: "Score Spade cards to get extra mult. Same idea as Greedy Joker, just for Spades."
   },
 
-  // ── 5. Gluttonous Joker ───────────────────────────────────────────────────
   {
     id: "gluttonous_joker",
     name: "Gluttonous Joker",
@@ -150,7 +140,6 @@ export const JOKERS: Joker[] = [
     beginner: "Score Club cards to get extra mult. Pair with Smeared Joker and Wrathful Joker for big flush payoffs."
   },
 
-  // ── 6. Jolly Joker ────────────────────────────────────────────────────────
   {
     id: "jolly_joker",
     name: "Jolly Joker",
@@ -169,7 +158,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play any hand with a Pair to get +8 Mult. Reliable and beginner-friendly."
   },
 
-  // ── 7. Zany Joker ─────────────────────────────────────────────────────────
   {
     id: "zany_joker",
     name: "Zany Joker",
@@ -188,7 +176,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play a Three of a Kind (or better) to get +12 Mult. Pairs well with Wily Joker."
   },
 
-  // ── 8. Mad Joker ──────────────────────────────────────────────────────────
   {
     id: "mad_joker",
     name: "Mad Joker",
@@ -207,7 +194,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play a Two Pair or Full House to activate. Combine with Clever Joker for chip coverage."
   },
 
-  // ── 9. Crazy Joker ────────────────────────────────────────────────────────
   {
     id: "crazy_joker",
     name: "Crazy Joker",
@@ -226,7 +212,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play a Straight to get +12 Mult. Takes a little setup but consistent once you commit to straights."
   },
 
-  // ── 10. Droll Joker ───────────────────────────────────────────────────────
   {
     id: "droll_joker",
     name: "Droll Joker",
@@ -245,7 +230,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play a Flush to get +10 Mult. Very strong with Crafty Joker and Smeared Joker."
   },
 
-  // ── 11. Sly Joker ─────────────────────────────────────────────────────────
   {
     id: "sly_joker",
     name: "Sly Joker",
@@ -264,7 +248,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play any Pair hand for +50 Chips. Easy and works with Jolly Joker at the same time."
   },
 
-  // ── 12. Wily Joker ────────────────────────────────────────────────────────
   {
     id: "wily_joker",
     name: "Wily Joker",
@@ -283,7 +266,6 @@ export const JOKERS: Joker[] = [
     beginner: "Get +100 Chips for playing a Three of a Kind. Works great alongside Zany Joker."
   },
 
-  // ── 13. Clever Joker ──────────────────────────────────────────────────────
   {
     id: "clever_joker",
     name: "Clever Joker",
@@ -302,7 +284,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play a Two Pair or Full House to get +80 Chips. Easy to combine with Mad Joker."
   },
 
-  // ── 14. Devious Joker ─────────────────────────────────────────────────────
   {
     id: "devious_joker",
     name: "Devious Joker",
@@ -321,7 +302,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play a Straight to get +100 Chips. Combine with Crazy Joker and Runner."
   },
 
-  // ── 15. Crafty Joker ──────────────────────────────────────────────────────
   {
     id: "crafty_joker",
     name: "Crafty Joker",
@@ -340,7 +320,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play a Flush to get +80 Chips. Very effective when paired with Droll Joker."
   },
 
-  // ── 16. Half Joker ────────────────────────────────────────────────────────
   {
     id: "half_joker",
     name: "Half Joker",
@@ -359,7 +338,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play 3 or fewer cards at once to get +20 Mult. High Card or single Pair are your best options."
   },
 
-  // ── 17. Credit Card ───────────────────────────────────────────────────────
   {
     id: "credit_card",
     name: "Credit Card",
@@ -378,7 +356,6 @@ export const JOKERS: Joker[] = [
     beginner: "Lets you go $20 into debt when shopping. Great for grabbing a must-have Joker you can't quite afford."
   },
 
-  // ── 18. Banner ────────────────────────────────────────────────────────────
   {
     id: "banner",
     name: "Banner",
@@ -398,7 +375,6 @@ export const JOKERS: Joker[] = [
     beginner: "Unused discards give you extra chips. Save discards when you have a good hand already."
   },
 
-  // ── 19. Mystic Summit ─────────────────────────────────────────────────────
   {
     id: "mystic_summit",
     name: "Mystic Summit",
@@ -418,7 +394,6 @@ export const JOKERS: Joker[] = [
     beginner: "Use all your discards before your final play to get +15 Mult. Works opposite to Banner; pick one."
   },
 
-  // ── 20. 8 Ball ────────────────────────────────────────────────────────────
   {
     id: "eight_ball",
     name: "8 Ball",
@@ -438,7 +413,6 @@ export const JOKERS: Joker[] = [
     beginner: "Each 8 you play has a 25% chance to give you a free Tarot card. Play 8s as often as possible."
   },
 
-  // ── 21. Misprint ──────────────────────────────────────────────────────────
   {
     id: "misprint",
     name: "Misprint",
@@ -457,7 +431,6 @@ export const JOKERS: Joker[] = [
     beginner: "Gives you a random amount of Mult; anywhere from 0 to 23. Very inconsistent; replace it when you can."
   },
 
-  // ── 22. Raised Fist ───────────────────────────────────────────────────────
   {
     id: "raised_fist",
     name: "Raised Fist",
@@ -477,7 +450,6 @@ export const JOKERS: Joker[] = [
     beginner: "Keep a low-rank card in your hand to turn its rank into Mult. An Ace gives +2 Mult; a 2 gives +4."
   },
 
-  // ── 23. Chaos the Clown ───────────────────────────────────────────────────
   {
     id: "chaos_the_clown",
     name: "Chaos the Clown",
@@ -496,7 +468,6 @@ export const JOKERS: Joker[] = [
     beginner: "You get one free reroll each shop visit. Use it to hunt for the Joker you need."
   },
 
-  // ── 24. Scary Face ────────────────────────────────────────────────────────
   {
     id: "scary_face",
     name: "Scary Face",
@@ -516,7 +487,6 @@ export const JOKERS: Joker[] = [
     beginner: "Face cards (J, Q, K) give +30 Chips each. Stack with Smiley Face for both chips and mult on the same cards."
   },
 
-  // ── 25. Abstract Joker ────────────────────────────────────────────────────
   {
     id: "abstract_joker",
     name: "Abstract Joker",
@@ -536,7 +506,6 @@ export const JOKERS: Joker[] = [
     beginner: "Gives +3 Mult per Joker you own. Fill your Joker slots to maximise it."
   },
 
-  // ── 26. Delayed Gratification ─────────────────────────────────────────────
   {
     id: "delayed_gratification",
     name: "Delayed Gratification",
@@ -556,7 +525,6 @@ export const JOKERS: Joker[] = [
     beginner: "If you avoid discarding all round, earn $2 per discard you had. Drunkard makes this more valuable."
   },
 
-  // ── 27. Gros Michel ───────────────────────────────────────────────────────
   {
     id: "gros_michel",
     name: "Gros Michel",
@@ -575,7 +543,6 @@ export const JOKERS: Joker[] = [
     beginner: "Gives +15 Mult but has a 1 in 6 chance to disappear each round. When it dies it lets Cavendish show up."
   },
 
-  // ── 28. Even Steven ───────────────────────────────────────────────────────
   {
     id: "even_steven",
     name: "Even Steven",
@@ -595,7 +562,6 @@ export const JOKERS: Joker[] = [
     beginner: "Scoring even-ranked cards (2, 4, 6, 8, 10) gives extra mult. Easy to trigger in most hands."
   },
 
-  // ── 29. Odd Todd ──────────────────────────────────────────────────────────
   {
     id: "odd_todd",
     name: "Odd Todd",
@@ -615,7 +581,6 @@ export const JOKERS: Joker[] = [
     beginner: "Odd-ranked cards (A, 3, 5, 7, 9) give +31 Chips each when scored. Aces double as Scholar fuel."
   },
 
-  // ── 30. Scholar ───────────────────────────────────────────────────────────
   {
     id: "scholar",
     name: "Scholar",
@@ -635,7 +600,6 @@ export const JOKERS: Joker[] = [
     beginner: "Each Ace you score gives +20 Chips and +4 Mult. Load up on Aces for consistent value."
   },
 
-  // ── 31. Business Card ─────────────────────────────────────────────────────
   {
     id: "business_card",
     name: "Business Card",
@@ -655,7 +619,6 @@ export const JOKERS: Joker[] = [
     beginner: "Face cards you play have a 50% chance to pay you $2. More face cards = more money."
   },
 
-  // ── 32. Supernova ─────────────────────────────────────────────────────────
   {
     id: "supernova",
     name: "Supernova",
@@ -675,7 +638,6 @@ export const JOKERS: Joker[] = [
     beginner: "Every time you play your favourite poker hand, this Joker's bonus grows. Stick to one hand type."
   },
 
-  // ── 33. Ride the Bus ──────────────────────────────────────────────────────
   {
     id: "ride_the_bus",
     name: "Ride the Bus",
@@ -695,7 +657,6 @@ export const JOKERS: Joker[] = [
     beginner: "Avoid face cards to keep this growing. One face card scored and it resets to zero."
   },
 
-  // ── 34. Egg ───────────────────────────────────────────────────────────────
   {
     id: "egg",
     name: "Egg",
@@ -714,7 +675,6 @@ export const JOKERS: Joker[] = [
     beginner: "This Joker's sell price goes up $3 every round. Hold it until you need a cash injection, then sell."
   },
 
-  // ── 35. Runner ────────────────────────────────────────────────────────────
   {
     id: "runner",
     name: "Runner",
@@ -734,7 +694,6 @@ export const JOKERS: Joker[] = [
     beginner: "Each Straight you play adds +15 Chips permanently. It keeps growing over the run."
   },
 
-  // ── 36. Ice Cream ─────────────────────────────────────────────────────────
   {
     id: "ice_cream",
     name: "Ice Cream",
@@ -753,7 +712,6 @@ export const JOKERS: Joker[] = [
     beginner: "Starts at +100 Chips but loses 5 Chips for every hand you play. Sell it before it empties."
   },
 
-  // ── 37. Splash ────────────────────────────────────────────────────────────
   {
     id: "splash",
     name: "Splash",
@@ -773,7 +731,6 @@ export const JOKERS: Joker[] = [
     beginner: "All cards you play score, not just the hand itself. Great with Jokers that pay per card (e.g., Even Steven)."
   },
 
-  // ── 38. Blue Joker ────────────────────────────────────────────────────────
   {
     id: "blue_joker",
     name: "Blue Joker",
@@ -793,7 +750,6 @@ export const JOKERS: Joker[] = [
     beginner: "Gives +2 Chips per card in your deck. A fresh 52-card deck gives +104 Chips; huge for early scaling."
   },
 
-  // ── 39. Faceless Joker ────────────────────────────────────────────────────
   {
     id: "faceless_joker",
     name: "Faceless Joker",
@@ -813,7 +769,6 @@ export const JOKERS: Joker[] = [
     beginner: "Discard 3 or more face cards at once to earn $5. Easy money in face-heavy decks."
   },
 
-  // ── 40. Green Joker ───────────────────────────────────────────────────────
   {
     id: "green_joker",
     name: "Green Joker",
@@ -833,7 +788,6 @@ export const JOKERS: Joker[] = [
     beginner: "Grows every hand you play but shrinks whenever you discard. Avoid discarding to keep it large."
   },
 
-  // ── 41. Superposition ────────────────────────────────────────────────────
   {
     id: "superposition",
     name: "Superposition",
@@ -853,7 +807,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play a Straight that includes an Ace to generate a free Tarot card. Good for upgrading your deck for free."
   },
 
-  // ── 42. To Do List ────────────────────────────────────────────────────────
   {
     id: "to_do_list",
     name: "To Do List",
@@ -872,7 +825,6 @@ export const JOKERS: Joker[] = [
     beginner: "Earn $4 whenever you play the target hand. The target changes each round; play flexibly to catch it often."
   },
 
-  // ── 43. Cavendish ─────────────────────────────────────────────────────────
   {
     id: "cavendish",
     name: "Cavendish",
@@ -891,7 +843,6 @@ export const JOKERS: Joker[] = [
     beginner: "Massive X3 multiplier that almost never breaks. Available only after Gros Michel dies in your run."
   },
 
-  // ── 44. Red Card ─────────────────────────────────────────────────────────
   {
     id: "red_card",
     name: "Red Card",
@@ -911,7 +862,6 @@ export const JOKERS: Joker[] = [
     beginner: "Every time you skip a Booster Pack in the shop, this gains +3 Mult. Skip packs you don't need."
   },
 
-  // ── 45. Square Joker ──────────────────────────────────────────────────────
   {
     id: "square_joker",
     name: "Square Joker",
@@ -931,7 +881,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play exactly 4 cards each hand to grow this Joker's chips. Consistent in Four Fingers builds."
   },
 
-  // ── 46. Riff-Raff ────────────────────────────────────────────────────────
   {
     id: "riff_raff",
     name: "Riff-Raff",
@@ -951,7 +900,6 @@ export const JOKERS: Joker[] = [
     beginner: "Generates 2 free Common Jokers every time you enter a Blind. Keep Joker slots open to catch them."
   },
 
-  // ── 47. Photograph ────────────────────────────────────────────────────────
   {
     id: "photograph",
     name: "Photograph",
@@ -971,7 +919,6 @@ export const JOKERS: Joker[] = [
     beginner: "The first face card you score each hand gives X2 Mult. Cheap XMult boost in any face-card build."
   },
 
-  // ── 48. Reserved Parking ─────────────────────────────────────────────────
   {
     id: "reserved_parking",
     name: "Reserved Parking",
@@ -991,7 +938,6 @@ export const JOKERS: Joker[] = [
     beginner: "Face cards you hold (not play) have a 50% chance to give you $1 each. Hold more face cards."
   },
 
-  // ── 49. Mail-In Rebate ────────────────────────────────────────────────────
   {
     id: "mail_in_rebate",
     name: "Mail-In Rebate",
@@ -1011,7 +957,6 @@ export const JOKERS: Joker[] = [
     beginner: "Discarding the target rank earns $5 per card. More discards = more money."
   },
 
-  // ── 50. Hallucination ────────────────────────────────────────────────────
   {
     id: "hallucination",
     name: "Hallucination",
@@ -1031,7 +976,6 @@ export const JOKERS: Joker[] = [
     beginner: "Opening any Booster Pack has a 50% chance to give you a free Tarot card. Buy packs more often."
   },
 
-  // ── 51. Fortune Teller ────────────────────────────────────────────────────
   {
     id: "fortune_teller",
     name: "Fortune Teller",
@@ -1051,7 +995,6 @@ export const JOKERS: Joker[] = [
     beginner: "Every Tarot card you use permanently adds +1 Mult. Use lots of Tarots to make it grow."
   },
 
-  // ── 52. Juggler ───────────────────────────────────────────────────────────
   {
     id: "juggler",
     name: "Juggler",
@@ -1070,7 +1013,6 @@ export const JOKERS: Joker[] = [
     beginner: "Gives you one extra card each hand. Helps you find better hands and holds for in-hand Jokers."
   },
 
-  // ── 53. Drunkard ──────────────────────────────────────────────────────────
   {
     id: "drunkard",
     name: "Drunkard",
@@ -1089,7 +1031,6 @@ export const JOKERS: Joker[] = [
     beginner: "Gives you one more discard every round. Helps you find the cards you need."
   },
 
-  // ── 54. Golden Joker ──────────────────────────────────────────────────────
   {
     id: "golden_joker",
     name: "Golden Joker",
@@ -1108,7 +1049,6 @@ export const JOKERS: Joker[] = [
     beginner: "Earns you $4 at the end of every round automatically. One of the safest Jokers in the game."
   },
 
-  // ── 55. Popcorn ───────────────────────────────────────────────────────────
   {
     id: "popcorn",
     name: "Popcorn",
@@ -1127,7 +1067,6 @@ export const JOKERS: Joker[] = [
     beginner: "Starts at +20 Mult but drops by 4 each round. Sell it before it runs out."
   },
 
-  // ── 56. Walkie Talkie ────────────────────────────────────────────────────
   {
     id: "walkie_talkie",
     name: "Walkie Talkie",
@@ -1147,7 +1086,6 @@ export const JOKERS: Joker[] = [
     beginner: "10s and 4s give you both Chips and Mult when scored. Load up on 10s and 4s."
   },
 
-  // ── 57. Smiley Face ───────────────────────────────────────────────────────
   {
     id: "smiley_face",
     name: "Smiley Face",
@@ -1167,7 +1105,6 @@ export const JOKERS: Joker[] = [
     beginner: "Face cards give +5 Mult each when scored. Pair with Scary Face for both Chips and Mult on face cards."
   },
 
-  // ── 58. Golden Ticket ────────────────────────────────────────────────────
   {
     id: "golden_ticket",
     name: "Golden Ticket",
@@ -1187,7 +1124,6 @@ export const JOKERS: Joker[] = [
     beginner: "Gold cards you play earn $4. Combine with Midas Mask which turns face cards into Gold as you play them."
   },
 
-  // ── 59. Swashbuckler ─────────────────────────────────────────────────────
   {
     id: "swashbuckler",
     name: "Swashbuckler",
@@ -1207,7 +1143,6 @@ export const JOKERS: Joker[] = [
     beginner: "Converts the combined sell value of your other Jokers into flat Mult. Hold Egg to inflate it."
   },
 
-  // ── 60. Hanging Chad ──────────────────────────────────────────────────────
   {
     id: "hanging_chad",
     name: "Hanging Chad",
@@ -1226,7 +1161,6 @@ export const JOKERS: Joker[] = [
     beginner: "Your first scoring card activates three times instead of once. Put your best card first."
   },
 
-  // ── 61. Shoot the Moon ────────────────────────────────────────────────────
   {
     id: "shoot_the_moon",
     name: "Shoot the Moon",
@@ -1246,10 +1180,6 @@ export const JOKERS: Joker[] = [
     beginner: "Every Queen you keep in hand (don't play) gives +13 Mult. Hold Queens, play everything else."
   },
 
-  // ════════════════════════════════════════════════════════════════
-  // UNCOMMON (64)
-  // ════════════════════════════════════════════════════════════════
-  // ── 1 ──────────────────────────────────────────────────────────────────────
   {
     id: "joker_stencil",
     name: "Joker Stencil",
@@ -1268,7 +1198,7 @@ export const JOKERS: Joker[] = [
     notes: "Paradoxical: it rewards having fewer Jokers. Running a lean 1-Joker setup (Stencil alone) gives X5; every additional Joker drops the multiplier. Best used as a powerful early piece before the build is assembled, then sold once slots fill.",
     beginner: "The fewer Jokers you have, the bigger the multiplier. Strong when you're still building your deck."
   },
-  // ── 2 ──────────────────────────────────────────────────────────────────────
+
   {
     id: "four_fingers",
     name: "Four Fingers",
@@ -1287,7 +1217,7 @@ export const JOKERS: Joker[] = [
     notes: "Fundamentally alters hand construction. Combines devastatingly with Shortcut (4-card gapped straights) and Smeared (4-card flushes from two-suit decks). Frees a hand slot for a held-in-hand piece.",
     beginner: "Makes flushes and straights with only 4 cards. Opens up more options for every hand."
   },
-  // ── 3 ──────────────────────────────────────────────────────────────────────
+
   {
     id: "mime",
     name: "Mime",
@@ -1306,7 +1236,7 @@ export const JOKERS: Joker[] = [
     notes: "Core of every Baron + Steel build. Doubles every in-hand effect; each held King pays X2.25 instead of X1.5, each Steel card delivers X2.25 instead of X1.5.",
     beginner: "Makes cards you keep in your hand trigger twice. Huge with Steel cards and Baron."
   },
-  // ── 4 ──────────────────────────────────────────────────────────────────────
+
   {
     id: "ceremonial_dagger",
     name: "Ceremonial Dagger",
@@ -1325,7 +1255,7 @@ export const JOKERS: Joker[] = [
     notes: "Position Ceremonial Dagger to the left of a Joker you plan to cycle (e.g., Egg, a cheap filler). Each consumed Joker's sell value doubles before conversion; Egg yields +$6 Mult per blind. Plan the sacrifice deliberately.",
     beginner: "Destroys the Joker to its right and adds double its value as flat Mult. Feed it cheap or expired Jokers."
   },
-  // ── 5 ──────────────────────────────────────────────────────────────────────
+
   {
     id: "marble_joker",
     name: "Marble Joker",
@@ -1344,7 +1274,7 @@ export const JOKERS: Joker[] = [
     notes: "Slowly inflates Stone count; every blind (including skipped) adds one. Stone cards contribute +25 Chips to Stone Joker and count toward Driver's License thresholds. Passive and low-maintenance.",
     beginner: "Adds a Stone card to your deck every blind. Fuels Stone Joker chip builds passively."
   },
-  // ── 6 ──────────────────────────────────────────────────────────────────────
+
   {
     id: "loyalty_card",
     name: "Loyalty Card",
@@ -1363,7 +1293,7 @@ export const JOKERS: Joker[] = [
     notes: "Requires a patience cycle; 5 dry hands then one massive X4. Track the counter and time your hands-per-round so the payoff fires on your hardest hand. Blueprint can copy the X4 on the trigger turn.",
     beginner: "Every 6th hand gives a giant X4 multiplier. Plan your plays so the big hand lands on a tough blind."
   },
-  // ── 7 ──────────────────────────────────────────────────────────────────────
+
   {
     id: "dusk",
     name: "Dusk",
@@ -1382,7 +1312,7 @@ export const JOKERS: Joker[] = [
     notes: "Effectively a one-shot Seltzer on demand each round. Best in builds that need only a single explosive hand rather than sustained output; play defensively first, then unleash on the final hand.",
     beginner: "Your last hand each round triggers every card twice. Save your best hand for last."
   },
-  // ── 8 ──────────────────────────────────────────────────────────────────────
+
   {
     id: "fibonacci",
     name: "Fibonacci",
@@ -1401,7 +1331,7 @@ export const JOKERS: Joker[] = [
     notes: "Free flat mult on five common ranks that span most hand types. Hack doubles triggers on 2, 3, and 5; those three overlap perfectly. Consistent throughout the run.",
     beginner: "Common low-rank cards give extra Mult. Hard to go wrong early."
   },
-  // ── 9 ──────────────────────────────────────────────────────────────────────
+
   {
     id: "steel_joker",
     name: "Steel Joker",
@@ -1420,7 +1350,7 @@ export const JOKERS: Joker[] = [
     notes: "Counts Steel cards even if they're held in hand during scoring. Stack Steel via Tarots; 5 Steel cards = X2 Mult which is already a strong floor, with no cap.",
     beginner: "Steel cards in your deck multiply your score. Add as many as possible via Tarot cards."
   },
-  // ── 10 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "hack",
     name: "Hack",
@@ -1439,7 +1369,7 @@ export const JOKERS: Joker[] = [
     notes: "Doubles low-card payoffs and breaks Glass twice as fast. Three of five Fibonacci ranks (2, 3, 5) overlap with Hack, making the pairing one of the most efficient in the game.",
     beginner: "Low cards (2-5) trigger twice. Combine with Glass to crack faster."
   },
-  // ── 11 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "pareidolia",
     name: "Pareidolia",
@@ -1458,7 +1388,7 @@ export const JOKERS: Joker[] = [
     notes: "Breaks face-card builds wide open but hard-blocks suit-specific Jokers by flooding everything into face-card status. Midas Mask becomes perpetual income since every scored card turns Gold.",
     beginner: "Treats every card as a face card. Massive face-card payoffs become trivial; but drop Greedy/Wrathful first."
   },
-  // ── 12 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "space_joker",
     name: "Space Joker",
@@ -1477,7 +1407,7 @@ export const JOKERS: Joker[] = [
     notes: "Free hand-level upgrades accelerate chip/mult base values independent of shop. Oops! All 6s doubles this to 50% chance per hand, making Space Joker a reliable levelling engine.",
     beginner: "25% chance each hand to level up your poker hand for free. Just keep playing."
   },
-  // ── 13 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "burglar",
     name: "Burglar",
@@ -1496,7 +1426,7 @@ export const JOKERS: Joker[] = [
     notes: "Trading discards for hands rewards builds that play clean; Green Joker thrives since discards penalise it, and extra hands let Loyalty Card's counter tick faster. Mystic Summit fires immediately since you start with zero discards.",
     beginner: "You get 3 extra hands each blind but no discards. Great if you rarely discard anyway."
   },
-  // ── 14 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "blackboard",
     name: "Blackboard",
@@ -1515,7 +1445,7 @@ export const JOKERS: Joker[] = [
     notes: "Smeared Joker is the critical unlock; it merges Spades and Clubs, allowing Blackboard's X3 to fire with any dark-suit hand. Thin Hearts and Diamonds from your deck to maximise reliability.",
     beginner: "Massive X3 if every card in your hand is black-suited. Run only Spades and Clubs."
   },
-  // ── 15 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "sixth_sense",
     name: "Sixth Sense",
@@ -1534,7 +1464,7 @@ export const JOKERS: Joker[] = [
     notes: "A consistent Spectral factory across the run; one per round if you can lead with a 6. Removes the 6 from your deck, thinning it while generating Spectrals. Showman lets Spectrals appear in duplicate.",
     beginner: "Play a single 6 as your first hand to destroy it and get a Spectral card. Thins your deck too."
   },
-  // ── 16 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "constellation",
     name: "Constellation",
@@ -1553,7 +1483,7 @@ export const JOKERS: Joker[] = [
     notes: "Quiet engine that compounds across the run. Buy every Planet you see; Astronomer makes them free and Planet Merchant doubles their appearance. Late-game Constellation values of X3-X6 are common in dedicated builds.",
     beginner: "Using Planet cards permanently boosts this. Hoard Planets and it snowballs."
   },
-  // ── 17 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "hiker",
     name: "Hiker",
@@ -1572,7 +1502,7 @@ export const JOKERS: Joker[] = [
     notes: "Permanently upgrades your entire deck's chip value over time. Plays well alongside high-frequency hand types that score many cards per hand (Flush, Straight). DNA duplication makes the permanent buff apply to both copies.",
     beginner: "Every card you score gets +5 chips forever. Plays more hands = permanently bigger deck."
   },
-  // ── 18 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "card_sharp",
     name: "Card Sharp",
@@ -1591,7 +1521,7 @@ export const JOKERS: Joker[] = [
     notes: "Once you play a hand twice in the same round, all subsequent same-hand plays get X3. The condition is trivially met in 3-hand rounds. Works best with builds that always repeat the same hand type (Flush, Pair).",
     beginner: "Play the same hand type twice in a round and the second time onwards gets X3 Mult. Easy to trigger."
   },
-  // ── 19 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "madness",
     name: "Madness",
@@ -1610,7 +1540,7 @@ export const JOKERS: Joker[] = [
     notes: "Grows X0.5 per non-boss blind but randomly destroys one of your other Jokers each time. Keep your Joker slot count low (2-3 total) so you control the selection pool; Joker Stencil becomes explosive once slots empty.",
     beginner: "Gets stronger each blind but destroys a random Joker. Keep fewer Jokers to stay in control."
   },
-  // ── 20 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "seance",
     name: "Séance",
@@ -1629,7 +1559,7 @@ export const JOKERS: Joker[] = [
     notes: "Straight Flush is hard to hit naturally, but Four Fingers + Shortcut reduces it to a 4-card gapped hand. Once enabled, Séance generates powerful Spectrals every round, potentially including Wraith (Negative Joker copies).",
     beginner: "Score a Straight Flush to get a free Spectral card. Use Four Fingers to make it easier."
   },
-  // ── 21 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "vampire",
     name: "Vampire",
@@ -1648,7 +1578,7 @@ export const JOKERS: Joker[] = [
     notes: "Eats your own enhancements to grow. Conflicts badly with any Joker that scales off maintained enhancements. Commit fully; load the deck with cheap Mult/Bonus enhancements, let Vampire devour them, then coast on the accumulated XMult.",
     beginner: "Consumes enhanced cards to grow bigger. Don't pair with Steel/Glass/Stone payoff Jokers."
   },
-  // ── 22 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "shortcut",
     name: "Shortcut",
@@ -1667,7 +1597,7 @@ export const JOKERS: Joker[] = [
     notes: "Dramatically lowers the assembly cost for Straights. Combined with Four Fingers (4-card hands), nearly any four consecutive-ish cards form a straight. Enables Séance reliably when paired with Four Fingers.",
     beginner: "Gaps in your Straight are fine now. Much easier to hit than normal Straights."
   },
-  // ── 23 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "hologram",
     name: "Hologram",
@@ -1686,7 +1616,7 @@ export const JOKERS: Joker[] = [
     notes: "Loves DNA and Standard packs. Every pack opened pushes the XMult higher. DNA duplication adds two cards per round (original + clone) and is easily the fastest Hologram accelerant available.",
     beginner: "Adding any playing card to your deck pumps this. Open lots of packs."
   },
-  // ── 24 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "cloud_9",
     name: "Cloud 9",
@@ -1705,7 +1635,7 @@ export const JOKERS: Joker[] = [
     notes: "Scales with deck density of 9s. A standard 52-card deck has four 9s for $4/round, but Standard packs and DNA can push this higher. Pairs cleanly with any economy engine since it fires passively.",
     beginner: "Pays you $1 per 9 in your deck every round. Add 9s to your deck for more income."
   },
-  // ── 25 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "rocket",
     name: "Rocket",
@@ -1724,7 +1654,7 @@ export const JOKERS: Joker[] = [
     notes: "Starts small but becomes a reliable late-game income source. By Ante 8, each Boss blind beaten pushes payout to $15+. Compounds best with interest builds; use the cash to stay at the interest cap.",
     beginner: "Makes more money every time you beat a boss blind. Keep it and watch it grow."
   },
-  // ── 26 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "midas_mask",
     name: "Midas Mask",
@@ -1743,7 +1673,7 @@ export const JOKERS: Joker[] = [
     notes: "Converts face-card pressure into snowball income. Best with Pareidolia since every scored card qualifies. Golden Ticket Joker also pays out on Gold cards, but Midas is the simpler route to passive income.",
     beginner: "Played face cards turn Gold and pay you. Money on top of damage."
   },
-  // ── 27 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "luchador",
     name: "Luchador",
@@ -1762,7 +1692,7 @@ export const JOKERS: Joker[] = [
     notes: "One-shot Boss Blind neutraliser. Invaluable against debilitating bosses (Psychic, Needle, Cerulean Bell). Blueprint copies Luchador before selling to get the effect for free. Gift Card raises sell value, but the effect itself is the real payoff.",
     beginner: "Sell it right before a scary Boss Blind to remove its negative effect. One-time lifesaver."
   },
-  // ── 28 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "gift_card",
     name: "Gift Card",
@@ -1781,7 +1711,7 @@ export const JOKERS: Joker[] = [
     notes: "Silent engine that inflates every Joker's sell value each round. Swashbuckler converts accumulated sell value directly into Mult. Luchador's sell becomes worth far more after Gift Card stacks for several rounds.",
     beginner: "All your Jokers get worth more each round. Sell them later for big money or combo with Swashbuckler."
   },
-  // ── 29 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "turtle_bean",
     name: "Turtle Bean",
@@ -1800,7 +1730,7 @@ export const JOKERS: Joker[] = [
     notes: "Exceptional early-game hand-size burst that self-liquidates. Best acquired early so you benefit from the full 5 rounds of expanded hand; use the time to set up flush/held-in-hand builds that need the extra cards.",
     beginner: "Big extra hand size that shrinks each round. Great early to help you hit flushes and big hands."
   },
-  // ── 30 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "erosion",
     name: "Erosion",
@@ -1819,7 +1749,7 @@ export const JOKERS: Joker[] = [
     notes: "Rewards deck thinning; every card removed permanently grows Mult by +4. Trading Card and Sixth Sense destroy cards on demand. Avoid deck-growth Jokers (Hologram, Marble) that work against the shrink.",
     beginner: "Remove cards from your deck to grow this. Thin aggressively and enjoy free Mult."
   },
-  // ── 31 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "to_the_moon",
     name: "To the Moon",
@@ -1838,7 +1768,7 @@ export const JOKERS: Joker[] = [
     notes: "Raises the effective interest cap; normally capped at $25 ($5/round), To the Moon adds +$1 per $5 on top, so holding $50 yields $10 more per round. Stack with all passive income Jokers for runaway money.",
     beginner: "Gives you extra interest based on how much money you have. The richer you are, the more you earn."
   },
-  // ── 32 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "stone_joker",
     name: "Stone Joker",
@@ -1857,7 +1787,7 @@ export const JOKERS: Joker[] = [
     notes: "Loves Stone-card-heavy decks. Stone cards have no rank or suit so they contribute nothing to hand construction; they're pure chip fuel. Marble Joker adds Stones passively; combine for effortless chip walls.",
     beginner: "More Stone cards = more chips. Convert junk cards to Stone cards."
   },
-  // ── 33 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "lucky_cat",
     name: "Lucky Cat",
@@ -1876,7 +1806,7 @@ export const JOKERS: Joker[] = [
     notes: "Lucky cards trigger on a 1 in 5 chance. Oops! All 6s doubles that to 2 in 5 (40%), dramatically raising Lucky Cat's growth rate. Seltzer retriggers scored cards, giving multiple Lucky proc chances per card per hand.",
     beginner: "Lucky cards in your deck have a chance to boost this. Use Oops! All 6s to trigger more often."
   },
-  // ── 34 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "bull",
     name: "Bull",
@@ -1895,7 +1825,7 @@ export const JOKERS: Joker[] = [
     notes: "Converts your cash reserves directly into chips on every scored hand. Holding $30 contributes +60 Chips, which is substantial mid-game. Bootstraps also scales off cash but via Mult; the two cover different scoring dimensions.",
     beginner: "Every dollar you have gives +2 chips every hand. Don't spend money right before scoring."
   },
-  // ── 35 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "diet_cola",
     name: "Diet Cola",
@@ -1914,7 +1844,7 @@ export const JOKERS: Joker[] = [
     notes: "One-shot tag generator. A Double Tag is worth whatever its contents are; an XMult Joker or two of the same consumable. Blueprint can copy the sell effect before selling to effectively produce two Double Tags from one.",
     beginner: "Sell it to get a free Double Tag (two of the same item). Time it with a great shop selection."
   },
-  // ── 36 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "trading_card",
     name: "Trading Card",
@@ -1933,7 +1863,7 @@ export const JOKERS: Joker[] = [
     notes: "Consistently earns $3 per round while also thinning the deck one card at a time. Erosion gains +4 Mult per removed card, making Trading Card a dual-benefit play every round. Drunkard provides extra discards so you can still dig for the hand after the sacrifice.",
     beginner: "Discard exactly 1 card first to destroy it and earn $3. Easy money and deck improvement."
   },
-  // ── 37 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "flash_card",
     name: "Flash Card",
@@ -1952,7 +1882,7 @@ export const JOKERS: Joker[] = [
     notes: "Scales naturally with any reroll-heavy shopping style. Chaos the Clown gives a free reroll each shop, effectively a free +2 Mult per round. No cap; heavy rerollers routinely push Flash Card to +40-60 Mult by mid-run.",
     beginner: "Reroll in the shop to add +2 Mult each time. Reroll freely and this snowballs."
   },
-  // ── 38 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "spare_trousers",
     name: "Spare Trousers",
@@ -1971,7 +1901,7 @@ export const JOKERS: Joker[] = [
     notes: "Steady accumulator in Two Pair builds. Every hand with Two Pair (including Full House) ticks it up. Pairs cleanly with DNA to flood the deck with a target rank, guaranteeing Two Pair on nearly every hand.",
     beginner: "Two Pair hands permanently add Mult to this. Just keep playing Two Pairs."
   },
-  // ── 39 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "ramen",
     name: "Ramen",
@@ -1990,7 +1920,7 @@ export const JOKERS: Joker[] = [
     notes: "Starts at X2 and erodes with every discard. Protect it by minimising discards; Burglar sacrifices discards for extra hands. At 200 total discards it hits X0, so treat it as a long-duration temporary buff.",
     beginner: "Starts at X2 but each discard shrinks it. Play with fewer discards to keep it powerful."
   },
-  // ── 40 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "seltzer",
     name: "Seltzer",
@@ -2009,7 +1939,7 @@ export const JOKERS: Joker[] = [
     notes: "Timer-limited: expires after 10 hands, then self-destructs. Plan to acquire and peak during boss blind phases. Blueprint can copy the retrigger the same turn it fires, effectively consuming two of the 10 hands at maximum value.",
     beginner: "Doubles every card for 10 hands then vanishes. Use during tough boss rounds."
   },
-  // ── 41 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "castle",
     name: "Castle",
@@ -2028,7 +1958,7 @@ export const JOKERS: Joker[] = [
     notes: "The suit rotates every round, so you need deck balance to hit it consistently. Smeared Joker merges two suits' coverage, doubling reliability. Merry Andy's +3 discards dramatically accelerates chip accumulation.",
     beginner: "Discard cards of the right suit to add chips. Suits rotate each round, so keep diverse cards."
   },
-  // ── 42 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "satellite",
     name: "Satellite",
@@ -2047,7 +1977,7 @@ export const JOKERS: Joker[] = [
     notes: "Compounds with any Planet-heavy run. Free money for natural shop behaviour; using Planets levels hands and grows Constellation simultaneously. With all 11 unique Planets used, Satellite yields $11/round.",
     beginner: "Every Planet you use pays you each round. Use lots of Planets."
   },
-  // ── 43 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "acrobat",
     name: "Acrobat",
@@ -2066,7 +1996,7 @@ export const JOKERS: Joker[] = [
     notes: "Reliable X3 every round if you can manage hand count. Best paired with Dusk for retrigger on the same final hand; the combo produces devastating burst. Keep enough hands to reach the final comfortably.",
     beginner: "Your last hand of the round gets X3. Save your biggest play for last."
   },
-  // ── 44 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "sock_and_buskin",
     name: "Sock and Buskin",
@@ -2085,7 +2015,7 @@ export const JOKERS: Joker[] = [
     notes: "Doubles every face card payoff; mandatory in face-card decks. Pairs with Hanging Chad so the lead face card fires three times, then Sock doubles all subsequent face cards in the same hand.",
     beginner: "Every face card scores twice. Insane with Triboulet."
   },
-  // ── 45 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "troubadour",
     name: "Troubadour",
@@ -2104,7 +2034,7 @@ export const JOKERS: Joker[] = [
     notes: "The hand-size gain is generous for held-in-hand builds but the -1 hand per round is a steep tax. Avoid in builds relying on Acrobat or Dusk (fewer hands = less flexibility). Best in single-hand-clearing builds.",
     beginner: "Bigger hand size but one fewer hand per round. Good if you clear blinds in fewer plays."
   },
-  // ── 46 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "certificate",
     name: "Certificate",
@@ -2123,7 +2053,7 @@ export const JOKERS: Joker[] = [
     notes: "Delivers a free sealed card each round; Gold Seals generate money, Red Seals retrigger on scoring, Blue Seals create Planet cards. The randomness averages to strong value over a run. Hologram gains from the added card immediately.",
     beginner: "Free card with a seal each round. Keep whichever seals give you money or planets."
   },
-  // ── 47 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "smeared_joker",
     name: "Smeared Joker",
@@ -2142,7 +2072,7 @@ export const JOKERS: Joker[] = [
     notes: "The glue piece of suit-based builds. Halves the effective suit pool, making flushes trivial and doubling suit Joker coverage. Blackboard becomes nearly unconditional with Smeared merging Spades and Clubs.",
     beginner: "Treats two suits as one. Makes flushes way easier to hit."
   },
-  // ── 48 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "throwback",
     name: "Throwback",
@@ -2161,7 +2091,7 @@ export const JOKERS: Joker[] = [
     notes: "Rewards running a skip-tag strategy. Each skipped blind adds X0.25; skipping 8 Small Blinds over a run yields X3 Mult. Credit Card enables going into debt to skip without being cash-locked. Works retroactively from the start of the run.",
     beginner: "Skip more blinds earlier to power this up. Get a skip tag whenever you can."
   },
-  // ── 49 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "rough_gem",
     name: "Rough Gem",
@@ -2180,7 +2110,7 @@ export const JOKERS: Joker[] = [
     notes: "Economy layer that stacks cleanly with Diamond suit synergies. Smeared Joker doubles its coverage by unifying Hearts and Diamonds. In Diamond-flush builds the income per round is substantial; 5 Diamonds in a flush nets $5.",
     beginner: "Scoring Diamond cards earns you money. Build toward Diamond flushes for best results."
   },
-  // ── 50 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "bloodstone",
     name: "Bloodstone",
@@ -2199,7 +2129,7 @@ export const JOKERS: Joker[] = [
     notes: "Probabilistic XMult that averages X1.5 per 2 Hearts. Oops! All 6s raises it to 100% (guaranteed X1.5 per Heart). In Heart-flush builds with Smeared, nearly every scored card procs it.",
     beginner: "Heart cards have a 50% chance to multiply your score. Use Oops! All 6s to guarantee it."
   },
-  // ── 51 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "arrowhead",
     name: "Arrowhead",
@@ -2218,7 +2148,7 @@ export const JOKERS: Joker[] = [
     notes: "+50 Chips per Spade is enormous; five Spades in a flush yields +250 Chips per hand on top of base values. Smeared merges Spades with Clubs for double coverage. Pairs with Onyx Agate for a chip+mult Spade/Club axis.",
     beginner: "Score Spades to get +50 chips each. Massive chip bonus in Spade-heavy decks."
   },
-  // ── 52 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "onyx_agate",
     name: "Onyx Agate",
@@ -2237,7 +2167,7 @@ export const JOKERS: Joker[] = [
     notes: "+7 Mult per Club is a strong flat Mult source. A 5-Club flush generates +35 flat Mult, rivalling many conditional Jokers. Smeared Joker merges Clubs with Spades; Arrowhead covers the chip side of the same suits.",
     beginner: "Score Clubs for +7 Mult each. Strong flat mult in Club-heavy decks."
   },
-  // ── 53 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "glass_joker",
     name: "Glass Joker",
@@ -2256,7 +2186,7 @@ export const JOKERS: Joker[] = [
     notes: "Cracks one shard at a time for permanent X0.75 gains. Hack retriggers 2-5s, doubling Glass proc chances on those ranks. After ~8 Glass destructions you reach X7 Mult; one of the highest single-Joker ceilings in the game.",
     beginner: "Break Glass cards to permanently buff this. Risky but explosive late game."
   },
-  // ── 54 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "showman",
     name: "Showman",
@@ -2275,7 +2205,7 @@ export const JOKERS: Joker[] = [
     notes: "Lifts the uniqueness constraint on shop offerings. Particularly valuable for Spectral hunting (Wraith, Ankh) and for constellating duplicate Jokers. Removes the bottleneck in single-Joker-focused strategies.",
     beginner: "Same Jokers and consumables can now appear multiple times in the shop. Great for duplicating key pieces."
   },
-  // ── 55 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "flower_pot",
     name: "Flower Pot",
@@ -2294,7 +2224,7 @@ export const JOKERS: Joker[] = [
     notes: "Requires all four suits in one hand; contradicts Smeared Joker (which merges suits). Natural in balanced decks; harder in suit-focused builds. Four Fingers helps by requiring only 4 cards while still needing 4 suits.",
     beginner: "X3 if you score all four suits at once. Keep a balanced deck across all suits."
   },
-  // ── 56 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "merry_andy",
     name: "Merry Andy",
@@ -2313,7 +2243,7 @@ export const JOKERS: Joker[] = [
     notes: "Enormous discard economy but the -1 hand size is a real tax on held-in-hand builds. Discard-economy Jokers (Castle, Mail-in Rebate, Faceless) absorb the extra discards for passive income. Avoid in Baron/Mime lines.",
     beginner: "Lots of extra discards but a smaller hand. Ideal for builds that use discards to search for cards."
   },
-  // ── 57 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "oops_all_6s",
     name: "Oops! All 6s",
@@ -2332,7 +2262,7 @@ export const JOKERS: Joker[] = [
     notes: "Globally doubles every probabilistic effect; Bloodstone (1in2→guaranteed), Lucky Cat triggers, Glass shatter rate, 8 Ball Tarot rate, Mystic Summit conditions. Single-handedly converts marginal procs into near-certainties.",
     beginner: "Doubles every random chance in the game. Huge with Glass cards, Lucky cards, and Bloodstone."
   },
-  // ── 58 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "the_idol",
     name: "The Idol",
@@ -2351,7 +2281,7 @@ export const JOKERS: Joker[] = [
     notes: "X2 per match; exponential when stacked with DNA (flood deck with target) or retriggers. The rotating card changes each round so Smeared Joker is key to halving the effective target pool.",
     beginner: "Pick a rank and suit; each matching card multiplies your score. Aim for face-card targets."
   },
-  // ── 59 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "seeing_double",
     name: "Seeing Double",
@@ -2370,7 +2300,7 @@ export const JOKERS: Joker[] = [
     notes: "Trivially triggered in any non-mono-Club hand; just include one Club. Unlike Flower Pot (four suits), this is one of the easiest conditional X2s in the game. Stack with Onyx Agate for +7 Mult per Club on top.",
     beginner: "X2 if you score at least one Club alongside any other suit. Extremely easy to trigger."
   },
-  // ── 60 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "matador",
     name: "Matador",
@@ -2389,7 +2319,7 @@ export const JOKERS: Joker[] = [
     notes: "Earns $8 each hand the boss effect triggers (up to once per hand played). Some bosses trigger every hand (The Wall, The Flint); those are goldmines. Conflicts philosophically with Luchador, which disables the boss entirely.",
     beginner: "Earn $8 by intentionally setting off the Boss Blind's effect. Know which bosses trigger repeatedly."
   },
-  // ── 61 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "cartomancer",
     name: "Cartomancer",
@@ -2408,7 +2338,7 @@ export const JOKERS: Joker[] = [
     notes: "Free Tarot every blind selection is extraordinary long-term value; Tarots enhance cards, Perkeo duplicates them, and Fortune Teller scales off total Tarot usage. Showman lifts the uniqueness restriction.",
     beginner: "Free Tarot card every time you enter a blind. Use Tarots to enhance your cards."
   },
-  // ── 62 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "astronomer",
     name: "Astronomer",
@@ -2427,7 +2357,7 @@ export const JOKERS: Joker[] = [
     notes: "Makes Constellation's growth engine free to fuel. Every Planet you'd normally spend $3 on now costs $0; redirect that money into Joker upgrades. Planet Merchant + Astronomer = free Planets in every shop.",
     beginner: "All Planets and Celestial Packs cost nothing. Buy every single one; free hand levels forever."
   },
-  // ── 63 ─────────────────────────────────────────────────────────────────────
+
   {
     id: "bootstraps",
     name: "Bootstraps",
@@ -2446,7 +2376,7 @@ export const JOKERS: Joker[] = [
     notes: "Converts cash reserves into flat Mult on every scored hand. Holding $40 nets +16 Mult; meaningful flat mult alongside economy engines. Bull covers the chip side of the same cash-scaling axis.",
     beginner: "More money in your pocket = more Mult. Save up cash and this grows naturally."
   },
-  // ── 64 ──────────────────────────────────────────────────────────────────────
+
   {
     id: "mr_bones",
     name: "Mr. Bones",
@@ -2466,10 +2396,6 @@ export const JOKERS: Joker[] = [
     beginner: "Saves you from one losing round if you score at least 25% of what's required. One-time use."
   },
 
-  // ════════════════════════════════════════════════════════════════
-  // RARE (20)
-  // ════════════════════════════════════════════════════════════════
-  // ── 1. DNA ─────────────────────────────────────────────────────────────────
   {
     id: "dna",
     name: "DNA",
@@ -2493,7 +2419,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play one card alone to permanently copy it into your deck. Do this early and often with your best card."
   },
 
-  // ── 2. Vagabond ────────────────────────────────────────────────────────────
   {
     id: "vagabond",
     name: "Vagabond",
@@ -2517,7 +2442,6 @@ export const JOKERS: Joker[] = [
     beginner: "Spend your money down to $4 or less before a hand to get a free Tarot card. Plan purchases around this."
   },
 
-  // ── 3. Baron ───────────────────────────────────────────────────────────────
   {
     id: "baron",
     name: "Baron",
@@ -2541,7 +2465,6 @@ export const JOKERS: Joker[] = [
     beginner: "Every King you keep in your hand (don't play) multiplies your score. Fill your deck with Kings."
   },
 
-  // ── 4. Obelisk ─────────────────────────────────────────────────────────────
   {
     id: "obelisk",
     name: "Obelisk",
@@ -2565,7 +2488,6 @@ export const JOKERS: Joker[] = [
     beginner: "Avoid playing your most-used hand to make this grow. Risky discipline play that pays off late."
   },
 
-  // ── 5. Ancient Joker ──────────────────────────────────────────────────────────
   {
     id: "ancient_joker",
     name: "Ancient Joker",
@@ -2589,7 +2511,6 @@ export const JOKERS: Joker[] = [
     beginner: "Every card matching the current suit multiplies your score. The suit changes each round, so keep a flexible deck with multiple suits."
   },
 
-  // ── 6. Driver's License ────────────────────────────────────────────────────
   {
     id: "driver_gloves",
     name: "Driver's License",
@@ -2613,7 +2534,6 @@ export const JOKERS: Joker[] = [
     beginner: "Add 16 enhanced cards (Steel, Glass, Stone) to your deck to turn on a permanent X3 multiplier."
   },
 
-  // ── 7. Campfire ────────────────────────────────────────────────────────────
   {
     id: "campfire",
     name: "Campfire",
@@ -2637,7 +2557,6 @@ export const JOKERS: Joker[] = [
     beginner: "Sell junk cards and spare consumables to grow this before the boss fight. It resets after you win each boss."
   },
 
-  // ── 8. Baseball Card ─────────────────────────────────────────────────────────
   {
     id: "baseball_card",
     name: "Baseball Card",
@@ -2661,7 +2580,6 @@ export const JOKERS: Joker[] = [
     beginner: "Every Uncommon Joker you own multiplies your score. Fill your Joker slots with Uncommon cards to stack free multipliers."
   },
 
-  // ── 9. Blueprint ──────────────────────────────────────────────────────────────
   {
     id: "blueprint",
     name: "Blueprint",
@@ -2685,7 +2603,6 @@ export const JOKERS: Joker[] = [
     beginner: "Copies whatever Joker is directly to its right. Always place it next to your strongest Joker."
   },
 
-  // ── 10. Wee Joker ───────────────────────────────────────────────────────────
   {
     id: "wee_joker",
     name: "Wee Joker",
@@ -2709,7 +2626,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play lots of 2s to permanently grow this Joker's chip bonus. Use Hack to double the growth each round."
   },
 
-  // ── 13. Hit the Road ───────────────────────────────────────────────────────
   {
     id: "hit_the_road",
     name: "Hit the Road",
@@ -2733,7 +2649,6 @@ export const JOKERS: Joker[] = [
     beginner: "Discard Jacks every round to build up a big multiplier. Works best when you have lots of discards."
   },
 
-  // ── 14. The Duo ────────────────────────────────────────────────────────────
   {
     id: "the_duo",
     name: "The Duo",
@@ -2757,7 +2672,6 @@ export const JOKERS: Joker[] = [
     beginner: "Play any hand with a pair in it to get a free X2. Almost always active."
   },
 
-  // ── 15. The Trio ───────────────────────────────────────────────────────────
   {
     id: "the_trio",
     name: "The Trio",
@@ -2781,7 +2695,6 @@ export const JOKERS: Joker[] = [
     beginner: "Score a Three of a Kind (or Full House) to activate the X3. Duplicate ranks with DNA to hit this more often."
   },
 
-  // ── 16. The Family ─────────────────────────────────────────────────────────
   {
     id: "the_family",
     name: "The Family",
@@ -2805,7 +2718,6 @@ export const JOKERS: Joker[] = [
     beginner: "Score a Four of a Kind to get X4. You'll need DNA or rank duplication to hit this consistently."
   },
 
-  // ── 17. The Order ──────────────────────────────────────────────────────────
   {
     id: "the_order",
     name: "The Order",
@@ -2829,7 +2741,6 @@ export const JOKERS: Joker[] = [
     beginner: "Score a Straight hand to activate the X3. Use extra discards to find the cards you need."
   },
 
-  // ── 18. The Tribe ──────────────────────────────────────────────────────────
   {
     id: "the_tribe",
     name: "The Tribe",
@@ -2853,7 +2764,6 @@ export const JOKERS: Joker[] = [
     beginner: "Score a Flush to get X2 mult. Smeared Joker makes flushes easier and this almost always active."
   },
 
-  // ── 19. Stuntman ───────────────────────────────────────────────────────────
   {
     id: "stuntman",
     name: "Stuntman",
@@ -2877,7 +2787,6 @@ export const JOKERS: Joker[] = [
     beginner: "Huge chip boost at the cost of a smaller hand. Keep away from builds that rely on holding cards."
   },
 
-  // ── 20. Invisible Joker ────────────────────────────────────────────────────
   {
     id: "invisible_joker",
     name: "Invisible Joker",
@@ -2901,7 +2810,6 @@ export const JOKERS: Joker[] = [
     beginner: "Hold this for 2 rounds then sell it to copy a random Joker. Try to have one really good Joker when you cash out."
   },
 
-  // ── 19. Burnt Joker ─────────────────────────────────────────────────────────
   {
     id: "burnt_joker",
     name: "Burnt Joker",
@@ -2925,7 +2833,6 @@ export const JOKERS: Joker[] = [
     beginner: "Discard cards each round to permanently level up a poker hand. Do it every single round for massive long-term gains."
   },
 
-  // ── 21. Brainstorm ─────────────────────────────────────────────────────────
   {
     id: "brainstorm",
     name: "Brainstorm",
@@ -2949,10 +2856,6 @@ export const JOKERS: Joker[] = [
     beginner: "Always copies the Joker on the far left of your row. Combine with Blueprint to triple your best Joker."
   },
 
-  // ════════════════════════════════════════════════════════════════
-  // LEGENDARY (5)
-  // ════════════════════════════════════════════════════════════════
-  // ── 1. Canio ───────────────────────────────────────────────────────────────
   {
     id: "canio",
     name: "Canio",
@@ -2976,7 +2879,6 @@ export const JOKERS: Joker[] = [
     beginner: "Destroy face cards (especially Glass ones) to permanently multiply your score. Risky but eventually unstoppable."
   },
 
-  // ── 2. Triboulet ───────────────────────────────────────────────────────────
   {
     id: "triboulet",
     name: "Triboulet",
@@ -3000,7 +2902,6 @@ export const JOKERS: Joker[] = [
     beginner: "Every King or Queen you play multiplies your score. Pack your deck with face cards and watch the numbers explode."
   },
 
-  // ── 3. Yorick ──────────────────────────────────────────────────────────────
   {
     id: "yorick",
     name: "Yorick",
@@ -3024,7 +2925,6 @@ export const JOKERS: Joker[] = [
     beginner: "Discard cards as often as possible throughout the run. After every 23 discards this gets permanently stronger. Pair it with Jokers that give you extra discards."
   },
 
-  // ── 4. Chicot ──────────────────────────────────────────────────────────────
   {
     id: "chicot",
     name: "Chicot",
@@ -3048,7 +2948,6 @@ export const JOKERS: Joker[] = [
     beginner: "Turns off all Boss Blind effects permanently. You can now play your best strategy every round without worrying about the boss."
   },
 
-  // ── 5. Perkeo ──────────────────────────────────────────────────────────────
   {
     id: "perkeo",
     name: "Perkeo",
@@ -3073,18 +2972,14 @@ export const JOKERS: Joker[] = [
   },
 ];
 
-// ------------------------------------------------------------------
-// SYNERGIES; 25+ explicit relationships with categorized reasoning
-// ------------------------------------------------------------------
-
 export type SynergyKind =
   | "core_pair" | "strong_support" | "conditional"
   | "archetype_only" | "risky_explosive" | "trap_unless_enabled";
 
 export interface SynergySource {
-  /** Short label shown on the citation chip. */
+
   name: string;
-  /** Direct URL to the article / wiki page / tier-list entry. */
+
   url: string;
 }
 
@@ -3095,11 +2990,7 @@ export interface Synergy {
         | "economy" | "face_card" | "discard_volume" | "enhancement"
         | "suit_unification" | "scaling";
   why: string;
-  /**
-   * External sources that confirm this synergy in community-accepted strategy.
-   * Empty / undefined = unsourced (curated heuristic only). Always cite when present
-   * in the wiki, dood.gg, balatrohq, or a verified high-stake clear video.
-   */
+
   sources?: SynergySource[];
 }
 
@@ -3193,460 +3084,426 @@ export const SYNERGIES: Synergy[] = [
   { a: "obelisk", b: "blueprint", kind: "conditional", engine: "scaling",
     why: "Once Obelisk has parked a huge XMult, Blueprint copies it; but only commit when you've truly stopped playing your most-played hand." },
 
-  // ════════ EXPANDED; 150-Joker pool ════════
-  // ─── RETRIGGER (12) ──────────────────────────────────────────────────────────
-
-  // Sock and Buskin × Photograph
   {
     a: "sock_and_buskin", b: "photograph",
     kind: "strong_support", engine: "retrigger",
     why: "Sock and Buskin retriggers every scored face card; Photograph procs on the FIRST face card; after the retrigger, Photograph's trigger window fires again, delivering two X2 ticks from a single face card."
   },
-  // Sock and Buskin × Smiley Face
+
   {
     a: "sock_and_buskin", b: "smiley_face",
     kind: "strong_support", engine: "retrigger",
     why: "Each retrigger by Sock and Buskin replays the scored face card in full, doubling every per-face-card flat-mult Joker including Smiley Face's +5 Mult; five face cards in a flush become +50 Mult instead of +25."
   },
-  // Sock and Buskin × Scary Face
+
   {
     a: "sock_and_buskin", b: "scary_face",
     kind: "strong_support", engine: "retrigger",
     why: "Sock and Buskin retriggers every face card; each retrigger also doubles Scary Face's +30 Chips chip bonus, covering the chip side that Sock's face-card mult engine typically lacks."
   },
-  // Dusk × The Idol
+
   {
     a: "dusk", b: "the_idol",
     kind: "core_pair", engine: "retrigger",
     why: "Dusk retriggers every scored card on the final hand of the round; if the Idol-target card is in that hand, each retrigger fires another X2, stacking multiplicatively on a hand already delivering the burst payoff."
   },
-  // Dusk × Acrobat
+
   {
     a: "dusk", b: "acrobat",
     kind: "core_pair", engine: "retrigger",
     why: "Both effects trigger on the final hand of the round; Acrobat contributes X3 and Dusk retriggers every played card, letting Acrobat's X3 apply to a doubled scoring pass on the same hand."
   },
-  // Hanging Chad × Triboulet
+
   {
     a: "hanging_chad", b: "triboulet",
     kind: "strong_support", engine: "retrigger",
     why: "Hanging Chad triggers the lead scoring card three times total; if that card is a King or Queen, Triboulet applies its X2 three times in sequence; X2×X2×X2 = X8 from one well-placed face card."
   },
-  // Hack × Wee Joker
+
   {
     a: "hack", b: "wee_joker",
     kind: "core_pair", engine: "retrigger",
     why: "Hack retriggers every played 2 once extra; each retrigger counts as an additional scored 2, doubling Wee Joker's permanent +8 Chips accumulation per 2 scored; one played 2 yields +16 Chips of permanent growth instead of +8."
   },
-  // Hack × Even Steven
+
   {
     a: "hack", b: "even_steven",
     kind: "strong_support", engine: "retrigger",
     why: "2 and 4 are both Even Steven ranks and Hack ranks; every played 2 or 4 fires Even Steven's +4 Mult twice, effectively +8 Mult per low even card scored."
   },
-  // Seltzer × The Idol
+
   {
     a: "seltzer", b: "the_idol",
     kind: "risky_explosive", engine: "retrigger",
     why: "Seltzer retriggers every scored card for 10 hands; each retrigger re-fires The Idol's X2 on matching cards, turning a single Idol-target card into X4 per triggered copy for the Seltzer window."
   },
-  // Mime × Shoot the Moon
+
   {
     a: "mime", b: "shoot_the_moon",
     kind: "strong_support", engine: "retrigger",
     why: "Shoot the Moon gives +13 Mult per Queen held in hand during the held-in-hand phase; Mime re-triggers that phase, giving +26 Mult per held Queen for free from a single held-hand phase."
   },
-  // Mime × Reserved Parking
+
   {
     a: "mime", b: "reserved_parking",
     kind: "strong_support", engine: "retrigger",
     why: "Reserved Parking triggers per held face card in the held-in-hand phase; Mime re-triggers the held-in-hand phase, doubling each face card's 1-in-2 income roll and roughly doubling the passive money earned."
   },
-  // Hanging Chad × Photograph
+
   {
     a: "hanging_chad", b: "photograph",
     kind: "strong_support", engine: "retrigger",
     why: "Photograph fires once per hand on the first face card scored; Hanging Chad retriggers the first scored card two extra times; if the lead card is a face card, Photograph's X2 applies on all three passes."
   },
 
-  // ─── XMULT_STACK (7) ─────────────────────────────────────────────────────────
-
-  // Blueprint × Triboulet
   {
     a: "blueprint", b: "triboulet",
     kind: "core_pair", engine: "xmult_stack",
     why: "Blueprint copies the Joker to its right; positioned immediately left of Triboulet it fires Triboulet's X2-per-King/Queen a second time on the same scoring pass, turning each face card into X4 per trigger."
   },
-  // Brainstorm × The Idol
+
   {
     a: "brainstorm", b: "the_idol",
     kind: "core_pair", engine: "xmult_stack",
     why: "Position The Idol leftmost; Brainstorm copies it, applying X2 per matching card twice in the same scoring pass; one Idol-target card goes from X2 to X4 at zero extra cost."
   },
-  // The Duo × Blueprint
+
   {
     a: "the_duo", b: "blueprint",
     kind: "strong_support", engine: "xmult_stack",
     why: "The Duo applies X2 whenever a Pair appears in the hand; Blueprint copies it to deliver a second X2 on the same hand, making every Pair-containing hand a free X4 XMult stack."
   },
-  // The Tribe × The Order
+
   {
     a: "the_tribe", b: "the_order",
     kind: "core_pair", engine: "xmult_stack",
     why: "Both conditional XMult Jokers fire simultaneously on Straight Flush hands; The Tribe contributes X2 and The Order contributes X3, stacking to X6 on every Straight Flush scored."
   },
-  // Ancient Joker × Smeared Joker
+
   {
     a: "ancient_joker", b: "smeared_joker",
     kind: "strong_support", engine: "xmult_stack",
     why: "Ancient Joker applies X1.5 per scored card of the active suit; Smeared Joker collapses four suits to two, so roughly half your deck triggers X1.5 on any hand regardless of suit rotation."
   },
-  // Bloodstone × Oops All 6s
+
   {
     a: "bloodstone", b: "oops_all_6s",
     kind: "core_pair", engine: "xmult_stack",
     why: "Oops! All 6s doubles Bloodstone's 1-in-2 Heart proc to guaranteed; every scored Heart card becomes a certain X1.5 tick, turning Heart flushes into a reliable X1.5-per-card multiplicative engine."
   },
-  // Baseball Card × Constellation
+
   {
     a: "baseball_card", b: "constellation",
     kind: "strong_support", engine: "xmult_stack",
     why: "Baseball Card gives X1.5 Mult per Uncommon Joker owned; Constellation is Uncommon and one of the strongest XMult scalers in the game; owning both gives X1.5 from Baseball Card for Constellation's presence, while Constellation independently compounds via Planets."
   },
 
-  // ─── DECK_MANIPULATION (6) ───────────────────────────────────────────────────
-
-  // DNA × Cavendish
   {
     a: "dna", b: "cavendish",
     kind: "conditional", engine: "deck_manipulation",
     why: "DNA single-play duplication can target any card; cloning an Ace into a deck stacked with four copies guarantees consistent high-value hands while Cavendish provides the X3 payoff on every scored hand that emerges."
   },
-  // Marble Joker × Stone Joker
+
   {
     a: "marble_joker", b: "stone_joker",
     kind: "core_pair", engine: "deck_manipulation",
     why: "Marble Joker adds one Stone card to the deck every blind; each added Stone grows Stone Joker by +25 Chips per scored hand; passive blind-count scaling delivers a free chip engine with no per-hand effort required."
   },
-  // Sixth Sense × Perkeo
+
   {
     a: "sixth_sense", b: "perkeo",
     kind: "strong_support", engine: "deck_manipulation",
     why: "Sixth Sense produces a Spectral card each round by sacrificing a 6; Perkeo duplicates a random consumable each shop; holding the Spectral across shop visits guarantees a free Negative Spectral copy, effectively doubling every Sixth Sense proc over the run."
   },
-  // Cartomancer × Fortune Teller
+
   {
     a: "cartomancer", b: "fortune_teller",
     kind: "strong_support", engine: "deck_manipulation",
     why: "Cartomancer creates a free Tarot every blind selection; each Tarot used permanently adds +1 Mult to Fortune Teller; the two form a closed loop where Tarot generation directly translates into permanent flat mult."
   },
-  // Certificate × Steel Joker
+
   {
     a: "certificate", b: "steel_joker",
     kind: "strong_support", engine: "deck_manipulation",
     why: "Certificate adds a sealed random card to your hand each round start; when those added cards carry Purple Seals or are manually enhanced to Steel, Steel Joker's XMult grows for free each round without Tarot expenditure."
   },
-  // Trading Card × Erosion
+
   {
     a: "trading_card", b: "erosion",
     kind: "strong_support", engine: "deck_manipulation",
     why: "Trading Card destroys the first single-discard card each round and earns $3; each destroyed card permanently grows Erosion by +4 Mult; free passive mult scaling every round that also provides income."
   },
 
-  // ─── CONSISTENCY (5) ─────────────────────────────────────────────────────────
-
-  // Four Fingers × Smeared Joker
   {
     a: "four_fingers", b: "smeared_joker",
     kind: "core_pair", engine: "consistency",
     why: "Four Fingers reduces flush requirement to 4 cards; Smeared Joker halves the suit pool; together nearly any four cards from a two-suit deck form a flush, making 5-card flush builds nearly unconditional."
   },
-  // Shortcut × Four Fingers
+
   {
     a: "shortcut", b: "four_fingers",
     kind: "core_pair", engine: "consistency",
     why: "Shortcut allows gapped straights; Four Fingers reduces the count to 4; any four roughly sequential cards form a straight, unlocking Straight Flush as a nearly-free hand type when combined with Smeared."
   },
-  // Burglar × Mystic Summit
+
   {
     a: "burglar", b: "mystic_summit",
     kind: "core_pair", engine: "consistency",
     why: "Burglar eliminates all discards at blind start; Mystic Summit requires exactly 0 remaining discards for its +15 Mult bonus; Burglar guarantees Mystic Summit fires every single hand without any discipline overhead."
   },
-  // Loyalty Card × Card Sharp
+
   {
     a: "loyalty_card", b: "card_sharp",
     kind: "trap_unless_enabled", engine: "consistency",
     why: "Loyalty Card wants you to play every 6th hand big; Card Sharp gives X3 on repeated hand-type plays; they create cycle tension where the X4 Loyalty trigger forces a hand choice that might reset or conflict with Card Sharp's same-hand bonus."
   },
-  // Space Joker × Oops All 6s
+
   {
     a: "space_joker", b: "oops_all_6s",
     kind: "strong_support", engine: "consistency",
     why: "Space Joker's 1-in-4 free hand-level upgrade doubles to 2-in-4 (50%) via Oops! All 6s, turning passive hand-levelling into a near-reliable engine that grows base chips and mult every other hand."
   },
 
-  // ─── ECONOMY (8) ─────────────────────────────────────────────────────────────
-
-  // To the Moon × Bull
   {
     a: "to_the_moon", b: "bull",
     kind: "core_pair", engine: "economy",
     why: "To the Moon raises the effective interest cap, letting you hold more money profitably; Bull converts each held dollar into +2 Chips per scored hand; the same cash reserve that earns more interest also delivers more chips every hand."
   },
-  // Cloud 9 × Rocket
+
   {
     a: "cloud_9", b: "rocket",
     kind: "strong_support", engine: "economy",
     why: "Both are end-of-round passive income sources that stack independently; Cloud 9 scales with 9-density while Rocket scales with Boss blinds defeated, covering early and late phases of the run with distinct income curves."
   },
-  // Golden Joker × Delayed Gratification
+
   {
     a: "golden_joker", b: "delayed_gratification",
     kind: "strong_support", engine: "economy",
     why: "Delayed Gratification pays $2 per unspent discard if no discards are used; Golden Joker's end-of-round $4 stacks on top; running both in a clean no-discard build generates $4 + (discards × $2) passively every round."
   },
-  // Rough Gem × Greedy Joker
+
   {
     a: "rough_gem", b: "greedy_joker",
     kind: "strong_support", engine: "economy",
     why: "Rough Gem earns $1 for each scored Diamond; Greedy Joker earns +3 Mult per scored Diamond; every Diamond card scored simultaneously advances both income and scoring, a rare dual-payoff per card."
   },
-  // Midas Mask × Golden Ticket
+
   {
     a: "midas_mask", b: "golden_ticket",
     kind: "core_pair", engine: "economy",
     why: "Midas Mask converts scored face cards to Gold permanently; Golden Ticket earns $4 each time a Gold card is scored; once face cards are converted, every face card scored returns $4 on top of its scoring contribution."
   },
-  // Business Card × Pareidolia
+
   {
     a: "business_card", b: "pareidolia",
     kind: "strong_support", engine: "economy",
     why: "Business Card has a 1-in-2 chance to pay $2 per scored face card; Pareidolia makes every card a face card; in a 5-card hand, expected income per hand jumps from 1-2 cards qualifying to all 5, roughly tripling Business Card's income."
   },
-  // Gift Card × Swashbuckler
+
   {
     a: "gift_card", b: "swashbuckler",
     kind: "strong_support", engine: "economy",
     why: "Gift Card adds $1 of sell value to every Joker each round; Swashbuckler converts total Joker sell value into flat Mult; Gift Card passively inflates Swashbuckler's Mult by $1 per Joker per round, compounding multiplicatively over the run."
   },
-  // Vagabond × Perkeo
+
   {
     a: "vagabond", b: "perkeo",
     kind: "strong_support", engine: "economy",
     why: "Vagabond creates a Tarot whenever you play with ≤$4; Perkeo duplicates a random consumable at end of shop; deliberately spending to the Vagabond threshold before shopping then triggers Perkeo on the generated Tarot, effectively producing two Tarots for the cost of one planned low-balance hand."
   },
 
-  // ─── FACE_CARD (6) ───────────────────────────────────────────────────────────
-
-  // Pareidolia × Sock and Buskin
   {
     a: "pareidolia", b: "sock_and_buskin",
     kind: "core_pair", engine: "face_card",
     why: "Pareidolia makes every card a face card; Sock and Buskin retriggers every scored face card; the combination retriggers every single card played in any hand, effectively doubling all per-card scoring contributions."
   },
-  // Pareidolia × Scary Face
+
   {
     a: "pareidolia", b: "scary_face",
     kind: "strong_support", engine: "face_card",
     why: "With Pareidolia active every scored card qualifies for Scary Face's +30 Chips, turning a 5-card hand into a guaranteed +150 Chips chip floor on top of base hand chips; a consistent chip foundation for any build."
   },
-  // Pareidolia × Smiley Face
+
   {
     a: "pareidolia", b: "smiley_face",
     kind: "strong_support", engine: "face_card",
     why: "Pareidolia makes every card a face card, so Smiley Face's +5 Mult fires on each of the five scored cards; +25 flat Mult baseline on any hand, stacking with suit Jokers and hand-levelling as a reliable floor."
   },
-  // Canio × Pareidolia
+
   {
     a: "canio", b: "pareidolia",
     kind: "risky_explosive", engine: "face_card",
     why: "Canio gains X1 Mult permanently each time a face card is destroyed; Pareidolia makes every card a face card; any card that gets destroyed (Glass cracking, Sixth Sense consuming a 6, trading card kills) now advances Canio's multiplier, drastically expanding the pool of destruction-eligible cards."
   },
-  // Triboulet × Dusk
+
   {
     a: "triboulet", b: "dusk",
     kind: "strong_support", engine: "face_card",
     why: "Dusk retriggers all scored cards on the final hand; Triboulet fires X2 per King or Queen scored; the final-hand retrigger doubles every Triboulet X2 application, turning a two-King final hand from X4 to X8 at no extra cost."
   },
-  // Hit the Road × Drunkard
+
   {
     a: "hit_the_road", b: "drunkard",
     kind: "strong_support", engine: "face_card",
     why: "Hit the Road gains X0.5 Mult per discarded Jack each round; Drunkard gives +1 discard per round; the extra discard enables one more Jack discard opportunity, consistently pushing Hit the Road's per-round growth from X1.5 to X2 per 3-Jack deck."
   },
 
-  // ─── DISCARD_VOLUME (5) ──────────────────────────────────────────────────────
-
-  // Yorick × Merry Andy
   {
     a: "yorick", b: "merry_andy",
     kind: "strong_support", engine: "discard_volume",
     why: "Yorick gains X1 Mult per 23 cards discarded; Merry Andy adds +3 discards per round; the extra discards across a full run compress Yorick's 23-card threshold from ~6 rounds to ~4 rounds, accelerating its permanent XMult stack."
   },
-  // Castle × Drunkard
+
   {
     a: "castle", b: "drunkard",
     kind: "strong_support", engine: "discard_volume",
     why: "Castle gains +3 Chips per discarded card of its rotating suit; Drunkard adds +1 discard per round; each extra discard generates an additional chip-scaling opportunity every round if the discarded card matches the active Castle suit."
   },
-  // Burnt Joker × Faceless Joker
+
   {
     a: "burnt_joker", b: "faceless_joker",
     kind: "strong_support", engine: "discard_volume",
     why: "Burnt Joker upgrades the discarded poker hand type each round as a free hand-level boost; Faceless Joker pays $5 for discarding 3+ face cards simultaneously; both rewards fire off the same discard action without competing for resources."
   },
-  // Yorick × Hit the Road
+
   {
     a: "yorick", b: "hit_the_road",
     kind: "strong_support", engine: "discard_volume",
     why: "Both Jokers scale their XMult from discard volume; Yorick permanently accumulates across the run while Hit the Road resets each round but pays off quickly within a single round's discard budget, covering both long-game and burst-scaling axes."
   },
-  // Ramen × Mystic Summit
+
   {
     a: "ramen", b: "mystic_summit",
     kind: "strong_support", engine: "discard_volume",
     why: "Ramen loses X0.01 Mult per discard and Mystic Summit only activates at zero discards; running both enforces a no-discard discipline that preserves Ramen's X2 cap and guarantees Mystic Summit's +15 Mult fires every hand the round."
   },
 
-  // ─── ENHANCEMENT (6) ─────────────────────────────────────────────────────────
-
-  // Vampire × Hack
   {
     a: "vampire", b: "hack",
     kind: "strong_support", engine: "enhancement",
     why: "Hack retriggers every played 2-5; if any of those low cards are enhanced, each retrigger counts as an additional enhanced card trigger for Vampire's XMult accumulation, doubling Vampire's growth rate on low-rank enhanced cards."
   },
-  // Driver's License × Marble Joker
+
   {
     a: "driver_gloves", b: "marble_joker",
     kind: "strong_support", engine: "enhancement",
     why: "Marble Joker adds a Stone card to the deck each blind; Stone cards count as Enhanced cards toward Driver's License's 16-card threshold; together they passively reach the X3 threshold without any Tarot expenditure."
   },
-  // Glass Joker × Seltzer
+
   {
     a: "glass_joker", b: "seltzer",
     kind: "risky_explosive", engine: "enhancement",
     why: "Seltzer retriggers every played card for 10 hands; Glass cards have their destruction chance applied on each retrigger; each Seltzer-active hand roughly doubles the number of Glass shatters, accelerating Glass Joker's permanent XMult stack in a concentrated burst."
   },
-  // Lucky Cat × Oops All 6s
+
   {
     a: "lucky_cat", b: "oops_all_6s",
     kind: "strong_support", engine: "enhancement",
     why: "Lucky Cat grows X0.25 Mult per Lucky card proc; Oops! All 6s doubles the 1-in-5 trigger chance to 2-in-5; nearly doubling average Lucky Cat growth per round and converting it from a slow scaler into a mid-game XMult engine."
   },
-  // Steel Joker × Driver's License
+
   {
     a: "steel_joker", b: "driver_gloves",
     kind: "strong_support", engine: "enhancement",
     why: "Steel cards counted by Steel Joker for XMult also count toward Driver's License's 16-enhanced-card threshold; stacking Steel enhancements simultaneously grows the XMult engine and unlocks the flat X3, two payoffs from one enhancement campaign."
   },
-  // Vampire × Smeared Joker
+
   {
     a: "vampire", b: "smeared_joker",
     kind: "conditional", engine: "enhancement",
     why: "Vampire grows from scored enhanced cards and doesn't care about suit; Smeared Joker has no direct interaction, but in flush builds Smeared increases the number of cards scored per hand, indirectly raising the number of enhanced card triggers per round."
   },
 
-  // ─── SUIT_UNIFICATION (6) ────────────────────────────────────────────────────
-
-  // Smeared Joker × Lusty Joker
   {
     a: "smeared_joker", b: "lusty_joker",
     kind: "strong_support", engine: "suit_unification",
     why: "Smeared Joker merges Hearts with Diamonds; Lusty Joker rewards scored Heart cards; every Diamond in the hand now counts as a Heart, doubling the number of cards that trigger Lusty's +3 Mult in Heart-Diamond flush builds."
   },
-  // Smeared Joker × Gluttonous Joker
+
   {
     a: "smeared_joker", b: "gluttonous_joker",
     kind: "strong_support", engine: "suit_unification",
     why: "Smeared Joker merges Clubs with Spades; Gluttonous Joker rewards Club cards; every Spade card now triggers Gluttonous's +3 Mult, effectively doubling dark-suit payoffs across Spade/Club flush builds."
   },
-  // Smeared Joker × Blackboard
+
   {
     a: "smeared_joker", b: "blackboard",
     kind: "core_pair", engine: "suit_unification",
     why: "Blackboard gives X3 Mult when all held cards are Spades or Clubs; Smeared merges Spades and Clubs into one effective suit; any hand composed of dark-suit cards now satisfies Blackboard unconditionally."
   },
-  // Smeared Joker × Wrathful Joker
+
   {
     a: "smeared_joker", b: "wrathful_joker",
     kind: "strong_support", engine: "suit_unification",
     why: "Smeared merges Spades and Clubs; Wrathful rewards scored Spades; every Club now counts as Spade, doubling the number of Wrathful +3 Mult triggers in Club/Spade builds and making Wrathful viable alongside Gluttonous."
   },
-  // Flower Pot × Four Fingers
+
   {
     a: "flower_pot", b: "four_fingers",
     kind: "strong_support", engine: "suit_unification",
     why: "Flower Pot requires all four suits in one hand for X3; Four Fingers reduces the hand size requirement to 4 cards; a 4-card hand containing one card of each suit satisfies Flower Pot, and the freed fifth slot can hold a key card for another payoff."
   },
-  // Ancient Joker × The Idol
+
   {
     a: "ancient_joker", b: "the_idol",
     kind: "conditional", engine: "suit_unification",
     why: "Ancient Joker rotates its active suit each round; The Idol rotates its target rank+suit each round; when they align on the same suit in the same round, the matching card delivers both X1.5 from Ancient and X2 from Idol for a X3 per-card burst."
   },
 
-  // ─── SCALING (5) ─────────────────────────────────────────────────────────────
-
-  // Hologram × Marble Joker
   {
     a: "hologram", b: "marble_joker",
     kind: "strong_support", engine: "scaling",
     why: "Marble Joker adds one Stone card to the deck each blind; every added card grows Hologram by X0.25; without spending a cent or opening packs, Marble drives Hologram's XMult upward by X0.25 every blind."
   },
-  // Constellation × Astronomer
+
   {
     a: "constellation", b: "astronomer",
     kind: "core_pair", engine: "scaling",
     why: "Astronomer makes all Planet cards and Celestial Packs free; every free Planet fuels Constellation's X0.1-per-use XMult accumulation; the two convert saved money into free exponential scaling across the run."
   },
-  // Obelisk × Acrobat
+
   {
     a: "obelisk", b: "acrobat",
     kind: "conditional", engine: "scaling",
     why: "Obelisk builds XMult by avoiding your most-played hand; Acrobat provides X3 on the final hand per round; in a parked Obelisk build where you always play an off-type final hand, Acrobat's X3 fires exactly when Obelisk's accumulated XMult is highest."
   },
-  // Green Joker × Burglar
+
   {
     a: "green_joker", b: "burglar",
     kind: "strong_support", engine: "scaling",
     why: "Burglar removes all discards at blind start; Green Joker grows per hand and shrinks per discard; Burglar guarantees no discards are ever spent, protecting Green Joker's scaling from erosion while providing extra hands for faster growth."
   },
-  // Supernova × Blueprint
+
   {
     a: "supernova", b: "blueprint",
     kind: "strong_support", engine: "scaling",
     why: "Supernova adds Mult equal to the number of times the current hand type has been played this run; Blueprint copies it, applying that same Mult bonus a second time; late in a specialised run this doubles a potentially massive accumulated count."
   },
 
-  // ─── ARCHETYPE-ONLY / TRAPS (5) ──────────────────────────────────────────────
-
-  // Joker Stencil × Swashbuckler
   {
     a: "joker_stencil", b: "swashbuckler",
     kind: "archetype_only", engine: "xmult_stack",
     why: "Joker Stencil rewards empty Joker slots with XMult; Swashbuckler converts other Jokers' sell value into flat Mult; the two build from opposite directions and only coexist in a lean high-value Joker build where every slot earns maximum sell value."
   },
-  // Madness × Riff-Raff
+
   {
     a: "madness", b: "riff_raff",
     kind: "risky_explosive", engine: "xmult_stack",
     why: "Madness destroys a random Joker each non-boss blind for X0.5 XMult gain; Riff-Raff generates two Common Jokers every blind; Riff-Raff's output feeds Madness's destruction engine so your valuable Jokers are protected by disposable Commons taking the hit."
   },
-  // Madness × Joker Stencil
+
   {
     a: "madness", b: "joker_stencil",
     kind: "trap_unless_enabled", engine: "xmult_stack",
     why: "Madness destroys Jokers (reducing your count) which increases Joker Stencil's XMult; but Madness picks randomly and could destroy Stencil itself or your other engines; only viable in a tightly controlled 2-Joker setup where you accept the risk."
   },
-  // Showman × Riff-Raff
+
   {
     a: "showman", b: "riff_raff",
     kind: "archetype_only", engine: "deck_manipulation",
     why: "Showman allows duplicate Jokers in the shop; Riff-Raff generates Common Jokers on blind entry; combined with Abstract Joker or Brainstorm, the duplicate-enablement can produce multiple copies of a key Common Joker for a stacking payoff."
   },
-  // Throwback × Credit Card
+
   {
     a: "throwback", b: "credit_card",
     kind: "conditional", engine: "scaling",
@@ -3655,22 +3512,17 @@ export const SYNERGIES: Synergy[] = [
 
 ];
 
-
-// ------------------------------------------------------------------
-// COMBO CARDS; curated combos with strategic writeups
-// ------------------------------------------------------------------
-
 export interface Combo {
   id: string;
   title: string;
   archetype: Archetype;
-  core: string[];        // joker ids
-  optional: string[];    // joker ids
+  core: string[];
+  optional: string[];
   conditions: string[];
   risks: string[];
   why: string;
   pivotOut: string;
-  /** Community sources / tier-lists / wiki entries that validate this combo. */
+
   sources?: SynergySource[];
 }
 
@@ -3830,8 +3682,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "Sell Stuntman the moment you commit to a held-in-hand build; keep Stone Joker as a chip wall."
   },
 
-  // ════════ EXPANDED; 150-Joker pool ════════
-  // ── 1. Economy Pure ──────────────────────────────────────────────────────────
   {
     id: "economy_pure",
     title: "Interest Snowball",
@@ -3853,7 +3703,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "Once interest is capped and shop is saturated, sell Cloud 9 or Rocket for a premium late-game XMult Joker like Cavendish or Triboulet."
   },
 
-  // ── 2. Bootstraps Broke Build ─────────────────────────────────────────────
   {
     id: "bootstraps_broke",
     title: "Broke Bootstraps",
@@ -3874,7 +3723,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "If Vagabond never appears, replace it with Satellite or Golden Joker and run a standard economy shell with Bootstraps and Bull."
   },
 
-  // ── 3. Hand-Only Discipline ───────────────────────────────────────────────
   {
     id: "hand_only_discipline",
     title: "Iron Fist (No Discard)",
@@ -3895,7 +3743,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "If Ramen falls below X1.5 from accidental discards, sell it and slot Cavendish or The Trio for a static XMult floor."
   },
 
-  // ── 4. Joker Stencil Empty Slot ───────────────────────────────────────────
   {
     id: "joker_stencil_empty",
     title: "Lean Stencil Build",
@@ -3919,7 +3766,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "Once you've found a premium second Joker (Cavendish, Triboulet), add it and accept the Stencil decay; the net scoring gain from the new Joker exceeds the lost XMult."
   },
 
-  // ── 5. Pair Specialist ────────────────────────────────────────────────────
   {
     id: "pair_specialist",
     title: "Pair Payoff Engine",
@@ -3940,7 +3786,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "If face-card density is insufficient for Photograph, replace it with The Tribe and transition to a Flush-Pair hybrid using Four Fingers."
   },
 
-  // ── 6. Three of a Kind Specialist ─────────────────────────────────────────
   {
     id: "three_of_a_kind_specialist",
     title: "The Trio Engine",
@@ -3961,7 +3806,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "If DNA is unavailable, replace Wily Joker with Hanging Chad and pivot to a face-card Pair build where the rank overlap requirement is less rigid."
   },
 
-  // ── 7. Straight Flush Endgame ─────────────────────────────────────────────
   {
     id: "straight_flush_endgame",
     title: "Straight Flush Endgame",
@@ -3983,7 +3827,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "If Séance never appears, use the enabler trio (Four Fingers + Shortcut + Smeared) to run a pure Flush build with The Tribe and Ancient Joker instead."
   },
 
-  // ── 8. Steel + Marble Chip Wall ───────────────────────────────────────────
   {
     id: "steel_marble_chip_wall",
     title: "Steel-Marble Wall",
@@ -4005,7 +3848,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "If Tarot access is poor and Driver's License threshold is unreachable, sell Stuntman and focus purely on Stone Joker + Marble Joker + Blueprint for a chip-dominant but simpler line."
   },
 
-  // ── 9. Sixth Sense Spectral Loop ──────────────────────────────────────────
   {
     id: "sixth_sense_spectral_loop",
     title: "Spectral Economy Loop",
@@ -4027,7 +3869,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "If Sixth Sense is unavailable, replace it with Hallucination (50% Tarot on every pack opened) and run a Cartomancer + Perkeo + Fortune Teller triple-Tarot line."
   },
 
-  // ── 10. Wee Joker Scaling ─────────────────────────────────────────────────
   {
     id: "wee_joker_scaling",
     title: "Wee Joker Chip Engine",
@@ -4049,7 +3890,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "Once Wee Joker's chip base is large enough to carry blinds on chips alone, sell Seltzer and replace it with Stone Joker or Stuntman to harden the chip foundation."
   },
 
-  // ── 11. Madness Sacrifice ─────────────────────────────────────────────────
   {
     id: "madness_sacrifice",
     title: "Sacrifice Engine",
@@ -4071,7 +3911,6 @@ export const COMBOS: Combo[] = [
     pivotOut: "If Madness destroys a key engine Joker twice, sell Madness and run Ceremonial Dagger + Riff-Raff alone as a stable flat-Mult scaling line."
   },
 
-  // ── 12. Ancient Joker Suit Rotation ──────────────────────────────────────
   {
     id: "ancient_joker_suit_rotation",
     title: "Ancient Suit Rotate",
@@ -4094,11 +3933,6 @@ export const COMBOS: Combo[] = [
   },
 
 ];
-
-
-// ------------------------------------------------------------------
-// ARCHETYPES; 14 build summaries
-// ------------------------------------------------------------------
 
 export interface ArchetypeSummary {
   id: Archetype;
@@ -4218,11 +4052,6 @@ export const ARCHETYPES: ArchetypeSummary[] = [
   }
 ];
 
-
-// ------------------------------------------------------------------
-// GLOSSARY
-// ------------------------------------------------------------------
-
 export const GLOSSARY: { term: string; def: string }[] = [
   { term: "Chips", def: "The blue number; flat additive score before mult is applied. Hand types and scored cards contribute chips." },
   { term: "Mult", def: "The red number; flat additive multiplier. Final score = chips × mult." },
@@ -4239,8 +4068,5 @@ export const GLOSSARY: { term: string; def: string }[] = [
   { term: "Tempo", def: "How quickly a build comes online relative to ante difficulty. Slow-scaling builds need defensive shells to survive early antes." }
 ];
 
-
-// ------------------------------------------------------------------
-// JOKER LOOKUP HELPERS
-// ------------------------------------------------------------------
 export const JOKER_MAP: Record<string, Joker> = Object.fromEntries(JOKERS.map(j => [j.id, j]));
+

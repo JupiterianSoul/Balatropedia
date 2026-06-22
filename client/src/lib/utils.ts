@@ -6,10 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/**
- * Turn a snake_case / kebab-case / lowercase token into a human-readable
- * Title Case label. e.g. "high_value" -> "High Value", "x-mult" -> "X Mult".
- */
 export function humanize(s: string): string {
   if (!s) return "";
   return s
@@ -18,3 +14,4 @@ export function humanize(s: string): string {
     .trim()
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
+

@@ -19,14 +19,8 @@ import { SectionLabel } from "@/components/primitives";
 import type { Phase3Category } from "@/lib/phase3Sprites";
 import { Sparkles, Clock, AlertTriangle, Lightbulb } from "lucide-react";
 
-/** Joker IDs sorted longest-first so multi-word ids match before their prefixes. */
 const SORTED_JOKER_IDS = [...KNOWN_JOKER_IDS].sort((a, b) => b.length - a.length);
 
-/**
- * Render a free-text combo idea, turning any embedded joker id (snake_case)
- * into an inline clickable chip that opens that joker.
- */
-/** Inline localized joker link rendered inside ComboText. */
 function InlineJokerLink({ id }: { id: string }) {
   const { openJokerDetail } = useApp();
   const { name } = useGameText("jokers", id);
@@ -44,7 +38,7 @@ function InlineJokerLink({ id }: { id: string }) {
 }
 
 function ComboText({ text }: { text: string }) {
-  // Tokenize on snake_case identifier candidates.
+
   const parts = text.split(/([a-z][a-z0-9]*(?:_[a-z0-9]+)+)/g);
   return (
     <span>
@@ -149,13 +143,13 @@ function EntityDetailBody({
         </SheetHeader>
 
         <div className="mt-6 space-y-6">
-          {/* Effect (localized text if available, else curated effect) */}
+          {}
           <section data-testid="section-effect">
             <SectionLabel>{t("ui.section.effect")}</SectionLabel>
             <p className="text-sm leading-relaxed text-foreground/90">{text || entity.effect}</p>
           </section>
 
-          {/* Strategy */}
+          {}
           {entity.strategy && (
             <section data-testid="section-strategy">
               <SectionLabel>{t("ui.section.strategy")}</SectionLabel>
@@ -163,7 +157,7 @@ function EntityDetailBody({
             </section>
           )}
 
-          {/* When to use */}
+          {}
           {entity.whenToUse && (
             <section data-testid="section-when-to-use">
               <SectionLabel>{t("ui.section.when_to_use")}</SectionLabel>
@@ -171,7 +165,7 @@ function EntityDetailBody({
             </section>
           )}
 
-          {/* Deep strategy */}
+          {}
           {entity.deepStrategy && entity.deepStrategy.length > 0 && (
             <section className="rounded-md border border-accent/25 bg-accent/[0.04] p-3.5" data-testid="section-deep-strategy">
               <div className="mb-2.5 flex items-center gap-1.5">
@@ -182,7 +176,7 @@ function EntityDetailBody({
             </section>
           )}
 
-          {/* Best timing */}
+          {}
           {entity.bestTimingNotes && (
             <section data-testid="section-best-timing">
               <div className="mb-1.5 flex items-center gap-1.5">
@@ -193,7 +187,7 @@ function EntityDetailBody({
             </section>
           )}
 
-          {/* Best with */}
+          {}
           {entity.bestWith.length > 0 && (
             <section data-testid="section-best-with">
               <SectionLabel>{t("ui.section.best_with")}</SectionLabel>
@@ -205,7 +199,7 @@ function EntityDetailBody({
             </section>
           )}
 
-          {/* Common mistakes */}
+          {}
           {entity.commonMistakes && entity.commonMistakes.length > 0 && (
             <section data-testid="section-common-mistakes">
               <div className="mb-1.5 flex items-center gap-1.5">
@@ -216,7 +210,7 @@ function EntityDetailBody({
             </section>
           )}
 
-          {/* Combo ideas (clickable joker links) */}
+          {}
           {entity.comboIdeas && entity.comboIdeas.length > 0 && (
             <section data-testid="section-combo-ideas">
               <div className="mb-1.5 flex items-center gap-1.5">
@@ -231,3 +225,4 @@ function EntityDetailBody({
     </div>
   );
 }
+

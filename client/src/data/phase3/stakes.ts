@@ -1,9 +1,9 @@
 export type Stake = {
   id: string;
   name: string;
-  color: string;        // hex like "#c8c8c8"
-  modifiers: string[];  // modifiers introduced at THIS stake tier only
-  watchOut: string;     // 1-2 sentence summary of biggest risk
+  color: string;
+  modifiers: string[];
+  watchOut: string;
   difficulty: "low" | "medium" | "high" | "extreme";
   deepStrategy?: string[];
   bestTimingNotes?: string;
@@ -229,3 +229,4 @@ export const STAKES: Stake[] = [
     ],
   },
 ];
+

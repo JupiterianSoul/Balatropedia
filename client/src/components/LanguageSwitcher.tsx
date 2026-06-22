@@ -9,11 +9,6 @@ import { Languages, Check } from "lucide-react";
 
 const LANGS: Lang[] = ["en", "fr", "es"];
 
-/**
- * Compact single-button language switcher.
- * Click → dropdown with the three languages. Saves horizontal space in the header
- * (was three pills, now one icon-button).
- */
 export function LanguageSwitcher() {
   const { lang, setLang } = useI18n();
   const t = useT();
@@ -51,3 +46,4 @@ export function LanguageSwitcher() {
     </DropdownMenu>
   );
 }
+

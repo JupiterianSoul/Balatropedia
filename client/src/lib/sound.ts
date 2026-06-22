@@ -1,41 +1,3 @@
-// Balatro-style SFX using real recorded samples (Kenney CC0 audio packs).
-//
-// Design rules :
-//   1. Each SoundName maps to EXACTLY ONE audio file, deterministically.
-//      Same action = same sound. Never randomized.
-//   2. Samples live in client/public/sfx/*.ogg and are served as static assets.
-//   3. We use HTMLAudioElement pooling : each sound holds N pre-cloned audio
-//      instances so rapid retriggering (hover spam, chip cascade) does not
-//      cancel itself.
-//   4. State (enabled, volume) persists in localStorage when available.
-//
-// SoundName  ; semantic intent                                ; file
-//   click          primary button press                       click.ogg
-//   click_alt      secondary press (less prominent)           click_alt.ogg
-//   click_heavy    deep press / commit                        click_heavy.ogg
-//   hover          mouse rollover                             hover.ogg
-//   select         dropdown / select item                     select.ogg
-//   toggle_on      toggle / switch turning on                 toggle_on.ogg
-//   toggle_off     toggle / switch turning off                toggle_off.ogg
-//   tab_switch     top-level tab change                       tab_switch.ogg
-//   card_place     joker card placed / chosen                 card_place.ogg
-//   card_slide     joker card slide (combobox commit)         card_slide.ogg
-//   card_shove     joker card removed                         card_shove.ogg
-//   card_fan       opening combobox / fanning cards           card_fan.ogg
-//   shuffle        shop reroll / full shuffle                 shuffle.ogg
-//   pack_open      pack / booster open                        pack_open.ogg
-//   pack_take      take card from pack                        pack_take.ogg
-//   chip           chip lay (favorite toggle on)              chip.ogg
-//   chip_stack     stack of chips (multi-favorite)            chip_stack.ogg
-//   chip_collide   chip clash                                 chip_collide.ogg
-//   chip_handle    chips moving                               chip_handle.ogg
-//   dice_shake     reroll shake                               dice_shake.ogg
-//   dice_throw     random pick                                dice_throw.ogg
-//   notify         small toast / inline notification          notify.ogg
-//   favorite       star added (jingle)                        favorite.ogg
-//   win            success / win jingle                       win.ogg
-//   error          error / invalid action                     error.ogg
-
 export type SoundName =
   | "click" | "click_alt" | "click_heavy" | "hover"
   | "select" | "toggle_on" | "toggle_off" | "tab_switch"
@@ -48,8 +10,6 @@ export type SoundName =
 const STORAGE_KEY_ENABLED = "balatro_sound_enabled";
 const STORAGE_KEY_VOLUME = "balatro_sound_volume";
 
-// Per-sound volume scaling. Recorded levels vary; this normalizes perceived
-// loudness so the master volume slider behaves predictably.
 const PER_SOUND_GAIN: Record<SoundName, number> = {
   click: 0.7,
   click_alt: 0.7,
@@ -78,7 +38,6 @@ const PER_SOUND_GAIN: Record<SoundName, number> = {
   error: 0.65,
 };
 
-// File path map (relative to the site root ; served from public/sfx).
 const SOUND_FILES: Record<SoundName, string> = {
   click:        "/sfx/click.ogg",
   click_alt:    "/sfx/click_alt.ogg",
@@ -107,8 +66,6 @@ const SOUND_FILES: Record<SoundName, string> = {
   error:        "/sfx/error.ogg",
 };
 
-// Pool size : how many parallel instances we keep per sound. Sounds that fire
-// rapidly (hover, click) need more headroom. Heavy one-shots can stay at 1.
 const POOL_SIZE: Partial<Record<SoundName, number>> = {
   hover: 6,
   click: 4,
@@ -121,9 +78,8 @@ const POOL_SIZE: Partial<Record<SoundName, number>> = {
 const DEFAULT_POOL_SIZE = 2;
 
 let enabled = true;
-let volume = 0.6; // 0..1 master volume
+let volume = 0.6;
 
-// Persistence (best-effort ; sandboxed iframes may block localStorage)
 try {
   if (typeof window !== "undefined" && window.localStorage) {
     const e = window.localStorage.getItem(STORAGE_KEY_ENABLED);
@@ -134,18 +90,15 @@ try {
       if (!Number.isNaN(n) && n >= 0 && n <= 1) volume = n;
     }
   }
-} catch { /* ignore */ }
+} catch {  }
 
 function persist(key: string, value: string) {
   try {
     if (typeof window !== "undefined" && window.localStorage) {
       window.localStorage.setItem(key, value);
     }
-  } catch { /* sandbox blocks storage */ }
+  } catch {  }
 }
-
-// ── Pool ────────────────────────────────────────────────────────────────────
-// pools[name] = array of HTMLAudioElement ; pointers[name] = next index to use.
 
 const pools: Partial<Record<SoundName, HTMLAudioElement[]>> = {};
 const pointers: Partial<Record<SoundName, number>> = {};
@@ -165,12 +118,6 @@ function ensurePool(name: SoundName): HTMLAudioElement[] | null {
   return arr;
 }
 
-// ── Public API ──────────────────────────────────────────────────────────────
-
-// Per-sound dedup window. Prevents the same sound firing twice in rapid
-// succession when both the global delegation and a component onClick handler
-// fire for the same user gesture. 40 ms is short enough that legitimate
-// rapid-fire (hover spam, chip cascade) still stacks via the pool.
 const DEDUP_MS = 40;
 const lastPlayedAt: Partial<Record<SoundName, number>> = {};
 
@@ -189,17 +136,14 @@ export function playSound(name: SoundName) {
   try {
     a.currentTime = 0;
     a.volume = volume * (PER_SOUND_GAIN[name] ?? 1);
-    // play() returns a Promise in modern browsers ; swallow autoplay rejections.
+
     const p = a.play();
-    if (p && typeof p.catch === "function") p.catch(() => { /* user gesture pending */ });
+    if (p && typeof p.catch === "function") p.catch(() => {  });
   } catch {
-    /* ignore */
+
   }
 }
 
-// Back-compat helper kept so existing call sites compile, but it now plays the
-// FIRST sound only (deterministic) ; the user explicitly does not want random
-// SFX per interaction.
 export function playRandom(names: SoundName[]) {
   if (names.length === 0) return;
   playSound(names[0]);
@@ -220,31 +164,11 @@ export function setSoundVolume(v: number) {
   persist(STORAGE_KEY_VOLUME, String(volume));
 }
 
-// ── Global delegation ───────────────────────────────────────────────────────
-// Most components do not wire playSound() themselves. To guarantee every
-// interactive click makes a sound, we install a single capture-phase listener
-// at the document level that fires BEFORE any onClick handler runs.
-//
-// Resolution order :
-//   1. Element (or ancestor) has data-no-sound  -> skip
-//   2. Element (or ancestor) has data-sound="x" -> play x
-//   3. Otherwise pick a default sound from role/tag/type :
-//        - role="tab"                     -> tab_switch
-//        - role="switch" / type=checkbox  -> toggle_on / toggle_off (by state)
-//        - role="option" / role="menuitem"-> select
-//        - <select>                       -> select
-//        - default                         -> click
-//
-// We also handle keyboard activation (Enter / Space on focused button-like
-// element) by listening to keydown on the same capture phase.
-
 let delegationInstalled = false;
 
 function findInteractive(target: EventTarget | null): HTMLElement | null {
   if (!(target instanceof Element)) return null;
-  // Closest match for anything clickable. We deliberately include [role=tab],
-  // [role=switch], [role=option], [role=menuitem], [role=button], plus native
-  // button / a / input / select / summary / label.
+
   return target.closest<HTMLElement>(
     'button, a[href], input, select, textarea, summary, label, ' +
     '[role="button"], [role="tab"], [role="switch"], [role="checkbox"], ' +
@@ -255,10 +179,9 @@ function findInteractive(target: EventTarget | null): HTMLElement | null {
 }
 
 function resolveSound(el: HTMLElement): SoundName | null {
-  // opt-out via attribute on element or any ancestor
+
   if (el.closest('[data-no-sound]')) return null;
 
-  // explicit override
   const ov = el.closest<HTMLElement>('[data-sound]');
   if (ov) {
     const v = ov.getAttribute('data-sound');
@@ -275,7 +198,7 @@ function resolveSound(el: HTMLElement): SoundName | null {
     const ariaChecked = el.getAttribute('aria-checked') === 'true';
     const stateChecked = el.getAttribute('data-state') === 'checked';
     const checked = nativeChecked || ariaChecked || stateChecked;
-    // PRE-click state ; clicking flips it, so play the OPPOSITE sound.
+
     return checked ? 'toggle_off' : 'toggle_on';
   }
   if (role === 'option' || role === 'menuitem' || role === 'menuitemradio' ||
@@ -290,7 +213,7 @@ function handlePointer(e: Event) {
   if (!enabled) return;
   const el = findInteractive(e.target);
   if (!el) return;
-  // disabled elements should not chirp
+
   if ((el as HTMLButtonElement).disabled) return;
   if (el.getAttribute('aria-disabled') === 'true') return;
   const s = resolveSound(el);
@@ -312,8 +235,8 @@ export function installGlobalSoundDelegation() {
   if (delegationInstalled) return;
   if (typeof document === 'undefined') return;
   delegationInstalled = true;
-  // capture phase = runs before component onClick handlers, so even if a
-  // handler calls stopPropagation() we have already fired the sound.
+
   document.addEventListener('pointerdown', handlePointer, { capture: true });
   document.addEventListener('keydown', handleKey as EventListener, { capture: true });
 }
+

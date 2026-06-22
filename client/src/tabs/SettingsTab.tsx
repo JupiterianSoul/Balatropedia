@@ -22,14 +22,6 @@ const LANG_OPTIONS: { code: Lang; label: string }[] = [
   { code: "es", label: "Español" },
 ];
 
-/**
- * Settings tab; all user-tunable preferences in one place:
- *  - Language (EN / FR / ES)
- *  - Sound on/off + master volume
- *  - Reset favorites (local + server when signed in)
- *  - Sign out
- *  - About + external links
- */
 export function SettingsTab() {
   const t = useT();
   const { lang, setLang } = useI18n();
@@ -54,7 +46,7 @@ export function SettingsTab() {
   }
 
   function handleResetFavorites() {
-    // Clear by toggling each (handles both server and local paths via appContext)
+
     Array.from(favoriteJokers).forEach((id) => toggleFavoriteJoker(id));
     Array.from(favoriteCombos).forEach((id) => toggleFavoriteCombo(id));
     toast({ title: t("ui.settings.reset_done") });
@@ -76,7 +68,7 @@ export function SettingsTab() {
         <p className="text-sm text-muted-foreground">{t("ui.settings.subtitle")}</p>
       </header>
 
-      {/* Language */}
+      {}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <Languages className="h-3.5 w-3.5 text-accent" />
@@ -97,7 +89,7 @@ export function SettingsTab() {
         <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.language_hint")}</p>
       </section>
 
-      {/* Theme */}
+      {}
       <section className="casino-card p-4" data-testid="section-theme">
         <div className="mb-3 flex items-center gap-1.5">
           <Palette className="h-3.5 w-3.5 text-accent" />
@@ -128,7 +120,7 @@ export function SettingsTab() {
         <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.theme.hint")}</p>
       </section>
 
-      {/* Screenshake */}
+      {}
       <section className="casino-card p-4" data-testid="section-screenshake">
         <div className="mb-3 flex items-center gap-1.5">
           <Zap className="h-3.5 w-3.5 text-accent" />
@@ -165,7 +157,7 @@ export function SettingsTab() {
         </div>
       </section>
 
-      {/* Sound */}
+      {}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           {soundOn ? (
@@ -205,7 +197,7 @@ export function SettingsTab() {
         </div>
       </section>
 
-      {/* Account / Favorites */}
+      {}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <Star className="h-3.5 w-3.5 text-[hsl(45_85%_60%)]" />
@@ -270,7 +262,7 @@ export function SettingsTab() {
         </div>
       </section>
 
-      {/* About / Links */}
+      {}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <SectionLabel>{t("ui.settings.about")}</SectionLabel>
@@ -300,3 +292,4 @@ export function SettingsTab() {
     </div>
   );
 }
+

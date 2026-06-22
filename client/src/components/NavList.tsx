@@ -16,15 +16,6 @@ interface NavListProps {
   favCount: number;
 }
 
-/**
- * Shared vertical nav list ; used in both the mobile sheet and the desktop sidebar.
- * Group labels (multi-tab groups) act as small-caps section headers.
- * Single-tab groups render as flat top-level buttons.
- *
- * Each multi-tab section header (Library, Run, Build, Game, More) gets its
- * own accent color. The corresponding active sub-item uses the same color
- * via inline style, so the entire section is visually coherent.
- */
 const NAV_SECTION_COLORS: Record<string, { header: string; active: string }> = {
   library: { header: "hsl(45 85% 60% / 0.7)",  active: "hsl(45 85% 60%)"  },
   run:     { header: "hsl(0 70% 62% / 0.75)",  active: "hsl(0 70% 62%)"   },
@@ -117,3 +108,4 @@ export function NavList({ groups, currentTab, onSelect, favCount }: NavListProps
     </div>
   );
 }
+

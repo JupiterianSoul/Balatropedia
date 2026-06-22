@@ -1,23 +1,19 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 
-/**
- * Shared run-builder state so the Shop tab can push jokers into My Run.
- * Persists in React state for the whole session (even signed-out).
- */
 interface RunState {
-  slots: string[]; // joker ids currently in the run
-  slotCap: number; // 1-10
+  slots: string[];
+  slotCap: number;
   setSlotCap: (n: number) => void;
-  addToRun: (id: string) => boolean; // returns false if full or duplicate
+  addToRun: (id: string) => boolean;
   removeFromRun: (id: string) => void;
   clearRun: () => void;
   replaceRun: (ids: string[]) => void;
   isInRun: (id: string) => boolean;
   isFull: boolean;
-  // Shop state (persists across tab switches)
+
   shop: string[];
   setShop: (ids: string[]) => void;
-  // Phase-3 run meta (deck / stake / vouchers)
+
   deckId: string | null;
   setDeckId: (id: string | null) => void;
   stakeId: string | null;
@@ -123,3 +119,4 @@ export function useRun() {
   if (!ctx) throw new Error("useRun must be used within RunProvider");
   return ctx;
 }
+

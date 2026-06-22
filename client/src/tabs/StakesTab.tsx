@@ -30,7 +30,7 @@ export function StakesTab() {
         </div>
       </div>
 
-      {/* Vertical ladder */}
+      {}
       <ol className="space-y-3">
         {STAKES.map((s, idx) => {
           const inherited = cumulative
@@ -105,3 +105,4 @@ export function StakesTab() {
     </div>
   );
 }
+

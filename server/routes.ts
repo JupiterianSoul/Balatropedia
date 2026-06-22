@@ -27,20 +27,10 @@ declare global {
   }
 }
 
-// NOTE: cookie-based sessions were removed because the deployed app runs inside
-// a cross-site iframe (sites.pplx.app proxy → __PORT_5000__ origin). Modern
-// browsers drop `sameSite: none; secure` cookies in that 3rd-party context,
-// which dropped the session on tab change and broke login-after-signup.
-// Auth now uses an in-memory Authorization: Bearer token (see client auth.tsx).
-// `setSessionCookie` is kept as a no-op so existing call sites stay readable.
 function setSessionCookie(_res: Response, _token: string) {
-  // intentionally a no-op — see note above.
+
 }
 
-/**
- * Read the bearer token from the Authorization header. Falls back to the legacy
- * cookie only when the header is absent (back-compat for any in-flight clients).\
- */
 function extractToken(req: Request): string | undefined {
   const header = req.headers.authorization;
   if (header && header.toLowerCase().startsWith("bearer ")) {
@@ -78,19 +68,14 @@ async function requireUser(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
-// In-memory cache for proxied joker sprites (server lifetime).
 const spriteCache = new Map<string, { buf: Buffer; type: string }>();
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
-  // ── Health check (always 200 OK, no auth) ─────────────────────────────────
+
   app.get("/api/health", (_req, res) => {
     res.status(200).json({ ok: true });
   });
 
-  // ── Sprite proxy ──────────────────────────────────────────────────────────
-  // Wikia blocks cross-origin <img> loads (returns 404 when an Origin header is
-  // present). Proxy the image server-side (no Origin header) and stream it back
-  // same-origin. Only allows the balatrogame wikia image host.
   app.get("/api/sprite", async (req, res) => {
     const raw = typeof req.query.url === "string" ? req.query.url : "";
     let target: URL;
@@ -127,11 +112,10 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
-  // ── Auth ──────────────────────────────────────────────────────────────────
   app.post("/api/auth/signup", async (req, res) => {
     const parsed = signupSchema.safeParse(req.body);
     if (!parsed.success) {
-      // Return every failing rule so the client can surface per-rule errors.
+
       return res.status(400).json({
         message: parsed.error.errors[0]?.message ?? "Invalid input",
         errors: parsed.error.errors.map((e) => ({ path: e.path.join("."), message: e.message })),
@@ -182,7 +166,6 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     res.json({ user: publicUser(user.id, user.email, user.language) });
   });
 
-  // Persist the user's language preference (signed-in only).
   app.patch("/api/auth/language", requireUser, async (req, res) => {
     const parsed = updateLanguageSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ message: "Invalid language" });
@@ -191,7 +174,6 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     res.json({ user: publicUser(user.id, user.email, user.language) });
   });
 
-  // ── Favorites ───────────────────────────────────────────────────────────────
   app.get("/api/favorites", requireUser, async (req, res) => {
     res.json(await storage.getFavorites(req.userId!));
   });
@@ -219,7 +201,6 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     res.status(204).end();
   });
 
-  // ── Runs ──────────────────────────────────────────────────────────────────
   app.get("/api/runs", requireUser, async (req, res) => {
     res.json((await storage.getRuns(req.userId!)).map(serializeRun));
   });
@@ -257,3 +238,4 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
 
   return httpServer;
 }
+
