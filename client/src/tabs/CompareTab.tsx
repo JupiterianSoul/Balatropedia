@@ -27,7 +27,7 @@ export function CompareTab() {
     { label: t("ui.tabs.compare_role"), render: (j) => <span className="text-sm">{labels.role[j.mainRole]}{j.secondaryRole ? ` / ${labels.role[j.secondaryRole]}` : ""}</span> },
     { label: t("ui.tabs.compare_scaling"), render: (j) => <span className="text-sm">{labels.scaling[j.scaling]}</span> },
     { label: t("ui.tabs.compare_setup_difficulty"), render: (j) => <LevelDots level={j.setupDifficulty} /> },
-    { label: t("ui.tabs.compare_archetype_fit"), render: (j) => <span className="text-xs text-muted-foreground">{j.archetypes.map((a) => ARCHETYPE_LABELS[a] ?? a).join(", ")}</span> },
+    { label: t("ui.tabs.compare_archetype_fit"), render: (j) => <span className="text-xs text-muted-foreground">{j.archetypes.map((a) => labels.archetype[a] ?? ARCHETYPE_LABELS[a] ?? a).join(", ")}</span> },
     { label: t("ui.tabs.compare_early_value"), render: (j) => <LevelDots level={earlyGameValue(j)} /> },
     { label: t("ui.tabs.compare_late_ceiling"), render: (j) => <LevelDots level={lateGameCeiling(j)} /> },
     { label: t("ui.tabs.compare_reliability"), render: (j) => <LevelDots level={reliability(j)} /> },

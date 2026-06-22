@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { JOKER_MAP, COMBOS, ARCHETYPE_LABELS } from "@/lib/helpers";
 import { StarToggle } from "@/components/primitives";
 import { LName, LText } from "@/components/Localized";
-import { useT } from "@/lib/i18n";
+import { useT, useLabels, useCuratedText } from "@/lib/i18n";
 
 function EmptyState() {
   const t = useT();
@@ -20,6 +20,40 @@ function EmptyState() {
   );
 }
 
+interface ComboFavRowProps {
+  c: typeof COMBOS[number];
+  archLabel: string;
+  noteValue: string;
+  onNoteChange: (v: string) => void;
+  onUnfavorite: () => void;
+  notePlaceholder: string;
+}
+
+function ComboFavRow({ c, archLabel, noteValue, onNoteChange, onUnfavorite, notePlaceholder }: ComboFavRowProps) {
+  const title = useCuratedText(`ui.combo.${c.id}.title`, c.title);
+  return (
+    <div className="casino-card p-4" data-testid={`fav-combo-${c.id}`}>
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <span className="font-pixel text-base text-accent">{title}</span>
+          <span className="ml-2 rounded-full border border-[hsl(145_35%_40%)]/40 bg-primary/15 px-2 py-0.5 text-[11px] text-[hsl(145_45%_62%)]">
+            {archLabel}
+          </span>
+        </div>
+        <StarToggle active onToggle={onUnfavorite} testId={`fav-remove-combo-${c.id}`} />
+      </div>
+      <Textarea
+        value={noteValue}
+        onChange={(e) => onNoteChange(e.target.value)}
+        placeholder={notePlaceholder}
+        rows={2}
+        className="mt-3 resize-none bg-background text-sm"
+        data-testid={`fav-note-combo-${c.id}`}
+      />
+    </div>
+  );
+}
+
 export function FavoritesTab() {
   const {
     favoriteJokers, favoriteCombos, notes, setNote,
@@ -28,6 +62,7 @@ export function FavoritesTab() {
   } = useApp();
   const { isSignedIn } = useAuth();
   const t = useT();
+  const labels = useLabels();
 
   const jokerList = Array.from(favoriteJokers).map((id) => JOKER_MAP[id]).filter(Boolean);
   const comboList = COMBOS.filter((c) => favoriteCombos.has(c.id));
@@ -88,25 +123,15 @@ export function FavoritesTab() {
 
       <TabsContent value="combos" className="space-y-3">
         {comboList.length === 0 ? <EmptyState /> : comboList.map((c) => (
-          <div key={c.id} className="casino-card p-4" data-testid={`fav-combo-${c.id}`}>
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <span className="font-pixel text-base text-accent">{c.title}</span>
-                <span className="ml-2 rounded-full border border-[hsl(145_35%_40%)]/40 bg-primary/15 px-2 py-0.5 text-[11px] text-[hsl(145_45%_62%)]">
-                  {ARCHETYPE_LABELS[c.archetype] ?? c.archetype}
-                </span>
-              </div>
-              <StarToggle active onToggle={() => toggleFavoriteCombo(c.id)} testId={`fav-remove-combo-${c.id}`} />
-            </div>
-            <Textarea
-              value={notes[`combo:${c.id}`] ?? ""}
-              onChange={(e) => setNote(`combo:${c.id}`, e.target.value)}
-              placeholder={t("ui.tabs.fav_add_session_note")}
-              rows={2}
-              className="mt-3 resize-none bg-background text-sm"
-              data-testid={`fav-note-combo-${c.id}`}
-            />
-          </div>
+          <ComboFavRow
+            key={c.id}
+            c={c}
+            archLabel={labels.archetype[c.archetype] ?? ARCHETYPE_LABELS[c.archetype] ?? c.archetype}
+            noteValue={notes[`combo:${c.id}`] ?? ""}
+            onNoteChange={(v) => setNote(`combo:${c.id}`, v)}
+            onUnfavorite={() => toggleFavoriteCombo(c.id)}
+            notePlaceholder={t("ui.tabs.fav_add_session_note")}
+          />
         ))}
       </TabsContent>
     </Tabs>

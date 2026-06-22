@@ -137,7 +137,7 @@ export function LibraryTab() {
           </PillGroup>
           <PillGroup title={t("ui.filters.archetype")}>
             {ARCHETYPES.map((a) => (
-              <FilterPill key={a.id} label={a.name} active={archs.has(a.id)} onClick={() => setArchs(toggle(archs, a.id))} testId={`pill-arch-${a.id}`} />
+              <FilterPill key={a.id} label={labels.archetype[a.id] ?? a.name} active={archs.has(a.id)} onClick={() => setArchs(toggle(archs, a.id))} testId={`pill-arch-${a.id}`} />
             ))}
           </PillGroup>
           <PillGroup title={t("ui.filters.hand_type")}>

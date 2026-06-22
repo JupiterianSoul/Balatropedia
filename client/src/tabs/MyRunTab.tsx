@@ -24,9 +24,49 @@ import { useApp } from "@/lib/appContext";
 import { useToast } from "@/hooks/use-toast";
 import {
   JOKER_MAP,
-  activeSynergies, impliedArchetypes, antiSynergyWarnings,
+  activeSynergies, impliedArchetypes, antiSynergyWarnings, synergyKey, ARCHETYPES,
+  type Archetype,
 } from "@/lib/helpers";
-import { useT, useLabels } from "@/lib/i18n";
+import { useT, useLabels, useCuratedText, useGameText } from "@/lib/i18n";
+
+function RunSynergyRow({ s, labels }: { s: ReturnType<typeof activeSynergies>[number]; labels: ReturnType<typeof useLabels> }) {
+  const key = synergyKey(s.a, s.b);
+  const why = useCuratedText(`ui.synergy.${key}.why`, s.why);
+  const aText = useGameText("jokers", s.a);
+  const bText = useGameText("jokers", s.b);
+  return (
+    <li className="border-l-2 border-accent/40 pl-3">
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="text-sm font-medium text-foreground">{aText.name}</span>
+        <span className="text-xs text-muted-foreground">+</span>
+        <span className="text-sm font-medium text-foreground">{bText.name}</span>
+        <span className="rounded-sm border border-accent/30 bg-accent/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-accent">
+          {labels.engine[s.engine]}
+        </span>
+      </div>
+      <p className="mt-1 text-xs leading-relaxed text-foreground/75">{why}</p>
+      <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted-foreground/60">{labels.synergyKind[s.kind]}</p>
+    </li>
+  );
+}
+
+function RunWarningRow({ w, t }: { w: ReturnType<typeof antiSynergyWarnings>[number]; t: ReturnType<typeof useT> }) {
+  const aText = useGameText("jokers", w.a);
+  const bText = useGameText("jokers", w.b);
+  const key = synergyKey(w.a, w.b);
+  const fallback = w.fromSynergy
+    ? w.why
+    : t("ui.tabs.myrun_anti_generic", { a: aText.name, b: bText.name });
+  const why = useCuratedText(`ui.synergy.${key}.why`, fallback);
+  return (
+    <li className="rounded-md border border-destructive/40 bg-destructive/[0.06] p-2.5">
+      <div className="text-sm font-medium text-[hsl(0_60%_72%)]">
+        {aText.name} ✕ {bText.name}
+      </div>
+      <p className="mt-0.5 text-xs leading-relaxed text-foreground/75">{why}</p>
+    </li>
+  );
+}
 
 export function MyRunTab() {
   const {
@@ -203,18 +243,7 @@ export function MyRunTab() {
           ) : (
             <ul className="space-y-3">
               {synergies.map((s, i) => (
-                <li key={i} className="border-l-2 border-accent/40 pl-3">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-sm font-medium text-foreground">{JOKER_MAP[s.a]?.name}</span>
-                    <span className="text-xs text-muted-foreground">+</span>
-                    <span className="text-sm font-medium text-foreground">{JOKER_MAP[s.b]?.name}</span>
-                    <span className="rounded-sm border border-accent/30 bg-accent/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-accent">
-                      {labels.engine[s.engine]}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-xs leading-relaxed text-foreground/75">{s.why}</p>
-                  <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted-foreground/60">{labels.synergyKind[s.kind]}</p>
-                </li>
+                <RunSynergyRow key={i} s={s} labels={labels} />
               ))}
             </ul>
           )}
@@ -235,7 +264,7 @@ export function MyRunTab() {
                   className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(145_35%_40%)]/40 bg-primary/15 px-2.5 py-1 text-xs text-[hsl(145_45%_62%)]"
                   data-testid={`run-archetype-${a.id}`}
                 >
-                  {a.name}
+                  {labels.archetype[a.id as Archetype] ?? a.name}
                   <span className="tabular text-[10px] text-muted-foreground">{a.matched.length}</span>
                 </span>
               ))}
@@ -253,12 +282,7 @@ export function MyRunTab() {
           ) : (
             <ul className="space-y-2">
               {warnings.map((w, i) => (
-                <li key={i} className="rounded-md border border-destructive/40 bg-destructive/[0.06] p-2.5" data-testid={`run-warning-${i}`}>
-                  <div className="text-sm font-medium text-[hsl(0_60%_72%)]">
-                    {JOKER_MAP[w.a]?.name} ✕ {JOKER_MAP[w.b]?.name}
-                  </div>
-                  <p className="mt-0.5 text-xs leading-relaxed text-foreground/75">{w.why}</p>
-                </li>
+                <RunWarningRow key={i} w={w} t={t} />
               ))}
             </ul>
           )}
