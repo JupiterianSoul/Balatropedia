@@ -6,23 +6,25 @@ import {
 } from "@/lib/helpers";
 import { useLabels, useT, useGameText } from "@/lib/i18n";
 
-/* ---- Rarity badge ---- */
+/* ---- Rarity badge (Balatro chunky sticker) ---- */
 const RARITY_TONE: Record<Rarity, string> = {
-  common: "text-muted-foreground border-border bg-card",
-  uncommon: "text-primary border-primary/40 bg-primary/10",
-  rare: "text-[hsl(210_50%_65%)] border-[hsl(210_50%_65%)]/40 bg-[hsl(210_50%_65%)]/10",
-  legendary: "text-accent border-accent/50 bg-accent/15 shadow-[0_0_8px_-2px_hsl(var(--accent)/0.4)]",
+  common: "bg-gradient-to-b from-[hsl(40_14%_85%)] to-[hsl(40_14%_70%)] text-[hsl(198_18%_9%)] border-[hsl(198_18%_9%)]",
+  uncommon: "bg-gradient-to-b from-[hsl(206_100%_60%)] to-[hsl(206_100%_45%)] text-white border-[hsl(198_18%_9%)]",
+  rare: "bg-gradient-to-b from-[hsl(4_99%_72%)] to-[hsl(4_99%_60%)] text-white border-[hsl(198_18%_9%)]",
+  legendary: "bg-gradient-to-b from-[hsl(282_50%_65%)] to-[hsl(282_45%_50%)] text-white border-[hsl(198_18%_9%)] shadow-[0_0_12px_-2px_hsl(282_50%_55%/0.7)]",
 };
 export function RarityBadge({ rarity, size = "sm", className }: { rarity: Rarity; size?: "sm" | "md"; className?: string }) {
   const labels = useLabels();
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-sm border font-semibold uppercase tracking-wider",
+        "font-display inline-flex items-center rounded-md border-2 font-semibold uppercase tracking-wider",
+        "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.4),0_2px_0_hsl(198_18%_4%)]",
         size === "md" ? "px-2 py-0.5 text-[11px]" : "px-1.5 py-0.5 text-[10px]",
         RARITY_TONE[rarity],
         className,
       )}
+      style={{ textShadow: "0 1px 0 rgba(0,0,0,0.3)" }}
       data-testid={`badge-rarity-${rarity}`}
     >
       {labels.rarity[rarity]}
@@ -30,15 +32,19 @@ export function RarityBadge({ rarity, size = "sm", className }: { rarity: Rarity
   );
 }
 
-/* ---- Role pill (flat chip) ---- */
+/* ---- Role pill (Balatro chunky chip) ---- */
 export function RolePill({ role, className }: { role: Role; className?: string }) {
   const labels = useLabels();
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border border-border bg-muted/40 px-2 py-0.5 text-[11px] font-medium text-muted-foreground small-caps",
+        "font-display inline-flex items-center rounded-md border-2 border-[hsl(198_18%_9%)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+        "bg-gradient-to-b from-[hsl(45_25%_24%)] to-[hsl(45_25%_16%)] text-[hsl(45_85%_70%)]",
+        "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.18),0_2px_0_hsl(198_18%_4%)]",
         className,
       )}
+      style={{ textShadow: "0 1px 0 rgba(0,0,0,0.45)" }}
+      data-testid={`badge-role-${role}`}
     >
       {labels.role[role]}
     </span>
@@ -47,18 +53,20 @@ export function RolePill({ role, className }: { role: Role; className?: string }
 
 /* ---- Level badge with severity coloring ---- */
 const LEVEL_TONE: Record<Level, string> = {
-  low: "border-border text-muted-foreground",
-  med: "border-accent/40 text-accent",
-  high: "border-secondary/60 text-[hsl(350_60%_70%)]",
+  low: "bg-gradient-to-b from-[hsl(144_50%_60%)] to-[hsl(144_50%_42%)] text-white",
+  med: "bg-gradient-to-b from-[hsl(45_85%_65%)] to-[hsl(45_85%_50%)] text-[hsl(198_18%_9%)]",
+  high: "bg-gradient-to-b from-[hsl(4_99%_72%)] to-[hsl(4_99%_58%)] text-white",
 };
 export function RiskBadge({ level }: { level: Level }) {
   const labels = useLabels();
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-sm border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide tabular",
+        "font-display inline-flex items-center gap-1 rounded-md border-2 border-[hsl(198_18%_9%)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+        "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.3),0_2px_0_hsl(198_18%_4%)]",
         LEVEL_TONE[level],
       )}
+      style={{ textShadow: "0 1px 0 rgba(0,0,0,0.3)" }}
       data-testid={`badge-risk-${level}`}
     >
       {labels.riskPrefix} {labels.level[level]}
@@ -67,18 +75,21 @@ export function RiskBadge({ level }: { level: Level }) {
 }
 
 const STAGE_TONE: Record<Stage, string> = {
-  early: "border-[hsl(145_35%_40%)]/50 text-[hsl(145_45%_60%)]",
-  mid: "border-accent/40 text-accent",
-  late: "border-secondary/50 text-[hsl(350_55%_68%)]",
+  early: "bg-gradient-to-b from-[hsl(144_50%_60%)] to-[hsl(144_50%_42%)] text-white",
+  mid: "bg-gradient-to-b from-[hsl(45_85%_65%)] to-[hsl(45_85%_50%)] text-[hsl(198_18%_9%)]",
+  late: "bg-gradient-to-b from-[hsl(206_100%_60%)] to-[hsl(206_100%_45%)] text-white",
 };
 export function StageBadge({ stage }: { stage: Stage }) {
   const labels = useLabels();
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-sm border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+        "font-display inline-flex items-center rounded-md border-2 border-[hsl(198_18%_9%)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+        "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.3),0_2px_0_hsl(198_18%_4%)]",
         STAGE_TONE[stage],
       )}
+      style={{ textShadow: "0 1px 0 rgba(0,0,0,0.3)" }}
+      data-testid={`badge-stage-${stage}`}
     >
       {labels.stage[stage]}
     </span>
@@ -87,18 +98,22 @@ export function StageBadge({ stage }: { stage: Stage }) {
 
 export function ScalingBadge({ scaling }: { scaling: Scaling }) {
   const tone =
-    scaling === "exponential" || scaling === "multiplicative"
-      ? "border-accent/50 text-accent"
-      : scaling === "static"
-        ? "border-border text-muted-foreground"
-        : "border-[hsl(145_35%_40%)]/50 text-[hsl(145_45%_60%)]";
+    scaling === "exponential"
+      ? "bg-gradient-to-b from-[hsl(282_50%_65%)] to-[hsl(282_45%_48%)] text-white shadow-[inset_0_1px_0_hsl(0_0%_100%/0.3),0_2px_0_hsl(198_18%_4%),0_0_10px_-2px_hsl(282_50%_55%/0.6)]"
+      : scaling === "multiplicative"
+        ? "bg-gradient-to-b from-[hsl(4_99%_72%)] to-[hsl(4_99%_58%)] text-white shadow-[inset_0_1px_0_hsl(0_0%_100%/0.3),0_2px_0_hsl(198_18%_4%)]"
+        : scaling === "static"
+          ? "bg-gradient-to-b from-[hsl(40_14%_85%)] to-[hsl(40_14%_70%)] text-[hsl(198_18%_9%)] shadow-[inset_0_1px_0_hsl(0_0%_100%/0.5),0_2px_0_hsl(198_18%_4%)]"
+          : "bg-gradient-to-b from-[hsl(206_100%_60%)] to-[hsl(206_100%_45%)] text-white shadow-[inset_0_1px_0_hsl(0_0%_100%/0.3),0_2px_0_hsl(198_18%_4%)]";
   const labels = useLabels();
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-sm border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+        "font-display inline-flex items-center rounded-md border-2 border-[hsl(198_18%_9%)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
         tone,
       )}
+      style={{ textShadow: "0 1px 0 rgba(0,0,0,0.3)" }}
+      data-testid={`badge-scaling-${scaling}`}
     >
       {labels.scaling[scaling]}
     </span>
@@ -158,10 +173,10 @@ export function JokerChip({
   const name = localized.name || j?.name || id;
   const toneCls =
     tone === "anti"
-      ? "border-destructive/60 text-[hsl(0_60%_70%)] hover:border-destructive"
+      ? "bg-gradient-to-b from-[hsl(4_99%_72%)] to-[hsl(4_99%_55%)] text-white border-[hsl(198_18%_9%)] hover:from-[hsl(4_99%_76%)] hover:to-[hsl(4_99%_60%)]"
       : tone === "bait"
-        ? "border-secondary/50 text-[hsl(350_55%_70%)] hover:border-secondary"
-        : "border-border text-foreground/90 hover:border-accent/50 hover:text-accent";
+        ? "bg-gradient-to-b from-[hsl(35_100%_60%)] to-[hsl(35_100%_45%)] text-white border-[hsl(198_18%_9%)] hover:from-[hsl(35_100%_65%)] hover:to-[hsl(35_100%_50%)]"
+        : "bg-gradient-to-b from-[hsl(206_100%_60%)] to-[hsl(206_100%_42%)] text-white border-[hsl(198_18%_9%)] hover:from-[hsl(206_100%_65%)] hover:to-[hsl(206_100%_48%)]";
 
   const content = (
     <button
@@ -170,11 +185,13 @@ export function JokerChip({
       disabled={!onClick}
       data-testid={`${testIdPrefix}-${id}`}
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border bg-card px-2.5 py-1 text-xs font-medium transition-colors",
+        "font-display inline-flex items-center gap-1 rounded-md border-2 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-all",
+        "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.3),0_2px_0_hsl(198_18%_4%)] hover:-translate-y-px hover:shadow-[inset_0_1px_0_hsl(0_0%_100%/0.4),0_3px_0_hsl(198_18%_4%)]",
         toneCls,
         strike && "line-through opacity-80",
         !onClick && "cursor-default",
       )}
+      style={{ textShadow: "0 1px 0 rgba(0,0,0,0.4)" }}
     >
       {tone === "bait" && <AlertTriangle size={11} className="shrink-0" />}
       <span>{name}</span>
