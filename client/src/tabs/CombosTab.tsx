@@ -5,6 +5,7 @@ import {
 import { useApp } from "@/lib/appContext";
 import { COMBOS, ARCHETYPE_LABELS, type Archetype } from "@/lib/helpers";
 import { JokerChip, StarToggle, SectionLabel } from "@/components/primitives";
+import { SourceCitations } from "@/components/SourceCitations";
 import { useT, useLabels, useCuratedText, useCuratedList } from "@/lib/i18n";
 
 interface ComboCardProps {
@@ -92,6 +93,7 @@ function ComboCard({ c, archLabel, openJokerDetail, isFavoriteCombo, toggleFavor
           <SectionLabel>{tLabels.pivotOut}</SectionLabel>
           <p className="text-xs italic leading-relaxed text-muted-foreground">{pivotOut}</p>
         </div>
+        <SourceCitations sources={c.sources} />
       </div>
     </div>
   );

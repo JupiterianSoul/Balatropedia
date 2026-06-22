@@ -43,6 +43,7 @@
       "skeleton": "Skeleton",
       "favorites": "Favorites",
       "glossary": "Glossary",
+      "about": "About",
       "group": {
         "library": "Library",
         "build": "Build",
@@ -1236,9 +1237,37 @@
         "def": "How quickly a build comes online relative to ante difficulty. Slow-scaling builds need defensive shells to survive early antes."
       }
     },
+    "sources": {
+      "label": "Sources"
+    },
+    "about": {
+      "title": "About Balatropedia",
+      "subtitle": "A community-sourced strategy companion for Balatro.",
+      "what_title": "What this is",
+      "what_body": "Balatropedia indexes every joker, deck, stake, voucher, boss blind, consumable, and modifier in Balatro, paired with curated synergies, archetypes, and combo blueprints. Use the sidebar to jump between reference tools (Library, Glossary) and planning tools (My Run, Compare, Skeleton).",
+      "accuracy_title": "Accuracy & sources",
+      "accuracy_body": "Joker effects and base values are pulled from the Balatro Wiki. Synergy claims and combo strategy are cross-referenced against community-trusted guides — citations appear inline below each synergy and combo. The full source list:",
+      "fandom_attribution": "Joker text and base values adapted from the Balatro Wiki under CC-BY-SA 3.0. Strategy commentary is editorial.",
+      "disclaimer_title": "Honest disclaimer",
+      "disclaimer_body": "Strategy tips are community-validated opinions where cited, and curated heuristics elsewhere. Balatro is deep — a pairing that looks weak in theory may be strong with the right deck/voucher/stake setup. If you find something wrong, please open an issue or PR.",
+      "submit_correction": "Submit a correction on GitHub",
+      "credits_title": "Credits",
+      "credit_game": "Game by",
+      "credit_font": "Pixel font by",
+      "credit_stack": "Built with",
+      "view_source": "View source on GitHub",
+      "fanmade": "A fan-made, non-commercial project. Balatro © LocalThunk & Playstack."
+    },
     "settings": {
       "title": "Settings",
-      "subtitle": "Language, sound, account, and data preferences for Balatropedia.",
+      "subtitle": "Language, theme, sound, account, and data preferences for Balatropedia.",
+      "theme": {
+        "title": "Theme",
+        "hint": "Affects surfaces and chrome only — Balatro identity colors (mult red, chip blue, money gold) stay locked.",
+        "felt": { "label": "Felt", "desc": "Default green casino table." },
+        "midnight": { "label": "Midnight", "desc": "Deep blue-black, low fatigue." },
+        "parchment": { "label": "Parchment", "desc": "Light cream card-table." }
+      },
       "language": "Language",
       "language_hint": "Switches the entire UI and joker text. ES is partially machine-translated.",
       "sound": "Sound",

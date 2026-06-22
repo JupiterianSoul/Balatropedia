@@ -188,6 +188,89 @@
   --destructive-border: hsl(var(--destructive));
 }
 
+/* ============================================================
+   THEME VARIANTS — data-theme on <html>
+
+   Re-maps shadcn surface tokens (background, card, popover, muted,
+   sidebar, foreground, border) without touching --bal-* identity
+   colors (Mult red, Chips blue, Money gold, etc. remain locked).
+   ============================================================ */
+
+/* Midnight — deep blue-black variant. Higher contrast, easier on eyes at night. */
+:root[data-theme="midnight"] {
+  --background: 220 30% 7%;             /* near-black with blue cast */
+  --foreground: 0 0% 100%;
+  --border: 220 18% 22%;
+
+  --card: 220 25% 12%;
+  --card-foreground: 0 0% 100%;
+  --card-border: 220 18% 22%;
+
+  --sidebar: 220 28% 9%;
+  --sidebar-foreground: 0 0% 96%;
+  --sidebar-border: 220 18% 22%;
+  --sidebar-accent: 220 25% 14%;
+  --sidebar-accent-foreground: 0 0% 100%;
+
+  --popover: 220 28% 14%;
+  --popover-foreground: 0 0% 100%;
+  --popover-border: 220 18% 22%;
+
+  --muted: 220 20% 16%;
+  --muted-foreground: 220 15% 72%;
+
+  --input: 220 22% 14%;
+}
+
+/* Parchment — light vintage card-table theme. Dark text on cream surfaces. */
+:root[data-theme="parchment"] {
+  --background: 36 30% 92%;             /* warm cream */
+  --foreground: 192 14% 18%;            /* deep teal-grey text */
+  --border: 36 18% 78%;
+
+  --card: 36 35% 96%;
+  --card-foreground: 192 14% 18%;
+  --card-border: 36 22% 80%;
+
+  --sidebar: 36 28% 88%;
+  --sidebar-foreground: 192 14% 22%;
+  --sidebar-border: 36 18% 76%;
+  --sidebar-primary: 4 78% 50%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 36 35% 82%;
+  --sidebar-accent-foreground: 192 14% 18%;
+  --sidebar-ring: 42 78% 50%;
+
+  --popover: 36 38% 95%;
+  --popover-foreground: 192 14% 18%;
+  --popover-border: 36 22% 80%;
+
+  --primary-foreground: 0 0% 100%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 36 22% 82%;
+  --muted-foreground: 192 10% 35%;
+
+  --accent-foreground: 192 14% 12%;
+
+  --input: 36 25% 86%;
+  --ring: 42 78% 50%;
+}
+
+/* Soften the heavy pure-black borders and shadows used by the felt theme
+   when running on lighter surfaces — they look harsh on cream. */
+:root[data-theme="parchment"] aside,
+:root[data-theme="parchment"] header {
+  border-color: hsl(36 22% 70%) !important;
+  box-shadow: 0 2px 0 hsl(36 22% 78%) !important;
+}
+:root[data-theme="parchment"] .mult-text {
+  text-shadow: 0 1px 0 hsl(36 25% 80%);
+}
+:root[data-theme="parchment"] .chips-text {
+  text-shadow: 0 1px 0 hsl(36 25% 80%);
+}
+
 @layer base {
   * { @apply border-border; }
 
