@@ -66,7 +66,7 @@ export function RunMetaSelectors() {
                 onClick={() => setDeckId(deckId === d.id ? null : d.id)}
                 aria-pressed={deckId === d.id}
                 data-testid={`pick-deck-${d.id}`}
-                title={d.name /* tooltip stays EN — title attr can't access hooks */}
+                title={d.name /* tooltip stays EN; title attr can't access hooks */}
                 className={cn(
                   "rounded-md border p-0.5 transition-all",
                   deckId === d.id

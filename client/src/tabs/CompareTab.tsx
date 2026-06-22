@@ -20,7 +20,7 @@ export function CompareTab() {
   const { openJokerDetail } = useApp();
   const t = useT();
   const labels = useLabels();
-  const [ids, setIds] = useState<string[]>(["triboulet", "joker"]);
+  const [ids, setIds] = useState<string[]>([]);
   const jokers = ids.map((id) => JOKER_MAP[id]).filter(Boolean) as Joker[];
 
   const rows: Row[] = [
@@ -42,7 +42,7 @@ export function CompareTab() {
               {idx < Math.min(j.partners.length, 3) - 1 && <span className="text-muted-foreground">,</span>}
             </span>
           ))}
-          {j.partners.length === 0 && <span className="text-xs text-muted-foreground">—</span>}
+          {j.partners.length === 0 && <span className="text-xs text-muted-foreground">;</span>}
         </div>
       )
     },

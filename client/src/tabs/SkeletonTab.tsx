@@ -16,7 +16,7 @@ const LEVEL_RANK = { low: 0, med: 1, high: 2 } as const;
 export function SkeletonTab() {
   const { openJokerDetail } = useApp();
   const t = useT();
-  const [ids, setIds] = useState<string[]>(["triboulet", "pareidolia", "sock_and_buskin"]);
+  const [ids, setIds] = useState<string[]>([]);
   const [whyOpen, setWhyOpen] = useState(false);
   const jokers = ids.map((id) => JOKER_MAP[id]).filter(Boolean) as Joker[];
 

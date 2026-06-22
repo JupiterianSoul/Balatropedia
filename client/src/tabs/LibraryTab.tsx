@@ -10,7 +10,7 @@ import { useApp } from "@/lib/appContext";
 import {
   JOKERS, ARCHETYPES,
   ALL_ROLES, ALL_HANDS, ALL_SCALINGS, ALL_STAGES, ALL_LEVELS, synergyDensity,
-  ALL_RARITIES, RARITY_SORT_RANK,
+  ALL_RARITIES, RARITY_SORT_RANK, beginnerScore,
   Role, HandType, Scaling, Stage, Level, Archetype, Rarity,
 } from "@/lib/helpers";
 import { JokerCard } from "@/components/JokerCard";
@@ -69,7 +69,7 @@ export function LibraryTab() {
 
     const sorted = [...list];
     if (sort === "name") sorted.sort((a, b) => a.name.localeCompare(b.name));
-    else if (sort === "beginner") sorted.sort((a, b) => LEVEL_RANK[a.setupDifficulty] - LEVEL_RANK[b.setupDifficulty] || a.name.localeCompare(b.name));
+    else if (sort === "beginner") sorted.sort((a, b) => beginnerScore(a) - beginnerScore(b) || a.name.localeCompare(b.name));
     else if (sort === "setup") sorted.sort((a, b) => LEVEL_RANK[b.setupDifficulty] - LEVEL_RANK[a.setupDifficulty] || a.name.localeCompare(b.name));
     else if (sort === "synergy") sorted.sort((a, b) => synergyDensity(b) - synergyDensity(a) || a.name.localeCompare(b.name));
     else if (sort === "rarity") sorted.sort((a, b) => {

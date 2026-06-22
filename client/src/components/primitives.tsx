@@ -5,6 +5,7 @@ import {
   Level, Role, Scaling, Stage, JOKER_MAP, Rarity,
 } from "@/lib/helpers";
 import { useLabels, useT, useGameText } from "@/lib/i18n";
+import { playSound } from "@/lib/sound";
 
 /* ---- Rarity badge (Balatro chunky sticker) ---- */
 const RARITY_TONE: Record<Rarity, string> = {
@@ -138,6 +139,7 @@ export function StarToggle({
       type="button"
       onClick={(e) => {
         e.stopPropagation();
+        playSound(active ? "toggle_off" : "coin");
         onToggle();
       }}
       aria-label={active ? t("ui.favStar.remove") : t("ui.favStar.add")}
@@ -153,7 +155,7 @@ export function StarToggle({
   );
 }
 
-/* ---- Clickable joker chip — opens detail ---- */
+/* ---- Clickable joker chip; opens detail ---- */
 export function JokerChip({
   id,
   onClick,

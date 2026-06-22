@@ -5,6 +5,7 @@ import {
   SynergyKind,
 } from "@/lib/helpers";
 import { JokerCombobox } from "@/components/JokerCombobox";
+import { JokerSprite } from "@/components/JokerSprite";
 import { SourceCitations } from "@/components/SourceCitations";
 import { LName, LText } from "@/components/Localized";
 import { useT, useLabels, useCuratedText, useGameText } from "@/lib/i18n";
@@ -29,23 +30,34 @@ interface SynergyRowProps {
 
 function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProps) {
   const p = JOKER_MAP[c.partnerId];
+  const a = JOKER_MAP[c.a];
+  const b = JOKER_MAP[c.b];
   const key = synergyKey(c.a, c.b);
   const why = useCuratedText(`ui.synergy.${key}.why`, c.why);
   const partnerName = useGameText("jokers", c.partnerId);
+  const aName = useGameText("jokers", c.a);
+  const bName = useGameText("jokers", c.b);
   return (
     <div
       className={cn("casino-card border-l-2 p-3.5", KIND_ACCENT[kind])}
       data-testid={`synergy-${selected}-${c.partnerId}`}
     >
       <div className="flex items-center justify-between gap-2">
-        <button
-          onClick={() => onSelect(c.partnerId)}
-          className="font-display text-sm font-semibold text-accent hover:underline"
-          data-testid={`button-select-partner-${c.partnerId}`}
-        >
-          {partnerName.name ?? p?.name ?? c.partnerId}
-        </button>
-        <span className="rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+        <div className="flex min-w-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-0.5">
+            <JokerSprite jokerId={c.a} name={aName.name ?? a?.name ?? c.a} size={28} className="h-7 w-7" />
+            <span className="px-0.5 text-[10px] text-muted-foreground">+</span>
+            <JokerSprite jokerId={c.b} name={bName.name ?? b?.name ?? c.b} size={28} className="h-7 w-7" />
+          </div>
+          <button
+            onClick={() => onSelect(c.partnerId)}
+            className="truncate font-display text-sm font-semibold text-accent hover:underline"
+            data-testid={`button-select-partner-${c.partnerId}`}
+          >
+            {partnerName.name ?? p?.name ?? c.partnerId}
+          </button>
+        </div>
+        <span className="shrink-0 rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
           {engineLabel}
         </span>
       </div>
@@ -59,9 +71,10 @@ export function SynergyTab() {
   const { openJokerDetail } = useApp();
   const t = useT();
   const labels = useLabels();
-  const [selected, setSelected] = useState<string>("blueprint");
+  const [selected, setSelected] = useState<string | null>(null);
 
   const grouped = useMemo(() => {
+    if (!selected) return null;
     const conns = synergiesFor(selected);
     const map = {} as Record<SynergyKind, typeof conns>;
     for (const k of SYNERGY_KIND_ORDER) map[k] = [];
@@ -69,8 +82,8 @@ export function SynergyTab() {
     return map;
   }, [selected]);
 
-  const total = Object.values(grouped).reduce((n, l) => n + l.length, 0);
-  const j = JOKER_MAP[selected];
+  const total = grouped ? Object.values(grouped).reduce((n, l) => n + l.length, 0) : 0;
+  const j = selected ? JOKER_MAP[selected] : null;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
@@ -110,7 +123,13 @@ export function SynergyTab() {
 
       {/* connections pane */}
       <div className="space-y-6">
-        {total === 0 ? (
+        {!selected || !grouped ? (
+          <div className="rounded-md border border-dashed border-border py-16 text-center">
+            <p className="text-sm text-muted-foreground">
+              {t("ui.syn.pick_to_start")}
+            </p>
+          </div>
+        ) : total === 0 ? (
           <div className="rounded-md border border-dashed border-border py-16 text-center">
             <p className="text-sm text-muted-foreground">
               {t("ui.syn.no_synergies")}
@@ -137,8 +156,8 @@ export function SynergyTab() {
                       key={c.partnerId}
                       c={c}
                       kind={kind}
-                      selected={selected}
-                      onSelect={setSelected}
+                      selected={selected!}
+                      onSelect={(id) => setSelected(id)}
                       engineLabel={labels.engine[c.engine] ?? ENGINE_LABELS[c.engine]}
                     />
                   ))}

@@ -15,8 +15,8 @@
       "pw_digit": "Un chiffre",
       "pw_symbol": "Un symbole",
       "pw_placeholder": "Choisissez un mot de passe fort",
-      "no_email_note": "Aucune vérification d'e-mail — c'est un projet de fans.",
-      "session_note": "Les sessions ne persistent pas après un rechargement — reconnectez-vous après actualisation.",
+      "no_email_note": "Aucune vérification d'e-mail; c'est un projet de fans.",
+      "session_note": "Les sessions ne persistent pas après un rechargement; reconnectez-vous après actualisation.",
       "welcome_back": "Content de vous revoir",
       "signed_in": "Connexion réussie.",
       "signin_failed": "Échec de la connexion",
@@ -196,7 +196,7 @@
     },
     "tabs": {
       "library_search_ph": "Rechercher des Jokers par nom, effet ou note…",
-      "library_sort_name": "Tri : Nom (A–Z)",
+      "library_sort_name": "Tri : Nom (A-Z)",
       "library_sort_beginner": "Tri : Accessible aux débutants",
       "library_sort_setup": "Tri : Difficulté de mise en place",
       "library_sort_synergy": "Tri : Densité de synergie",
@@ -207,7 +207,7 @@
       "myrun_subtitle": "Choisissez un deck, une mise et des bons, puis regardez les synergies s'activer en temps réel.",
       "myrun_slots": "Emplacements",
       "myrun_add_ph": "Ajouter un Joker à votre partie…",
-      "myrun_full_ph": "Partie pleine — augmentez les emplacements pour ajouter",
+      "myrun_full_ph": "Partie pleine; augmentez les emplacements pour ajouter",
       "myrun_run_full": "Partie pleine",
       "myrun_already_in": "Déjà dans la partie",
       "myrun_full_desc": "Augmentez la limite d'emplacements au-delà de {{cap}} pour en ajouter.",
@@ -273,16 +273,21 @@
       "myrun_voucher_frag": " · {{count}} bons",
       "myrun_voucher_frag_one": " · {{count}} bon",
       "compare_conflicts_with": " · en conflit avec {{names}}",
-      "heatmap_subtitle": "Choisissez un Joker pour voir la force de ses associations avec tous les autres Jokers. L'or est positif, le rouge sang est un conflit.",
-      "fav_empty": "Aucun favori pour l'instant. Ajoutez des Jokers et des combos en favoris pour les retrouver ici. Les notes ne sont gardées que pour cette session — elles seront réinitialisées au rechargement.",
+      "heatmap_subtitle": "Choisissez un Joker. Chaque autre Joker reçoit un score d'association : l'or indique une forte synergie, le rouge sang un anti-synergie. Cliquez sur une case pour ouvrir la fiche complète.",
+      "heatmap_how_title": "Comment lire ce tableau",
+      "heatmap_how_b1": "Or foncé = les deux Jokers se renforcent (même archétype, chaîne de payoff, fuel de retrigger, etc).",
+      "heatmap_how_b2": "Rouge sang = ils s'opposent (l'un détruit ce dont l'autre a besoin, mains incompatibles, etc).",
+      "heatmap_how_b3": "Neutre = pas d'interaction sélectionnée ; ils coexistent sans se multiplier.",
+      "heatmap_how_b4": "Touchez ou cliquez une case pour ouvrir le profil de ce Joker.",
+      "fav_empty": "Aucun favori pour l'instant. Ajoutez des Jokers et des combos en favoris pour les retrouver ici. Les notes ne sont gardées que pour cette session; elles seront réinitialisées au rechargement.",
       "fav_jokers": "Jokers",
       "fav_combos": "Combos",
-      "shop_subtitle": "Générez une boutique avec les probabilités de rareté de Balatro — commun 70 %, peu commun 25 %, rare 5 %.",
+      "shop_subtitle": "Générez une boutique avec les probabilités de rareté de Balatro; commun 70 %, peu commun 25 %, rare 5 %.",
       "shop_empty_pre": "Appuyez sur ",
       "shop_empty_post": " pour distribuer trois jokers. Ajoutez ceux que vous aimez directement à Ma partie.",
       "shop_in_run": "Dans votre partie",
       "shop_add_to_run": "Ajouter à Ma partie",
-      "decks_subtitle": "15 decks de départ — choisissez le moteur de build qui correspond à votre plan.",
+      "decks_subtitle": "15 decks de départ; choisissez le moteur de build qui correspond à votre plan.",
       "decks_sort_prefix": "Trier : {{val}}",
       "decks_diff_low": "Faible",
       "decks_diff_medium": "Moyenne",
@@ -325,10 +330,10 @@
     "usecase": {
       "early_pickup": "Pioche de début de partie : une pièce {{role}} peu coûteuse pour stabiliser votre score pendant que vous assemblez un vrai moteur.",
       "endgame_payoff": "Moteur de multiplicateur de fin de partie quand sa condition déclenchante est fiable à chaque main jouée.",
-      "pivot_piece": "Pièce de pivot quand votre axe principal de scaling s’effondre — insérez-la pour rediriger le build.",
+      "pivot_piece": "Pièce de pivot quand votre axe principal de scaling s’effondre; insérez-la pour rediriger le build.",
       "economy_snowball": "Boule de neige économique : encaissez le revenu supplémentaire tôt, puis réinvestissez-le dans votre condition de victoire.",
       "late_commit": "Engagement de fin de partie : activez-la une fois que les pièces de soutien sont en place.",
-      "pairs_partners": "Se combine naturellement avec {{partners}} partenaires recommandés — voir Meilleurs partenaires ci-dessous."
+      "pairs_partners": "Se combine naturellement avec {{partners}} partenaires recommandés; voir Meilleurs partenaires ci-dessous."
     },
     "why": {
       "core_role": "Rôle principal : {{role}}. Monte en puissance par {{scaling}}.",
@@ -357,7 +362,7 @@
       "what_you_have": "Ce que vous avez",
       "no_pieces": "Aucune pièce de moteur reconnue pour l'instant.",
       "what_missing": "Ce qui vous manque",
-      "nothing_all_covered": "Rien — les six catégories de moteur sont couvertes.",
+      "nothing_all_covered": "Rien; les six catégories de moteur sont couvertes.",
       "suggested_next": "Prochain type de Joker suggéré",
       "biggest_gap_pre": "Votre plus grande lacune est",
       "biggest_gap_post": ". Envisagez l'un de ceux-ci :",
@@ -366,14 +371,14 @@
       "why_hide": "Masquer",
       "why_show": "Afficher",
       "why_post": "les règles déclenchées",
-      "no_rules": "Aucune règle de diagnostic déclenchée — le build est encore en développement.",
+      "no_rules": "Aucune règle de diagnostic déclenchée; le build est encore en développement.",
       "remove_aria": "Retirer",
-      "dx_incomplete": "Incomplet — ajoutez plus de pièces pour évaluer.",
+      "dx_incomplete": "Incomplet; ajoutez plus de pièces pour évaluer.",
       "dx_too_narrow": "Trop étroit",
       "dx_too_slow": "Trop lent",
       "dx_too_conditional": "Trop conditionnel",
       "dx_well_rounded": "Bien équilibré",
-      "dx_developing": "En développement — couvre certaines catégories de moteur mais comporte des lacunes.",
+      "dx_developing": "En développement; couvre certaines catégories de moteur mais comporte des lacunes.",
       "rule_narrow": "Tous les Jokers sélectionnés partagent un seul archétype → le build est trop étroit.",
       "rule_slow": "Chaque Joker sélectionné est uniquement de fin de partie → le build est trop lent à se mettre en place.",
       "rule_conditional": "La difficulté de mise en place moyenne est élevée → le build est trop conditionnel.",
@@ -390,7 +395,7 @@
     },
     "cons": {
       "title": "Consommables",
-      "subtitle": "Tarots, Planètes et cartes Spectrales — et les Jokers avec lesquels elles s'associent.",
+      "subtitle": "Tarots, Planètes et cartes Spectrales; et les Jokers avec lesquels elles s'associent.",
       "tab_tarots": "Tarots",
       "tab_planets": "Planètes",
       "tab_spectrals": "Spectrales",
@@ -420,7 +425,7 @@
     "arch": {
       "enablers": "Activateurs",
       "scalers": "Amplificateurs",
-      "bait": "Pièges — semble bon, mais rarement",
+      "bait": "Pièges; semble bon, mais rarement",
       "often_lacks": "Manque souvent de"
     },
     "boss": {
@@ -445,11 +450,12 @@
       "connections": "connexions",
       "curated": "sélectionnée(s)",
       "legend": "Légende",
-      "no_synergies": "Aucune synergie sélectionnée pour ce Joker pour l'instant. Consultez la Bibliothèque pour les rôles généraux."
+      "no_synergies": "Aucune synergie sélectionnée pour ce Joker pour l'instant. Consultez la Bibliothèque pour les rôles généraux.",
+      "pick_to_start": "Choisissez un Joker pour voir ses synergies."
     },
     "gloss": {
       "rarity_term": "Rareté",
-      "rarity_def": "Les Jokers existent en quatre raretés — Commun, Peu commun, Rare, Légendaire. Les raretés supérieures apparaissent moins souvent dans la boutique et ont des effets plus puissants ou plus complexes. Les Légendaires ne peuvent apparaître qu'à partir de la carte L'Âme."
+      "rarity_def": "Les Jokers existent en quatre raretés; Commun, Peu commun, Rare, Légendaire. Les raretés supérieures apparaissent moins souvent dans la boutique et ont des effets plus puissants ou plus complexes. Les Légendaires ne peuvent apparaître qu'à partir de la carte L'Âme."
     },
     "runmeta": {
       "deck": "Paquet",
@@ -501,7 +507,7 @@
       },
       "four_of_a_kind": {
         "wants": "Main à gros payoff avec densité de rang. Se combine mieux avec les Jokers ciblant un rang précis.",
-        "oftenLacks": "Fiabilité — difficile à assembler naturellement. DNA + taille de main le rend viable."
+        "oftenLacks": "Fiabilité; difficile à assembler naturellement. DNA + taille de main le rend viable."
       },
       "face_card": {
         "wants": "Densité de figures qui synergise avec les Jokers de payoff et de redéclenchement.",
@@ -521,7 +527,7 @@
       },
       "discard": {
         "wants": "Plus de défausses pour trouver des mains et monétiser les défausses comme économie.",
-        "oftenLacks": "Payoff offensif. La pure défausse, c'est de l'économie — couple-la avec un moteur XMult pour vraiment éliminer les blinds."
+        "oftenLacks": "Payoff offensif. La pure défausse, c'est de l'économie; couple-la avec un moteur XMult pour vraiment éliminer les blinds."
       },
       "deck_growth": {
         "wants": "Ajouter des cartes en permanence (souvent améliorées) pour faire croître les Jokers à évolution.",
@@ -533,7 +539,7 @@
       },
       "retrigger_engine": {
         "wants": "Plusieurs sources de redéclenchement empilées pour que chaque carte scorée tire 2 à 3 fois.",
-        "oftenLacks": "Payoff de base. Les redéclenchements multiplient les effets existants — sans vrai payoff, tu multiplies zéro par trois."
+        "oftenLacks": "Payoff de base. Les redéclenchements multiplient les effets existants; sans vrai payoff, tu multiplies zéro par trois."
       }
     },
     "combo": {
@@ -560,7 +566,7 @@
           "Évolution lente sans accès aux Tarots",
           "Steel Joker fizzle si la boutique refuse les améliorations"
         ],
-        "why": "Mime double le X1.5 par Roi gardé de Baron et le X1.5 des cartes Acier — chaque Roi et carte Acier gardés payent deux fois pendant la phase gardée-en-main, s'empilant multiplicativement.",
+        "why": "Mime double le X1.5 par Roi gardé de Baron et le X1.5 des cartes Acier; chaque Roi et carte Acier gardés payent deux fois pendant la phase gardée-en-main, s'empilant multiplicativement.",
         "pivotOut": "Abandonne Steel Joker si les améliorations n'apparaissent jamais ; garde Baron + Mime + Raised Fist comme ligne purement gardée-en-main."
       },
       "retrigger_idol": {
@@ -570,10 +576,10 @@
           "Joue la carte choisie en premier lors du score"
         ],
         "risks": [
-          "La cible de L'Idole peut ne pas être une figure — choisis un Roi ou une Dame de la même enseigne",
+          "La cible de L'Idole peut ne pas être une figure; choisis un Roi ou une Dame de la même enseigne",
           "Dépendance à une seule carte"
         ],
-        "why": "Hanging Chad déclenche la carte de tête trois fois. Si la tête est la cible de L'Idole, ça fait trois X2 — et Sock redéclenche encore quand c'est une figure. Une seule carte porte toute la main.",
+        "why": "Hanging Chad déclenche la carte de tête trois fois. Si la tête est la cible de L'Idole, ça fait trois X2; et Sock redéclenche encore quand c'est une figure. Une seule carte porte toute la main.",
         "pivotOut": "Si tu ne trouves pas de cible L'Idole figure, bascule vers une coque mult plat construite autour de Fibonacci."
       },
       "flush_mono": {
@@ -622,7 +628,7 @@
           "Joue une seule carte en première main pour DNA"
         ],
         "risks": [
-          "Démarrage lent — nécessite de nombreux rounds pour se composer",
+          "Démarrage lent; nécessite de nombreux rounds pour se composer",
           "Brick si les boosters Standard n'apparaissent jamais"
         ],
         "why": "Chaque carte ajoutée au deck alimente Hologram. DNA duplique une carte chaque round. Constellation évolue grâce à l'utilisation des Planètes. Les trois accumulent discrètement du XMult sans effort par main.",
@@ -638,7 +644,7 @@
           "Sans vrai payoff, les redéclenchements triplent zéro",
           "La réduction de taille de main de Stuntman nuit à Mime"
         ],
-        "why": "Trois sources de redéclenchement couvrent les trois phases — figures scorées (Sock), carte scorée de tête (Chad), gardée-en-main (Mime). Insère n'importe quel Joker payoff et il tire 2 à 3× par round.",
+        "why": "Trois sources de redéclenchement couvrent les trois phases; figures scorées (Sock), carte scorée de tête (Chad), gardée-en-main (Mime). Insère n'importe quel Joker payoff et il tire 2 à 3× par round.",
         "pivotOut": "Si aucun Joker payoff n'apparaît avant l'ante 6, abandonne Mime et prends un Joker XMult statique comme Cavendish en filet de sécurité."
       },
       "glass_loop": {
@@ -677,7 +683,7 @@
           "Aucun payoff offensif en soi",
           "Nécessite de la chance en boutique pour la densité en Planètes"
         ],
-        "why": "Planet Merchant double les taux de Planètes. Satellite paie 1$ par Planète unique utilisée. Constellation gagne X0.1 par Planète utilisée. Un seul axe te paie, monte tes mains en niveau et fait évoluer le XMult — trois retours sur chaque Planète achetée.",
+        "why": "Planet Merchant double les taux de Planètes. Satellite paie 1$ par Planète unique utilisée. Constellation gagne X0.1 par Planète utilisée. Un seul axe te paie, monte tes mains en niveau et fait évoluer le XMult; trois retours sur chaque Planète achetée.",
         "pivotOut": "Une fois que Constellation est assez grand pour porter les rounds seul, vends Satellite et Planet Merchant contre des Jokers premium de fin de partie."
       },
       "stone_chip_wall": {
@@ -706,7 +712,7 @@
           "Bootstraps/Bull n'ont de valeur que si l'argent reste non dépensé",
           "Les blinds Boss qui forcent les dépenses tuent le tempo de montée en puissance de Rocket"
         ],
-        "why": "Cloud 9 paie en fonction de la densité de 9 dans le deck, Rocket croît à chaque blind Boss défait, et To the Moon brise le plafond normal d'intérêt. Bull convertit l'argent gardé en Jetons à chaque main pendant que Bootstraps gère le Mult plat depuis la même réserve. Les cinq sources de revenus sont passives et se composent — à l'ante 6, la construction génère 20 à 30$ par round en revenus passifs pendant que Bull et Bootstraps couvrent conjointement les deux axes de score depuis le même portefeuille.",
+        "why": "Cloud 9 paie en fonction de la densité de 9 dans le deck, Rocket croît à chaque blind Boss défait, et To the Moon brise le plafond normal d'intérêt. Bull convertit l'argent gardé en Jetons à chaque main pendant que Bootstraps gère le Mult plat depuis la même réserve. Les cinq sources de revenus sont passives et se composent; à l'ante 6, la construction génère 20 à 30$ par round en revenus passifs pendant que Bull et Bootstraps couvrent conjointement les deux axes de score depuis le même portefeuille.",
         "pivotOut": "Une fois l'intérêt plafonné et la boutique saturée, vends Cloud 9 ou Rocket contre un Joker XMult premium de fin de partie comme Cavendish ou Triboulet."
       },
       "bootstraps_broke": {
@@ -718,23 +724,23 @@
         ],
         "risks": [
           "Nécessite de rester délibérément à court d'argent, limitant les options en boutique",
-          "La génération de Tarot de Vagabond ne se déclenche que si tu as ≤4$ — mal gérer l'argent la bloque",
+          "La génération de Tarot de Vagabond ne se déclenche que si tu as ≤4$; mal gérer l'argent la bloque",
           "Mystic Summit et les Jokers d'économie de défausse sont mutuellement exclusifs"
         ],
-        "why": "Bootstraps donne +2 Mult par tranche de 5$ possédés, mais Vagabond te pousse vers le dénuement — la tension se résout par un cycle : dépense jusqu'à ≤4$ pour déclencher le Tarot gratuit de Vagabond, puis utilise ce Tarot pour de l'amélioration ou de la valeur en Planète avant la fin du round. Mystic Summit récompense 0 défausse. Banner récompense les défausses gardées. Choisis un seul axe de défausse par run — les lignes zéro-défausse empilent simultanément Mystic Summit et le bonus gardé-défausse de Banner.",
+        "why": "Bootstraps donne +2 Mult par tranche de 5$ possédés, mais Vagabond te pousse vers le dénuement; la tension se résout par un cycle : dépense jusqu'à ≤4$ pour déclencher le Tarot gratuit de Vagabond, puis utilise ce Tarot pour de l'amélioration ou de la valeur en Planète avant la fin du round. Mystic Summit récompense 0 défausse. Banner récompense les défausses gardées. Choisis un seul axe de défausse par run; les lignes zéro-défausse empilent simultanément Mystic Summit et le bonus gardé-défausse de Banner.",
         "pivotOut": "Si Vagabond n'apparaît jamais, remplace-le par Satellite ou Golden Joker et joue une coque économique standard avec Bootstraps et Bull."
       },
       "hand_only_discipline": {
         "title": "Poing de fer (sans défausse)",
         "conditions": [
-          "N'utilise jamais de défausses — Burglar les élimine, garantissant que Mystic Summit tire toujours",
+          "N'utilise jamais de défausses; Burglar les élimine, garantissant que Mystic Summit tire toujours",
           "Ramen démarre à X2 et ne décroît jamais quand les défausses sont à 0",
-          "Banner donne +30 Jetons par défausse restante — les +3 mains de Burglar maintiennent le pool de Banner plein"
+          "Banner donne +30 Jetons par défausse restante; les +3 mains de Burglar maintiennent le pool de Banner plein"
         ],
         "risks": [
           "Pas d'accès à la défausse signifie que la cohérence de main dépend entièrement de la chance de pioche et de la taille de main",
           "Le −1 main par blind de Burglar entre en conflit avec les stratégies à nombreuses mains",
-          "Le plancher X2 de Ramen est puissant en début de partie mais n'évolue pas en fin — il faut une autre pièce XMult"
+          "Le plancher X2 de Ramen est puissant en début de partie mais n'évolue pas en fin; il faut une autre pièce XMult"
         ],
         "why": "Burglar convertit les défausses en 3 mains supplémentaires par blind, garantissant que tu as toujours des jeux disponibles sans jamais défausser. Le +15 Mult de Mystic Summit tire à chaque main puisque les défausses sont toujours à 0. Ramen ne décroît jamais puisqu'aucune défausse n'est effectuée. Banner collecte des Jetons depuis l'équivalent de 3-défausses crédité par le jeu au début du blind. Green Joker accumule +1 Mult par main jouée et ne perd jamais de valeur. Ensemble, la construction score via une boucle propre à nombreuses mains sans conflits d'économie de défausse.",
         "pivotOut": "Si Ramen tombe sous X1.5 suite à des défausses accidentelles, vends-le et insère Cavendish ou The Trio pour un plancher XMult statique."
@@ -747,12 +753,12 @@
           "Brainstorm copie le Joker le plus à gauche pour une duplication XMult gratuite"
         ],
         "risks": [
-          "Stencil récompense moins de Jokers — chaque emplacement supplémentaire acheté réduit le XMult",
+          "Stencil récompense moins de Jokers; chaque emplacement supplémentaire acheté réduit le XMult",
           "Madness détruit aléatoirement des Jokers, pouvant toucher Stencil lui-même",
-          "Le Mult de Swashbuckler dépend de la valeur de revente des Jokers gardés — les vendre pour de l'argent réduit le Mult"
+          "Le Mult de Swashbuckler dépend de la valeur de revente des Jokers gardés; les vendre pour de l'argent réduit le Mult"
         ],
-        "why": "Joker Stencil donne X1 Mult par emplacement de Joker vide, lui-même inclus — une configuration à 3 Jokers avec 2 emplacements vides donne X2. Swashbuckler convertit la valeur de revente des deux Jokers gardés (Stencil + Brainstorm) en Mult plat. Brainstorm copie Stencil pour un second X2, produisant X4 total depuis une équipe de 3 Jokers allégée. La valeur de revente croissante d'Egg gonfle Swashbuckler passivement même sans utilisation.",
-        "pivotOut": "Une fois un second Joker premium trouvé (Cavendish, Triboulet), ajoute-le et accepte la décroissance de Stencil — le gain de score net du nouveau Joker dépasse le XMult perdu."
+        "why": "Joker Stencil donne X1 Mult par emplacement de Joker vide, lui-même inclus; une configuration à 3 Jokers avec 2 emplacements vides donne X2. Swashbuckler convertit la valeur de revente des deux Jokers gardés (Stencil + Brainstorm) en Mult plat. Brainstorm copie Stencil pour un second X2, produisant X4 total depuis une équipe de 3 Jokers allégée. La valeur de revente croissante d'Egg gonfle Swashbuckler passivement même sans utilisation.",
+        "pivotOut": "Une fois un second Joker premium trouvé (Cavendish, Triboulet), ajoute-le et accepte la décroissance de Stencil; le gain de score net du nouveau Joker dépasse le XMult perdu."
       },
       "pair_specialist": {
         "title": "Moteur payoff Paire",
@@ -762,11 +768,11 @@
           "DNA peut dupliquer le rang cible de la Paire pour des mains Paire quasi garanties"
         ],
         "risks": [
-          "Photograph ne tire qu'une fois par main sur la première figure — trie ta main soigneusement",
+          "Photograph ne tire qu'une fois par main sur la première figure; trie ta main soigneusement",
           "Sly et Jolly sont seulement Mult/Jetons plats ; sans le X2 de The Duo le plafond est bas",
-          "Spare Trousers requiert une Double paire, pas une simple Paire — fonctionne sur un type de main distinct"
+          "Spare Trousers requiert une Double paire, pas une simple Paire; fonctionne sur un type de main distinct"
         ],
-        "why": "The Duo fournit X2 sur toute main contenant une Paire — presque toujours actif. Jolly Joker ajoute +8 Mult et Sly Joker ajoute +50 Jetons sur la même condition de déclenchement. Photograph applique X2 à la première figure, donc un lead Roi avec Hanging Chad donne trois procs X2 depuis une seule carte avant que The Duo tire. The Duo + Photograph seuls produisent X4 depuis une main Paire avec un lead de figure.",
+        "why": "The Duo fournit X2 sur toute main contenant une Paire; presque toujours actif. Jolly Joker ajoute +8 Mult et Sly Joker ajoute +50 Jetons sur la même condition de déclenchement. Photograph applique X2 à la première figure, donc un lead Roi avec Hanging Chad donne trois procs X2 depuis une seule carte avant que The Duo tire. The Duo + Photograph seuls produisent X4 depuis une main Paire avec un lead de figure.",
         "pivotOut": "Si la densité de figures est insuffisante pour Photograph, remplace-le par The Tribe et bascule vers un hybride Couleur-Paire avec Four Fingers."
       },
       "three_of_a_kind_specialist": {
@@ -774,14 +780,14 @@
         "conditions": [
           "Utilise DNA pour empiler un seul rang à 8+ copies pour un Brelan garanti",
           "Le rang cible de L'Idole doit chevaucher le rang dupliqué pour X2 par carte correspondante",
-          "Monte le niveau de la main Brelan via des cartes Planète — les Jetons de base élevés rendent le +100 de Wily décisif"
+          "Monte le niveau de la main Brelan via des cartes Planète; les Jetons de base élevés rendent le +100 de Wily décisif"
         ],
         "risks": [
           "Sans DNA, le Brelan est incohérent dans un deck de 52 cartes",
           "Le Full satisfait The Trio mais dilue la stratégie de ciblage de DNA",
-          "Le rang+enseigne de L'Idole tourne — il ne s'alignera pas toujours avec le rang triplé"
+          "Le rang+enseigne de L'Idole tourne; il ne s'alignera pas toujours avec le rang triplé"
         ],
-        "why": "The Trio délivre X3 sur Brelan et Full — en tirant aux côtés du +12 Mult de Zany Joker et du +100 Jetons de Wily Joker, cela crée un package de score complet sur trois axes depuis un seul type de main. DNA assure que le rang choisi inonde le deck, rendant le Brelan trivialement cohérent. L'Idole empilée par-dessus convertit chaque carte correspondante en procs X2 supplémentaires, et Blueprint à côté de The Trio double le X3 en X9 quand positionné correctement.",
+        "why": "The Trio délivre X3 sur Brelan et Full; en tirant aux côtés du +12 Mult de Zany Joker et du +100 Jetons de Wily Joker, cela crée un package de score complet sur trois axes depuis un seul type de main. DNA assure que le rang choisi inonde le deck, rendant le Brelan trivialement cohérent. L'Idole empilée par-dessus convertit chaque carte correspondante en procs X2 supplémentaires, et Blueprint à côté de The Trio double le X3 en X9 quand positionné correctement.",
         "pivotOut": "Si DNA n'est pas disponible, remplace Wily Joker par Hanging Chad et pivote vers une construction Paire de figures où l'exigence de chevauchement de rang est moins rigide."
       },
       "straight_flush_endgame": {
@@ -789,61 +795,61 @@
         "conditions": [
           "Four Fingers + Shortcut réduit la Quinte flush à n'importe quel 4 cartes à peu près séquentielles",
           "Smeared Joker réduit l'exigence d'enseigne à 2 enseignes effectives",
-          "Séance génère une carte Spectrale à chaque Quinte flush — utilise-la pour des copies Wraith/Ankh",
+          "Séance génère une carte Spectrale à chaque Quinte flush; utilise-la pour des copies Wraith/Ankh",
           "Monte le niveau de la main Quinte flush via des boosters Célestes"
         ],
         "risks": [
           "Nécessite trois Jokers activateurs spécifiques avant que le moteur soit actif",
-          "Séance génère des Spectraux aléatoires — peut ne pas toujours toucher Wraith ou des cartes utiles",
+          "Séance génère des Spectraux aléatoires; peut ne pas toujours toucher Wraith ou des cartes utiles",
           "The Order et The Tribe requièrent tous deux leurs types de mains respectifs, mais la Quinte flush satisfait les deux"
         ],
-        "why": "Four Fingers + Shortcut convertit la Quinte flush d'une main rarement chanceuse en un jeu quasi garanti à 4 cartes. Smeared Joker double la disponibilité des cartes en fusionnant les enseignes. Séance transforme chaque Quinte flush en un Spectral gratuit — sur un run complet, cela génère 5 à 10+ Spectraux puissants. The Order (X3) et The Tribe (X2) tirent simultanément sur la Quinte flush pour un XMult de base gratuit de X6 avant même la contribution des autres Jokers.",
+        "why": "Four Fingers + Shortcut convertit la Quinte flush d'une main rarement chanceuse en un jeu quasi garanti à 4 cartes. Smeared Joker double la disponibilité des cartes en fusionnant les enseignes. Séance transforme chaque Quinte flush en un Spectral gratuit; sur un run complet, cela génère 5 à 10+ Spectraux puissants. The Order (X3) et The Tribe (X2) tirent simultanément sur la Quinte flush pour un XMult de base gratuit de X6 avant même la contribution des autres Jokers.",
         "pivotOut": "Si Séance n'apparaît jamais, utilise le trio activateur (Four Fingers + Shortcut + Smeared) pour jouer une construction Couleur pure avec The Tribe et Ancient Joker à la place."
       },
       "steel_marble_chip_wall": {
         "title": "Mur Acier-Marble",
         "conditions": [
-          "Marble Joker ajoute passivement des cartes Pierre à chaque blind — vise 10+ Pierres pour Stone Joker",
-          "Cartes Acier appliquées via Tarots aux cartes gardées — Steel Joker les compte toutes",
+          "Marble Joker ajoute passivement des cartes Pierre à chaque blind; vise 10+ Pierres pour Stone Joker",
+          "Cartes Acier appliquées via Tarots aux cartes gardées; Steel Joker les compte toutes",
           "Stuntman fournit +250 Jetons de plancher ; évite les associations Mime/Baron (conflit de taille de main)",
           "Driver's License débloque X3 quand 16+ cartes améliorées sont dans le deck"
         ],
         "risks": [
           "Stuntman réduit la taille de main de 2, en conflit avec les pièces gardées-en-main comme Mime",
           "Marble Joker fait grandir la taille du deck, augmentant la variance de pioche",
-          "Driver's License requiert 16 cartes améliorées — lent à activer sans densité en Tarots"
+          "Driver's License requiert 16 cartes améliorées; lent à activer sans densité en Tarots"
         ],
-        "why": "Marble Joker construit passivement le nombre de Pierres vers l'évolution en Jetons de Stone Joker, pendant que les cartes Acier ajoutées via Tarots font croître le XMult de Steel Joker. Stuntman ajoute un plancher de +250 Jetons. Driver's License s'active quand les améliorations Pierre et Acier atteignent le seuil de 16 cartes. La construction ne nécessite aucune condition par main — elle accumule Jetons et XMult passivement à travers les blinds pendant que les Tarots convertissent le deck.",
+        "why": "Marble Joker construit passivement le nombre de Pierres vers l'évolution en Jetons de Stone Joker, pendant que les cartes Acier ajoutées via Tarots font croître le XMult de Steel Joker. Stuntman ajoute un plancher de +250 Jetons. Driver's License s'active quand les améliorations Pierre et Acier atteignent le seuil de 16 cartes. La construction ne nécessite aucune condition par main; elle accumule Jetons et XMult passivement à travers les blinds pendant que les Tarots convertissent le deck.",
         "pivotOut": "Si l'accès aux Tarots est faible et le seuil de Driver's License inatteignable, vends Stuntman et concentre-toi purement sur Stone Joker + Marble Joker + Blueprint pour une ligne dominante en Jetons mais plus simple."
       },
       "sixth_sense_spectral_loop": {
         "title": "Boucle économique Spectrale",
         "conditions": [
           "Commence chaque round avec un seul jeu de 6 pour la génération de Spectral de Sixth Sense",
-          "Cartomancer crée un Tarot à chaque début de blind — garde un emplacement de consommable libre",
-          "Perkeo duplique un consommable à chaque boutique — garde des Tarots/Planètes à travers la boutique",
-          "Certificate ajoute une carte scellée à chaque round — le sceau Rouge redéclenche, le sceau Or rapporte de l'argent"
+          "Cartomancer crée un Tarot à chaque début de blind; garde un emplacement de consommable libre",
+          "Perkeo duplique un consommable à chaque boutique; garde des Tarots/Planètes à travers la boutique",
+          "Certificate ajoute une carte scellée à chaque round; le sceau Rouge redéclenche, le sceau Or rapporte de l'argent"
         ],
         "risks": [
-          "Nécessite une gestion serrée des emplacements de consommables — 2 emplacements au maximum disponibles",
+          "Nécessite une gestion serrée des emplacements de consommables; 2 emplacements au maximum disponibles",
           "Sixth Sense a besoin d'un 6 disponible en main comme premier jeu à chaque round",
           "Le Mult de Fortune Teller n'évolue qu'avec les Tarots utilisés, pas les Spectraux"
         ],
-        "why": "Sixth Sense génère un Spectral par round en détruisant un 6, affinant simultanément le deck. Cartomancer ajoute un Tarot à chaque entrée de blind. Perkeo duplique un consommable aléatoire en fin de boutique, transformant un Tarot ou une Planète en deux. Certificate fournit une carte scellée gratuite à chaque round. Sur un run, cela génère 20+ consommables — suffisant pour améliorer entièrement le deck, maximiser le Mult de Fortune Teller, et utiliser régulièrement des Planètes pour alimenter Constellation.",
+        "why": "Sixth Sense génère un Spectral par round en détruisant un 6, affinant simultanément le deck. Cartomancer ajoute un Tarot à chaque entrée de blind. Perkeo duplique un consommable aléatoire en fin de boutique, transformant un Tarot ou une Planète en deux. Certificate fournit une carte scellée gratuite à chaque round. Sur un run, cela génère 20+ consommables; suffisant pour améliorer entièrement le deck, maximiser le Mult de Fortune Teller, et utiliser régulièrement des Planètes pour alimenter Constellation.",
         "pivotOut": "Si Sixth Sense n'est pas disponible, remplace-le par Hallucination (50% de Tarot sur chaque booster ouvert) et joue une ligne triple-Tarot Cartomancer + Perkeo + Fortune Teller."
       },
       "wee_joker_scaling": {
         "title": "Moteur de Jetons Wee Joker",
         "conditions": [
-          "Maximise les 2 dans le deck — la duplication DNA de 2 est idéale",
+          "Maximise les 2 dans le deck; la duplication DNA de 2 est idéale",
           "Hack redéclenche chaque 2 joué, doublant la croissance de Wee Joker à +16 Jetons par 2",
-          "La fenêtre active de Seltzer double tous les déclenchements de cartes pendant 10 mains — maximise les 2 pendant Seltzer",
+          "La fenêtre active de Seltzer double tous les déclenchements de cartes pendant 10 mains; maximise les 2 pendant Seltzer",
           "Blueprint copie Wee Joker, doublant la vitesse d'accumulation de Jetons"
         ],
         "risks": [
-          "Wee Joker est uniquement en évolution de Jetons — nécessite une source XMult pour convertir les gros Jetons en dégâts",
+          "Wee Joker est uniquement en évolution de Jetons; nécessite une source XMult pour convertir les gros Jetons en dégâts",
           "Seltzer est limité dans le temps (10 mains) ; planifie l'acquisition près des blinds Boss pour une valeur maximale",
-          "L'exigence de jeu unique de DNA entre en conflit avec les mains de score — planifie soigneusement le round de duplication"
+          "L'exigence de jeu unique de DNA entre en conflit avec les mains de score; planifie soigneusement le round de duplication"
         ],
         "why": "Chaque 2 joué ajoute définitivement +8 Jetons à Wee Joker. Hack redéclenche chaque 2 une fois supplémentaire, faisant ajouter +16 par round à chaque 2. Blueprint copie Wee Joker, doublant le taux d'accumulation à +32 par 2 par main. La fenêtre de 10 mains de Seltzer redéclenche chaque carte y compris les 2, compressant des mois de croissance en une courte rafale. Avec 4+ 2 dans une main sous Seltzer + Hack + Blueprint, Wee Joker peut gagner des centaines de Jetons en un seul round.",
         "pivotOut": "Une fois que la base de Jetons de Wee Joker est assez grande pour porter les blinds uniquement sur les Jetons, vends Seltzer et remplace-le par Stone Joker ou Stuntman pour solidifier le fondement en Jetons."
@@ -851,17 +857,17 @@
       "madness_sacrifice": {
         "title": "Moteur Sacrifice",
         "conditions": [
-          "Riff-Raff génère 2 Jokers Communs à chaque blind — ils alimentent le pool de sacrifice aléatoire de Madness",
+          "Riff-Raff génère 2 Jokers Communs à chaque blind; ils alimentent le pool de sacrifice aléatoire de Madness",
           "Ceremonial Dagger positionné à gauche d'un Commun de Riff-Raff se nourrit de ces Communs pour du Mult double-valeur-de-revente",
           "Maintiens le total de Jokers bas (3 à 4) pour que Madness sacrifie les Communs de Riff-Raff et non les moteurs",
-          "Campfire croît de X0.25 par Joker vendu — combine avec des ventes de Jokers pré-boss pour une rafale"
+          "Campfire croît de X0.25 par Joker vendu; combine avec des ventes de Jokers pré-boss pour une rafale"
         ],
         "risks": [
-          "Le sacrifice de Madness est aléatoire — Ceremonial Dagger, Blueprint ou Madness lui-même pourrait être ciblé",
+          "Le sacrifice de Madness est aléatoire; Ceremonial Dagger, Blueprint ou Madness lui-même pourrait être ciblé",
           "Les Communs de Riff-Raff ont besoin d'un emplacement de Joker libre pour spawner ; la consommation par Madness crée naturellement cet emplacement",
-          "Campfire se réinitialise à la défaite du blind Boss — le timing du pic de vente pré-boss est essentiel"
+          "Campfire se réinitialise à la défaite du blind Boss; le timing du pic de vente pré-boss est essentiel"
         ],
-        "why": "Riff-Raff inonde le roster de Jokers de Communs gratuits à chaque blind. Madness consomme un Joker aléatoire pour un gain de XMult de X0.5 — les Communs de Riff-Raff servent de carburant jetable, absorbant la destruction aléatoire de Madness. Ceremonial Dagger sacrifie le Commun de Riff-Raff à sa droite pour du Mult plat double-valeur-de-revente à chaque blind. Ensemble les trois forment une boucle de sacrifice auto-renouvelable : Riff-Raff crée le carburant, Ceremonial Dagger le brûle pour du Mult, Madness convertit les morts aléatoires en stacks de XMult.",
+        "why": "Riff-Raff inonde le roster de Jokers de Communs gratuits à chaque blind. Madness consomme un Joker aléatoire pour un gain de XMult de X0.5; les Communs de Riff-Raff servent de carburant jetable, absorbant la destruction aléatoire de Madness. Ceremonial Dagger sacrifie le Commun de Riff-Raff à sa droite pour du Mult plat double-valeur-de-revente à chaque blind. Ensemble les trois forment une boucle de sacrifice auto-renouvelable : Riff-Raff crée le carburant, Ceremonial Dagger le brûle pour du Mult, Madness convertit les morts aléatoires en stacks de XMult.",
         "pivotOut": "Si Madness détruit un Joker moteur clé deux fois, vends Madness et joue Ceremonial Dagger + Riff-Raff seuls comme une ligne d'évolution Mult plat stable."
       },
       "ancient_joker_suit_rotation": {
@@ -870,14 +876,14 @@
           "Smeared Joker réduit l'enseigne tournante de Ancient de 1-sur-4 à 1-sur-2 de couverture",
           "Four Fingers réduit la Couleur à 4 cartes, assurant que les cartes scorées correspondent plus souvent à l'enseigne active de Ancient",
           "La cible tournante de L'Idole s'aligne parfois avec l'enseigne de Ancient pour X1.5 × X2 = X3 par carte",
-          "Bloodstone ajoute un X1.5 probabiliste sur les cartes Cœur — s'associe à la fusion Cœur-Carreau de Smeared"
+          "Bloodstone ajoute un X1.5 probabiliste sur les cartes Cœur; s'associe à la fusion Cœur-Carreau de Smeared"
         ],
         "risks": [
-          "L'enseigne de Ancient Joker tourne à chaque round — les rounds où ton deck va à l'encontre de l'enseigne active perdent de la valeur",
+          "L'enseigne de Ancient Joker tourne à chaque round; les rounds où ton deck va à l'encontre de l'enseigne active perdent de la valeur",
           "L'alignement de L'Idole avec Ancient est occasionnel, pas garanti",
-          "Smeared entre en conflit avec Flower Pot (qui nécessite les quatre enseignes) — impossible de jouer les deux"
+          "Smeared entre en conflit avec Flower Pot (qui nécessite les quatre enseignes); impossible de jouer les deux"
         ],
-        "why": "Ancient Joker applique X1.5 par carte scorée de l'enseigne active, mais la rotation pénalise les decks mono-enseigne. Smeared Joker réduit quatre enseignes à deux, garantissant qu'environ 50% des cartes scorées déclenchent X1.5 à chaque round donné. Four Fingers augmente le nombre moyen de cartes scorées par main dans les constructions Couleur, multipliant directement la sortie de Ancient. Quand la cible tournante de L'Idole correspond à l'enseigne active de Ancient, chaque carte correspondante touche X1.5 × X2 = X3 — un double gratuit qui récompense une couverture d'enseigne flexible.",
+        "why": "Ancient Joker applique X1.5 par carte scorée de l'enseigne active, mais la rotation pénalise les decks mono-enseigne. Smeared Joker réduit quatre enseignes à deux, garantissant qu'environ 50% des cartes scorées déclenchent X1.5 à chaque round donné. Four Fingers augmente le nombre moyen de cartes scorées par main dans les constructions Couleur, multipliant directement la sortie de Ancient. Quand la cible tournante de L'Idole correspond à l'enseigne active de Ancient, chaque carte correspondante touche X1.5 × X2 = X3; un double gratuit qui récompense une couverture d'enseigne flexible.",
         "pivotOut": "Si la rotation de L'Idole est trop peu fiable pour s'aligner avec Ancient, remplace-le par The Tribe pour un X2 plat sur chaque main Couleur, conservant le cœur de cohérence Smeared + Four Fingers."
       }
     },
@@ -886,7 +892,7 @@
         "why": "Paire de copies verrouillées par position. Empile-les autour de ton moteur XMult le plus fort pour multiplier sa sortie trois fois dans le même passage de score."
       },
       "blueprint__the_idol": {
-        "why": "Chaque correspondance de L'Idole est X2 — Blueprint double la prise sur la même main scorée, transformant les cartes correspondantes en évolution X4 par carte."
+        "why": "Chaque correspondance de L'Idole est X2; Blueprint double la prise sur la même main scorée, transformant les cartes correspondantes en évolution X4 par carte."
       },
       "brainstorm__triboulet": {
         "why": "Positionne Triboulet à l'extrême gauche pour que Brainstorm le copie. Chaque Roi et Dame scorés appliquent deux multiplicateurs X2 empilés."
@@ -898,7 +904,7 @@
         "why": "Les cartes Acier déclenchent leur X1.5 une fois en gardé-en-main. Mime redéclenche, doublant gratuitement la pression Acier."
       },
       "sock_and_buskin__triboulet": {
-        "why": "Sock redéclenche chaque figure scorée, et chaque redéclenchement réapplique le X2 de Triboulet — la boucle d'évolution canonique sur figures."
+        "why": "Sock redéclenche chaque figure scorée, et chaque redéclenchement réapplique le X2 de Triboulet; la boucle d'évolution canonique sur figures."
       },
       "pareidolia__triboulet": {
         "why": "Pareidolia rend chaque carte scorée comme une figure, donc le X2 de Triboulet tire sur toute la main au lieu de seulement les Rois et Dames."
@@ -916,7 +922,7 @@
         "why": "Hack redéclenche les petites cartes deux fois, doublant les chances de briser du Verre à chaque main et accélérant les stacks permanents X0.75 de Glass Joker."
       },
       "fibonacci__hack": {
-        "why": "2, 3 et 5 sont à la fois des rangs Fibonacci et des rangs Hack — chaque proc Fibonacci tire deux fois."
+        "why": "2, 3 et 5 sont à la fois des rangs Fibonacci et des rangs Hack; chaque proc Fibonacci tire deux fois."
       },
       "mime__raised_fist": {
         "why": "Mime redéclenche la phase gardée-en-main, donc le mult plat de Raised Fist s'applique deux fois depuis une seule petite carte gardée en main."
@@ -928,10 +934,10 @@
         "why": "DNA duplique définitivement ce que tu joues seul. Choisis une carte cible de L'Idole et farm ses procs X2 en saturant le deck."
       },
       "dna__hologram": {
-        "why": "Chaque carte clonée par DNA fait croître Hologram de X0.25 — une boucle d'évolution XMult gratuite."
+        "why": "Chaque carte clonée par DNA fait croître Hologram de X0.25; une boucle d'évolution XMult gratuite."
       },
       "astronomer__constellation": {
-        "why": "Astronomer rend toutes les cartes Planète et les boosters Célestes gratuits ; chaque Planète gratuite alimente l'accumulation XMult de X0.1-par-utilisation de Constellation — les deux convertissent l'argent économisé en évolution exponentielle gratuite sur le run."
+        "why": "Astronomer rend toutes les cartes Planète et les boosters Célestes gratuits ; chaque Planète gratuite alimente l'accumulation XMult de X0.1-par-utilisation de Constellation; les deux convertissent l'argent économisé en évolution exponentielle gratuite sur le run."
       },
       "astronomer__satellite": {
         "why": "Satellite évolue les revenus avec les Planètes uniques utilisées ; Planet Merchant garantit plus de variété de Planètes vues."
@@ -946,7 +952,7 @@
         "why": "Stuntman réduit la taille de main de 2, détruisant le multiplicateur par-Roi de Baron. N'utilise les deux ensemble que si tu corriges agressivement la taille de main."
       },
       "ride_the_bus__triboulet": {
-        "why": "Ride the Bus se réinitialise sur n'importe quelle figure scorée — Triboulet veut scorer des figures. Ils s'annulent activement."
+        "why": "Ride the Bus se réinitialise sur n'importe quelle figure scorée; Triboulet veut scorer des figures. Ils s'annulent activement."
       },
       "drunkard__green_joker": {
         "why": "Green Joker perd du mult par défausse, annulant tout l'objectif de Drunkard. Choisis une direction."
@@ -964,19 +970,19 @@
         "why": "Seltzer double chaque carte scorée pendant 10 mains. Spike Triboulet pendant les blinds Boss, puis pivote quand il expire."
       },
       "golden_joker__midas_mask": {
-        "why": "Deux sources de revenus empilées — Midas convertit les figures en or pendant que Golden Joker paie un soutien d'intérêt passif de fin de round."
+        "why": "Deux sources de revenus empilées; Midas convertit les figures en or pendant que Golden Joker paie un soutien d'intérêt passif de fin de round."
       },
       "driver_gloves__stone_joker": {
         "why": "Les Pierres comptent comme cartes Améliorées pour le seuil de Driver's License et alimentent individuellement les Jetons de Stone Joker. Deux payoffs depuis une seule conversion."
       },
       "blueprint__obelisk": {
-        "why": "Une fois qu'Obelisk a accumulé un énorme XMult, Blueprint le copie — mais ne t'engage que quand tu as vraiment arrêté de jouer ta main la plus jouée."
+        "why": "Une fois qu'Obelisk a accumulé un énorme XMult, Blueprint le copie; mais ne t'engage que quand tu as vraiment arrêté de jouer ta main la plus jouée."
       },
       "photograph__sock_and_buskin": {
-        "why": "Sock and Buskin redéclenche chaque figure scorée ; Photograph proc sur la PREMIÈRE figure — après le redéclenchement, la fenêtre de déclenchement de Photograph tire à nouveau, délivrant deux ticks X2 depuis une seule figure."
+        "why": "Sock and Buskin redéclenche chaque figure scorée ; Photograph proc sur la PREMIÈRE figure; après le redéclenchement, la fenêtre de déclenchement de Photograph tire à nouveau, délivrant deux ticks X2 depuis une seule figure."
       },
       "smiley_face__sock_and_buskin": {
-        "why": "Chaque redéclenchement par Sock and Buskin rejoue la figure scorée en entier, doublant chaque Joker Mult plat par figure incluant le +5 Mult de Smiley Face — cinq figures dans une Couleur donnent +50 Mult au lieu de +25."
+        "why": "Chaque redéclenchement par Sock and Buskin rejoue la figure scorée en entier, doublant chaque Joker Mult plat par figure incluant le +5 Mult de Smiley Face; cinq figures dans une Couleur donnent +50 Mult au lieu de +25."
       },
       "scary_face__sock_and_buskin": {
         "why": "Sock and Buskin redéclenche chaque figure ; chaque redéclenchement double aussi le bonus de +30 Jetons de Scary Face, couvrant le côté Jetons que le moteur de mult-figures de Sock manque généralement."
@@ -985,16 +991,16 @@
         "why": "Dusk redéclenche toutes les cartes scorées sur la dernière main du round ; si la carte cible de L'Idole est dans cette main, chaque redéclenchement tire un autre X2, s'empilant multiplicativement sur une main qui délivre déjà le payoff en rafale."
       },
       "acrobat__dusk": {
-        "why": "Les deux effets se déclenchent sur la dernière main du round — Acrobat contribue X3 et Dusk redéclenche chaque carte jouée, laissant le X3 d'Acrobat s'appliquer à un passage de score doublé sur la même main."
+        "why": "Les deux effets se déclenchent sur la dernière main du round; Acrobat contribue X3 et Dusk redéclenche chaque carte jouée, laissant le X3 d'Acrobat s'appliquer à un passage de score doublé sur la même main."
       },
       "hanging_chad__triboulet": {
-        "why": "Hanging Chad déclenche la première carte scorée trois fois au total ; si cette carte est un Roi ou une Dame, Triboulet applique son X2 trois fois en séquence — X2×X2×X2 = X8 depuis une seule figure bien placée."
+        "why": "Hanging Chad déclenche la première carte scorée trois fois au total ; si cette carte est un Roi ou une Dame, Triboulet applique son X2 trois fois en séquence; X2×X2×X2 = X8 depuis une seule figure bien placée."
       },
       "hack__wee_joker": {
-        "why": "Hack redéclenche chaque 2 joué une fois supplémentaire ; chaque redéclenchement compte comme un 2 scoré additionnel, doublant l'accumulation permanente de +8 Jetons par 2 scoré de Wee Joker — un 2 joué donne +16 Jetons de croissance permanente au lieu de +8."
+        "why": "Hack redéclenche chaque 2 joué une fois supplémentaire ; chaque redéclenchement compte comme un 2 scoré additionnel, doublant l'accumulation permanente de +8 Jetons par 2 scoré de Wee Joker; un 2 joué donne +16 Jetons de croissance permanente au lieu de +8."
       },
       "even_steven__hack": {
-        "why": "2 et 4 sont à la fois des rangs Even Steven et des rangs Hack — chaque 2 ou 4 joué déclenche le +4 Mult d'Even Steven deux fois, soit effectivement +8 Mult par petite carte paire scorée."
+        "why": "2 et 4 sont à la fois des rangs Even Steven et des rangs Hack; chaque 2 ou 4 joué déclenche le +4 Mult d'Even Steven deux fois, soit effectivement +8 Mult par petite carte paire scorée."
       },
       "seltzer__the_idol": {
         "why": "Seltzer redéclenche chaque carte scorée pendant 10 mains ; chaque redéclenchement retire le X2 de L'Idole sur les cartes correspondantes, transformant une seule carte cible de L'Idole en X4 par copie déclenchée pendant la fenêtre Seltzer."
@@ -1006,191 +1012,191 @@
         "why": "Reserved Parking se déclenche par figure gardée en main pendant la phase gardée-en-main ; Mime redéclenche la phase gardée-en-main, doublant le jet de revenu 1-sur-2 de chaque figure et doublant approximativement l'argent passif gagné."
       },
       "hanging_chad__photograph": {
-        "why": "Photograph tire une fois par main sur la première figure scorée ; Hanging Chad redéclenche la première carte scorée deux fois supplémentaires — si la carte de tête est une figure, le X2 de Photograph s'applique sur les trois passages."
+        "why": "Photograph tire une fois par main sur la première figure scorée ; Hanging Chad redéclenche la première carte scorée deux fois supplémentaires; si la carte de tête est une figure, le X2 de Photograph s'applique sur les trois passages."
       },
       "blueprint__triboulet": {
         "why": "Blueprint copie le Joker à sa droite ; positionné immédiatement à gauche de Triboulet, il tire le X2-par-Roi/Dame de Triboulet une seconde fois sur le même passage de score, transformant chaque figure en X4 par déclenchement."
       },
       "brainstorm__the_idol": {
-        "why": "Positionne L'Idole à l'extrême gauche ; Brainstorm la copie, appliquant X2 par carte correspondante deux fois dans le même passage de score — une carte cible de L'Idole passe de X2 à X4 sans coût supplémentaire."
+        "why": "Positionne L'Idole à l'extrême gauche ; Brainstorm la copie, appliquant X2 par carte correspondante deux fois dans le même passage de score; une carte cible de L'Idole passe de X2 à X4 sans coût supplémentaire."
       },
       "blueprint__the_duo": {
         "why": "The Duo applique X2 quand une Paire apparaît dans la main ; Blueprint le copie pour délivrer un second X2 sur la même main, faisant de chaque main contenant une Paire un stack XMult X4 gratuit."
       },
       "the_order__the_tribe": {
-        "why": "Les deux Jokers XMult conditionnels tirent simultanément sur les mains Quinte flush — The Tribe contribue X2 et The Order contribue X3, s'empilant à X6 sur chaque Quinte flush scorée."
+        "why": "Les deux Jokers XMult conditionnels tirent simultanément sur les mains Quinte flush; The Tribe contribue X2 et The Order contribue X3, s'empilant à X6 sur chaque Quinte flush scorée."
       },
       "ancient_joker__smeared_joker": {
         "why": "Ancient Joker applique X1.5 par carte scorée de l'enseigne active ; Smeared Joker réduit quatre enseignes à deux, donc environ la moitié de ton deck déclenche X1.5 sur n'importe quelle main quelle que soit la rotation d'enseigne."
       },
       "bloodstone__oops_all_6s": {
-        "why": "Oops ! All 6s double le proc Cœur 1-sur-2 de Bloodstone en garanti — chaque carte Cœur scorée devient un tick X1.5 certain, transformant les Couleurs Cœur en un moteur multiplicatif X1.5-par-carte fiable."
+        "why": "Oops ! All 6s double le proc Cœur 1-sur-2 de Bloodstone en garanti; chaque carte Cœur scorée devient un tick X1.5 certain, transformant les Couleurs Cœur en un moteur multiplicatif X1.5-par-carte fiable."
       },
       "baseball_card__constellation": {
-        "why": "Baseball Card donne X1.5 Mult par Joker Peu commun possédé ; Constellation est Peu commun et l'un des plus forts évolueurs XMult du jeu — posséder les deux donne X1.5 de Baseball Card pour la présence de Constellation, pendant que Constellation se compose indépendamment via les Planètes."
+        "why": "Baseball Card donne X1.5 Mult par Joker Peu commun possédé ; Constellation est Peu commun et l'un des plus forts évolueurs XMult du jeu; posséder les deux donne X1.5 de Baseball Card pour la présence de Constellation, pendant que Constellation se compose indépendamment via les Planètes."
       },
       "cavendish__dna": {
-        "why": "La duplication par jeu unique de DNA peut cibler n'importe quelle carte — cloner un As dans un deck saturé de quatre copies garantit des mains constamment de haute valeur pendant que Cavendish fournit le payoff X3 sur chaque main scorée qui en ressort."
+        "why": "La duplication par jeu unique de DNA peut cibler n'importe quelle carte; cloner un As dans un deck saturé de quatre copies garantit des mains constamment de haute valeur pendant que Cavendish fournit le payoff X3 sur chaque main scorée qui en ressort."
       },
       "marble_joker__stone_joker": {
-        "why": "Marble Joker ajoute une carte Pierre au deck à chaque blind ; chaque Pierre ajoutée fait croître Stone Joker de +25 Jetons par main scorée — l'évolution passive par nombre de blinds délivre un moteur de Jetons gratuit sans effort par main."
+        "why": "Marble Joker ajoute une carte Pierre au deck à chaque blind ; chaque Pierre ajoutée fait croître Stone Joker de +25 Jetons par main scorée; l'évolution passive par nombre de blinds délivre un moteur de Jetons gratuit sans effort par main."
       },
       "perkeo__sixth_sense": {
-        "why": "Sixth Sense produit une carte Spectrale à chaque round en sacrifiant un 6 ; Perkeo duplique un consommable aléatoire à chaque fin de boutique — garder le Spectral entre les visites de boutique garantit une copie Spectrale Négative gratuite, doublant effectivement chaque proc de Sixth Sense sur le run."
+        "why": "Sixth Sense produit une carte Spectrale à chaque round en sacrifiant un 6 ; Perkeo duplique un consommable aléatoire à chaque fin de boutique; garder le Spectral entre les visites de boutique garantit une copie Spectrale Négative gratuite, doublant effectivement chaque proc de Sixth Sense sur le run."
       },
       "cartomancer__fortune_teller": {
-        "why": "Cartomancer crée un Tarot gratuit à chaque sélection de blind ; chaque Tarot utilisé ajoute définitivement +1 Mult à Fortune Teller — les deux forment une boucle fermée où la génération de Tarots se traduit directement en mult plat permanent."
+        "why": "Cartomancer crée un Tarot gratuit à chaque sélection de blind ; chaque Tarot utilisé ajoute définitivement +1 Mult à Fortune Teller; les deux forment une boucle fermée où la génération de Tarots se traduit directement en mult plat permanent."
       },
       "certificate__steel_joker": {
         "why": "Certificate ajoute une carte aléatoire scellée à ta main au début de chaque round ; quand ces cartes ajoutées portent des sceaux Violets ou sont améliorées manuellement en Acier, le XMult de Steel Joker croît gratuitement chaque round sans dépense de Tarot."
       },
       "erosion__trading_card": {
-        "why": "Trading Card détruit la première carte jouée seule à chaque round et rapporte 3$ ; chaque carte détruite fait croître définitivement Erosion de +4 Mult — évolution de mult passif gratuit chaque round tout en fournissant des revenus."
+        "why": "Trading Card détruit la première carte jouée seule à chaque round et rapporte 3$ ; chaque carte détruite fait croître définitivement Erosion de +4 Mult; évolution de mult passif gratuit chaque round tout en fournissant des revenus."
       },
       "four_fingers__smeared_joker": {
-        "why": "Four Fingers réduit l'exigence de Couleur à 4 cartes ; Smeared Joker réduit de moitié le pool d'enseignes — ensemble presque n'importe quelles quatre cartes d'un deck à deux enseignes forment une Couleur, rendant les constructions Couleur à 5 cartes presque inconditionnelles."
+        "why": "Four Fingers réduit l'exigence de Couleur à 4 cartes ; Smeared Joker réduit de moitié le pool d'enseignes; ensemble presque n'importe quelles quatre cartes d'un deck à deux enseignes forment une Couleur, rendant les constructions Couleur à 5 cartes presque inconditionnelles."
       },
       "four_fingers__shortcut": {
-        "why": "Shortcut permet les suites avec des trous ; Four Fingers réduit le nombre à 4 — n'importe quelles quatre cartes à peu près séquentielles forment une Suite, débloquant la Quinte flush comme un type de main quasi gratuit quand combiné avec Smeared."
+        "why": "Shortcut permet les suites avec des trous ; Four Fingers réduit le nombre à 4; n'importe quelles quatre cartes à peu près séquentielles forment une Suite, débloquant la Quinte flush comme un type de main quasi gratuit quand combiné avec Smeared."
       },
       "burglar__mystic_summit": {
-        "why": "Burglar élimine toutes les défausses au début du blind ; Mystic Summit requiert exactement 0 défausse restante pour son bonus de +15 Mult — Burglar garantit que Mystic Summit tire à chaque main sans aucune discipline supplémentaire."
+        "why": "Burglar élimine toutes les défausses au début du blind ; Mystic Summit requiert exactement 0 défausse restante pour son bonus de +15 Mult; Burglar garantit que Mystic Summit tire à chaque main sans aucune discipline supplémentaire."
       },
       "card_sharp__loyalty_card": {
-        "why": "Loyalty Card veut que tu joues ta 6e main en grand ; Card Sharp donne X3 sur les jeux répétés du même type de main — ils créent une tension de cycle où le déclencheur X4 de Loyalty force un choix de main qui pourrait réinitialiser ou entrer en conflit avec le bonus même-main de Card Sharp."
+        "why": "Loyalty Card veut que tu joues ta 6e main en grand ; Card Sharp donne X3 sur les jeux répétés du même type de main; ils créent une tension de cycle où le déclencheur X4 de Loyalty force un choix de main qui pourrait réinitialiser ou entrer en conflit avec le bonus même-main de Card Sharp."
       },
       "oops_all_6s__space_joker": {
         "why": "La montée de niveau gratuite 1-sur-4 de Space Joker passe à 2-sur-4 (50%) via Oops ! All 6s, transformant la montée de niveau passive en un moteur quasi fiable qui fait croître les Jetons et le mult de base à quasi chaque autre main."
       },
       "bull__to_the_moon": {
-        "why": "To the Moon relève le plafond d'intérêt effectif, te permettant de garder plus d'argent profitablement ; Bull convertit chaque dollar gardé en +2 Jetons par main scorée — la même réserve d'argent qui rapporte plus d'intérêts délivre aussi plus de Jetons à chaque main."
+        "why": "To the Moon relève le plafond d'intérêt effectif, te permettant de garder plus d'argent profitablement ; Bull convertit chaque dollar gardé en +2 Jetons par main scorée; la même réserve d'argent qui rapporte plus d'intérêts délivre aussi plus de Jetons à chaque main."
       },
       "cloud_9__rocket": {
-        "why": "Les deux sont des sources de revenus passifs de fin de round qui s'empilent indépendamment — Cloud 9 évolue avec la densité de 9 pendant que Rocket évolue avec les blinds Boss défaits, couvrant les phases précoces et tardives du run avec des courbes de revenus distinctes."
+        "why": "Les deux sont des sources de revenus passifs de fin de round qui s'empilent indépendamment; Cloud 9 évolue avec la densité de 9 pendant que Rocket évolue avec les blinds Boss défaits, couvrant les phases précoces et tardives du run avec des courbes de revenus distinctes."
       },
       "delayed_gratification__golden_joker": {
-        "why": "Delayed Gratification paie 2$ par défausse non utilisée si aucune défausse n'est utilisée ; le 4$ de fin de round de Golden Joker s'empile par-dessus — jouer les deux dans une construction zéro-défausse propre génère 4$ + (défausses × 2$) passivement à chaque round."
+        "why": "Delayed Gratification paie 2$ par défausse non utilisée si aucune défausse n'est utilisée ; le 4$ de fin de round de Golden Joker s'empile par-dessus; jouer les deux dans une construction zéro-défausse propre génère 4$ + (défausses × 2$) passivement à chaque round."
       },
       "greedy_joker__rough_gem": {
-        "why": "Rough Gem rapporte 1$ par Carreau scoré ; Greedy Joker rapporte +3 Mult par Carreau scoré — chaque carte Carreau scorée fait simultanément avancer les revenus et le score, un rare double payoff par carte."
+        "why": "Rough Gem rapporte 1$ par Carreau scoré ; Greedy Joker rapporte +3 Mult par Carreau scoré; chaque carte Carreau scorée fait simultanément avancer les revenus et le score, un rare double payoff par carte."
       },
       "golden_ticket__midas_mask": {
-        "why": "Midas Mask convertit définitivement les figures scorées en Or ; Golden Ticket rapporte 4$ à chaque fois qu'une carte Or est scorée — une fois les figures converties, chaque figure scorée retourne 4$ en plus de sa contribution au score."
+        "why": "Midas Mask convertit définitivement les figures scorées en Or ; Golden Ticket rapporte 4$ à chaque fois qu'une carte Or est scorée; une fois les figures converties, chaque figure scorée retourne 4$ en plus de sa contribution au score."
       },
       "business_card__pareidolia": {
-        "why": "Business Card a 1 chance sur 2 de payer 2$ par figure scorée ; Pareidolia rend chaque carte une figure — dans une main de 5 cartes, le revenu attendu par main passe de 1 à 2 cartes admissibles à 5, triplant approximativement les revenus de Business Card."
+        "why": "Business Card a 1 chance sur 2 de payer 2$ par figure scorée ; Pareidolia rend chaque carte une figure; dans une main de 5 cartes, le revenu attendu par main passe de 1 à 2 cartes admissibles à 5, triplant approximativement les revenus de Business Card."
       },
       "gift_card__swashbuckler": {
-        "why": "Gift Card ajoute 1$ de valeur de revente à chaque Joker à chaque round ; Swashbuckler convertit la valeur de revente totale des Jokers en Mult plat — Gift Card gonfle passivement le Mult de Swashbuckler de 1$ par Joker par round, se composant multiplicativement sur le run."
+        "why": "Gift Card ajoute 1$ de valeur de revente à chaque Joker à chaque round ; Swashbuckler convertit la valeur de revente totale des Jokers en Mult plat; Gift Card gonfle passivement le Mult de Swashbuckler de 1$ par Joker par round, se composant multiplicativement sur le run."
       },
       "perkeo__vagabond": {
-        "why": "Vagabond crée un Tarot quand tu joues avec ≤4$ ; Perkeo duplique un consommable aléatoire en fin de boutique — dépenser délibérément jusqu'au seuil Vagabond avant de faire du shopping déclenche alors Perkeo sur le Tarot généré, produisant effectivement deux Tarots pour le coût d'une main planifiée à faible solde."
+        "why": "Vagabond crée un Tarot quand tu joues avec ≤4$ ; Perkeo duplique un consommable aléatoire en fin de boutique; dépenser délibérément jusqu'au seuil Vagabond avant de faire du shopping déclenche alors Perkeo sur le Tarot généré, produisant effectivement deux Tarots pour le coût d'une main planifiée à faible solde."
       },
       "pareidolia__sock_and_buskin": {
-        "why": "Pareidolia rend chaque carte une figure ; Sock and Buskin redéclenche chaque figure scorée — la combinaison redéclenche chaque carte jouée dans n'importe quelle main, doublant effectivement toutes les contributions de score par carte."
+        "why": "Pareidolia rend chaque carte une figure ; Sock and Buskin redéclenche chaque figure scorée; la combinaison redéclenche chaque carte jouée dans n'importe quelle main, doublant effectivement toutes les contributions de score par carte."
       },
       "pareidolia__scary_face": {
-        "why": "Avec Pareidolia actif, chaque carte scorée est admissible pour les +30 Jetons de Scary Face, transformant une main de 5 cartes en un plancher garanti de +150 Jetons en plus des Jetons de main de base — une fondation de Jetons cohérente pour n'importe quelle construction."
+        "why": "Avec Pareidolia actif, chaque carte scorée est admissible pour les +30 Jetons de Scary Face, transformant une main de 5 cartes en un plancher garanti de +150 Jetons en plus des Jetons de main de base; une fondation de Jetons cohérente pour n'importe quelle construction."
       },
       "pareidolia__smiley_face": {
-        "why": "Pareidolia rend chaque carte une figure, donc le +5 Mult de Smiley Face tire sur chacune des cinq cartes scorées — baseline de +25 Mult plat sur n'importe quelle main, s'empilant avec les Jokers d'enseigne et la montée de niveau des mains comme plancher fiable."
+        "why": "Pareidolia rend chaque carte une figure, donc le +5 Mult de Smiley Face tire sur chacune des cinq cartes scorées; baseline de +25 Mult plat sur n'importe quelle main, s'empilant avec les Jokers d'enseigne et la montée de niveau des mains comme plancher fiable."
       },
       "canio__pareidolia": {
-        "why": "Canio gagne X1 Mult définitivement à chaque fois qu'une figure est détruite ; Pareidolia rend chaque carte une figure — toute carte détruite (brisure de Verre, Sixth Sense consommant un 6, kills de trading card) fait maintenant avancer le multiplicateur de Canio, élargissant drastiquement le pool de cartes éligibles à la destruction."
+        "why": "Canio gagne X1 Mult définitivement à chaque fois qu'une figure est détruite ; Pareidolia rend chaque carte une figure; toute carte détruite (brisure de Verre, Sixth Sense consommant un 6, kills de trading card) fait maintenant avancer le multiplicateur de Canio, élargissant drastiquement le pool de cartes éligibles à la destruction."
       },
       "dusk__triboulet": {
-        "why": "Dusk redéclenche toutes les cartes scorées sur la dernière main ; Triboulet tire X2 par Roi ou Dame scoré — le redéclenchement de dernière main double chaque application X2 de Triboulet, transformant une dernière main à deux Rois de X4 à X8 sans coût supplémentaire."
+        "why": "Dusk redéclenche toutes les cartes scorées sur la dernière main ; Triboulet tire X2 par Roi ou Dame scoré; le redéclenchement de dernière main double chaque application X2 de Triboulet, transformant une dernière main à deux Rois de X4 à X8 sans coût supplémentaire."
       },
       "drunkard__hit_the_road": {
-        "why": "Hit the Road gagne X0.5 Mult par Valet défaussé à chaque round ; Drunkard donne +1 défausse par round — la défausse supplémentaire permet une opportunité de défausse de Valet de plus, poussant constamment la croissance par round de Hit the Road de X1.5 à X2 par deck de 3 Valets."
+        "why": "Hit the Road gagne X0.5 Mult par Valet défaussé à chaque round ; Drunkard donne +1 défausse par round; la défausse supplémentaire permet une opportunité de défausse de Valet de plus, poussant constamment la croissance par round de Hit the Road de X1.5 à X2 par deck de 3 Valets."
       },
       "merry_andy__yorick": {
-        "why": "Yorick gagne X1 Mult par 23 cartes défaussées ; Merry Andy ajoute +3 défausses par round — les défausses supplémentaires sur un run complet compriment le seuil de 23 cartes de Yorick de ~6 rounds à ~4 rounds, accélérant son stack XMult permanent."
+        "why": "Yorick gagne X1 Mult par 23 cartes défaussées ; Merry Andy ajoute +3 défausses par round; les défausses supplémentaires sur un run complet compriment le seuil de 23 cartes de Yorick de ~6 rounds à ~4 rounds, accélérant son stack XMult permanent."
       },
       "castle__drunkard": {
-        "why": "Castle gagne +3 Jetons par carte défaussée de son enseigne tournante ; Drunkard ajoute +1 défausse par round — chaque défausse supplémentaire génère une opportunité d'évolution de Jetons supplémentaire à chaque round si la carte défaussée correspond à l'enseigne active de Castle."
+        "why": "Castle gagne +3 Jetons par carte défaussée de son enseigne tournante ; Drunkard ajoute +1 défausse par round; chaque défausse supplémentaire génère une opportunité d'évolution de Jetons supplémentaire à chaque round si la carte défaussée correspond à l'enseigne active de Castle."
       },
       "burnt_joker__faceless_joker": {
-        "why": "Burnt Joker monte en niveau le type de main de poker défaussée à chaque round comme montée de niveau gratuite ; Faceless Joker paie 5$ pour avoir défaussé 3+ figures simultanément — les deux récompenses tirent depuis la même action de défausse sans se disputer les ressources."
+        "why": "Burnt Joker monte en niveau le type de main de poker défaussée à chaque round comme montée de niveau gratuite ; Faceless Joker paie 5$ pour avoir défaussé 3+ figures simultanément; les deux récompenses tirent depuis la même action de défausse sans se disputer les ressources."
       },
       "hit_the_road__yorick": {
-        "why": "Les deux Jokers font évoluer leur XMult à partir du volume de défausse — Yorick s'accumule définitivement sur le run pendant que Hit the Road se réinitialise à chaque round mais paie rapidement dans le budget de défausse d'un seul round, couvrant les axes d'évolution long terme et en rafale."
+        "why": "Les deux Jokers font évoluer leur XMult à partir du volume de défausse; Yorick s'accumule définitivement sur le run pendant que Hit the Road se réinitialise à chaque round mais paie rapidement dans le budget de défausse d'un seul round, couvrant les axes d'évolution long terme et en rafale."
       },
       "mystic_summit__ramen": {
-        "why": "Ramen perd X0.01 Mult par défausse et Mystic Summit ne s'active qu'à zéro défausse — jouer les deux impose une discipline zéro-défausse qui préserve le plafond X2 de Ramen et garantit que le +15 Mult de Mystic Summit tire à chaque main du round."
+        "why": "Ramen perd X0.01 Mult par défausse et Mystic Summit ne s'active qu'à zéro défausse; jouer les deux impose une discipline zéro-défausse qui préserve le plafond X2 de Ramen et garantit que le +15 Mult de Mystic Summit tire à chaque main du round."
       },
       "hack__vampire": {
         "why": "Hack redéclenche chaque 2 à 5 joué ; si l'une de ces petites cartes est améliorée, chaque redéclenchement compte comme un déclenchement supplémentaire de carte améliorée pour l'accumulation XMult de Vampire, doublant le taux de croissance de Vampire sur les cartes améliorées de bas rang."
       },
       "driver_gloves__marble_joker": {
-        "why": "Marble Joker ajoute une carte Pierre au deck à chaque blind — les cartes Pierre comptent comme cartes Améliorées pour le seuil de 16 cartes de Driver's License ; ensemble ils atteignent passivement le seuil X3 sans aucune dépense de Tarot."
+        "why": "Marble Joker ajoute une carte Pierre au deck à chaque blind; les cartes Pierre comptent comme cartes Améliorées pour le seuil de 16 cartes de Driver's License ; ensemble ils atteignent passivement le seuil X3 sans aucune dépense de Tarot."
       },
       "glass_joker__seltzer": {
-        "why": "Seltzer redéclenche chaque carte jouée pendant 10 mains ; les cartes Verre ont leur chance de destruction appliquée à chaque redéclenchement — chaque main sous Seltzer environ double le nombre de brisures de Verre, accélérant le stack XMult permanent de Glass Joker en une rafale concentrée."
+        "why": "Seltzer redéclenche chaque carte jouée pendant 10 mains ; les cartes Verre ont leur chance de destruction appliquée à chaque redéclenchement; chaque main sous Seltzer environ double le nombre de brisures de Verre, accélérant le stack XMult permanent de Glass Joker en une rafale concentrée."
       },
       "lucky_cat__oops_all_6s": {
-        "why": "Lucky Cat croît de X0.25 Mult par proc de carte Lucky ; Oops ! All 6s double la chance de déclenchement 1-sur-5 à 2-sur-5 — quasi doublant la croissance moyenne de Lucky Cat par round et le convertissant d'un évolueur lent en un moteur XMult en milieu de partie."
+        "why": "Lucky Cat croît de X0.25 Mult par proc de carte Lucky ; Oops ! All 6s double la chance de déclenchement 1-sur-5 à 2-sur-5; quasi doublant la croissance moyenne de Lucky Cat par round et le convertissant d'un évolueur lent en un moteur XMult en milieu de partie."
       },
       "driver_gloves__steel_joker": {
-        "why": "Les cartes Acier comptées par Steel Joker pour le XMult comptent aussi vers le seuil de 16 cartes améliorées de Driver's License — empiler les améliorations Acier fait simultanément croître le moteur XMult et débloque le X3 plat, deux payoffs depuis une seule campagne d'amélioration."
+        "why": "Les cartes Acier comptées par Steel Joker pour le XMult comptent aussi vers le seuil de 16 cartes améliorées de Driver's License; empiler les améliorations Acier fait simultanément croître le moteur XMult et débloque le X3 plat, deux payoffs depuis une seule campagne d'amélioration."
       },
       "smeared_joker__vampire": {
-        "why": "Vampire croît à partir des cartes améliorées scorées et se fiche de l'enseigne — Smeared Joker n'a pas d'interaction directe, mais dans les constructions Couleur, Smeared augmente le nombre de cartes scorées par main, augmentant indirectement le nombre de déclenchements de cartes améliorées par round."
+        "why": "Vampire croît à partir des cartes améliorées scorées et se fiche de l'enseigne; Smeared Joker n'a pas d'interaction directe, mais dans les constructions Couleur, Smeared augmente le nombre de cartes scorées par main, augmentant indirectement le nombre de déclenchements de cartes améliorées par round."
       },
       "lusty_joker__smeared_joker": {
-        "why": "Smeared Joker fusionne les Cœurs avec les Carreaux ; Lusty Joker récompense les cartes Cœur scorées — chaque Carreau dans la main compte désormais comme un Cœur, doublant le nombre de cartes qui déclenchent le +3 Mult de Lusty dans les constructions Couleur Cœur-Carreau."
+        "why": "Smeared Joker fusionne les Cœurs avec les Carreaux ; Lusty Joker récompense les cartes Cœur scorées; chaque Carreau dans la main compte désormais comme un Cœur, doublant le nombre de cartes qui déclenchent le +3 Mult de Lusty dans les constructions Couleur Cœur-Carreau."
       },
       "gluttonous_joker__smeared_joker": {
-        "why": "Smeared Joker fusionne les Trèfles avec les Piques ; Gluttonous Joker récompense les cartes Trèfle — chaque Pique déclenche désormais le +3 Mult de Gluttonous, doublant effectivement les payoffs d'enseigne sombre dans les constructions Couleur Pique/Trèfle."
+        "why": "Smeared Joker fusionne les Trèfles avec les Piques ; Gluttonous Joker récompense les cartes Trèfle; chaque Pique déclenche désormais le +3 Mult de Gluttonous, doublant effectivement les payoffs d'enseigne sombre dans les constructions Couleur Pique/Trèfle."
       },
       "blackboard__smeared_joker": {
-        "why": "Blackboard donne X3 Mult quand toutes les cartes gardées sont Piques ou Trèfles ; Smeared fusionne Piques et Trèfles en une enseigne effective — toute main composée de cartes d'enseigne sombre satisfait désormais Blackboard inconditionnellement."
+        "why": "Blackboard donne X3 Mult quand toutes les cartes gardées sont Piques ou Trèfles ; Smeared fusionne Piques et Trèfles en une enseigne effective; toute main composée de cartes d'enseigne sombre satisfait désormais Blackboard inconditionnellement."
       },
       "smeared_joker__wrathful_joker": {
-        "why": "Smeared fusionne Piques et Trèfles ; Wrathful récompense les Piques scorés — chaque Trèfle compte désormais comme Pique, doublant le nombre de déclenchements +3 Mult de Wrathful dans les constructions Trèfle/Pique et rendant Wrathful viable aux côtés de Gluttonous."
+        "why": "Smeared fusionne Piques et Trèfles ; Wrathful récompense les Piques scorés; chaque Trèfle compte désormais comme Pique, doublant le nombre de déclenchements +3 Mult de Wrathful dans les constructions Trèfle/Pique et rendant Wrathful viable aux côtés de Gluttonous."
       },
       "flower_pot__four_fingers": {
-        "why": "Flower Pot requiert les quatre enseignes dans une main pour X3 ; Four Fingers réduit l'exigence de taille de main à 4 cartes — une main de 4 cartes contenant une carte de chaque enseigne satisfait Flower Pot, et le cinquième emplacement libéré peut tenir une carte clé pour un autre payoff."
+        "why": "Flower Pot requiert les quatre enseignes dans une main pour X3 ; Four Fingers réduit l'exigence de taille de main à 4 cartes; une main de 4 cartes contenant une carte de chaque enseigne satisfait Flower Pot, et le cinquième emplacement libéré peut tenir une carte clé pour un autre payoff."
       },
       "ancient_joker__the_idol": {
-        "why": "Ancient Joker tourne son enseigne active à chaque round ; L'Idole tourne son rang+enseigne cible à chaque round — quand ils s'alignent sur la même enseigne au même round, la carte correspondante délivre X1.5 de Ancient et X2 de L'Idole pour une rafale X3 par carte."
+        "why": "Ancient Joker tourne son enseigne active à chaque round ; L'Idole tourne son rang+enseigne cible à chaque round; quand ils s'alignent sur la même enseigne au même round, la carte correspondante délivre X1.5 de Ancient et X2 de L'Idole pour une rafale X3 par carte."
       },
       "hologram__marble_joker": {
-        "why": "Marble Joker ajoute une carte Pierre au deck à chaque blind ; chaque carte ajoutée fait croître Hologram de X0.25 — sans dépenser un centime ni ouvrir de boosters, Marble fait monter le XMult de Hologram de X0.25 à chaque blind."
+        "why": "Marble Joker ajoute une carte Pierre au deck à chaque blind ; chaque carte ajoutée fait croître Hologram de X0.25; sans dépenser un centime ni ouvrir de boosters, Marble fait monter le XMult de Hologram de X0.25 à chaque blind."
       },
       "acrobat__obelisk": {
-        "why": "Obelisk construit du XMult en évitant ta main la plus jouée ; Acrobat fournit X3 sur la dernière main par round — dans une construction Obelisk parqué où tu joues toujours une dernière main hors type, le X3 d'Acrobat tire exactement quand le XMult accumulé d'Obelisk est à son maximum."
+        "why": "Obelisk construit du XMult en évitant ta main la plus jouée ; Acrobat fournit X3 sur la dernière main par round; dans une construction Obelisk parqué où tu joues toujours une dernière main hors type, le X3 d'Acrobat tire exactement quand le XMult accumulé d'Obelisk est à son maximum."
       },
       "burglar__green_joker": {
-        "why": "Burglar supprime toutes les défausses au début du blind ; Green Joker croît par main et réduit par défausse — Burglar garantit qu'aucune défausse n'est jamais dépensée, protégeant l'évolution de Green Joker de l'érosion tout en fournissant des mains supplémentaires pour une croissance plus rapide."
+        "why": "Burglar supprime toutes les défausses au début du blind ; Green Joker croît par main et réduit par défausse; Burglar garantit qu'aucune défausse n'est jamais dépensée, protégeant l'évolution de Green Joker de l'érosion tout en fournissant des mains supplémentaires pour une croissance plus rapide."
       },
       "blueprint__supernova": {
-        "why": "Supernova ajoute du Mult égal au nombre de fois que le type de main actuel a été joué dans ce run ; Blueprint le copie, appliquant ce même bonus Mult une seconde fois — tard dans un run spécialisé cela double un compte accumulé potentiellement massif."
+        "why": "Supernova ajoute du Mult égal au nombre de fois que le type de main actuel a été joué dans ce run ; Blueprint le copie, appliquant ce même bonus Mult une seconde fois; tard dans un run spécialisé cela double un compte accumulé potentiellement massif."
       },
       "joker_stencil__swashbuckler": {
-        "why": "Joker Stencil récompense les emplacements de Joker vides avec du XMult ; Swashbuckler convertit la valeur de revente des autres Jokers en Mult plat — les deux construisent depuis des directions opposées et coexistent seulement dans une construction allégée à haute valeur de Jokers où chaque emplacement gagne une valeur de revente maximale."
+        "why": "Joker Stencil récompense les emplacements de Joker vides avec du XMult ; Swashbuckler convertit la valeur de revente des autres Jokers en Mult plat; les deux construisent depuis des directions opposées et coexistent seulement dans une construction allégée à haute valeur de Jokers où chaque emplacement gagne une valeur de revente maximale."
       },
       "madness__riff_raff": {
-        "why": "Madness détruit un Joker aléatoire à chaque blind non-Boss pour un gain de XMult de X0.5 ; Riff-Raff génère deux Jokers Communs à chaque blind — la sortie de Riff-Raff alimente le moteur de destruction de Madness pour que tes Jokers précieux soient protégés par des Communs jetables absorbant les coups."
+        "why": "Madness détruit un Joker aléatoire à chaque blind non-Boss pour un gain de XMult de X0.5 ; Riff-Raff génère deux Jokers Communs à chaque blind; la sortie de Riff-Raff alimente le moteur de destruction de Madness pour que tes Jokers précieux soient protégés par des Communs jetables absorbant les coups."
       },
       "joker_stencil__madness": {
-        "why": "Madness détruit des Jokers (réduisant ton nombre) ce qui augmente le XMult de Joker Stencil — mais Madness choisit aléatoirement et pourrait détruire Stencil lui-même ou tes autres moteurs ; viable seulement dans une configuration à 2 Jokers étroitement contrôlée où tu acceptes le risque."
+        "why": "Madness détruit des Jokers (réduisant ton nombre) ce qui augmente le XMult de Joker Stencil; mais Madness choisit aléatoirement et pourrait détruire Stencil lui-même ou tes autres moteurs ; viable seulement dans une configuration à 2 Jokers étroitement contrôlée où tu acceptes le risque."
       },
       "riff_raff__showman": {
-        "why": "Showman permet les Jokers en double dans la boutique ; Riff-Raff génère des Jokers Communs à l'entrée du blind — combiné avec Abstract Joker ou Brainstorm, l'activation des doublons peut produire plusieurs copies d'un Joker Commun clé pour un payoff empilé."
+        "why": "Showman permet les Jokers en double dans la boutique ; Riff-Raff génère des Jokers Communs à l'entrée du blind; combiné avec Abstract Joker ou Brainstorm, l'activation des doublons peut produire plusieurs copies d'un Joker Commun clé pour un payoff empilé."
       },
       "credit_card__throwback": {
-        "why": "Throwback gagne X0.25 Mult par blind sauté ; Credit Card permet d'aller jusqu'à 20$ de dette — la marge de dette te laisse acheter des pièces clés sans argent, te permettant de sauter des blinds marginalement bénéfiques et de récolter des stacks Throwback même sur les premiers antes serrés en argent."
+        "why": "Throwback gagne X0.25 Mult par blind sauté ; Credit Card permet d'aller jusqu'à 20$ de dette; la marge de dette te laisse acheter des pièces clés sans argent, te permettant de sauter des blinds marginalement bénéfiques et de récolter des stacks Throwback même sur les premiers antes serrés en argent."
       }
     },
     "glossary": {
       "chips": {
         "term": "Jetons",
-        "def": "Le nombre bleu — score additif plat avant l'application du mult. Les types de mains et les cartes scorées contribuent des Jetons."
+        "def": "Le nombre bleu; score additif plat avant l'application du mult. Les types de mains et les cartes scorées contribuent des Jetons."
       },
       "mult": {
         "term": "Mult",
-        "def": "Le nombre rouge — multiplicateur additif plat. Score final = Jetons × mult."
+        "def": "Le nombre rouge; multiplicateur additif plat. Score final = Jetons × mult."
       },
       "xmult": {
         "term": "XMult",
@@ -1246,10 +1252,10 @@
       "what_title": "Qu’est-ce que c’est",
       "what_body": "Balatropedia répertorie chaque joker, deck, stake, voucher, boss blind, consommable et modificateur de Balatro, accompagné de synergies, d’archétypes et de combos curés. Utilisez la barre latérale pour basculer entre les outils de référence (Library, Glossary) et les outils de planification (My Run, Compare, Skeleton).",
       "accuracy_title": "Précision et sources",
-      "accuracy_body": "Les effets et valeurs de base des jokers proviennent du Wiki Balatro. Les synergies et stratégies de combo sont croisées avec des guides communautaires de confiance — les citations apparaissent en ligne sous chaque synergie et combo. Liste complète des sources :",
+      "accuracy_body": "Les effets et valeurs de base des jokers proviennent du Wiki Balatro. Les synergies et stratégies de combo sont croisées avec des guides communautaires de confiance; les citations apparaissent en ligne sous chaque synergie et combo. Liste complète des sources :",
       "fandom_attribution": "Textes et valeurs des jokers adaptés du Wiki Balatro sous licence CC-BY-SA 3.0. Les commentaires stratégiques sont éditoriaux.",
       "disclaimer_title": "Avertissement honnête",
-      "disclaimer_body": "Les conseils stratégiques sont des opinions validées par la communauté lorsque citées, ou des heuristiques curées ailleurs. Balatro est profond — une paire qui semble faible en théorie peut être forte avec le bon deck/voucher/stake. Si vous trouvez une erreur, ouvrez une issue ou une PR.",
+      "disclaimer_body": "Les conseils stratégiques sont des opinions validées par la communauté lorsque citées, ou des heuristiques curées ailleurs. Balatro est profond; une paire qui semble faible en théorie peut être forte avec le bon deck/voucher/stake. Si vous trouvez une erreur, ouvrez une issue ou une PR.",
       "submit_correction": "Soumettre une correction sur GitHub",
       "credits_title": "Crédits",
       "credit_game": "Jeu par",
@@ -1263,10 +1269,16 @@
       "subtitle": "Langue, thème, son, compte et données pour Balatropedia.",
       "theme": {
         "title": "Thème",
-        "hint": "Affecte uniquement les surfaces — les couleurs d’identité Balatro (mult rouge, chip bleu, money or) restent verrouillées.",
+        "hint": "Affecte uniquement les surfaces; les couleurs d’identité Balatro (mult rouge, chip bleu, money or) restent verrouillées.",
         "felt": { "label": "Feutre", "desc": "Table de casino verte par défaut." },
         "midnight": { "label": "Minuit", "desc": "Bleu-noir profond, peu fatigant." },
         "parchment": { "label": "Parchemin", "desc": "Table claire couleur crème." }
+      },
+      "screenshake": {
+        "title": "Effet de juice",
+        "enabled": "Animation au changement d'onglet",
+        "intensity": "Intensité",
+        "hint": "Contrôle l'effet de juice Balatro au changement d'onglet et sur les titres. 0 désactive, 50 est la valeur par défaut, 150 est exagéré."
       },
       "language": "Langue",
       "language_hint": "Change toute l'interface et le texte des Jokers. L'espagnol est partiellement traduit automatiquement.",
@@ -1299,22 +1311,22 @@
       "tip_label": "Astuce",
       "overview": {
         "title": "Aperçu",
-        "body": "Balatropedia est une référence non officielle pour Balatro. Chaque Joker, deck, stake, voucher, boss blind, consommable et modificateur est indexé avec des synergies et archétypes triés à la main. Utilise le menu latéral pour passer entre les outils — la plupart sont de pure référence, certains (My Run, Compare, Skeleton) aident à planifier une vraie partie.",
+        "body": "Balatropedia est une référence non officielle pour Balatro. Chaque Joker, deck, stake, voucher, boss blind, consommable et modificateur est indexé avec des synergies et archétypes triés à la main. Utilise le menu latéral pour passer entre les outils; la plupart sont de pure référence, certains (My Run, Compare, Skeleton) aident à planifier une vraie partie.",
         "tip": "Étoile n'importe quoi pour l'ajouter aux Favoris. Connecte-toi pour synchroniser favoris et runs entre appareils."
       },
       "library": {
         "title": "Bibliothèque",
-        "body": "Index recherchable des 150 Jokers avec descriptions, scaling, archétypes et tags. Les filtres sont derrière le bouton Filtres — clique dessus pour les ouvrir. Bascule Mosaïque/Grille/Liste depuis la barre du haut.",
-        "tip": "Utilise les filtres pour restreindre par rôle, rareté, stage ou type de main. Combine plusieurs filtres — ils s'additionnent (ET)."
+        "body": "Index recherchable des 150 Jokers avec descriptions, scaling, archétypes et tags. Les filtres sont derrière le bouton Filtres; clique dessus pour les ouvrir. Bascule Mosaïque/Grille/Liste depuis la barre du haut.",
+        "tip": "Utilise les filtres pour restreindre par rôle, rareté, stage ou type de main. Combine plusieurs filtres; ils s'additionnent (ET)."
       },
       "myrun": {
         "title": "My Run",
         "body": "Construis le set de Jokers que tu joues vraiment. Choisis un deck, un stake, des vouchers et jusqu'à 10 slots. La colonne de droite se met à jour en direct avec : synergies triées, archétypes implicites, synergies probables (partenaires / archétype partagé / tags partagés) et avertissements d'anti-synergie.",
-        "tip": "Les synergies probables apparaissent en or même sans entrée triée — elles sont déduites des métadonnées de chaque Joker pour que tu aies toujours du feedback."
+        "tip": "Les synergies probables apparaissent en or même sans entrée triée; elles sont déduites des métadonnées de chaque Joker pour que tu aies toujours du feedback."
       },
       "shop": {
         "title": "Boutique",
-        "body": "Simule un reroll de boutique. Ajoute des Jokers candidats et la page note à quel point chacun colle à ta run actuelle — basé sur la densité de synergie avec ce qui est déjà slotté et ton archétype actif.",
+        "body": "Simule un reroll de boutique. Ajoute des Jokers candidats et la page note à quel point chacun colle à ta run actuelle; basé sur la densité de synergie avec ce qui est déjà slotté et ton archétype actif.",
         "tip": "Utilise-le avant d'engager de l'argent en jeu : pose ici les Jokers visibles dans la boutique et compare les scores."
       },
       "synergies": {
@@ -1325,7 +1337,7 @@
       "combos": {
         "title": "Combos",
         "body": "Setups multi-Jokers (3+ pièces) qui produisent un moteur de sortie connu. Chaque combo liste les Jokers requis, la main visée et la difficulté de mise en place.",
-        "tip": "Les Combos sont la version longue des Synergies — utilise-les comme objectifs de build plutôt que comme paires ad-hoc."
+        "tip": "Les Combos sont la version longue des Synergies; utilise-les comme objectifs de build plutôt que comme paires ad-hoc."
       },
       "archetypes": {
         "title": "Archétypes",
@@ -1340,17 +1352,17 @@
       "skeleton": {
         "title": "Squelette",
         "body": "Construis un template à 5 Jokers par slot moteur (Chips / Flat Mult / XMult / Retrigger / Consistance). Choisis un Joker par slot pour voir à quel point le squelette tient.",
-        "tip": "Considère le Squelette comme un plan, pas une prescription — beaucoup de runs échangent les rôles en cours de partie."
+        "tip": "Considère le Squelette comme un plan, pas une prescription; beaucoup de runs échangent les rôles en cours de partie."
       },
       "decks": {
         "title": "Decks",
         "body": "Tous les decks de base et déverrouillables avec leur effet de départ et leurs archétypes idéaux.",
-        "tip": "Choisis un deck avant de remplir My Run — certains archétypes ne prospèrent que sur des decks spécifiques."
+        "tip": "Choisis un deck avant de remplir My Run; certains archétypes ne prospèrent que sur des decks spécifiques."
       },
       "stakes": {
         "title": "Stakes",
         "body": "Les huit stakes du Blanc au Doré, avec ce que chacun change (taille des Blinds, scaling de boutique, Tags restreints, etc.) et la courbe de difficulté.",
-        "tip": "Les stakes élevés punissent les setups lents — privilégie les Jokers early-stage au-dessus du Black Stake."
+        "tip": "Les stakes élevés punissent les setups lents; privilégie les Jokers early-stage au-dessus du Black Stake."
       },
       "bosses": {
         "title": "Boss Blinds",
@@ -1360,12 +1372,12 @@
       "vouchers": {
         "title": "Vouchers",
         "body": "Tous les vouchers, leur coût et leur upgrade. Utile pour les décisions d'achat en boutique mid-late game.",
-        "tip": "Beaucoup d'archétypes (Steel, Glass, Discard) ont besoin d'un voucher spécifique pour scaler — vérifie le champ `oftenLacks` de l'archétype."
+        "tip": "Beaucoup d'archétypes (Steel, Glass, Discard) ont besoin d'un voucher spécifique pour scaler; vérifie le champ `oftenLacks` de l'archétype."
       },
       "consumables": {
         "title": "Consommables",
         "body": "Tarots, Planètes et Spectres, avec leurs effets et les builds qu'ils aident le plus.",
-        "tip": "Les cartes Planètes upgradent les mains de façon permanente — priorise celles pour ta main de scoring. Les Spectres sont situationnels mais puissants."
+        "tip": "Les cartes Planètes upgradent les mains de façon permanente; priorise celles pour ta main de scoring. Les Spectres sont situationnels mais puissants."
       },
       "modifiers": {
         "title": "Modificateurs",
@@ -1379,12 +1391,12 @@
       },
       "glossary": {
         "title": "Glossaire",
-        "body": "Définitions de chaque terme spécifique à Balatro utilisé dans l'app — Mult, Chips, XMult, Retrigger, niveau de main, etc.",
+        "body": "Définitions de chaque terme spécifique à Balatro utilisé dans l'app; Mult, Chips, XMult, Retrigger, niveau de main, etc.",
         "tip": "Ouvre-le côte à côte avec My Run quand tu apprends le jeu."
       },
       "favorites": {
         "title": "Favoris",
-        "body": "Tout ce que tu as étoilé — Jokers et combos au même endroit. Ajoute des notes pour te rappeler pourquoi tu as mis en favori.",
+        "body": "Tout ce que tu as étoilé; Jokers et combos au même endroit. Ajoute des notes pour te rappeler pourquoi tu as mis en favori.",
         "tip": "Connecte-toi pour garder tes favoris entre appareils ; sinon ils ne vivent que dans cette session de navigateur."
       }
     }

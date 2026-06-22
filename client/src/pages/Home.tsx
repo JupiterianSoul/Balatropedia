@@ -16,7 +16,7 @@ import { EntityDetailSheet } from "@/components/EntityDetailSheet";
 import { UserButton } from "@/components/UserButton";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SoundToggle } from "@/components/SoundToggle";
-import { playSound } from "@/lib/sound";
+import { playSound, playRandom } from "@/lib/sound";
 import { useI18n, useT } from "@/lib/i18n";
 import { LibraryTab } from "@/tabs/LibraryTab";
 import { MyRunTab } from "@/tabs/MyRunTab";
@@ -39,7 +39,7 @@ import { SettingsTab } from "@/tabs/SettingsTab";
 import { HelpTab } from "@/tabs/HelpTab";
 import { AboutTab } from "@/tabs/AboutTab";
 
-// Grouped navigation — 17 tabs collapsed into 5 logical groups + Favorites.
+// Grouped navigation; 17 tabs collapsed into 5 logical groups + Favorites.
 // Same structure renders in both the mobile sheet and the desktop sidebar.
 const NAV_GROUPS: NavGroup[] = [
   { key: "library", tabs: ["library"] },
@@ -64,7 +64,7 @@ export default function Home() {
     setMobileNavOpen(false);
   }
 
-  // Brand block — shared between mobile sheet header and desktop sidebar header
+  // Brand block; shared between mobile sheet header and desktop sidebar header
   const Brand = (
     <button
       type="button"
@@ -85,10 +85,10 @@ export default function Home() {
     <div className="flex min-h-[100dvh] bg-background">
       <Tabs
         value={tab}
-        onValueChange={(v) => { playSound("click"); setTab(v); }}
+        onValueChange={(v) => { playRandom(["flip", "deal", "chip"]); setTab(v); }}
         className="flex min-h-[100dvh] w-full"
       >
-        {/* Desktop sidebar — persistent vertical nav, hidden on mobile */}
+        {/* Desktop sidebar; persistent vertical nav, hidden on mobile */}
         <aside
           className="sticky top-0 z-20 hidden h-[100dvh] w-60 shrink-0 flex-col border-r-4 border-black bg-[hsl(178_14%_13%)] shadow-[4px_0_0_hsl(198_18%_4%)] md:flex"
           data-testid="sidebar-desktop"
@@ -115,7 +115,7 @@ export default function Home() {
 
         {/* Main column */}
         <div className="flex min-w-0 flex-1 flex-col">
-          {/* Top bar — full bar on mobile, slim utility bar on desktop */}
+          {/* Top bar; full bar on mobile, slim utility bar on desktop */}
           <header className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden">
             <div className="flex items-center gap-2 px-3 py-2">
               {/* mobile hamburger */}
@@ -171,7 +171,7 @@ export default function Home() {
 
               <div className="flex-1" />
 
-              {/* mobile right controls — no SoundToggle here to keep room for sign-in (desktop has it in the sidebar) */}
+              {/* mobile right controls; no SoundToggle here to keep room for sign-in (desktop has it in the sidebar) */}
               <div className="flex shrink-0 items-center gap-1">
                 <LanguageSwitcher />
                 <UserButton />

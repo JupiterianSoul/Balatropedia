@@ -3,7 +3,7 @@ import type { SynergySource } from "@/data/jokers";
 import { useT } from "@/lib/i18n";
 
 /**
- * Inline citation chip strip — renders one external-link chip per community source
+ * Inline citation chip strip; renders one external-link chip per community source
  * (Balatro Wiki, dood.gg, Balatro HQ, Mobalytics, etc.).
  *
  * Used under synergy "why" blurbs and combo strategy writeups to make the
