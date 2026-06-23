@@ -58,11 +58,15 @@ const VALID_TABS = new Set([
 
 export default function Home() {
   const { favoriteJokers, favoriteCombos } = useApp();
-  // Hash-routing: initial tab from URL hash if valid
+  // Initial tab from history state (set by previous in-app navigation).
+  // We do NOT read from window.location.hash because wouter's useHashLocation
+  // owns the hash and treats it as the route path (#/ => '/'). Touching it
+  // would route us to NotFound.
   const initialTab = (() => {
     if (typeof window === "undefined") return "library";
-    const h = window.location.hash.replace(/^#/, "");
-    return VALID_TABS.has(h) ? h : "library";
+    const st = window.history.state;
+    if (st && typeof st.tab === "string" && VALID_TABS.has(st.tab)) return st.tab;
+    return "library";
   })();
   const [tab, setTab] = useState(initialTab);
   const favCount = favoriteJokers.size + favoriteCombos.size;
@@ -75,21 +79,25 @@ export default function Home() {
   // Mobile back-button fix: push history state on tab change, listen for popstate.
   // Without this, the device back gesture exits the site (because the page has
   // no history entries). With it, back navigation moves between tabs first.
+  //
+  // IMPORTANT: we MUST NOT change the URL — wouter's useHashLocation owns the
+  // hash and treats it as the route path. We push state with the *same* URL
+  // (passing `null` to pushState/replaceState keeps the current URL). This
+  // still creates a history entry that the device back gesture can pop.
   useEffect(() => {
     function onPop(e: PopStateEvent) {
       const next = (e.state && typeof e.state.tab === "string" && VALID_TABS.has(e.state.tab))
         ? e.state.tab
-        : (() => {
-            const h = window.location.hash.replace(/^#/, "");
-            return VALID_TABS.has(h) ? h : "library";
-          })();
+        : "library";
       setTab(next);
       setMobileNavOpen(false);
     }
     window.addEventListener("popstate", onPop);
     // Seed initial state so the first back-press has somewhere to go
-    if (!window.history.state || !window.history.state.tab) {
-      window.history.replaceState({ tab: initialTab }, "", `#${initialTab}`);
+    if (!window.history.state || typeof window.history.state.tab !== "string") {
+      try {
+        window.history.replaceState({ tab: initialTab }, "");
+      } catch { /* ignore */ }
     }
     return () => window.removeEventListener("popstate", onPop);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,9 +105,9 @@ export default function Home() {
 
   function handleSelect(v: string) {
     if (v !== tab) {
-      // Only push a new history entry when actually changing tabs
+      // Push a new history entry without changing the URL (keeps wouter happy)
       try {
-        window.history.pushState({ tab: v }, "", `#${v}`);
+        window.history.pushState({ tab: v }, "");
       } catch { /* ignore (e.g. embedded iframes) */ }
     }
     setTab(v);
