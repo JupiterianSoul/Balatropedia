@@ -4,6 +4,23 @@
 let Module: any = null;
 let ready = false;
 
+// ---- Per-worker constraint cache ----
+// Constraints don't change between batches within a single search run.
+// Allocating/freeing embind vectors every batch (1000s of times) is heap
+// churn we can avoid by caching them and only rebuilding when the input
+// signature changes.
+let cachedSig: string | null = null;
+let cachedJc: any = null;
+let cachedVc: any = null;
+let cachedTc: any = null;
+
+function disposeCached() {
+  if (cachedJc) { cachedJc.delete(); cachedJc = null; }
+  if (cachedVc) { cachedVc.delete(); cachedVc = null; }
+  if (cachedTc) { cachedTc.delete(); cachedTc = null; }
+  cachedSig = null;
+}
+
 async function initModule() {
   if (Module) return Module;
   // Load Emscripten glue from public/ via importScripts (workers can't use ES imports
@@ -55,24 +72,34 @@ self.onmessage = async (e: MessageEvent) => {
     try {
       const m: SearchMessage = msg;
 
-      const jc = new Module.VectorJokerConstraint();
-      for (const c of m.jokerConstraints) {
-        jc.push_back({
-          joker: c.joker,
-          edition: c.edition ?? "",
-          source: c.source ?? "",
-          maxAnte: c.maxAnte,
-        });
-      }
+      // Build a cheap signature of the constraint inputs. If unchanged from
+      // the last batch we skip the embind vector rebuild entirely.
+      const sig =
+        m.deck + "|" + m.stake + "|" + m.versionInt + "|" + m.maxAnte + "|" +
+        JSON.stringify(m.jokerConstraints) + "|" +
+        JSON.stringify(m.voucherConstraints) + "|" +
+        JSON.stringify(m.tagConstraints);
 
-      const vc = new Module.VectorVoucherConstraint();
-      for (const c of m.voucherConstraints) {
-        vc.push_back({ voucher: c.voucher, maxAnte: c.maxAnte });
-      }
-
-      const tc = new Module.VectorTagConstraint();
-      for (const c of m.tagConstraints) {
-        tc.push_back({ tag: c.tag, maxAnte: c.maxAnte });
+      if (sig !== cachedSig) {
+        disposeCached();
+        cachedJc = new Module.VectorJokerConstraint();
+        for (const c of m.jokerConstraints) {
+          cachedJc.push_back({
+            joker: c.joker,
+            edition: c.edition ?? "",
+            source: c.source ?? "",
+            maxAnte: c.maxAnte,
+          });
+        }
+        cachedVc = new Module.VectorVoucherConstraint();
+        for (const c of m.voucherConstraints) {
+          cachedVc.push_back({ voucher: c.voucher, maxAnte: c.maxAnte });
+        }
+        cachedTc = new Module.VectorTagConstraint();
+        for (const c of m.tagConstraints) {
+          cachedTc.push_back({ tag: c.tag, maxAnte: c.maxAnte });
+        }
+        cachedSig = sig;
       }
 
       const result = Module.findSeedV2(
@@ -82,35 +109,36 @@ self.onmessage = async (e: MessageEvent) => {
         m.deck,
         m.stake,
         m.versionInt,
-        jc, vc, tc
+        cachedJc, cachedVc, cachedTc
       );
 
-      // Marshal embind vectors to plain JS
+      // Marshal embind vectors to plain JS only when there's actually a match.
+      // No match = empty vectors = pointless 3 method calls + comparison.
       const jLocs: any[] = [];
-      const jl = result.jokerLocations;
-      for (let i = 0; i < jl.size(); i++) {
-        const j = jl.get(i);
-        jLocs.push({
-          joker: j.joker, edition: j.edition, source: j.source,
-          ante: j.ante, slot: j.slot, packName: j.packName,
-          packPosition: j.packPosition,
-          eternal: j.eternal, perishable: j.perishable, rental: j.rental,
-        });
-      }
       const vLocs: any[] = [];
-      const vl = result.voucherLocations;
-      for (let i = 0; i < vl.size(); i++) {
-        const v = vl.get(i);
-        vLocs.push({ voucher: v.voucher, ante: v.ante });
-      }
       const tLocs: any[] = [];
-      const tl = result.tagLocations;
-      for (let i = 0; i < tl.size(); i++) {
-        const t = tl.get(i);
-        tLocs.push({ tag: t.tag, ante: t.ante, blind: t.blind });
+      if (result.seed) {
+        const jl = result.jokerLocations;
+        for (let i = 0; i < jl.size(); i++) {
+          const j = jl.get(i);
+          jLocs.push({
+            joker: j.joker, edition: j.edition, source: j.source,
+            ante: j.ante, slot: j.slot, packName: j.packName,
+            packPosition: j.packPosition,
+            eternal: j.eternal, perishable: j.perishable, rental: j.rental,
+          });
+        }
+        const vl = result.voucherLocations;
+        for (let i = 0; i < vl.size(); i++) {
+          const v = vl.get(i);
+          vLocs.push({ voucher: v.voucher, ante: v.ante });
+        }
+        const tl = result.tagLocations;
+        for (let i = 0; i < tl.size(); i++) {
+          const t = tl.get(i);
+          tLocs.push({ tag: t.tag, ante: t.ante, blind: t.blind });
+        }
       }
-
-      jc.delete(); vc.delete(); tc.delete();
 
       (self as any).postMessage({
         type: "result",

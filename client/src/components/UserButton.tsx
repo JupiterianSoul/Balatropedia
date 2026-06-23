@@ -14,11 +14,6 @@ import { AuthDialog } from "./AuthDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useT } from "@/lib/i18n";
 
-function truncateEmail(email: string, max = 18): string {
-  if (email.length <= max) return email;
-  return email.slice(0, max - 1) + "…";
-}
-
 export function UserButton() {
   const { user, isSignedIn, signOut } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -56,10 +51,11 @@ export function UserButton() {
           variant="outline"
           className="shrink-0 gap-1.5 border-border bg-card text-xs hover:border-accent/40"
           data-testid="button-user-menu"
+          title={user!.email}
         >
           <UserIcon className="h-3.5 w-3.5 text-accent" />
-          <span className="max-w-[120px] truncate" data-testid="text-user-email">
-            {truncateEmail(user!.email)}
+          <span data-testid="text-user-status">
+            {t("ui.user.signed_in_short")}
           </span>
           <ChevronDown className="h-3.5 w-3.5 opacity-60" />
         </Button>

@@ -111,10 +111,11 @@ export class SeedFinder {
 
     // ---- Perf tunables ----
     // FAILSAFE: revert to PREV_* values if any regression is observed in the field.
-    // const PREV_THREADS_CAP = 8;
-    // const PREV_TRIES_PER_BATCH = 5000;
+    // const PREV_THREADS_CAP = 8;        // original v1.7 cap
+    // const PREV_TRIES_PER_BATCH = 5000; // original v1.7 batch
+    // const SAFE_TRIES_PER_BATCH = 20000; // v1.7.3 conservative bump
     const THREADS_CAP = 16;        // use full logical-core count up to 16
-    const TRIES_PER_BATCH = 20000; // larger batches => fewer postMessage round-trips
+    const TRIES_PER_BATCH = 50000; // larger batches => fewer postMessage round-trips
     const threads = cfg.threads ?? Math.max(1, Math.min(THREADS_CAP, navigator.hardwareConcurrency || 4));
     const triesPerBatch = cfg.triesPerBatch ?? TRIES_PER_BATCH;
     const maxTotalTries = cfg.maxTotalTries ?? 0;
