@@ -271,9 +271,13 @@ export default function Home() {
           )}
 
           {}
+          {tab === "home" ? (
+            <div className="mount-fade flex-1" key={tab} data-testid="home-fullbleed">
+              <TabsContent value="home" className="mt-0"><HomeTab onNavigate={handleSelect} /></TabsContent>
+            </div>
+          ) : (
           <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
             <div className="mount-fade" key={tab}>
-              <TabsContent value="home" className="mt-0"><HomeTab onNavigate={handleSelect} /></TabsContent>
               <TabsContent value="jokers" className="mt-0"><JokersTab /></TabsContent>
               <TabsContent value="myrun" className="mt-0"><MyRunTab /></TabsContent>
               <TabsContent value="runchallenge" className="mt-0"><RunChallengeTab /></TabsContent>
@@ -299,10 +303,13 @@ export default function Home() {
               <KofiFooterButton />
             </div>
           </main>
+          )}
 
-          <footer className="border-t border-border py-5 text-center text-xs text-muted-foreground">
-            {t("ui.header.footer")}
-          </footer>
+          {tab !== "home" && (
+            <footer className="border-t border-border py-5 text-center text-xs text-muted-foreground">
+              {t("ui.header.footer")}
+            </footer>
+          )}
         </div>
       </Tabs>
 
