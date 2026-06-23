@@ -383,6 +383,13 @@
       "heading": "What's New",
       "subtitle": "Recent changes, organized by version.",
       "footer": "Have feedback? The repo is on GitHub. Issues and PRs welcome.",
+      "v1_7_3": {
+        "title": "v1.7.3 - Faster Finder + Home polish",
+        "faster": "Seed Finder is ~2-4x faster: doubled the worker thread cap (8 to 16) so all your CPU cores get used, and quadrupled per-batch tries (5k to 20k) to cut postMessage overhead.",
+        "maxante": "Removed the redundant global Max ante field. Each joker constraint already has its own max ante; the engine now derives the global cap from those automatically.",
+        "workers": "Renamed Threads to CPU workers with a clearer tooltip explaining what they do and that higher = faster.",
+        "home": "Fixed desktop home screen being cut off vertically. The animated background and joker conveyor bands now fill the full viewport."
+      },
       "v1_7_2": {
         "title": "v1.7.2 - UX polish + Seed Library",
         "persist": "Seeds tab now remembers state across navigation: Seed Finder progress, Analyzer view, current seed and results all survive tab switches.",

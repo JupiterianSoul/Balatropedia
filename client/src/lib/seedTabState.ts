@@ -63,13 +63,15 @@ interface State {
 
 function defaultFinder(): FinderState {
   const cores = typeof navigator !== "undefined" ? navigator.hardwareConcurrency : 4;
+  // Default to ALL logical cores (capped at 16) for maximum throughput.
+  // Previous cap of 8 left half the CPU idle on modern machines.
   return {
     selected: [],
     deck: "Red Deck",
     stake: "White Stake",
     version: "1.0.1f",
-    globalMaxAnte: 4,
-    threads: Math.max(1, Math.min(8, cores || 4)),
+    globalMaxAnte: 8,
+    threads: Math.max(1, Math.min(16, cores || 4)),
     matches: [],
     progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 },
     error: null,

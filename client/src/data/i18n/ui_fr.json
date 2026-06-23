@@ -383,6 +383,13 @@
       "heading": "Nouveautés",
       "subtitle": "Changements récents, organisés par version.",
       "footer": "Un retour ? Le dépôt est sur GitHub. Issues et PRs bienvenues.",
+      "v1_7_3": {
+        "title": "v1.7.3 - Finder plus rapide + polish Home",
+        "faster": "Le Seed Finder est ~2-4x plus rapide : la limite de threads workers a double (8 a 16) pour utiliser tous tes coeurs CPU, et le nombre d'essais par batch a quadruple (5k a 20k) pour reduire le cout des postMessage.",
+        "maxante": "Suppression du champ Max ante global redondant. Chaque contrainte de joker a deja son propre max ante ; le moteur calcule maintenant la borne globale automatiquement.",
+        "workers": "Renomme Threads en CPU workers avec un tooltip plus clair qui explique ce que c'est et que plus = plus rapide.",
+        "home": "Correction de l'ecran d'accueil coupe en deux sur desktop. Le fond anime et les bandes de jokers remplissent maintenant tout le viewport."
+      },
       "v1_7_2": {
         "title": "v1.7.2 - Polish UX + Seed Library",
         "persist": "L'onglet Seeds memorise maintenant son etat entre les navigations : progression du Seed Finder, vue de l'Analyzer, seed et resultats survivent aux changements d'onglet.",
