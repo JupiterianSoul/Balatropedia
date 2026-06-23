@@ -383,6 +383,11 @@
       "heading": "What's New",
       "subtitle": "Recent changes, organized by version.",
       "footer": "Have feedback? The repo is on GitHub. Issues and PRs welcome.",
+      "v1_7_4": {
+        "title": "v1.7.4 - Even faster Finder + signed-in fix",
+        "signed_in": "Fixed signed-in user button overflowing the sidebar with long email addresses. Now shows 'Signed in'; the full email is on hover and in the dropdown.",
+        "faster": "Seed Finder another ~20-40% faster: constraint vectors are now cached per worker instead of re-allocated every batch (no more embind heap churn), result marshaling is skipped on no-match batches, and batch size went 20k to 50k for fewer round-trips."
+      },
       "v1_7_3": {
         "title": "v1.7.3 - Faster Finder + Home polish",
         "faster": "Seed Finder is ~2-4x faster: doubled the worker thread cap (8 to 16) so all your CPU cores get used, and quadrupled per-batch tries (5k to 20k) to cut postMessage overhead.",
@@ -676,7 +681,8 @@
     "user": {
       "sign_in": "Sign in",
       "sign_out": "Sign out",
-      "signed_out": "Signed out"
+      "signed_out": "Signed out",
+      "signed_in_short": "Signed in"
     },
     "archetype": {
       "flush": {

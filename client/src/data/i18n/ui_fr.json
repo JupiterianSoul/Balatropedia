@@ -383,6 +383,11 @@
       "heading": "Nouveautés",
       "subtitle": "Changements récents, organisés par version.",
       "footer": "Un retour ? Le dépôt est sur GitHub. Issues et PRs bienvenues.",
+      "v1_7_4": {
+        "title": "v1.7.4 - Finder encore plus rapide + fix connecté",
+        "signed_in": "Correction du bouton utilisateur connecté qui débordait de la sidebar avec les longues adresses email. Affiche maintenant 'Connecté' ; l'email complet est au survol et dans le menu déroulant.",
+        "faster": "Seed Finder encore ~20-40% plus rapide : les vecteurs de contraintes sont maintenant mis en cache par worker au lieu d'être réalloués a chaque batch (plus de churn heap embind), le marshaling de résultats est sauté sur les batches sans match, et la taille de batch est passée de 20k a 50k pour moins de round-trips."
+      },
       "v1_7_3": {
         "title": "v1.7.3 - Finder plus rapide + polish Home",
         "faster": "Le Seed Finder est ~2-4x plus rapide : la limite de threads workers a double (8 a 16) pour utiliser tous tes coeurs CPU, et le nombre d'essais par batch a quadruple (5k a 20k) pour reduire le cout des postMessage.",
@@ -676,7 +681,8 @@
     "user": {
       "sign_in": "Se connecter",
       "sign_out": "Se déconnecter",
-      "signed_out": "Déconnecté"
+      "signed_out": "Déconnecté",
+      "signed_in_short": "Connecté"
     },
     "archetype": {
       "flush": {

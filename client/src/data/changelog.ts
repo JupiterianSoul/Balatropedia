@@ -13,6 +13,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "v1.7.4",
+    kind: "polish",
+    titleKey: "ui.whatsnew.v1_7_4.title",
+    bullets: [
+      "ui.whatsnew.v1_7_4.signed_in",
+      "ui.whatsnew.v1_7_4.faster",
+    ],
+  },
+  {
     version: "v1.7.3",
     kind: "polish",
     titleKey: "ui.whatsnew.v1_7_3.title",
