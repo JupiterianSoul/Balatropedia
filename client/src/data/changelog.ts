@@ -17,6 +17,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     kind: "feature",
     titleKey: "ui.whatsnew.v1_7.title",
     bullets: [
+      "ui.whatsnew.v1_7.rework",
       "ui.whatsnew.v1_7.finder",
       "ui.whatsnew.v1_7.wasm",
       "ui.whatsnew.v1_7.constraints",

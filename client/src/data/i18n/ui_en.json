@@ -385,11 +385,12 @@
       "footer": "Have feedback? The repo is on GitHub. Issues and PRs welcome.",
       "v1_7": {
         "title": "v1.7 - Native seed finder",
-        "finder": "New Seed Finder sub-tab: pick the jokers (and editions) you want, set a max ante, hit Search. Returns real seeds with the exact location of every match.",
+        "rework": "Seeds tab fully reworked. Two clean sub-tabs only: Seed Analyzer (input a seed, see everything in it) and Seed Finder (input what you want, find a matching seed). Joker Hunter and Soul Finder are now views inside the Analyzer.",
+        "finder": "Seed Finder uses an autocomplete search bar (no more icon wall): type a joker name, add it as a constraint, repeat for as many jokers as you want.",
         "wasm": "WebAssembly engine compiled from the same C++ math as TheSoul/Immolate, running in parallel Web Workers across all your CPU cores. Tens of thousands of seeds per second per core.",
         "constraints": "Multi-joker constraints with edition and source pinning: require a Negative Perkeo specifically from a Spectral pack's Soul card, or a Polychrome Blueprint from any shop, or both at once.",
-        "location": "Every match reports the exact location: ante, source type (shop / Buffoon pack / Soul card), shop slot or pack index + position in pack, plus edition and stickers.",
-        "icons": "Joker icons everywhere on the Seeds tab: Shop Queue, Buffoon pack contents, Joker Hunter results, Seed Finder matches."
+        "location": "Locations are now human-readable: 'After Big Blind, shop item 3' or 'After Small Blind, 2nd booster (Mega Buffoon Pack), card #4'. Same labels in the Analyzer spoiler and Joker Finder.",
+        "icons": "Joker icons everywhere on the Seeds tab: shop queue, booster contents, search results, finder matches."
       },
       "v1_6": {
         "title": "v1.6 - Native seed engine",

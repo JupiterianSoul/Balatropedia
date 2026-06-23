@@ -1,9 +1,10 @@
-// SeedFinderTab.tsx - v1.7 Native seed finder (inverse search).
-// Brute-force random seeds with constraint matching using Immolate WASM engine
-// running in N parallel Web Workers. Shows exact location for each matched joker.
+// SeedFinderTab.tsx - v1.7.1 Native seed finder, reworked UX.
+// Search bar (autocomplete) instead of icon grid. Chip list of selected jokers
+// with per-joker constraints. Match cards report human-readable locations
+// ("After Big Blind, shop item 3" / "After Small Blind, 2nd booster (Mega Buffoon Pack), position 4").
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, Loader2, Play, Square, Sparkles, AlertCircle } from "lucide-react";
+import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -11,13 +12,14 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { JokerSprite } from "@/components/JokerSprite";
-import { JOKERS, JOKER_MAP, jokerIdFromName } from "@/lib/helpers";
+import { jokerIdFromName } from "@/lib/helpers";
 import { DECKS, STAKES, COMMON_JOKERS, UNCOMMON_JOKERS, RARE_JOKERS, LEGENDARY_JOKERS } from "@/lib/seedItems";
 import {
   SeedFinder, type JokerConstraint, type SeedMatch, type FinderHandle, type FinderProgress,
 } from "@/lib/seedFinder";
+import { describeShopSlot, describePackSlot } from "@/lib/seedFinderLocation";
 
-// ---- Joker set & rarity ----
+// ---- Joker dataset ----
 const ALL_JOKER_NAMES = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
   .filter((j, i, a) => a.indexOf(j) === i)
   .sort();
@@ -30,92 +32,124 @@ function rarityOf(name: string): "common" | "uncommon" | "rare" | "legendary" | 
   return "unknown";
 }
 
-function rarityBorder(r: string): string {
-  if (r === "legendary") return "border-purple-400/70";
-  if (r === "rare") return "border-red-400/70";
-  if (r === "uncommon") return "border-emerald-400/60";
-  if (r === "common") return "border-zinc-400/40";
-  return "border-zinc-700";
+function rarityTextClass(r: string): string {
+  if (r === "legendary") return "text-purple-300";
+  if (r === "rare") return "text-red-300";
+  if (r === "uncommon") return "text-emerald-300";
+  if (r === "common") return "text-zinc-300";
+  return "text-zinc-400";
 }
 
 function editionClass(edition: string): string {
   if (edition === "Foil") return "text-cyan-300";
   if (edition === "Holographic") return "text-pink-300";
   if (edition === "Polychrome") return "text-orange-300";
-  if (edition === "Negative") return "text-zinc-200 font-semibold";
+  if (edition === "Negative") return "text-zinc-100 font-semibold";
   return "text-zinc-300";
 }
 
-function sourceLabel(source: string): string {
-  switch (source) {
-    case "shop": return "Shop";
-    case "buffoon-pack": return "Buffoon Pack";
-    case "arcana-soul": return "Arcana Pack (Soul)";
-    case "spectral-soul": return "Spectral Pack (Soul)";
-    case "spectral-wraith": return "Spectral Pack (Wraith)";
-    default: return source || "any";
-  }
-}
+// ---- Autocomplete joker search bar ----
 
-function blindLabel(blind: number): string {
-  return blind === 1 ? "Small Blind" : blind === 2 ? "Big Blind" : "?";
-}
-
-// ---- Joker picker grid (clickable, multi-select) ----
-
-function JokerPickerGrid({
-  selected,
-  onToggle,
-  filter,
+function JokerSearchBar({
+  onAdd,
+  selectedNames,
 }: {
-  selected: string[];
-  onToggle: (name: string) => void;
-  filter: string;
+  onAdd: (name: string) => void;
+  selectedNames: string[];
 }) {
-  const filtered = useMemo(() => {
-    const f = filter.toLowerCase().trim();
-    return ALL_JOKER_NAMES.filter(n => !f || n.toLowerCase().includes(f));
-  }, [filter]);
+  const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const results = useMemo(() => {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+    return ALL_JOKER_NAMES
+      .filter(n => n.toLowerCase().includes(q))
+      .slice(0, 10);
+  }, [query]);
+
+  function commit(name: string) {
+    if (!selectedNames.includes(name)) onAdd(name);
+    setQuery("");
+    setActiveIdx(0);
+    inputRef.current?.focus();
+  }
+
+  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIdx(i => Math.min(results.length - 1, i + 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIdx(i => Math.max(0, i - 1));
+    } else if (e.key === "Enter" && results.length > 0) {
+      e.preventDefault();
+      commit(results[activeIdx]);
+    } else if (e.key === "Escape") {
+      setQuery("");
+      (e.target as HTMLInputElement).blur();
+    }
+  }
 
   return (
-    <div className="rounded-md border border-yellow-500/20 bg-zinc-950/40 p-2 max-h-72 overflow-y-auto">
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(56px,1fr))] gap-1.5">
-        {filtered.map(name => {
-          const id = jokerIdFromName(name);
-          const isSel = selected.includes(name);
-          const rarity = rarityOf(name);
-          return (
-            <button
-              key={name}
-              onClick={() => onToggle(name)}
-              title={name}
-              className={`group relative rounded-md border-2 transition ${
-                isSel
-                  ? "border-yellow-400 ring-2 ring-yellow-400/50 bg-yellow-400/10"
-                  : `${rarityBorder(rarity)} hover:border-yellow-300/70 hover:bg-yellow-300/5`
-              }`}
-              data-testid={`finder-joker-${id}`}
-            >
-              {id ? (
-                <JokerSprite jokerId={id} name={name} size={50} className="border-0 bg-transparent" />
-              ) : (
-                <div className="flex h-[50px] items-center justify-center text-xs text-zinc-400 px-1 text-center">{name}</div>
-              )}
-              {isSel && (
-                <div className="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-yellow-400 text-zinc-950 text-[10px] font-bold flex items-center justify-center">✓</div>
-              )}
-            </button>
-          );
-        })}
+    <div className="relative">
+      <div className="flex items-center gap-2 rounded-md border border-yellow-500/30 bg-zinc-950/80 px-3 py-2 focus-within:border-yellow-400/70">
+        <Search className="h-4 w-4 text-yellow-300/70 shrink-0" />
+        <input
+          ref={inputRef}
+          value={query}
+          onChange={e => { setQuery(e.target.value); setActiveIdx(0); }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setTimeout(() => setFocused(false), 150)}  // delay so click registers
+          onKeyDown={onKeyDown}
+          placeholder="Search a joker to add (e.g. Perkeo, Blueprint, Brainstorm)..."
+          className="flex-1 bg-transparent text-sm outline-none placeholder:text-zinc-500"
+          data-testid="finder-search-input"
+        />
+        {query && (
+          <button onClick={() => setQuery("")} className="text-zinc-500 hover:text-zinc-300">
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
-      {filtered.length === 0 && (
-        <div className="text-center text-xs text-zinc-500 py-4 italic">No jokers match "{filter}".</div>
+      {focused && results.length > 0 && (
+        <div className="absolute z-30 mt-1 w-full rounded-md border border-yellow-500/30 bg-zinc-950 shadow-xl max-h-80 overflow-y-auto">
+          {results.map((name, idx) => {
+            const id = jokerIdFromName(name);
+            const r = rarityOf(name);
+            const isActive = idx === activeIdx;
+            const isAdded = selectedNames.includes(name);
+            return (
+              <button
+                key={name}
+                onMouseDown={(e) => { e.preventDefault(); commit(name); }}
+                onMouseEnter={() => setActiveIdx(idx)}
+                disabled={isAdded}
+                className={`w-full flex items-center gap-2 px-3 py-1.5 text-left text-sm transition ${
+                  isActive ? "bg-yellow-500/10" : ""
+                } ${isAdded ? "opacity-50" : "hover:bg-yellow-500/5"}`}
+              >
+                {id ? (
+                  <JokerSprite jokerId={id} name={name} size={32} className="border-0 bg-transparent" />
+                ) : (
+                  <div className="w-8 h-8" />
+                )}
+                <span className={`flex-1 ${rarityTextClass(r)}`}>{name}</span>
+                <span className="text-[10px] text-zinc-500 uppercase tracking-wider">{r}</span>
+                {isAdded && <span className="text-[10px] text-emerald-300">added</span>}
+                {!isAdded && <Plus className="h-3.5 w-3.5 text-yellow-300/70" />}
+              </button>
+            );
+          })}
+        </div>
       )}
     </div>
   );
 }
 
-// ---- Per-joker constraint editor (edition + source + maxAnte) ----
+// ---- Per-joker constraint row ----
 
 function ConstraintRow({
   c, onChange, onRemove,
@@ -125,12 +159,17 @@ function ConstraintRow({
   onRemove: () => void;
 }) {
   const id = jokerIdFromName(c.joker);
+  const r = rarityOf(c.joker);
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
-      {id && <JokerSprite jokerId={id} name={c.joker} size={44} />}
-      <div className="flex-1 min-w-[120px]">
-        <div className="text-sm font-semibold text-yellow-200">{c.joker}</div>
-        <div className="text-[10px] text-zinc-500">{rarityOf(c.joker)}</div>
+      {id ? (
+        <JokerSprite jokerId={id} name={c.joker} size={44} className="border-0 bg-transparent" />
+      ) : (
+        <div className="w-11 h-11" />
+      )}
+      <div className="min-w-[120px]">
+        <div className={`text-sm font-semibold ${rarityTextClass(r)}`}>{c.joker}</div>
+        <div className="text-[10px] text-zinc-500 uppercase">{r}</div>
       </div>
       <div>
         <Label className="text-[10px] text-zinc-400">Edition</Label>
@@ -148,13 +187,13 @@ function ConstraintRow({
       <div>
         <Label className="text-[10px] text-zinc-400">Source</Label>
         <Select value={c.source || "any"} onValueChange={v => onChange({ ...c, source: v === "any" ? "" : v as JokerConstraint["source"] })}>
-          <SelectTrigger className="h-8 w-[150px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="h-8 w-[160px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="any">Any source</SelectItem>
             <SelectItem value="shop">Shop only</SelectItem>
             <SelectItem value="buffoon-pack">Buffoon Pack</SelectItem>
-            <SelectItem value="arcana-soul">Arcana (Soul)</SelectItem>
-            <SelectItem value="spectral-soul">Spectral (Soul)</SelectItem>
+            <SelectItem value="arcana-soul">Arcana (Soul card)</SelectItem>
+            <SelectItem value="spectral-soul">Spectral (Soul card)</SelectItem>
             <SelectItem value="spectral-wraith">Spectral (Wraith)</SelectItem>
           </SelectContent>
         </Select>
@@ -168,7 +207,9 @@ function ConstraintRow({
           className="h-8 w-[70px] text-xs"
         />
       </div>
-      <Button size="sm" variant="ghost" onClick={onRemove} className="text-red-400 hover:text-red-300 h-8 px-2">×</Button>
+      <Button size="sm" variant="ghost" onClick={onRemove} className="text-red-400 hover:text-red-300 h-8 px-2 ml-auto">
+        <X className="h-4 w-4" />
+      </Button>
     </div>
   );
 }
@@ -177,7 +218,6 @@ function ConstraintRow({
 
 export function SeedFinderTab() {
   const [selected, setSelected] = useState<JokerConstraint[]>([]);
-  const [filter, setFilter] = useState("");
   const [deck, setDeck] = useState("Red Deck");
   const [stake, setStake] = useState("White Stake");
   const [version, setVersion] = useState("1.0.1f");
@@ -193,16 +233,14 @@ export function SeedFinderTab() {
 
   useEffect(() => () => { handleRef.current?.stop(); }, []);
 
-  // Sync globalMaxAnte from constraints
   const effectiveMaxAnte = useMemo(() => {
     if (selected.length === 0) return globalMaxAnte;
     return Math.max(globalMaxAnte, ...selected.map(s => s.maxAnte));
   }, [selected, globalMaxAnte]);
 
-  function toggleJoker(name: string) {
+  function addJoker(name: string) {
     setSelected(prev => {
-      const idx = prev.findIndex(c => c.joker === name);
-      if (idx >= 0) return prev.filter((_, i) => i !== idx);
+      if (prev.some(c => c.joker === name)) return prev;
       return [...prev, { joker: name, edition: "", source: "", maxAnte: globalMaxAnte }];
     });
   }
@@ -231,7 +269,7 @@ export function SeedFinderTab() {
       },
       {
         onProgress: (p) => setProgress(p),
-        onMatch: (m) => setMatches(prev => [...prev, m].slice(-50)),  // keep last 50
+        onMatch: (m) => setMatches(prev => [...prev, m].slice(-50)),
         onDone: () => setRunning(false),
         onError: (msg) => { setError(msg); setRunning(false); },
       }
@@ -248,16 +286,8 @@ export function SeedFinderTab() {
 
   return (
     <div className="space-y-4">
-      {/* Header */}
+      {/* Run config */}
       <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/70 p-3 space-y-3">
-        <div className="flex items-center gap-2 text-yellow-200 font-semibold">
-          <Search className="h-4 w-4" /> Seed Finder
-          <span className="text-xs text-zinc-400 font-normal">
-            Pick jokers, set constraints, brute-force the seed space. Runs locally in {threads} Web Workers powered by a native WebAssembly engine.
-          </span>
-        </div>
-
-        {/* Run config row */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           <div>
             <Label className="text-xs text-zinc-400">Deck</Label>
@@ -285,7 +315,7 @@ export function SeedFinderTab() {
             </Select>
           </div>
           <div>
-            <Label className="text-xs text-zinc-400" title="Global cap. Per-joker max-ante can be tighter.">Global max ante</Label>
+            <Label className="text-xs text-zinc-400" title="Global cap. Per-joker max-ante can be tighter.">Max ante</Label>
             <Input
               type="number" min={1} max={39} value={globalMaxAnte}
               onChange={e => setGlobalMaxAnte(Math.max(1, Math.min(39, Number(e.target.value) || 1)))}
@@ -302,34 +332,25 @@ export function SeedFinderTab() {
         </div>
       </div>
 
-      {/* Joker picker */}
+      {/* Joker search bar */}
       <div className="space-y-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <Label className="text-xs text-zinc-400">Target jokers ({selected.length} selected)</Label>
-          <Input
-            placeholder="Filter jokers..."
-            value={filter}
-            onChange={e => setFilter(e.target.value)}
-            className="h-7 w-[200px] text-xs ml-auto"
-          />
-        </div>
-        <JokerPickerGrid selected={selectedNames} onToggle={toggleJoker} filter={filter} />
+        <Label className="text-xs text-zinc-400">
+          Target jokers {selected.length > 0 && <span className="text-yellow-300">({selected.length})</span>}
+        </Label>
+        <JokerSearchBar onAdd={addJoker} selectedNames={selectedNames} />
       </div>
 
-      {/* Per-joker constraints */}
+      {/* Selected constraints */}
       {selected.length > 0 && (
-        <div className="space-y-2">
-          <Label className="text-xs text-zinc-400">Per-joker constraints (click × to remove)</Label>
-          <div className="space-y-1.5">
-            {selected.map((c, i) => (
-              <ConstraintRow key={c.joker} c={c} onChange={n => updateConstraint(i, n)} onRemove={() => removeConstraint(i)} />
-            ))}
-          </div>
+        <div className="space-y-1.5">
+          {selected.map((c, i) => (
+            <ConstraintRow key={c.joker} c={c} onChange={n => updateConstraint(i, n)} onRemove={() => removeConstraint(i)} />
+          ))}
         </div>
       )}
 
-      {/* Controls */}
-      <div className="flex items-center gap-3 rounded-md border border-yellow-500/15 bg-zinc-950/60 p-3">
+      {/* Run controls */}
+      <div className="flex flex-wrap items-center gap-3 rounded-md border border-yellow-500/15 bg-zinc-950/60 p-3">
         {!running ? (
           <Button onClick={start} disabled={selected.length === 0} className="bg-yellow-400 hover:bg-yellow-300 text-zinc-950" data-testid="finder-start">
             <Play className="mr-2 h-4 w-4" /> Start search
@@ -339,16 +360,15 @@ export function SeedFinderTab() {
             <Square className="mr-2 h-4 w-4" /> Stop
           </Button>
         )}
-        <div className="flex flex-wrap gap-4 text-xs text-zinc-300 ml-2 font-mono">
-          <div><span className="text-zinc-500">checked</span> <span className="text-yellow-200">{progress.totalTries.toLocaleString()}</span></div>
-          <div><span className="text-zinc-500">rate</span> <span className="text-yellow-200">{progress.seedsPerSec.toLocaleString()}/s</span></div>
-          <div><span className="text-zinc-500">elapsed</span> <span className="text-yellow-200">{(progress.elapsedMs / 1000).toFixed(1)}s</span></div>
-          <div><span className="text-zinc-500">matches</span> <span className="text-emerald-300">{matches.length}</span></div>
+        <div className="flex flex-wrap gap-4 text-xs font-mono">
+          <div><span className="text-zinc-500">checked </span><span className="text-yellow-200">{progress.totalTries.toLocaleString()}</span></div>
+          <div><span className="text-zinc-500">rate </span><span className="text-yellow-200">{progress.seedsPerSec.toLocaleString()}/s</span></div>
+          <div><span className="text-zinc-500">elapsed </span><span className="text-yellow-200">{(progress.elapsedMs / 1000).toFixed(1)}s</span></div>
+          <div><span className="text-zinc-500">matches </span><span className="text-emerald-300">{matches.length}</span></div>
         </div>
         {running && <Loader2 className="h-4 w-4 animate-spin text-yellow-300 ml-auto" />}
       </div>
 
-      {/* Error */}
       {error && (
         <div className="flex items-start gap-2 rounded-md border border-red-500/40 bg-red-950/30 p-3 text-sm text-red-200">
           <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
@@ -359,11 +379,10 @@ export function SeedFinderTab() {
         </div>
       )}
 
-      {/* Matches */}
       {matches.length === 0 && !running && (
         <div className="text-center text-sm text-zinc-500 italic py-8">
           {selected.length === 0
-            ? "Select one or more jokers above, then click Start search."
+            ? "Search and add jokers above, then click Start search."
             : "Click Start search to begin brute-forcing seeds."}
         </div>
       )}
@@ -387,6 +406,47 @@ export function SeedFinderTab() {
   );
 }
 
+function formatLocation(j: SeedMatch["jokerLocations"][number]): React.ReactNode {
+  if (j.source === "shop") {
+    const info = describeShopSlot(j.slot, j.ante);
+    return (
+      <>
+        Ante <span className="text-yellow-300 font-mono">{j.ante}</span>
+        {" · "}<span className="text-zinc-300">{info.blindLabel}</span>
+        {" · shop item "}<span className="text-yellow-300 font-mono">{info.positionInShop}</span>
+      </>
+    );
+  }
+  if (j.source === "buffoon-pack") {
+    const info = describePackSlot(j.slot, j.ante);
+    return (
+      <>
+        Ante <span className="text-yellow-300 font-mono">{j.ante}</span>
+        {" · "}<span className="text-zinc-300">{info.blindLabel}</span>
+        {", "}<span className="text-yellow-300">{info.positionInShop === 1 ? "1st" : "2nd"} booster</span>
+        {" ("}<span className="text-purple-300">{j.packName}</span>{")"}
+        {", card "}<span className="text-yellow-300 font-mono">#{j.packPosition}</span>
+      </>
+    );
+  }
+  if (j.source === "arcana-soul" || j.source === "spectral-soul" || j.source === "spectral-wraith") {
+    const info = describePackSlot(j.slot, j.ante);
+    const soulType = j.source === "arcana-soul" ? "Arcana"
+      : j.source === "spectral-soul" ? "Spectral"
+      : "Spectral (Wraith)";
+    return (
+      <>
+        Ante <span className="text-yellow-300 font-mono">{j.ante}</span>
+        {" · "}<span className="text-zinc-300">{info.blindLabel}</span>
+        {", "}<span className="text-yellow-300">{info.positionInShop === 1 ? "1st" : "2nd"} booster</span>
+        {" ("}<span className="text-purple-300">{j.packName}</span>{") "}
+        <span className="text-purple-300 italic">[{soulType} → Soul card]</span>
+      </>
+    );
+  }
+  return <>Ante {j.ante}</>;
+}
+
 function MatchCard({ match }: { match: SeedMatch }) {
   return (
     <div className="rounded-lg border border-emerald-500/40 bg-emerald-950/10 p-3 space-y-2">
@@ -406,27 +466,20 @@ function MatchCard({ match }: { match: SeedMatch }) {
           const id = jokerIdFromName(j.joker);
           return (
             <div key={i} className="flex items-center gap-2 text-sm">
-              {id ? <JokerSprite jokerId={id} name={j.joker} size={40} /> : <div className="w-10 h-10" />}
+              {id ? <JokerSprite jokerId={id} name={j.joker} size={40} className="border-0 bg-transparent" /> : <div className="w-10 h-10" />}
               <div className="flex-1">
                 <div className="font-semibold text-yellow-200">
                   {j.joker}
                   {j.edition && j.edition !== "No Edition" && (
                     <span className={`ml-2 text-xs italic ${editionClass(j.edition)}`}>[{j.edition}]</span>
                   )}
-                </div>
-                <div className="text-xs text-zinc-400">
-                  Ante <span className="text-yellow-300 font-mono">{j.ante}</span>
-                  {" · "}{sourceLabel(j.source)}
-                  {j.source === "shop" && <> · slot <span className="font-mono">{j.slot}</span></>}
-                  {(j.source !== "shop" && j.packName) && (
-                    <> · <span className="text-purple-300">{j.packName}</span> (pack #{j.slot}, pos {j.packPosition})</>
-                  )}
                   {(j.eternal || j.perishable || j.rental) && (
-                    <span className="text-amber-300/80 ml-1">
+                    <span className="text-amber-300/80 ml-2 text-xs">
                       [{[j.eternal && "Eternal", j.perishable && "Perishable", j.rental && "Rental"].filter(Boolean).join(", ")}]
                     </span>
                   )}
                 </div>
+                <div className="text-xs text-zinc-400">{formatLocation(j)}</div>
               </div>
             </div>
           );
