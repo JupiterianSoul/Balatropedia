@@ -11,7 +11,6 @@ import { STAKES } from "@/data/phase3/stakes";
 import { ENHANCEMENTS, EDITIONS, SEALS, TAGS } from "@/data/phase3/misc";
 import { BOSSES } from "@/data/bosses";
 import { getSpriteUrl } from "@/lib/sprites";
-import { CHANGELOG } from "@/data/changelog";
 import { useOpenDetail } from "@/lib/detailContext";
 import { setHandoff } from "@/lib/tabHandoff";
 import type { EntityKind } from "@/lib/entities";
@@ -62,100 +61,51 @@ interface SearchHit {
   id: string;
   label: string;
   sub?: string;
-  // Routing.
   go: "openJoker" | "openDetail" | "navigateTab";
   detailKind?: EntityKind;
   navigateTab?: string;
-  // Optional handoff payload to set before navigation.
   handoff?: { key: "synergyJoker" | "comboId" | "archetypeId"; value: string };
 }
 
 function buildSearchIndex(): SearchHit[] {
   const hits: SearchHit[] = [];
-
-  // Jokers - open detail directly.
   for (const j of JOKERS) {
-    hits.push({
-      kind: "joker", id: j.id, label: j.name,
-      sub: j.summary, go: "openJoker",
-    });
+    hits.push({ kind: "joker", id: j.id, label: j.name, sub: j.summary, go: "openJoker" });
   }
-
-  // Synergies - route to Synergies tab pre-filtered to one of the two jokers.
   for (const s of SYNERGIES) {
     const a = JOKER_MAP[s.a]?.name ?? s.a;
     const b = JOKER_MAP[s.b]?.name ?? s.b;
     hits.push({
-      kind: "synergy", id: `${s.a}+${s.b}`,
-      label: `${a} + ${b}`,
-      sub: s.why.slice(0, 80),
-      go: "navigateTab", navigateTab: "synergies",
+      kind: "synergy", id: `${s.a}+${s.b}`, label: `${a} + ${b}`,
+      sub: s.why.slice(0, 80), go: "navigateTab", navigateTab: "synergies",
       handoff: { key: "synergyJoker", value: s.a },
     });
   }
-
-  // Combos - route to Combos tab with the combo highlighted.
   for (const c of COMBOS) {
     hits.push({
-      kind: "combo", id: c.id, label: c.title,
-      sub: c.why.slice(0, 80),
+      kind: "combo", id: c.id, label: c.title, sub: c.why.slice(0, 80),
       go: "navigateTab", navigateTab: "combos",
       handoff: { key: "comboId", value: c.id },
     });
   }
-
-  // Archetypes - route to Archetypes tab with one expanded.
   for (const a of ARCHETYPES) {
     hits.push({
-      kind: "archetype", id: a.id, label: a.name,
-      sub: a.wants.slice(0, 80),
+      kind: "archetype", id: a.id, label: a.name, sub: a.wants.slice(0, 80),
       go: "navigateTab", navigateTab: "archetypes",
       handoff: { key: "archetypeId", value: a.id },
     });
   }
-
-  // Tarots, Planets, Spectrals, Vouchers, Decks, Stakes, Enhancements,
-  // Editions, Seals, Tags - all resolvable via useOpenDetail.
-  for (const x of TAROTS) {
-    hits.push({ kind: "tarot", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "tarot" });
-  }
-  for (const x of PLANETS) {
-    hits.push({ kind: "planet", id: x.id, label: x.name, sub: `${x.hand} - +${x.chipsPerLevel} chips / +${x.multPerLevel} mult per level`, go: "openDetail", detailKind: "planet" });
-  }
-  for (const x of SPECTRALS) {
-    hits.push({ kind: "spectral", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "spectral" });
-  }
-  for (const x of VOUCHERS) {
-    hits.push({ kind: "voucher", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "voucher" });
-  }
-  for (const x of DECKS) {
-    hits.push({ kind: "deck", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "deck" });
-  }
-  for (const x of STAKES) {
-    hits.push({ kind: "stake", id: x.id, label: x.name, sub: x.watchOut.slice(0, 80), go: "openDetail", detailKind: "stake" });
-  }
-  for (const x of ENHANCEMENTS) {
-    hits.push({ kind: "enhancement", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "enhancement" });
-  }
-  for (const x of EDITIONS) {
-    hits.push({ kind: "edition", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "edition" });
-  }
-  for (const x of SEALS) {
-    hits.push({ kind: "seal", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "seal" });
-  }
-  for (const x of TAGS) {
-    hits.push({ kind: "tag", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "tag" });
-  }
-
-  // Bosses - no detail kind; navigate to the Bosses tab.
-  for (const b of BOSSES) {
-    hits.push({
-      kind: "boss", id: b.id, label: b.name,
-      sub: b.effect.slice(0, 80),
-      go: "navigateTab", navigateTab: "bosses",
-    });
-  }
-
+  for (const x of TAROTS) hits.push({ kind: "tarot", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "tarot" });
+  for (const x of PLANETS) hits.push({ kind: "planet", id: x.id, label: x.name, sub: `${x.hand} - +${x.chipsPerLevel} chips / +${x.multPerLevel} mult per level`, go: "openDetail", detailKind: "planet" });
+  for (const x of SPECTRALS) hits.push({ kind: "spectral", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "spectral" });
+  for (const x of VOUCHERS) hits.push({ kind: "voucher", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "voucher" });
+  for (const x of DECKS) hits.push({ kind: "deck", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "deck" });
+  for (const x of STAKES) hits.push({ kind: "stake", id: x.id, label: x.name, sub: x.watchOut.slice(0, 80), go: "openDetail", detailKind: "stake" });
+  for (const x of ENHANCEMENTS) hits.push({ kind: "enhancement", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "enhancement" });
+  for (const x of EDITIONS) hits.push({ kind: "edition", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "edition" });
+  for (const x of SEALS) hits.push({ kind: "seal", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "seal" });
+  for (const x of TAGS) hits.push({ kind: "tag", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "tag" });
+  for (const b of BOSSES) hits.push({ kind: "boss", id: b.id, label: b.name, sub: b.effect.slice(0, 80), go: "navigateTab", navigateTab: "bosses" });
   return hits;
 }
 
@@ -210,7 +160,6 @@ function JokerConveyor({ direction, side, ids }: {
               alt=""
               className="joker-conveyor-img"
               draggable={false}
-              loading="lazy"
               decoding="async"
             />
           );
@@ -224,14 +173,12 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   const t = useT();
   const openDetail = useOpenDetail();
 
-  // Randomized description, chosen once per mount.
   const descKey = useMemo(() => DESC_KEYS[Math.floor(Math.random() * DESC_KEYS.length)], []);
 
-  // Joker IDs for the two conveyors. Memoized once per mount.
-  const leftIds = useMemo(() => pickRandom(JOKERS.map((j) => j.id), 14), []);
-  const rightIds = useMemo(() => pickRandom(JOKERS.map((j) => j.id), 14), []);
+  // Larger conveyor lists so they fill tall desktop viewports edge-to-edge.
+  const leftIds = useMemo(() => pickRandom(JOKERS.map((j) => j.id), 20), []);
+  const rightIds = useMemo(() => pickRandom(JOKERS.map((j) => j.id), 20), []);
 
-  // Search.
   const index = useMemo(buildSearchIndex, []);
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
@@ -258,15 +205,12 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
     }
   }, [openDetail, onNavigate]);
 
-  // Discover Something New: track visited tabs in sessionStorage.
-  // The current Home visit does NOT count - only the tab the button picks.
   const [discoverMessage, setDiscoverMessage] = useState<string | null>(null);
   const handleDiscover = useCallback(() => {
     let visited = readVisited();
     const pool = DISCOVER_TABS.filter((tab) => !visited.has(tab));
     let pick: string;
     if (pool.length === 0) {
-      // Reset and pick fresh.
       visited = new Set();
       pick = DISCOVER_TABS[Math.floor(Math.random() * DISCOVER_TABS.length)];
       setDiscoverMessage(t("ui.home.discover_reset"));
@@ -279,10 +223,6 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
     onNavigate(pick);
   }, [onNavigate, t]);
 
-  // Latest update card.
-  const latest = CHANGELOG[0];
-
-  // Close search dropdown on Escape.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
@@ -295,50 +235,55 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   }, [focused]);
 
   return (
-    <div className="relative min-h-[80vh] overflow-hidden rounded-lg" data-testid="tab-home">
-      {/* Animated Balatro main-menu red/blue background, scoped to the hero block. */}
+    // Full-bleed home view. Mobile has a sticky header (~60px); desktop has no header,
+    // so we use 100dvh on md+. Locked overflow-hidden = the user only sees this view.
+    <div
+      className="relative w-full overflow-hidden h-[calc(100dvh-60px)] md:h-[100dvh]"
+      data-testid="tab-home"
+    >
+      {/* Animated Balatro main-menu red/blue background, fills the entire view. */}
       <div className="balatro-menu-bg" aria-hidden="true" />
 
-      {/* Vertical joker conveyors on left & right edges. */}
+      {/* Vertical joker conveyors anchored to the FULL view edges. */}
       <JokerConveyor direction="down" side="left" ids={leftIds} />
       <JokerConveyor direction="up" side="right" ids={rightIds} />
 
-      {/* Foreground content - constrained so it never overlaps the 64px conveyors. */}
+      {/* Foreground content. Vertical-center on mobile, top-aligned-ish on desktop.
+          Padding clears the 64px conveyors on both sides. */}
       <div
-        className="relative z-10 mx-auto flex flex-col items-center gap-6 px-4 py-10 sm:py-16"
-        style={{ maxWidth: "min(48rem, calc(100% - 160px))" }}
+        className="relative z-10 mx-auto flex h-full w-full flex-col items-center justify-center gap-5 px-20 py-6 sm:gap-6 sm:py-10"
+        style={{ maxWidth: "min(64rem, 100%)" }}
       >
-        {/* Two suit icons above the title: spade (chips/blue) + heart (mult/red) */}
-        <div className="flex items-center justify-center gap-6" aria-hidden="true">
-          <span className="font-pixel chips-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♠</span>
-          <span className="font-pixel mult-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♥</span>
-        </div>
-
-        {/* Big app title */}
+        {/* Big app title - moved higher via smaller top padding above */}
         <h1
           className="font-pixel text-center leading-none drop-shadow-[0_4px_0_rgba(0,0,0,0.55)]"
-          style={{ fontSize: "clamp(2.5rem, 9vw, 5.5rem)" }}
+          style={{ fontSize: "clamp(3rem, 11vw, 7rem)" }}
           data-testid="text-home-title"
         >
           <span className="mult-text">{t("ui.home.title_a")}</span>
           <span className="chips-text">{t("ui.home.title_b")}</span>
         </h1>
 
-        {/* Randomized description (no random icons) */}
+        {/* Description */}
         <p
-          className="text-center font-display text-base text-foreground/90 sm:text-lg"
+          className="max-w-2xl text-center font-display text-base text-foreground/90 sm:text-lg md:text-xl"
           data-testid="text-home-desc"
         >
           {t(descKey)}
         </p>
 
-        {/* Two suit icons below the description: diamond (mult/red) + club (chips/blue) */}
-        <div className="-mt-2 flex items-center justify-center gap-6" aria-hidden="true">
+        {/* All 4 suit icons in one row under the description. */}
+        <div
+          className="flex items-center justify-center gap-6 sm:gap-8"
+          aria-hidden="true"
+        >
+          <span className="font-pixel chips-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♠</span>
+          <span className="font-pixel mult-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♥</span>
           <span className="font-pixel mult-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♦</span>
           <span className="font-pixel chips-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♣</span>
         </div>
 
-        {/* Search-first bar */}
+        {/* Search bar */}
         <div className="relative w-full max-w-xl" data-testid="home-search">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -368,10 +313,10 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
             )}
           </div>
 
-          {/* Autocomplete dropdown */}
+          {/* Autocomplete dropdown - capped to fit within the view */}
           {focused && query.trim() && (
             <div
-              className="casino-card absolute z-20 mt-2 max-h-80 w-full overflow-y-auto p-1 shadow-2xl"
+              className="casino-card absolute z-20 mt-2 max-h-72 w-full overflow-y-auto p-1 shadow-2xl"
               data-testid="home-search-results"
             >
               {results.length === 0 ? (
@@ -383,7 +328,6 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
                   <button
                     key={`${hit.kind}-${hit.id}`}
                     type="button"
-                    // Use onMouseDown so the click fires before the input's onBlur dismisses the menu.
                     onMouseDown={(e) => { e.preventDefault(); handlePick(hit); }}
                     className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left transition-colors hover:bg-accent/15"
                     data-testid={`search-hit-${hit.kind}-${hit.id}`}
@@ -407,61 +351,34 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
           )}
         </div>
 
-        {/* Discover Something New button */}
-        <div className="flex flex-col items-center gap-1">
-          <button
-            type="button"
-            onClick={handleDiscover}
-            className="balatro-tab inline-flex items-center gap-2 px-5 py-2.5 font-pixel text-sm"
-            data-testid="button-home-discover"
-          >
-            <Compass className="h-4 w-4" />
-            {t("ui.home.discover")}
-          </button>
-          <span className="text-[11px] text-muted-foreground">
-            {discoverMessage ?? t("ui.home.discover_hint")}
-          </span>
+        {/* Two-button row: Discover + What's New */}
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={handleDiscover}
+              className="balatro-tab inline-flex items-center gap-2 px-5 py-2.5 font-pixel text-sm"
+              data-testid="button-home-discover"
+            >
+              <Compass className="h-4 w-4" />
+              {t("ui.home.discover")}
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigate("whatsnew")}
+              className="balatro-tab inline-flex items-center gap-2 px-5 py-2.5 font-pixel text-sm"
+              data-testid="button-home-whats-new"
+            >
+              <Sparkles className="h-4 w-4" />
+              {t("ui.home.whats_new")}
+            </button>
+          </div>
+          {discoverMessage && (
+            <span className="text-[11px] text-muted-foreground">
+              {discoverMessage}
+            </span>
+          )}
         </div>
-
-        {/* Latest update card - constrained narrower than container so it never crowds the conveyors. */}
-        {latest && (
-          <article
-            className="casino-card mt-2 w-full max-w-md p-4 sm:p-5"
-            data-testid="home-latest-update"
-          >
-            <header className="flex flex-wrap items-center gap-2 border-b border-border pb-2">
-              <Sparkles className="h-4 w-4 text-accent" strokeWidth={2.5} />
-              <span className="font-pixel text-xs uppercase tracking-wider text-muted-foreground">
-                {t("ui.home.latest_update")}
-              </span>
-              <span className="ml-auto rounded-sm border border-border px-1.5 py-0.5 font-mono text-[10px] tabular text-muted-foreground">
-                {latest.version}
-              </span>
-            </header>
-            <h3 className="mt-2 font-display text-base font-semibold text-accent">
-              {t(latest.titleKey)}
-            </h3>
-            <ul className="mt-2 space-y-1">
-              {latest.bullets.slice(0, 4).map((b) => (
-                <li key={b} className="flex gap-2 text-sm leading-snug text-foreground/85">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
-                  <span>{t(b)}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-3 flex justify-end">
-              <button
-                type="button"
-                onClick={() => onNavigate("whatsnew")}
-                className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
-                data-testid="button-home-see-more-updates"
-              >
-                {t("ui.home.see_more")}
-                <ArrowRight className="h-3 w-3" />
-              </button>
-            </div>
-          </article>
-        )}
       </div>
     </div>
   );
