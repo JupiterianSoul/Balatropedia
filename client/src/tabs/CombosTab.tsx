@@ -4,7 +4,7 @@ import {
 } from "@/components/ui/select";
 import { useApp } from "@/lib/appContext";
 import { COMBOS, ARCHETYPE_LABELS, type Archetype } from "@/lib/helpers";
-import { JokerChip, StarToggle, SectionLabel } from "@/components/primitives";
+import { JokerChip, StarToggle, SectionLabel, PopularityBadge, DifficultyBadge } from "@/components/primitives";
 import { SourceCitations } from "@/components/SourceCitations";
 import { useT, useLabels, useCuratedText, useCuratedList } from "@/lib/i18n";
 
@@ -36,9 +36,13 @@ function ComboCard({ c, archLabel, openJokerDetail, isFavoriteCombo, toggleFavor
       <div className="flex items-start justify-between gap-2">
         <div>
           <h3 className="font-display text-lg font-semibold text-accent">{title}</h3>
-          <span className="mt-1 inline-block rounded-full border border-[hsl(145_35%_40%)]/40 bg-primary/15 px-2 py-0.5 text-[11px] font-medium text-[hsl(145_45%_62%)]">
-            {archLabel}
-          </span>
+          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+            <span className="inline-block rounded-full border border-[hsl(145_35%_40%)]/40 bg-primary/15 px-2 py-0.5 text-[11px] font-medium text-[hsl(145_45%_62%)]">
+              {archLabel}
+            </span>
+            {c.popularity ? <PopularityBadge popularity={c.popularity} /> : null}
+            {c.difficulty ? <DifficultyBadge difficulty={c.difficulty} /> : null}
+          </div>
         </div>
         <StarToggle
           active={isFavoriteCombo(c.id)}

@@ -179,7 +179,22 @@
       "archetype_discard": "Défausse",
       "archetype_deck_growth": "Croissance du deck",
       "archetype_economy_snowball": "Économie boule de neige",
-      "archetype_retrigger_engine": "Moteur de redéclenchement"
+      "archetype_retrigger_engine": "Moteur de redéclenchement",
+      "popularity_label": "Popularité",
+      "popularity_staple": "Incontournable",
+      "popularity_common": "Courant",
+      "popularity_niche": "De niche",
+      "difficulty_label": "Difficulté",
+      "difficulty_easy": "Facile",
+      "difficulty_moderate": "Modérée",
+      "difficulty_hard": "Difficile",
+      "archetype_bloodstone_lucky": "Bloodstone / Lucky",
+      "archetype_canio_destruction": "Destruction Canio",
+      "archetype_low_card_count": "Deck Réduit",
+      "archetype_no_discard": "Sans Défausse",
+      "archetype_tarot_engine": "Moteur Tarot",
+      "archetype_two_pair_scaling": "Two Pair Scaling",
+      "archetype_vampire_enhancement": "Vampire Améliorations"
     },
     "filters": {
       "rarity": "Rareté",
