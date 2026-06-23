@@ -26,8 +26,11 @@
       "something_wrong": "Something went wrong."
     },
     "nav": {
-      "library": "Library",
+      "home": "Home",
+      "jokers": "Jokers",
+      "library": "Jokers",
       "myrun": "My Run",
+      "runchallenge": "Run Challenge",
       "synergies": "Synergies",
       "combos": "Combos",
       "archetypes": "Archetypes",
@@ -46,7 +49,8 @@
       "tierlist": "Tier List",
       "whatsnew": "What's New",
       "group": {
-        "library": "Library",
+        "home": "Home",
+        "library": "Home",
         "build": "Build",
         "game": "Game",
         "run": "Run",
@@ -55,6 +59,26 @@
       },
       "settings": "Settings",
       "help": "Help"
+    },
+    "home": {
+      "tag": "Strategy companion",
+      "intro": "A fan-made companion for Balatro — curated jokers, synergies, combos, archetypes, tier lists, and a build planner. Pick where to start.",
+      "cta_browse": "Browse Jokers",
+      "cta_run": "Plan a Run",
+      "stats": "At a glance",
+      "quick_nav": "Quick navigation",
+      "featured": "Most-connected jokers",
+      "favorites_count": "favorites saved",
+      "favorites_view": "View favorites →",
+      "card_jokers": "Browse all 150 jokers with filters, sorting, and curated notes.",
+      "card_myrun": "Build a run, see active synergies, and save loadouts.",
+      "card_synergies": "Pick a joker, see every curated pair and how it scores.",
+      "card_tierlist": "Community-aggregated rankings by stake and deck.",
+      "card_archetypes": "Find the win condition behind every popular build.",
+      "card_decks": "Compare every deck and its starting effect.",
+      "card_stakes": "All stake modifiers and what changes per ante.",
+      "card_bosses": "Every boss blind, ability, and counter.",
+      "card_glossary": "Quick reference for every Balatro term."
     },
     "header": {
       "title_a": "Balatro",
@@ -323,6 +347,7 @@
       "variant_default": "General (most use cases)",
       "showing": "Showing",
       "empty_tier": "No jokers in this tier for this variant.",
+      "i_understand": "I understand",
       "sources": "Sources",
       "methodology": "Methodology"
     },

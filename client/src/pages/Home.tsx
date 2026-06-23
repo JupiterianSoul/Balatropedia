@@ -17,8 +17,10 @@ import { UserButton } from "@/components/UserButton";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SoundToggle } from "@/components/SoundToggle";
 import { useI18n, useT } from "@/lib/i18n";
-import { LibraryTab } from "@/tabs/LibraryTab";
+import { HomeTab } from "@/tabs/HomeTab";
+import { JokersTab } from "@/tabs/JokersTab";
 import { MyRunTab } from "@/tabs/MyRunTab";
+import { RunChallengeTab } from "@/tabs/RunChallengeTab";
 import { SynergyTab } from "@/tabs/SynergyTab";
 import { CombosTab } from "@/tabs/CombosTab";
 import { ArchetypesTab } from "@/tabs/ArchetypesTab";
@@ -41,19 +43,21 @@ import { WhatsNewTab } from "@/tabs/WhatsNewTab";
 import { KofiFooterButton } from "@/components/KofiButton";
 
 const NAV_GROUPS: NavGroup[] = [
-  { key: "library", tabs: ["library"] },
-  { key: "run", tabs: ["myrun"] },
+  { key: "home", tabs: ["home"] },
+  { key: "run", tabs: ["myrun", "runchallenge"] },
   { key: "build", tabs: ["synergies", "combos", "archetypes", "tierlist", "compare", "skeleton"] },
-  { key: "game", tabs: ["decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
+  { key: "game", tabs: ["jokers", "decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
   { key: "more", tabs: ["heatmap", "glossary", "whatsnew", "help", "about", "settings"] },
 ];
 
 // All valid tab IDs for hash routing validation
 const VALID_TABS = new Set([
-  "library", "myrun", "synergies", "combos", "archetypes", "tierlist",
+  "home", "jokers", "myrun", "runchallenge", "synergies", "combos", "archetypes", "tierlist",
   "compare", "skeleton", "decks", "stakes", "bosses", "vouchers",
   "consumables", "modifiers", "heatmap", "glossary", "whatsnew",
   "help", "about", "settings", "favorites",
+  // legacy alias
+  "library",
 ]);
 
 export default function Home() {
@@ -63,10 +67,14 @@ export default function Home() {
   // owns the hash and treats it as the route path (#/ => '/'). Touching it
   // would route us to NotFound.
   const initialTab = (() => {
-    if (typeof window === "undefined") return "library";
+    if (typeof window === "undefined") return "home";
     const st = window.history.state;
-    if (st && typeof st.tab === "string" && VALID_TABS.has(st.tab)) return st.tab;
-    return "library";
+    if (st && typeof st.tab === "string" && VALID_TABS.has(st.tab)) {
+      // legacy 'library' redirects to 'jokers' (the joker browser moved)
+      if (st.tab === "library") return "jokers";
+      return st.tab;
+    }
+    return "home";
   })();
   const [tab, setTab] = useState(initialTab);
   const favCount = favoriteJokers.size + favoriteCombos.size;
@@ -86,9 +94,10 @@ export default function Home() {
   // still creates a history entry that the device back gesture can pop.
   useEffect(() => {
     function onPop(e: PopStateEvent) {
-      const next = (e.state && typeof e.state.tab === "string" && VALID_TABS.has(e.state.tab))
+      let next = (e.state && typeof e.state.tab === "string" && VALID_TABS.has(e.state.tab))
         ? e.state.tab
-        : "library";
+        : "home";
+      if (next === "library") next = "jokers";
       setTab(next);
       setMobileNavOpen(false);
     }
@@ -117,7 +126,7 @@ export default function Home() {
   const Brand = (
     <button
       type="button"
-      onClick={() => handleSelect("library")}
+      onClick={() => handleSelect("home")}
       className="flex w-full shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]"
       data-testid="button-logo"
       aria-label="Balatropedia home"
@@ -207,7 +216,7 @@ export default function Home() {
               {}
               <button
                 type="button"
-                onClick={() => setTab("library")}
+                onClick={() => handleSelect("home")}
                 className="flex shrink-0 items-center gap-2 transition-transform hover:scale-[1.02]"
                 aria-label="Balatropedia home"
               >
@@ -249,8 +258,10 @@ export default function Home() {
           {}
           <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
             <div className="mount-fade" key={tab}>
-              <TabsContent value="library" className="mt-0"><LibraryTab /></TabsContent>
+              <TabsContent value="home" className="mt-0"><HomeTab onNavigate={handleSelect} /></TabsContent>
+              <TabsContent value="jokers" className="mt-0"><JokersTab /></TabsContent>
               <TabsContent value="myrun" className="mt-0"><MyRunTab /></TabsContent>
+              <TabsContent value="runchallenge" className="mt-0"><RunChallengeTab /></TabsContent>
               <TabsContent value="synergies" className="mt-0"><SynergyTab /></TabsContent>
               <TabsContent value="combos" className="mt-0"><CombosTab /></TabsContent>
               <TabsContent value="archetypes" className="mt-0"><ArchetypesTab /></TabsContent>
