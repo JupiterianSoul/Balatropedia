@@ -46,7 +46,7 @@
       "glossary": "Glossaire",
       "about": "À propos",
       "tierlist": "Tier List",
-      "whatsnew": "Nouveautés",
+      "whatsnew": "Mises à jour",
       "group": {
         "home": "Accueil",
         "library": "Accueil",
@@ -87,7 +87,22 @@
       "featured_sub": "Ces jokers apparaissent dans le plus de synergies curées.",
       "lucky_pull": "Tirage chanceux",
       "lucky_pull_desc": "Tire un joker au hasard. Clique-le pour les détails complets.",
-      "lucky_pull_again": "Relancer"
+      "lucky_pull_again": "Relancer",
+      "title_a": "Bala",
+      "title_b": "tropedia",
+      "search_placeholder": "Cherche jokers, synergies, combos, archétypes...",
+      "search_empty": "Aucun résultat.",
+      "discover": "Découvrir un Nouvel Endroit",
+      "discover_hint": "Ouvre un onglet où tu n'es pas encore allé.",
+      "discover_reset": "Tu as tout visité. Réinitialisation.",
+      "latest_update": "Dernière mise à jour",
+      "see_more": "Voir toutes les mises à jour",
+      "desc_1": "Compagnon de stratégie poussé pour Balatro.",
+      "desc_2": "Chaque joker, chaque synergie, chaque combo - au même endroit.",
+      "desc_3": "Planifie tes parties, trouve les conditions de victoire, apprends le meta.",
+      "desc_4": "Un coffre fan-made de jokers, archétypes et tier lists.",
+      "desc_5": "Planificateur de builds, base de données joker, explorateur de synergies.",
+      "desc_6": "Trouve ton prochain build cassé."
     },
     "header": {
       "title_a": "Balatro",
@@ -411,6 +426,16 @@
         "tier_variants": "Les variantes du tier list diffèrent réellement par stake et par deck via des deltas de mécaniques.",
         "tier_disclaimer": "L'avertissement du tier list peut être masqué via un bouton « J'ai compris ».",
         "tier_blank_row": "Correction du rendu de ligne vide dans le tier list."
+      },
+      "v1_4": {
+        "title": "v1.4 - Refonte Accueil et effet CRT",
+        "home_rebuild": "Écran d'accueil refait de zéro autour d'une barre de recherche centrale.",
+        "menu_bg": "Fond fluide rouge/bleu du menu principal de Balatro, animé sur l'Accueil.",
+        "crt": "Effet écran CRT global avec interrupteur et curseur d'intensité dans les Réglages.",
+        "conveyors": "Tapis verticaux de jokers défilant sur les bords de l'Accueil.",
+        "search_first": "Recherche unifiée sur l'Accueil : jokers, synergies, combos, archétypes.",
+        "discover": "Bouton Découvrir un Nouvel Endroit qui ne t'envoie jamais deux fois sur le même onglet.",
+        "updates_rename": "Barre latérale : 'What's New' renommé 'Mises à jour'."
       }
     },
     "challenge": {
@@ -1441,7 +1466,13 @@
       "sign_in_to_sync": "Connecte-toi (en haut du menu) pour synchroniser favoris et runs sauvegardées entre appareils.",
       "about": "À propos",
       "source_code": "Code source sur GitHub",
-      "disclaimer": "Balatropedia est une référence non officielle créée par un fan. Balatro et tous les assets associés appartiennent à LocalThunk et Playstack."
+      "disclaimer": "Balatropedia est une référence non officielle créée par un fan. Balatro et tous les assets associés appartiennent à LocalThunk et Playstack.",
+      "crt": {
+        "title": "Effet écran CRT",
+        "enabled": "CRT activé",
+        "intensity": "Intensité",
+        "hint": "Coins arrondis, scanlines, ligne qui défile, vignette. 0 désactive, 60 par défaut."
+      }
     },
     "help": {
       "title": "Aide & Tutoriel",
