@@ -26,8 +26,11 @@
       "something_wrong": "Une erreur s'est produite."
     },
     "nav": {
-      "library": "Bibliothèque",
+      "home": "Accueil",
+      "jokers": "Jokers",
+      "library": "Jokers",
       "myrun": "Ma Partie",
+      "runchallenge": "Défi de Partie",
       "synergies": "Synergies",
       "combos": "Combos",
       "archetypes": "Archétypes",
@@ -46,7 +49,8 @@
       "tierlist": "Tier List",
       "whatsnew": "Nouveautés",
       "group": {
-        "library": "Bibliothèque",
+        "home": "Accueil",
+        "library": "Accueil",
         "build": "Construction",
         "game": "Jeu",
         "run": "Partie",
@@ -55,6 +59,26 @@
       },
       "settings": "Paramètres",
       "help": "Aide"
+    },
+    "home": {
+      "tag": "Compagnon de stratégie",
+      "intro": "Un compagnon fan-made pour Balatro — jokers, synergies, combos, archétypes, tier lists et un planificateur de build. Choisis par où commencer.",
+      "cta_browse": "Parcourir les Jokers",
+      "cta_run": "Planifier une Partie",
+      "stats": "En un coup d'œil",
+      "quick_nav": "Navigation rapide",
+      "featured": "Jokers les plus connectés",
+      "favorites_count": "favoris sauvegardés",
+      "favorites_view": "Voir les favoris →",
+      "card_jokers": "Parcours les 150 jokers avec filtres, tris et notes curées.",
+      "card_myrun": "Construis une partie, vois les synergies actives, sauvegarde tes builds.",
+      "card_synergies": "Choisis un joker, vois chaque paire curée et son scoring.",
+      "card_tierlist": "Classements agrégés par la communauté, par mise et paquet.",
+      "card_archetypes": "Trouve la condition de victoire derrière chaque build populaire.",
+      "card_decks": "Compare tous les paquets et leurs effets de départ.",
+      "card_stakes": "Toutes les mises et ce qui change à chaque ante.",
+      "card_bosses": "Chaque blind boss, sa capacité et son contre.",
+      "card_glossary": "Référence rapide pour chaque terme de Balatro."
     },
     "header": {
       "title_a": "Balatro",
@@ -323,6 +347,7 @@
       "variant_default": "Général (la plupart des cas)",
       "showing": "Affichage",
       "empty_tier": "Aucun joker dans ce tier pour cette variante.",
+      "i_understand": "J'ai compris",
       "sources": "Sources",
       "methodology": "Méthodologie"
     },

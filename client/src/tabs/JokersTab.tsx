@@ -30,7 +30,7 @@ function toggle<T>(set: Set<T>, v: T): Set<T> {
   return next;
 }
 
-export function LibraryTab() {
+export function JokersTab() {
   const { notes } = useApp();
   const t = useT();
   const labels = useLabels();

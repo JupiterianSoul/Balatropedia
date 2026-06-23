@@ -26,8 +26,11 @@
       "something_wrong": "Algo salió mal."
     },
     "nav": {
-      "library": "Biblioteca",
+      "home": "Inicio",
+      "jokers": "Jokers",
+      "library": "Jokers",
       "myrun": "Mi Partida",
+      "runchallenge": "Reto de Partida",
       "synergies": "Sinergias",
       "combos": "Combos",
       "archetypes": "Arquetipos",
@@ -46,7 +49,8 @@
       "tierlist": "Tier List",
       "whatsnew": "Novedades",
       "group": {
-        "library": "Biblioteca",
+        "home": "Inicio",
+        "library": "Inicio",
         "build": "Construir",
         "game": "Juego",
         "run": "Partida",
@@ -55,6 +59,26 @@
       },
       "settings": "Ajustes",
       "help": "Ayuda"
+    },
+    "home": {
+      "tag": "Compañero de estrategia",
+      "intro": "Un compañero fan-made para Balatro — jokers, sinergias, combos, arquetipos, tier lists y un planificador de build. Elige por dónde empezar.",
+      "cta_browse": "Ver Jokers",
+      "cta_run": "Planear Partida",
+      "stats": "De un vistazo",
+      "quick_nav": "Navegación rápida",
+      "featured": "Jokers más conectados",
+      "favorites_count": "favoritos guardados",
+      "favorites_view": "Ver favoritos →",
+      "card_jokers": "Explora los 150 jokers con filtros, orden y notas curadas.",
+      "card_myrun": "Construye una partida, ve sinergias activas y guarda builds.",
+      "card_synergies": "Elige un joker y mira cada par curado y cómo puntuá.",
+      "card_tierlist": "Ranking agregado por la comunidad, por apuesta y mazo.",
+      "card_archetypes": "Encuentra la condición de victoria de cada build popular.",
+      "card_decks": "Compara todos los mazos y su efecto inicial.",
+      "card_stakes": "Todas las apuestas y qué cambia por ante.",
+      "card_bosses": "Cada ciega jefe, habilidad y contra.",
+      "card_glossary": "Referencia rápida para cada término de Balatro."
     },
     "header": {
       "title_a": "Balatro",
@@ -323,6 +347,7 @@
       "variant_default": "General (la mayoría de casos)",
       "showing": "Mostrando",
       "empty_tier": "No hay jokers en este tier para esta variante.",
+      "i_understand": "Entendido",
       "sources": "Fuentes",
       "methodology": "Metodología"
     },

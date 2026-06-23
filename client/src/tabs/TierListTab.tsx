@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Info, ExternalLink } from "lucide-react";
+import { Info, ExternalLink, X } from "lucide-react";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -135,6 +135,7 @@ export function TierListTab() {
   const { openJokerDetail } = useApp();
   const [stake, setStake] = useState<string>("any");
   const [deck, setDeck] = useState<string>("any");
+  const [disclaimerHidden, setDisclaimerHidden] = useState<boolean>(false);
 
   const data: TierData = useMemo(() => {
     const stakeData = stake !== "any" ? DATA.byStake[stake] : null;
@@ -162,20 +163,31 @@ export function TierListTab() {
   return (
     <div className="space-y-5">
       {/* Disclaimer */}
-      <div
-        className="flex items-start gap-3 rounded-md border-2 border-accent/40 bg-accent/5 p-4"
-        data-testid="tierlist-disclaimer"
-      >
-        <Info className="mt-0.5 h-5 w-5 shrink-0 text-accent" strokeWidth={2.5} />
-        <div className="space-y-1.5">
-          <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-accent">
-            {t("ui.tierlist.disclaimer_title")}
-          </h3>
-          <p className="text-xs leading-relaxed text-foreground/85">
-            {t("ui.tierlist.disclaimer_body")}
-          </p>
+      {!disclaimerHidden && (
+        <div
+          className="flex items-start gap-3 rounded-md border-2 border-accent/40 bg-accent/5 p-4"
+          data-testid="tierlist-disclaimer"
+        >
+          <Info className="mt-0.5 h-5 w-5 shrink-0 text-accent" strokeWidth={2.5} />
+          <div className="flex-1 space-y-2">
+            <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-accent">
+              {t("ui.tierlist.disclaimer_title")}
+            </h3>
+            <p className="text-xs leading-relaxed text-foreground/85">
+              {t("ui.tierlist.disclaimer_body")}
+            </p>
+            <button
+              type="button"
+              onClick={() => setDisclaimerHidden(true)}
+              className="mt-1 inline-flex items-center gap-1.5 rounded border border-accent/50 bg-accent/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-accent transition-colors hover:bg-accent/25"
+              data-testid="button-tierlist-dismiss-disclaimer"
+            >
+              <X className="h-3 w-3" strokeWidth={2.5} />
+              {t("ui.tierlist.i_understand")}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Selectors */}
       <div className="flex flex-wrap items-end gap-3">
@@ -248,9 +260,9 @@ export function TierListTab() {
               >
                 {tier}
               </div>
-              <div className="flex min-h-[60px] flex-1 flex-wrap items-center gap-1">
+              <div className="flex flex-1 flex-wrap items-start gap-1 py-1">
                 {ids.length === 0 ? (
-                  <span className="text-xs italic text-muted-foreground">
+                  <span className="self-center text-xs italic text-muted-foreground">
                     {t("ui.tierlist.empty_tier")}
                   </span>
                 ) : (
@@ -259,7 +271,13 @@ export function TierListTab() {
                   ))
                 )}
               </div>
-              <div className="hidden shrink-0 self-center text-[11px] tabular text-muted-foreground sm:block">
+              <div
+                className={cn(
+                  "hidden shrink-0 items-center self-stretch rounded px-2 font-display text-sm font-bold sm:flex",
+                  tone.bg, tone.text,
+                )}
+                title={`${ids.length} jokers`}
+              >
                 {ids.length}
               </div>
             </div>
