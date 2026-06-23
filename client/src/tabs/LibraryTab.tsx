@@ -18,7 +18,6 @@ import {
 } from "@/lib/helpers";
 import { JokerCard } from "@/components/JokerCard";
 import { FilterPill, PillGroup } from "@/components/FilterPills";
-import { RunChallengeDialog } from "@/components/RunChallenge";
 import { useT, useLabels, useI18n, getGameText } from "@/lib/i18n";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -168,8 +167,14 @@ export function LibraryTab() {
             <Button variant="outline" onClick={() => setQuery("")} data-testid="button-mobile-search-reset">
               {t("ui.btn.clear")}
             </Button>
-            <Button onClick={() => setSearchSheetOpen(false)} data-testid="button-mobile-search-apply">
-              {t("ui.tabs.library_search_results", { n: filtered.length })}
+            <Button
+              onClick={() => setSearchSheetOpen(false)}
+              data-testid="button-mobile-search-apply"
+              disabled={filtered.length === 0}
+            >
+              {filtered.length === 0
+                ? t("ui.tabs.library_search_no_results")
+                : t("ui.tabs.library_search_results", { n: filtered.length })}
             </Button>
           </div>
         </div>
@@ -182,7 +187,6 @@ export function LibraryTab() {
       {}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         {isMobile ? mobileSearchTrigger : desktopInput}
-        <RunChallengeDialog />
         <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
           <SelectTrigger className="w-full bg-card sm:w-56" data-testid="select-sort">
             <SelectValue />

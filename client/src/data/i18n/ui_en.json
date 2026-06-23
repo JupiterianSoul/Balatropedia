@@ -213,6 +213,8 @@
       "library_search_ph": "Search Jokers by name, effect, or note…",
       "library_search_title": "Search Jokers",
       "library_search_hint": "Search by joker name, effect text, +Mult, X Mult, Chips, chance, $…",
+      "library_search_results": "Show {{n}} results",
+      "library_search_no_results": "No matches",
       "library_sort_name": "Sort: Name (A-Z)",
       "library_sort_beginner": "Sort: Beginner-friendly",
       "library_sort_setup": "Sort: Setup difficulty",
@@ -372,6 +374,10 @@
       "consumables": "Consumables to look for",
       "watch_out": "Watch out",
       "reroll": "Reroll",
+      "mission": "Mission",
+      "must_have": "Must-have jokers",
+      "fill_in": "Fill-in jokers",
+      "tips": "Tactical tips",
       "disclaimer": "Suggestions, not a script. Adapt to what the shop gives you."
     },
     "sheet": {

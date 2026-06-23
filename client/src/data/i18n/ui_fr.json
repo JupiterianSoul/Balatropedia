@@ -213,6 +213,8 @@
       "library_search_ph": "Rechercher des Jokers par nom, effet ou note…",
       "library_search_title": "Rechercher des Jokers",
       "library_search_hint": "Recherche par nom, effet, +Mult, X Mult, Jetons, chance, $…",
+      "library_search_results": "Afficher {{n}} résultats",
+      "library_search_no_results": "Aucun résultat",
       "library_sort_name": "Tri : Nom (A-Z)",
       "library_sort_beginner": "Tri : Accessible aux débutants",
       "library_sort_setup": "Tri : Difficulté de mise en place",
@@ -372,6 +374,10 @@
       "consumables": "Consommables à chercher",
       "watch_out": "Attention à",
       "reroll": "Relancer",
+      "mission": "Mission",
+      "must_have": "Jokers requis",
+      "fill_in": "Jokers de remplissage",
+      "tips": "Conseils tactiques",
       "disclaimer": "Des suggestions, pas un script. Adapte-toi à ce que le shop te donne."
     },
     "sheet": {
