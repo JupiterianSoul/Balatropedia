@@ -30,7 +30,9 @@
       "library": "Jokers",
       "myrun": "Mi Partida",
       "runchallenge": "Reto de Partida",
-      "runplanner": "Planificador",
+      "buildlab": "Laboratorio de Build",
+      "calculator": "Calculadora",
+      "seeds": "Semillas",
       "synergies": "Sinergias",
       "combos": "Combos",
       "archetypes": "Arquetipos",
@@ -428,6 +430,13 @@
         "tier_variants": "Las variantes del tier list realmente difieren por stake y por deck usando deltas de mecánica.",
         "tier_disclaimer": "El aviso del tier list se puede ocultar con un botón \"Entendido\".",
         "tier_blank_row": "Corregido artefacto visual de fila vacía en el tier list."
+      },
+      "v1_5": {
+        "title": "v1.5 - Laboratorio, Calculadora y Semillas",
+        "buildlab": "Laboratorio de Build: elige 1-3 jokers ancla y obtén compañeros clasificados, foco de mano, vigilancia de bosses, seguimiento de scaling y advertencias de anti-sinergia.",
+        "calculator": "Calculadora de Puntuación: motor completo de Balatro con desglose por carta, orden de jokers, estado de scaling, modificadores de mazo y cronología de 4 fases.",
+        "seeds": "Pestaña Semillas: biblioteca curada + analizador deep-link a TheSoul y Blueprint con semilla y mazo precompletados.",
+        "runplanner_removed": "Planificador antiguo eliminado a favor de la Calculadora más precisa y el Laboratorio más útil."
       },
       "v1_4": {
         "title": "v1.4 - Rediseño de Inicio y efecto CRT",

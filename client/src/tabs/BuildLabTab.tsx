@@ -1,0 +1,315 @@
+// Build Lab — recommendation engine that takes 1-3 anchor jokers and outputs:
+//   - detected archetypes
+//   - ranked partner suggestions (by pairScore + curated partners)
+//   - hand focus (which hand the build wants to play)
+//   - planet priorities (which hands to level)
+//   - boss watch (which bosses cripple this build)
+//   - scaling tracker tips (which jokers in build are scaling, what to feed them)
+//   - anti-synergy warnings
+import { useMemo, useState } from "react";
+import { FlaskConical, X, Sparkles, AlertTriangle, Target, Skull, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { JokerCombobox } from "@/components/JokerCombobox";
+import { JokerSprite } from "@/components/JokerSprite";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  JOKERS, JOKER_MAP, pairScore, suggestedArchetypes, activeSynergies,
+  antiSynergyWarnings, heuristicSynergies,
+  SCALING_LABELS, HAND_LABELS,
+} from "@/lib/helpers";
+import { useGameText } from "@/lib/i18n";
+
+function HandFocus({ ids }: { ids: string[] }) {
+  // Aggregate joker.hands across the anchors and rank by frequency
+  const counts: Record<string, number> = {};
+  for (const id of ids) {
+    const j = JOKER_MAP[id];
+    if (!j) continue;
+    for (const h of j.hands) {
+      if (h === "any") continue;
+      counts[h] = (counts[h] ?? 0) + 1;
+    }
+  }
+  const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  if (ranked.length === 0) {
+    return <p className="text-xs text-muted-foreground italic">No hand preference — these jokers work on any hand.</p>;
+  }
+  return (
+    <ul className="space-y-1 text-xs">
+      {ranked.map(([h, n]) => (
+        <li key={h} className="flex items-center justify-between">
+          <span>{HAND_LABELS[h as keyof typeof HAND_LABELS] ?? h}</span>
+          <span className="text-muted-foreground">{n} joker{n !== 1 ? "s" : ""} care</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ScalingTracker({ ids }: { ids: string[] }) {
+  const scaling = ids.map(id => JOKER_MAP[id]).filter(j => j && j.scaling !== "static");
+  if (scaling.length === 0) {
+    return <p className="text-xs text-muted-foreground italic">No scaling jokers in this build. Add one for late-game power.</p>;
+  }
+  return (
+    <ul className="space-y-1.5 text-xs">
+      {scaling.map(j => (
+        <li key={j.id} className="border-l-2 border-amber-500/40 pl-2">
+          <div className="font-semibold">{j.name} <span className="text-muted-foreground text-[10px]">({SCALING_LABELS[j.scaling]})</span></div>
+          <div className="text-muted-foreground">{j.trigger}</div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function BossWatch({ ids }: { ids: string[] }) {
+  // Heuristic: cross-reference boss effects with joker tags.
+  // We hard-code the most punishing boss/joker conflicts.
+  const warns: { boss: string; why: string }[] = [];
+  const has = (role: string) => ids.some(id => {
+    const j = JOKER_MAP[id]; if (!j) return false;
+    return j.tags.includes(role as any) || j.mainRole === role || j.secondaryRole === role;
+  });
+  const hasArchetype = (a: string) => ids.some(id => JOKER_MAP[id]?.archetypes.includes(a as any));
+  const buildIncludes = (jid: string) => ids.includes(jid);
+
+  if (has("suit_support") || hasArchetype("flush")) warns.push({ boss: "The Plant", why: "Flush builds debuff face cards if you rely on K/Q/J chips" });
+  if (has("rank_face_support") || hasArchetype("face_card")) warns.push({ boss: "The Plant", why: "Face cards debuffed" });
+  if (hasArchetype("steel") || has("held_in_hand")) warns.push({ boss: "The Needle", why: "Only 1 hand — held effects fire less" });
+  if (has("retrigger")) warns.push({ boss: "The Eye", why: "Can't repeat hand types — retrigger engines suffer" });
+  if (has("economy") || hasArchetype("economy_snowball")) warns.push({ boss: "The Hook", why: "Discards 2 random cards on play" });
+  if (has("scaling_engine")) warns.push({ boss: "The Manacle", why: "-1 hand size limits scaling triggers per ante" });
+  if (buildIncludes("baron") || buildIncludes("shoot_the_moon")) warns.push({ boss: "The Mark", why: "Cards drawn face down — held-in-hand triggers blind" });
+
+  if (warns.length === 0) {
+    return <p className="text-xs text-muted-foreground italic">No common boss disasters identified.</p>;
+  }
+  // dedupe by boss
+  const seen = new Set<string>();
+  const uniq = warns.filter(w => seen.has(w.boss) ? false : (seen.add(w.boss), true));
+  return (
+    <ul className="space-y-1.5 text-xs">
+      {uniq.map(w => (
+        <li key={w.boss} className="border-l-2 border-rose-500/40 pl-2">
+          <div className="font-semibold text-rose-400">{w.boss}</div>
+          <div className="text-muted-foreground">{w.why}</div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function PartnerSuggestions({ ids }: { ids: string[] }) {
+  // Aggregate pairScore across all candidate jokers vs the anchor set
+  const candidates = useMemo(() => {
+    if (ids.length === 0) return [];
+    const scored = JOKERS
+      .filter(c => !ids.includes(c.id))
+      .map(c => {
+        let total = 0;
+        let curatedHits = 0;
+        for (const aid of ids) {
+          const p = pairScore(aid, c.id);
+          total += p;
+          const a = JOKER_MAP[aid];
+          if (a?.partners.includes(c.id)) curatedHits += 1;
+        }
+        return { joker: c, score: total, curatedHits };
+      })
+      .filter(x => x.score > 0)
+      .sort((a, b) => b.score - a.score || b.curatedHits - a.curatedHits)
+      .slice(0, 12);
+    return scored;
+  }, [ids.join("|")]);
+
+  if (ids.length === 0) {
+    return <p className="text-xs text-muted-foreground italic">Add an anchor joker to see partner suggestions.</p>;
+  }
+  if (candidates.length === 0) {
+    return <p className="text-xs text-muted-foreground italic">No clear partners. Try adding a different anchor.</p>;
+  }
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+      {candidates.map(c => (
+        <PartnerCard key={c.joker.id} jokerId={c.joker.id} score={c.score} curated={c.curatedHits} />
+      ))}
+    </div>
+  );
+}
+
+function PartnerCard({ jokerId, score, curated }: { jokerId: string; score: number; curated: number }) {
+  const { name, text } = useGameText("jokers", jokerId);
+  return (
+    <div className="rounded-md border border-border/60 bg-card/40 p-2 flex gap-2">
+      <JokerSprite jokerId={jokerId} size={36} />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm font-semibold truncate">{name}</span>
+          {curated > 0 && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-[10px] bg-accent/20 text-accent px-1 rounded">★{curated}</span>
+              </TooltipTrigger>
+              <TooltipContent>Curated partner for {curated} anchor(s)</TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+        <p className="text-[10px] text-muted-foreground line-clamp-2">{text}</p>
+        <div className="text-[10px] text-muted-foreground mt-0.5">score: {score.toFixed(1)}</div>
+      </div>
+    </div>
+  );
+}
+
+export function BuildLabTab() {
+  const [anchors, setAnchors] = useState<string[]>([]);
+  const archetypes = useMemo(() => suggestedArchetypes(anchors), [anchors.join("|")]);
+  const synergies = useMemo(() => activeSynergies(anchors), [anchors.join("|")]);
+  const antiWarns = useMemo(() => antiSynergyWarnings(anchors), [anchors.join("|")]);
+  const heuristics = useMemo(() => heuristicSynergies(anchors), [anchors.join("|")]);
+
+  const addAnchor = (id: string) => {
+    if (id && !anchors.includes(id) && anchors.length < 3) setAnchors([...anchors, id]);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-lg border border-border/60 bg-card/40 p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <FlaskConical className="h-4 w-4 text-accent" />
+          <h2 className="text-lg font-bold">Build Lab</h2>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Pick 1-3 anchor jokers. The lab figures out the archetype, ranks partners, points to the hand you should level, warns you about bosses, and tracks scaling.
+        </p>
+      </div>
+
+      {/* Anchor picker */}
+      <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
+        <h3 className="text-sm font-semibold">Anchors ({anchors.length}/3)</h3>
+        <div className="flex flex-wrap gap-2">
+          {anchors.map((id, i) => {
+            const j = JOKER_MAP[id];
+            return (
+              <div key={id} className="flex items-center gap-2 rounded-md border border-border/60 bg-card/60 px-2 py-1">
+                <JokerSprite jokerId={id} size={32} />
+                <span className="text-sm font-semibold">{j?.name ?? id}</span>
+                <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => setAnchors(anchors.filter((_, k) => k !== i))}>
+                  <X className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            );
+          })}
+          {anchors.length < 3 && (
+            <div className="min-w-[220px] flex-1">
+              <JokerCombobox value={null} onChange={addAnchor} placeholder="Add anchor joker..." />
+            </div>
+          )}
+        </div>
+      </section>
+
+      {anchors.length > 0 && (
+        <>
+          {/* Archetypes */}
+          <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-accent" />
+              <h3 className="text-sm font-semibold">Detected archetypes</h3>
+            </div>
+            {archetypes.length === 0 ? (
+              <p className="text-xs text-muted-foreground italic">No dominant archetype. This is a flexible build.</p>
+            ) : (
+              <div className="flex flex-wrap gap-1.5">
+                {archetypes.map(a => (
+                  <span key={a.id} className="text-xs rounded px-2 py-0.5 bg-accent/20 text-accent border border-accent/40">
+                    {a.name} <span className="opacity-60">·{a.matched.length}</span>
+                  </span>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Hand focus + Planet priorities */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
+              <div className="flex items-center gap-2">
+                <Target className="h-4 w-4 text-accent" />
+                <h3 className="text-sm font-semibold">Hand focus / planet priority</h3>
+              </div>
+              <HandFocus ids={anchors} />
+            </section>
+
+            <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-amber-500" />
+                <h3 className="text-sm font-semibold">Scaling tracker</h3>
+              </div>
+              <ScalingTracker ids={anchors} />
+            </section>
+          </div>
+
+          {/* Partners */}
+          <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
+            <h3 className="text-sm font-semibold">Ranked partner suggestions</h3>
+            <PartnerSuggestions ids={anchors} />
+          </section>
+
+          {/* Synergies + Anti */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
+              <h3 className="text-sm font-semibold">Active synergies ({synergies.length + heuristics.length})</h3>
+              {synergies.length + heuristics.length === 0 ? (
+                <p className="text-xs text-muted-foreground italic">No active synergies between anchors yet.</p>
+              ) : (
+                <ul className="space-y-1 text-xs">
+                  {synergies.map((s, i) => (
+                    <li key={`c${i}`} className="border-l-2 border-emerald-500/40 pl-2">
+                      <span className="font-semibold">{JOKER_MAP[s.a]?.name} + {JOKER_MAP[s.b]?.name}</span>
+                      <div className="text-muted-foreground">{s.why}</div>
+                    </li>
+                  ))}
+                  {heuristics.map((h, i) => (
+                    <li key={`h${i}`} className="border-l-2 border-sky-500/40 pl-2">
+                      <span className="font-semibold">{JOKER_MAP[h.a]?.name} + {JOKER_MAP[h.b]?.name}</span>
+                      <span className="text-[10px] text-muted-foreground"> ({h.reasonKey})</span>
+                      <div className="text-muted-foreground">{h.detail}</div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+
+            <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                <h3 className="text-sm font-semibold">Anti-synergies ({antiWarns.length})</h3>
+              </div>
+              {antiWarns.length === 0 ? (
+                <p className="text-xs text-muted-foreground italic">No conflicts detected.</p>
+              ) : (
+                <ul className="space-y-1 text-xs">
+                  {antiWarns.map((w, i) => (
+                    <li key={i} className="border-l-2 border-yellow-500/40 pl-2">
+                      <span className="font-semibold">{JOKER_MAP[w.a]?.name} ⚠ {JOKER_MAP[w.b]?.name}</span>
+                      <div className="text-muted-foreground">{w.why}</div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </div>
+
+          {/* Boss watch */}
+          <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <Skull className="h-4 w-4 text-rose-500" />
+              <h3 className="text-sm font-semibold">Boss watch</h3>
+            </div>
+            <BossWatch ids={anchors} />
+          </section>
+        </>
+      )}
+    </div>
+  );
+}

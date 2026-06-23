@@ -22,7 +22,9 @@ import { HomeTab } from "@/tabs/HomeTab";
 import { JokersTab } from "@/tabs/JokersTab";
 import { MyRunTab } from "@/tabs/MyRunTab";
 import { RunChallengeTab } from "@/tabs/RunChallengeTab";
-import { RunPlannerTab } from "@/tabs/RunPlannerTab";
+import { BuildLabTab } from "@/tabs/BuildLabTab";
+import { ScoreCalculatorTab } from "@/tabs/ScoreCalculatorTab";
+import { SeedsTab } from "@/tabs/SeedsTab";
 import { SynergyTab } from "@/tabs/SynergyTab";
 import { CombosTab } from "@/tabs/CombosTab";
 import { ArchetypesTab } from "@/tabs/ArchetypesTab";
@@ -46,7 +48,7 @@ import { KofiFooterButton } from "@/components/KofiButton";
 
 const NAV_GROUPS: NavGroup[] = [
   { key: "home", tabs: ["home"] },
-  { key: "run", tabs: ["myrun", "runchallenge", "runplanner"] },
+  { key: "run", tabs: ["myrun", "runchallenge", "buildlab", "calculator", "seeds"] },
   { key: "build", tabs: ["synergies", "combos", "archetypes", "tierlist", "compare", "skeleton"] },
   { key: "game", tabs: ["jokers", "decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
   { key: "more", tabs: ["heatmap", "glossary", "whatsnew", "help", "about", "settings"] },
@@ -54,13 +56,20 @@ const NAV_GROUPS: NavGroup[] = [
 
 // All valid tab IDs for hash routing validation
 const VALID_TABS = new Set([
-  "home", "jokers", "myrun", "runchallenge", "runplanner", "synergies", "combos", "archetypes", "tierlist",
+  "home", "jokers", "myrun", "runchallenge", "buildlab", "calculator", "seeds", "synergies", "combos", "archetypes", "tierlist",
   "compare", "skeleton", "decks", "stakes", "bosses", "vouchers",
   "consumables", "modifiers", "heatmap", "glossary", "whatsnew",
   "help", "about", "settings", "favorites",
-  // legacy alias
+  // legacy aliases
   "library",
+  "runplanner",
 ]);
+
+// Legacy tab redirects (old hash links continue to work)
+const LEGACY_REDIRECTS: Record<string, string> = {
+  library: "jokers",
+  runplanner: "buildlab",
+};
 
 export default function Home() {
   const { favoriteJokers, favoriteCombos } = useApp();
@@ -72,9 +81,7 @@ export default function Home() {
     if (typeof window === "undefined") return "home";
     const st = window.history.state;
     if (st && typeof st.tab === "string" && VALID_TABS.has(st.tab)) {
-      // legacy 'library' redirects to 'jokers' (the joker browser moved)
-      if (st.tab === "library") return "jokers";
-      return st.tab;
+      return LEGACY_REDIRECTS[st.tab] ?? st.tab;
     }
     return "home";
   })();
@@ -99,7 +106,7 @@ export default function Home() {
       let next = (e.state && typeof e.state.tab === "string" && VALID_TABS.has(e.state.tab))
         ? e.state.tab
         : "home";
-      if (next === "library") next = "jokers";
+      next = LEGACY_REDIRECTS[next] ?? next;
       setTab(next);
       setMobileNavOpen(false);
     }
@@ -286,7 +293,9 @@ export default function Home() {
               <TabsContent value="jokers" className="mt-0"><JokersTab /></TabsContent>
               <TabsContent value="myrun" className="mt-0"><MyRunTab /></TabsContent>
               <TabsContent value="runchallenge" className="mt-0"><RunChallengeTab /></TabsContent>
-              <TabsContent value="runplanner" className="mt-0"><RunPlannerTab /></TabsContent>
+              <TabsContent value="buildlab" className="mt-0"><BuildLabTab /></TabsContent>
+              <TabsContent value="calculator" className="mt-0"><ScoreCalculatorTab /></TabsContent>
+              <TabsContent value="seeds" className="mt-0"><SeedsTab /></TabsContent>
               <TabsContent value="synergies" className="mt-0"><SynergyTab /></TabsContent>
               <TabsContent value="combos" className="mt-0"><CombosTab /></TabsContent>
               <TabsContent value="archetypes" className="mt-0"><ArchetypesTab /></TabsContent>
