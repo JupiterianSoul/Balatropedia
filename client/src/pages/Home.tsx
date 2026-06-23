@@ -155,20 +155,19 @@ export default function Home() {
   );
 
   return (
-    <div className="flex min-h-[100dvh] bg-background">
+    // Outer is locked to viewport height on desktop with overflow-hidden so the
+    // sidebar and right pane become two independent scroll contexts (standard
+    // Slack/Discord/Notion layout). Mobile keeps document scroll because the
+    // sidebar isn't shown there.
+    <div className="flex min-h-[100dvh] bg-background md:h-[100dvh] md:min-h-0 md:overflow-hidden">
       <Tabs
         value={tab}
         onValueChange={handleSelect}
-        className="flex min-h-[100dvh] w-full"
+        className="flex min-h-[100dvh] w-full md:h-[100dvh] md:min-h-0"
       >
-        {}
-        {/* Desktop sidebar: position:sticky lets it stay pinned while the right
-            pane scrolls. self-start prevents the flex container from stretching
-            this aside to match content height - without that, the aside grows
-            taller than the viewport and there's no room left for sticky to
-            engage, so it scrolls away with the page. */}
+        {/* Desktop sidebar: its own scroll context, never scrolls with the page. */}
         <aside
-          className="sticky top-0 z-20 hidden h-[100dvh] w-60 shrink-0 flex-col self-start border-r-4 border-black bg-[hsl(178_14%_13%)] shadow-[4px_0_0_hsl(198_18%_4%)] md:flex"
+          className="z-20 hidden h-[100dvh] w-60 shrink-0 flex-col border-r-4 border-black bg-[hsl(178_14%_13%)] shadow-[4px_0_0_hsl(198_18%_4%)] md:flex"
           data-testid="sidebar-desktop"
         >
           <div className="border-b-2 border-black bg-[hsl(150_16%_10%)] px-4 py-3">
@@ -191,8 +190,8 @@ export default function Home() {
           </div>
         </aside>
 
-        {}
-        <div className="flex min-w-0 flex-1 flex-col">
+        {/* Right pane: its own independent vertical scroll on desktop. */}
+        <div className="flex min-w-0 flex-1 flex-col md:h-[100dvh] md:overflow-y-auto">
           {}
           <header className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden">
             <div className="flex items-center gap-2 px-3 py-2">
@@ -277,7 +276,7 @@ export default function Home() {
 
           {}
           {tab === "home" ? (
-            <div className="mount-fade flex-1" key={tab} data-testid="home-fullbleed">
+            <div className="mount-fade flex-1 min-h-0" key={tab} data-testid="home-fullbleed">
               <TabsContent value="home" className="mt-0"><HomeTab onNavigate={handleSelect} /></TabsContent>
             </div>
           ) : (

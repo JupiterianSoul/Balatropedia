@@ -235,10 +235,12 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   }, [focused]);
 
   return (
-    // Full-bleed home view. Mobile has a sticky header (~60px); desktop has no header,
-    // so we use 100dvh on md+. Locked overflow-hidden = the user only sees this view.
+    // Full-bleed home view. Mobile has a sticky header (~60px), so we lock to
+    // calc(100dvh-60px). On desktop the right pane is itself a 100dvh scroll
+    // container, so h-full picks up that height exactly. overflow-hidden means
+    // the user only ever sees this one view, no scroll.
     <div
-      className="relative w-full overflow-hidden h-[calc(100dvh-60px)] md:h-[100dvh]"
+      className="relative w-full overflow-hidden h-[calc(100dvh-60px)] md:h-full"
       data-testid="tab-home"
     >
       {/* Animated Balatro main-menu red/blue background, fills the entire view. */}
