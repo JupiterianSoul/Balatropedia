@@ -104,6 +104,12 @@ export const ALL_SCALINGS = Object.keys(SCALING_LABELS) as Scaling[];
 export const ALL_STAGES: Stage[] = ["early", "mid", "late"];
 export const ALL_LEVELS: Level[] = ["low", "med", "high"];
 
+/** Reverse lookup: joker display name -> id (for sprite/JOKER_MAP). */
+export const NAME_TO_ID: Record<string, string> = Object.fromEntries(JOKERS.map(j => [j.name, j.id]));
+export function jokerIdFromName(name: string): string | undefined {
+  return NAME_TO_ID[name];
+}
+
 export function jokerName(id: string): string {
   return JOKER_MAP[id]?.name ?? id;
 }

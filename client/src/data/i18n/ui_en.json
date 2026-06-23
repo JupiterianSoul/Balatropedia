@@ -383,6 +383,14 @@
       "heading": "What's New",
       "subtitle": "Recent changes, organized by version.",
       "footer": "Have feedback? The repo is on GitHub. Issues and PRs welcome.",
+      "v1_7": {
+        "title": "v1.7 - Native seed finder",
+        "finder": "New Seed Finder sub-tab: pick the jokers (and editions) you want, set a max ante, hit Search. Returns real seeds with the exact location of every match.",
+        "wasm": "WebAssembly engine compiled from the same C++ math as TheSoul/Immolate, running in parallel Web Workers across all your CPU cores. Tens of thousands of seeds per second per core.",
+        "constraints": "Multi-joker constraints with edition and source pinning: require a Negative Perkeo specifically from a Spectral pack's Soul card, or a Polychrome Blueprint from any shop, or both at once.",
+        "location": "Every match reports the exact location: ante, source type (shop / Buffoon pack / Soul card), shop slot or pack index + position in pack, plus edition and stickers.",
+        "icons": "Joker icons everywhere on the Seeds tab: Shop Queue, Buffoon pack contents, Joker Hunter results, Seed Finder matches."
+      },
       "v1_6": {
         "title": "v1.6 - Native seed engine",
         "native_engine": "Seeds tab rebuilt from scratch. Native port of Immolate / TheSoul: deterministic per-ante shop queue, packs, vouchers, bosses, tags, and pack contents - all computed in-browser from a seed. No external links.",
