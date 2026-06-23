@@ -43,6 +43,8 @@
       "favorites": "Favoritos",
       "glossary": "Glosario",
       "about": "Acerca de",
+      "tierlist": "Tier List",
+      "whatsnew": "Novedades",
       "group": {
         "library": "Biblioteca",
         "build": "Construir",
@@ -209,6 +211,8 @@
     },
     "tabs": {
       "library_search_ph": "Buscar Jokers por nombre, efecto o nota…",
+      "library_search_title": "Buscar Jokers",
+      "library_search_hint": "Busca por nombre, efecto, +Mult, X Mult, Fichas, probabilidad, $…",
       "library_sort_name": "Orden: Nombre (A-Z)",
       "library_sort_beginner": "Orden: Apto para principiantes",
       "library_sort_setup": "Orden: Dificultad de preparación",
@@ -306,6 +310,69 @@
       "myrun_reason_tag": "Rol compartido",
       "fav_show_note": "Nota",
       "fav_hide_note": "Ocultar nota"
+    },
+    "tierlist": {
+      "disclaimer_title": "Las tier lists son orientativas, no absolutas",
+      "disclaimer_body": "Las tier lists no son verdades absolutas — dependen del stake, mazo, habilidad, RNG y estilo de juego. Úsalas como punto de partida, no como regla.",
+      "filter_stake": "Stake",
+      "filter_deck": "Mazo",
+      "stake_any": "Cualquier stake — General",
+      "deck_any": "Cualquier mazo — General",
+      "variant_default": "General (la mayoría de casos)",
+      "showing": "Mostrando",
+      "empty_tier": "No hay jokers en este tier para esta variante.",
+      "sources": "Fuentes",
+      "methodology": "Metodología"
+    },
+    "whatsnew": {
+      "heading": "Novedades",
+      "subtitle": "Cambios recientes, por versión.",
+      "footer": "¿Feedback? El repo está en GitHub — issues y PRs bienvenidos.",
+      "v1_1": {
+        "title": "v1.1 — Tier list + Run Challenge",
+        "tierlist": "Pestaña Tier List agregada por la comunidad con variantes por Stake y Mazo (24 variantes).",
+        "runchallenge": "Generador Run Challenge: arquetipo + combo + jokers clave + mazo + stake + sugerencia de consumibles aleatorios.",
+        "colorcoding": "Color en todas partes: +Mult, X Mult, Fichas, $, probabilidad y etiquetas están coloreados en los textos de sinergia/combo/arquetipo.",
+        "mobileback": "El botón atrás móvil ya no cierra la app — navega entre pestañas.",
+        "mobilesearch": "Modal de búsqueda móvil (bottom sheet) con input auto-enfocado.",
+        "searcheffects": "La búsqueda de Biblioteca también revisa el texto del efecto, no solo nombres.",
+        "og": "Imagen de previsualización social y meta tags Open Graph / Twitter Card para enlaces compartidos."
+      },
+      "v1_0_3": {
+        "title": "v1.0.3 — Expansión de datos",
+        "syn60": "+60 nuevas sinergias curadas.",
+        "combos16": "+16 nuevos combos.",
+        "arch7": "+7 nuevos arquetipos.",
+        "ranking": "Backfill de ranking en los 150 jokers.",
+        "backfill": "Backfill editorial: roles, encaje, parejas, riesgos."
+      },
+      "v1_0_2": {
+        "title": "v1.0.2 — Pulido de lanzamiento",
+        "kofi": "Botón de apoyo Ko-fi añadido.",
+        "reddit": "Lanzamiento en r/balatro.",
+        "hardening": "Endurecimiento del servidor, rate limiting, validación de requests."
+      },
+      "v1_0_1": {
+        "title": "v1.0.1 — Calidad de vida",
+        "sounds": "Efectos de sonido deterministas en la UI.",
+        "comments": "Comentarios eliminados del bundle de producción.",
+        "shop": "Pestaña Shop heredada eliminada; consolidada en Vouchers + Consumables."
+      }
+    },
+    "challenge": {
+      "button": "Run Challenge",
+      "title": "Run Challenge",
+      "intro": "Un build aleatorio — intenta que funcione.",
+      "archetype": "Arquetipo",
+      "with_combo": "Con combo",
+      "core_jokers": "Jokers clave",
+      "no_core": "Sin núcleo obligatorio — improvisa.",
+      "deck": "Mazo",
+      "stake": "Stake",
+      "consumables": "Consumibles a buscar",
+      "watch_out": "Cuidado con",
+      "reroll": "Rehacer",
+      "disclaimer": "Son sugerencias, no un guión. Adapta según lo que te dé la tienda."
     },
     "sheet": {
       "why_play": "¿Por qué jugarlo?",

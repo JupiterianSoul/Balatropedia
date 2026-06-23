@@ -6,7 +6,8 @@ import { useApp } from "@/lib/appContext";
 import { COMBOS, ARCHETYPE_LABELS, type Archetype } from "@/lib/helpers";
 import { JokerChip, StarToggle, SectionLabel, PopularityBadge, DifficultyBadge } from "@/components/primitives";
 import { SourceCitations } from "@/components/SourceCitations";
-import { useT, useLabels, useCuratedText, useCuratedList } from "@/lib/i18n";
+import { useT, useLabels, useCuratedText, useCuratedList, useI18n } from "@/lib/i18n";
+import { FormattedBalatroText } from "@/lib/balatroText";
 
 interface ComboCardProps {
   c: typeof COMBOS[number];
@@ -25,6 +26,7 @@ interface ComboCardProps {
 }
 
 function ComboCard({ c, archLabel, openJokerDetail, isFavoriteCombo, toggleFavoriteCombo, tLabels }: ComboCardProps) {
+  const { lang } = useI18n();
   const title = useCuratedText(`ui.combo.${c.id}.title`, c.title);
   const why = useCuratedText(`ui.combo.${c.id}.why`, c.why);
   const pivotOut = useCuratedText(`ui.combo.${c.id}.pivotOut`, c.pivotOut);
@@ -73,7 +75,8 @@ function ComboCard({ c, archLabel, openJokerDetail, isFavoriteCombo, toggleFavor
             <ul className="space-y-1">
               {conditions.map((x, i) => (
                 <li key={i} className="flex gap-2 text-xs text-foreground/80">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />{x}
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                  <span><FormattedBalatroText text={x} lang={lang} /></span>
                 </li>
               ))}
             </ul>
@@ -83,7 +86,8 @@ function ComboCard({ c, archLabel, openJokerDetail, isFavoriteCombo, toggleFavor
             <ul className="space-y-1">
               {risks.map((x, i) => (
                 <li key={i} className="flex gap-2 text-xs text-[hsl(0_55%_72%)]">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-destructive" />{x}
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-destructive" />
+                  <span><FormattedBalatroText text={x} lang={lang} /></span>
                 </li>
               ))}
             </ul>
@@ -91,11 +95,15 @@ function ComboCard({ c, archLabel, openJokerDetail, isFavoriteCombo, toggleFavor
         </div>
         <div>
           <SectionLabel>{tLabels.whyWorks}</SectionLabel>
-          <p className="text-xs leading-relaxed text-foreground/85">{why}</p>
+          <p className="text-xs leading-relaxed text-foreground/85">
+            <FormattedBalatroText text={why} lang={lang} />
+          </p>
         </div>
         <div className="border-t border-border pt-3">
           <SectionLabel>{tLabels.pivotOut}</SectionLabel>
-          <p className="text-xs italic leading-relaxed text-muted-foreground">{pivotOut}</p>
+          <p className="text-xs italic leading-relaxed text-muted-foreground">
+            <FormattedBalatroText text={pivotOut} lang={lang} />
+          </p>
         </div>
         <SourceCitations sources={c.sources} />
       </div>
