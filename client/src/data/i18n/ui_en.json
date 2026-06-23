@@ -383,6 +383,14 @@
       "heading": "What's New",
       "subtitle": "Recent changes, organized by version.",
       "footer": "Have feedback? The repo is on GitHub. Issues and PRs welcome.",
+      "v1_6": {
+        "title": "v1.6 - Native seed engine",
+        "native_engine": "Seeds tab rebuilt from scratch. Native port of Immolate / TheSoul: deterministic per-ante shop queue, packs, vouchers, bosses, tags, and pack contents - all computed in-browser from a seed. No external links.",
+        "spoiler": "Spoiler sub-tab: per-ante breakdown with boss, voucher, both tags, 15-item shop queue, and every pack with its contents (jokers, tarots, planets, spectrals, standard cards with enhancements/editions/seals).",
+        "hunter": "Joker Hunter sub-tab: search any joker by name (Perkeo, Blueprint, Brainstorm, etc.) and see every ante, source (shop or Buffoon pack), rarity, edition, and stickers it appears at.",
+        "soul_finder": "Soul Finder sub-tab: lists every The Soul + Black Hole spawn across all antes, with the pack name and source (Tarot, Spectral, or Celestial pack).",
+        "verified": "Engine cross-verified against TheSoul live for seed 8Q47WV6K (Red, 1.0.1c) - boss, voucher, tags, shop queue, and all pack contents match exactly across antes 1-3."
+      },
       "v1_1": {
         "title": "v1.1 - Tier list + Run Challenge",
         "tierlist": "Community-aggregated Tier List tab with Stake and Deck variants (24 variants total).",
@@ -436,7 +444,7 @@
         "buildlab": "Build Lab: pick 1-3 anchor jokers and get ranked partners, hand focus, boss watch, scaling tracker, and anti-synergy warnings.",
         "calculator": "Score Calculator: full Balatro scoring engine with per-card breakdown, joker order, scaling state, deck modifiers, and 4-phase timeline.",
         "seeds": "Seeds tab: curated seed library + deep-link analyzer into TheSoul and Blueprint with seed and deck pre-filled.",
-        "runplanner_removed": "Old Run Planner removed in favour of the more accurate Calculator and the more useful Build Lab."
+        "runplanner_removed": "Old Run Planner replaced by the new Calculator and Build Lab tabs."
       },
       "v1_4": {
         "title": "v1.4 - Home rebuild and CRT effect",

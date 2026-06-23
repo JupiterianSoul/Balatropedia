@@ -383,6 +383,14 @@
       "heading": "Nouveautés",
       "subtitle": "Changements récents, organisés par version.",
       "footer": "Un retour ? Le dépôt est sur GitHub. Issues et PRs bienvenues.",
+      "v1_6": {
+        "title": "v1.6 - Moteur de seeds natif",
+        "native_engine": "Onglet Seeds reconstruit. Portage natif d'Immolate / TheSoul : file de boutique, packs, vouchers, boss, tags et contenu des packs deterministes par ante, calcules dans le navigateur depuis une seed. Aucun lien externe.",
+        "spoiler": "Sous-onglet Spoiler : detail par ante avec boss, voucher, les deux tags, file de boutique de 15 items, et chaque pack avec son contenu (jokers, tarots, planetes, spectraux, cartes standard avec ameliorations/editions/sceaux).",
+        "hunter": "Sous-onglet Joker Hunter : cherche un joker par nom (Perkeo, Blueprint, Brainstorm, etc.) et affiche chaque ante, source (boutique ou pack Buffoon), rarete, edition et stickers ou il apparait.",
+        "soul_finder": "Sous-onglet Soul Finder : liste chaque apparition de The Soul + Black Hole sur toutes les antes, avec le nom du pack et la source (pack Tarot, Spectral ou Celestial).",
+        "verified": "Moteur verifie contre TheSoul en direct pour la seed 8Q47WV6K (Red, 1.0.1c) - boss, voucher, tags, file de boutique et contenu des packs correspondent exactement sur les antes 1 a 3."
+      },
       "v1_1": {
         "title": "v1.1 - Tier list + Run Challenge",
         "tierlist": "Onglet Tier List communautaire avec variantes Stake et Deck (24 variantes au total).",
@@ -436,7 +444,7 @@
         "buildlab": "Labo de Build : choisis 1-3 jokers d'ancrage et obtiens partenaires classés, focus de main, surveillance des boss, suivi de scaling et alertes d'anti-synergie.",
         "calculator": "Calculatrice de Score : moteur de calcul Balatro complet avec décomposition par carte, ordre des jokers, état de scaling, modificateurs de deck et chronologie en 4 phases.",
         "seeds": "Onglet Graines : bibliothèque de graines curées + analyseur deep-link vers TheSoul et Blueprint avec graine et deck pré-remplis.",
-        "runplanner_removed": "Ancien Planificateur supprimé au profit de la Calculatrice plus précise et du Labo de Build plus utile."
+        "runplanner_removed": "Ancien Planificateur remplacé par les nouveaux onglets Calculatrice et Labo de Build."
       },
       "v1_4": {
         "title": "v1.4 - Refonte Accueil et effet CRT",

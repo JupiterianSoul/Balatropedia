@@ -1,231 +1,414 @@
-// Seeds tab. We deliberately do NOT ship a broken in-browser seed finder
-// (Immolate requires native compilation; immolate.js exists but is too heavy
-// for a Render free-tier dyno). Instead we provide:
-//   1. Seed Library — curated seeds for popular archetypes, filterable by joker
-//   2. Seed Analyzer — paste a seed, deep-link to TheSoul + Blueprint with seed prefilled
-//   3. Honest "what's coming" note about full filter search.
+// Seeds tab v1.6 — native Balatro seed engine (no external links).
+// Ports Immolate / TheSoul to TypeScript. See client/src/lib/seedEngine.ts.
+//
+// Three sub-tabs:
+//   - Spoiler:      per-ante boss/voucher/tags/shop/packs with contents
+//   - Joker Hunter: locate a specific joker across antes
+//   - Soul Finder:  list every Soul + Black Hole spawn
 import { useMemo, useState } from "react";
-import { Dices, ExternalLink, Search, Copy, Check } from "lucide-react";
+import { Dices, Search, Sparkles, Skull, Play, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { JokerSprite } from "@/components/JokerSprite";
-import { JOKER_MAP } from "@/lib/helpers";
+import {
+  defaultInput, runAnalysis, findJoker, findSoulSpawns,
+  type AnalysisInput, type AnteResult, type PackContents, type JokerSighting,
+} from "@/lib/seedEngine";
+import {
+  DECKS, STAKES, COMMON_JOKERS, UNCOMMON_JOKERS, RARE_JOKERS, LEGENDARY_JOKERS,
+} from "@/lib/seedItems";
 
-interface SeedEntry {
-  seed: string;
-  deck: string;          // "Red", "Blue", etc.
-  stake?: string;
-  archetype: string;
-  highlights: string[];  // joker ids OR free-text labels
-  notes: string;
+const ALL_JOKERS = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
+  .filter((j, i, a) => a.indexOf(j) === i)
+  .sort();
+
+const RARITY_LABEL: Record<string, string> = { "1": "Common", "2": "Uncommon", "3": "Rare", "4": "Legendary" };
+
+function editionClass(edition: string): string {
+  if (edition === "Foil") return "text-cyan-300";
+  if (edition === "Holographic") return "text-pink-300";
+  if (edition === "Polychrome") return "text-orange-300";
+  if (edition === "Negative") return "text-zinc-400";
+  return "";
 }
 
-const SEED_LIBRARY: SeedEntry[] = [
-  // Legendary skip seeds
-  { seed: "8Q47WV6K", deck: "Red", archetype: "Legendary skip", highlights: ["triboulet", "perkeo"], notes: "Ante 1 Soul → Triboulet, second Soul → Perkeo. Both via Hieroglyph skip tag." },
-  { seed: "G3GN8GQH", deck: "Red", archetype: "Legendary skip", highlights: ["perkeo"], notes: "Free Perkeo via Temperance on ante 1." },
-  // Yorick rushes
-  { seed: "4K4ZWL2U", deck: "Red", archetype: "Yorick rush", highlights: ["yorick"], notes: "Holographic Yorick early - massive xMult scaling." },
-  { seed: "DJXG5GVT", deck: "Red", archetype: "Yorick rush", highlights: ["yorick"], notes: "Yorick early in shop." },
-  { seed: "ZV2W1851", deck: "Red", archetype: "Yorick rush", highlights: ["yorick", "invisible_joker"], notes: "Yorick + Invisible Joker combo path." },
-  { seed: "TJ839I1Y", deck: "Red", archetype: "Yorick rush", highlights: ["yorick"], notes: "Yorick with Wasteful deck-style discard support." },
-  // Brainstorm / Blueprint combos
-  { seed: "NLK8X1S1", deck: "Red", archetype: "Copier loop", highlights: ["brainstorm", "the_order"], notes: "Brainstorm + The Order — easy x3 copy loop." },
-  { seed: "7UMHIZHH", deck: "Red", archetype: "Copier loop", highlights: ["brainstorm", "invisible_joker"], notes: "Brainstorm + Invisible Joker — late-game power." },
-  { seed: "CHHPXHBZ", deck: "Red", archetype: "Copier loop", highlights: ["blueprint", "brainstorm"], notes: "Free Blueprint + Brainstorm in shop — dream double-copier." },
-  { seed: "NC6J3T8C", deck: "Red", archetype: "Copier loop", highlights: ["chicot", "brainstorm"], notes: "Chicot + Brainstorm — skip every boss." },
-];
-
-const ARCHETYPES = Array.from(new Set(SEED_LIBRARY.map(s => s.archetype)));
-
-function seedHighlightJokers(entry: SeedEntry): string[] {
-  return entry.highlights.filter(h => JOKER_MAP[h]);
+function rarityClass(rarity: string): string {
+  if (rarity === "1") return "text-zinc-300";
+  if (rarity === "2") return "text-emerald-300";
+  if (rarity === "3") return "text-red-300";
+  if (rarity === "4") return "text-purple-300";
+  return "";
 }
 
-function SeedCard({ entry, onCopy }: { entry: SeedEntry; onCopy: (s: string) => void }) {
-  const jokerHighlights = seedHighlightJokers(entry);
-  const textOnly = entry.highlights.filter(h => !JOKER_MAP[h]);
+function stickerBadge(s: { eternal: boolean; perishable: boolean; rental: boolean }) {
+  const parts: string[] = [];
+  if (s.eternal) parts.push("Eternal");
+  if (s.perishable) parts.push("Perishable");
+  if (s.rental) parts.push("Rental");
+  if (parts.length === 0) return null;
   return (
-    <div className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
-      <div className="flex items-center justify-between">
-        <code className="text-lg font-bold tracking-wider text-[hsl(var(--bal-gold))]">{entry.seed}</code>
-        <Button size="sm" variant="ghost" onClick={() => onCopy(entry.seed)}>
-          <Copy className="h-3.5 w-3.5 mr-1" /> copy
-        </Button>
+    <span className="ml-1 text-[10px] text-amber-300/80">[{parts.join(", ")}]</span>
+  );
+}
+
+function PackBlock({ p }: { p: PackContents }) {
+  return (
+    <div className="rounded-md border border-yellow-500/20 bg-zinc-900/60 p-2 text-sm">
+      <div className="font-semibold text-yellow-200">
+        {p.name} <span className="text-zinc-500 text-xs">(size {p.size}, choose {p.choices})</span>
       </div>
-      <div className="flex flex-wrap gap-1 text-[11px]">
-        <span className="rounded bg-secondary/40 px-1.5 py-0.5">{entry.deck} Deck</span>
-        {entry.stake && <span className="rounded bg-secondary/40 px-1.5 py-0.5">{entry.stake}</span>}
-        <span className="rounded bg-accent/20 text-accent px-1.5 py-0.5">{entry.archetype}</span>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {jokerHighlights.map(j => (
-          <div key={j} className="flex items-center gap-1.5 text-xs">
-            <JokerSprite jokerId={j} size={28} />
-            <span>{JOKER_MAP[j]?.name}</span>
+      <div className="mt-1 text-xs space-y-0.5">
+        {p.contents.kind === "tarot" && p.contents.items.map((it, i) => (
+          <div key={i} className={it === "The Soul" || it === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-300"}>
+            {i + 1}. {it}
           </div>
         ))}
-        {textOnly.map(t => (
-          <span key={t} className="text-xs text-muted-foreground italic">{t}</span>
+        {p.contents.kind === "planet" && p.contents.items.map((it, i) => (
+          <div key={i} className={it === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-300"}>
+            {i + 1}. {it}
+          </div>
         ))}
-      </div>
-      <p className="text-xs text-muted-foreground">{entry.notes}</p>
-      <div className="flex flex-wrap gap-1.5">
-        <a href={`https://spectralpack.github.io/TheSoul/?seed=${entry.seed}&deck=${entry.deck}`} target="_blank" rel="noopener noreferrer">
-          <Button size="sm" variant="outline" className="h-7 text-xs">
-            <ExternalLink className="h-3 w-3 mr-1" /> TheSoul
-          </Button>
-        </a>
-        <a href={`https://miaklwalker.github.io/Blueprint/?seed=${entry.seed}`} target="_blank" rel="noopener noreferrer">
-          <Button size="sm" variant="outline" className="h-7 text-xs">
-            <ExternalLink className="h-3 w-3 mr-1" /> Blueprint
-          </Button>
-        </a>
+        {p.contents.kind === "spectral" && p.contents.items.map((it, i) => (
+          <div key={i} className={it === "The Soul" || it === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-300"}>
+            {i + 1}. {it}
+          </div>
+        ))}
+        {p.contents.kind === "standard" && p.contents.cards.map((c, i) => (
+          <div key={i} className={`text-zinc-300 ${editionClass(c.edition)}`}>
+            {i + 1}. {c.base}
+            {c.enhancement !== "No Enhancement" && <span className="text-amber-400/70"> / {c.enhancement}</span>}
+            {c.edition !== "No Edition" && <span className="ml-1 italic opacity-80">[{c.edition}]</span>}
+            {c.seal !== "No Seal" && <span className="ml-1 text-blue-300/80">[{c.seal}]</span>}
+          </div>
+        ))}
+        {p.contents.kind === "buffoon" && p.contents.jokers.map((j, i) => (
+          <div key={i} className="text-zinc-300">
+            {i + 1}. <span className={rarityClass(j.rarity)}>{j.joker}</span>
+            {j.edition !== "No Edition" && <span className={`ml-1 italic ${editionClass(j.edition)}`}>[{j.edition}]</span>}
+            {stickerBadge(j.stickers)}
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
+function AnteCard({ r }: { r: AnteResult }) {
+  return (
+    <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/80 p-3 shadow-md">
+      <div className="flex flex-wrap items-baseline gap-3 mb-2">
+        <h3 className="text-lg font-bold text-yellow-200">Ante {r.ante}</h3>
+        <span className="text-sm text-red-300"><b>Boss:</b> {r.boss}</span>
+        <span className="text-sm text-emerald-300"><b>Voucher:</b> {r.voucher}</span>
+        <span className="text-sm text-zinc-300">
+          <b>Tags:</b> {r.tags[0]} · {r.tags[1]}
+        </span>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <div>
+          <div className="text-xs uppercase tracking-wider text-zinc-500 mb-1">Shop Queue</div>
+          <div className="space-y-0.5 text-sm">
+            {r.shopQueue.map((it, i) => (
+              <div key={i} className="font-mono text-xs">
+                <span className="text-zinc-500 w-6 inline-block">{i + 1}.</span>
+                <span className="text-zinc-400">{it.type}:</span>{" "}
+                {it.jokerData ? (
+                  <>
+                    <span className={rarityClass(it.jokerData.rarity)}>{it.item}</span>
+                    {it.jokerData.edition !== "No Edition" && (
+                      <span className={`ml-1 italic ${editionClass(it.jokerData.edition)}`}>[{it.jokerData.edition}]</span>
+                    )}
+                    {stickerBadge(it.jokerData.stickers)}
+                  </>
+                ) : (
+                  <span className={it.item === "The Soul" || it.item === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-200"}>
+                    {it.item}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="text-xs uppercase tracking-wider text-zinc-500 mb-1">Packs</div>
+          <div className="space-y-2">
+            {r.packs.map((p, i) => <PackBlock key={i} p={p} />)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InputsPanel({
+  input, setInput, onRun, isRunning,
+}: {
+  input: AnalysisInput;
+  setInput: (i: AnalysisInput) => void;
+  onRun: () => void;
+  isRunning: boolean;
+}) {
+  return (
+    <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/80 p-4 space-y-3">
+      <div className="flex items-center gap-2 mb-2">
+        <Dices className="h-5 w-5 text-yellow-300" />
+        <h2 className="text-lg font-bold text-yellow-200">Seed Inputs</h2>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div>
+          <Label className="text-xs text-zinc-400">Seed</Label>
+          <Input
+            value={input.seed}
+            onChange={e => setInput({ ...input, seed: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10) })}
+            placeholder="e.g. 8Q47WV6K"
+            className="font-mono uppercase"
+            data-testid="input-seed"
+          />
+        </div>
+        <div>
+          <Label className="text-xs text-zinc-400">Deck</Label>
+          <Select value={input.deck} onValueChange={v => setInput({ ...input, deck: v })}>
+            <SelectTrigger data-testid="select-deck"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {DECKS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label className="text-xs text-zinc-400">Stake</Label>
+          <Select value={input.stake} onValueChange={v => setInput({ ...input, stake: v })}>
+            <SelectTrigger data-testid="select-stake"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {STAKES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label className="text-xs text-zinc-400">Game Version</Label>
+          <Select value={String(input.version)} onValueChange={v => setInput({ ...input, version: Number(v) })}>
+            <SelectTrigger data-testid="select-version"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10099">1.0.0 (legacy)</SelectItem>
+              <SelectItem value="10103">1.0.1c</SelectItem>
+              <SelectItem value="10106">1.0.1f / modern</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label className="text-xs text-zinc-400">Max Ante</Label>
+          <Input
+            type="number" min={1} max={39}
+            value={input.maxAnte}
+            onChange={e => setInput({ ...input, maxAnte: Math.max(1, Math.min(39, Number(e.target.value) || 1)) })}
+            data-testid="input-maxante"
+          />
+        </div>
+        <div>
+          <Label className="text-xs text-zinc-400">Shop items / ante</Label>
+          <Input
+            type="number" min={1} max={30}
+            value={input.cardsPerAnte}
+            onChange={e => setInput({ ...input, cardsPerAnte: Math.max(1, Math.min(30, Number(e.target.value) || 1)) })}
+            data-testid="input-cards"
+          />
+        </div>
+        <div>
+          <Label className="text-xs text-zinc-400">Packs / ante</Label>
+          <Input
+            type="number" min={0} max={6}
+            value={input.packsPerAnte}
+            onChange={e => setInput({ ...input, packsPerAnte: Math.max(0, Math.min(6, Number(e.target.value) || 0)) })}
+            data-testid="input-packs"
+          />
+        </div>
+        <div className="flex flex-col gap-2 pt-5">
+          <label className="flex items-center gap-2 text-xs text-zinc-300">
+            <input type="checkbox" checked={input.showman} onChange={e => setInput({ ...input, showman: e.target.checked })} data-testid="check-showman" />
+            Showman owned
+          </label>
+          <label className="flex items-center gap-2 text-xs text-zinc-300">
+            <input type="checkbox" checked={input.freshProfile} onChange={e => setInput({ ...input, freshProfile: e.target.checked })} data-testid="check-freshprofile" />
+            Fresh profile
+          </label>
+          <label className="flex items-center gap-2 text-xs text-zinc-300">
+            <input type="checkbox" checked={input.freshRun} onChange={e => setInput({ ...input, freshRun: e.target.checked })} data-testid="check-freshrun" />
+            Fresh run
+          </label>
+        </div>
+      </div>
+      <Button onClick={onRun} disabled={!input.seed || isRunning} className="w-full md:w-auto" data-testid="button-analyze">
+        {isRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
+        Analyze seed
+      </Button>
+    </div>
+  );
+}
+
+type SubTab = "spoiler" | "hunter" | "soul";
+
 export function SeedsTab() {
-  const [filter, setFilter] = useState("");
-  const [archetype, setArchetype] = useState<string>("__all__");
-  const [jokerFilter, setJokerFilter] = useState<string>("__any__");
-  const [analyzerSeed, setAnalyzerSeed] = useState("");
-  const [analyzerDeck, setAnalyzerDeck] = useState("Red");
-  const [copied, setCopied] = useState<string | null>(null);
+  const [input, setInput] = useState<AnalysisInput>(() => defaultInput(""));
+  const [results, setResults] = useState<AnteResult[] | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const [subTab, setSubTab] = useState<SubTab>("spoiler");
+  const [hunterQuery, setHunterQuery] = useState("");
 
-  const filtered = useMemo(() => {
-    return SEED_LIBRARY.filter(s => {
-      if (archetype !== "__all__" && s.archetype !== archetype) return false;
-      if (jokerFilter !== "__any__" && !s.highlights.includes(jokerFilter)) return false;
-      if (filter) {
-        const q = filter.toLowerCase();
-        const hay = (s.seed + s.archetype + s.notes + s.highlights.join(" ")).toLowerCase();
-        if (!hay.includes(q)) return false;
+  const onRun = () => {
+    if (!input.seed) return;
+    setIsRunning(true);
+    // Defer to next tick so the spinner can render. Engine is sync.
+    setTimeout(() => {
+      try {
+        const r = runAnalysis(input);
+        setResults(r);
+      } finally {
+        setIsRunning(false);
       }
-      return true;
-    });
-  }, [filter, archetype, jokerFilter]);
-
-  const allJokers = useMemo(() => {
-    const set = new Set<string>();
-    for (const s of SEED_LIBRARY) for (const h of s.highlights) if (JOKER_MAP[h]) set.add(h);
-    return Array.from(set);
-  }, []);
-
-  const copy = (s: string) => {
-    if (navigator.clipboard) navigator.clipboard.writeText(s).catch(() => {});
-    setCopied(s);
-    setTimeout(() => setCopied(c => c === s ? null : c), 1500);
+    }, 0);
   };
 
-  const analyzerValid = /^[A-Z0-9]{6,10}$/.test(analyzerSeed.toUpperCase());
+  const soulSpawns = useMemo(() => results ? findSoulSpawns(results) : [], [results]);
+  const hunterMatches = useMemo<JokerSighting[]>(
+    () => (results && hunterQuery) ? findJoker(results, hunterQuery, 200) : [],
+    [results, hunterQuery],
+  );
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-lg border border-border/60 bg-card/40 p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Dices className="h-4 w-4 text-accent" />
-          <h2 className="text-lg font-bold">Seeds</h2>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Curated seed library + analyzer. Use TheSoul or Blueprint for full per-ante spoilers. A full filter-based seed finder requires native compilation (Immolate) and is on the roadmap.
+    <div className="space-y-4 p-2 md:p-4">
+      <div className="flex flex-wrap items-baseline gap-3">
+        <h1 className="text-2xl font-bold text-yellow-200 flex items-center gap-2">
+          <Dices className="h-7 w-7" /> Seeds
+        </h1>
+        <p className="text-sm text-zinc-400">
+          Native Balatro seed analyzer. Computes shop queue, packs, vouchers, bosses, tags, and Soul/Black Hole spawns deterministically from a seed.
         </p>
       </div>
 
-      {/* Analyzer */}
-      <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-3">
-        <h3 className="text-sm font-semibold">Seed analyzer</h3>
-        <p className="text-xs text-muted-foreground">Paste a seed to deep-link into the two best seed-spoiler tools, pre-filled with your seed and deck.</p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-          <div className="md:col-span-2">
-            <Label className="text-xs">Seed code</Label>
-            <Input
-              value={analyzerSeed}
-              onChange={(e) => setAnalyzerSeed(e.target.value.toUpperCase())}
-              placeholder="e.g. 8Q47WV6K"
-              className="h-9 font-mono tracking-wider"
-              maxLength={10}
-            />
-          </div>
-          <div>
-            <Label className="text-xs">Deck</Label>
-            <Select value={analyzerDeck} onValueChange={setAnalyzerDeck}>
-              <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {["Red","Blue","Yellow","Green","Black","Magic","Nebula","Ghost","Abandoned","Checkered","Zodiac","Painted","Anaglyph","Plasma","Erratic"].map(d => (
-                  <SelectItem key={d} value={d}>{d}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <a
-            href={analyzerValid ? `https://spectralpack.github.io/TheSoul/?seed=${analyzerSeed.toUpperCase()}&deck=${analyzerDeck}` : "#"}
-            target="_blank" rel="noopener noreferrer"
-            className={!analyzerValid ? "pointer-events-none opacity-40" : ""}
-          >
-            <Button size="sm" variant="default">
-              <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Open in TheSoul
+      <InputsPanel input={input} setInput={setInput} onRun={onRun} isRunning={isRunning} />
+
+      {results && (
+        <>
+          <div className="flex gap-2 border-b border-yellow-500/20 pb-2">
+            <Button variant={subTab === "spoiler" ? "default" : "ghost"} onClick={() => setSubTab("spoiler")} size="sm" data-testid="tab-spoiler">
+              <Sparkles className="mr-2 h-4 w-4" /> Spoiler
             </Button>
-          </a>
-          <a
-            href={analyzerValid ? `https://miaklwalker.github.io/Blueprint/?seed=${analyzerSeed.toUpperCase()}` : "#"}
-            target="_blank" rel="noopener noreferrer"
-            className={!analyzerValid ? "pointer-events-none opacity-40" : ""}
-          >
-            <Button size="sm" variant="outline">
-              <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Open in Blueprint
+            <Button variant={subTab === "hunter" ? "default" : "ghost"} onClick={() => setSubTab("hunter")} size="sm" data-testid="tab-hunter">
+              <Search className="mr-2 h-4 w-4" /> Joker Hunter
             </Button>
-          </a>
-          {analyzerSeed && !analyzerValid && (
-            <span className="text-xs text-rose-400 self-center">Seeds are 6-10 uppercase A-Z 0-9.</span>
+            <Button variant={subTab === "soul" ? "default" : "ghost"} onClick={() => setSubTab("soul")} size="sm" data-testid="tab-soul">
+              <Skull className="mr-2 h-4 w-4" /> Soul Finder
+            </Button>
+          </div>
+
+          {subTab === "spoiler" && (
+            <div className="space-y-3">
+              {results.map(r => <AnteCard key={r.ante} r={r} />)}
+            </div>
           )}
-        </div>
-      </section>
 
-      {/* Library filters */}
-      <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold">Seed library ({filtered.length}/{SEED_LIBRARY.length})</h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-          <div className="relative">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
-            <Input value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Search..." className="h-8 pl-7 text-xs" />
-          </div>
-          <Select value={archetype} onValueChange={setArchetype}>
-            <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Archetype" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__all__">All archetypes</SelectItem>
-              {ARCHETYPES.map(a => <SelectItem key={a} value={a}>{a}</SelectItem>)}
-            </SelectContent>
-          </Select>
-          <Select value={jokerFilter} onValueChange={setJokerFilter}>
-            <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Joker" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__any__">Any joker</SelectItem>
-              {allJokers.map(j => <SelectItem key={j} value={j}>{JOKER_MAP[j]?.name}</SelectItem>)}
-            </SelectContent>
-          </Select>
-        </div>
-      </section>
+          {subTab === "hunter" && (
+            <div className="space-y-3">
+              <div className="flex flex-col md:flex-row gap-2 items-start md:items-end">
+                <div className="flex-1">
+                  <Label className="text-xs text-zinc-400">Joker</Label>
+                  <Input
+                    list="joker-list"
+                    value={hunterQuery}
+                    onChange={e => setHunterQuery(e.target.value)}
+                    placeholder="Perkeo, Blueprint, Brainstorm..."
+                    data-testid="input-hunter-query"
+                  />
+                  <datalist id="joker-list">
+                    {ALL_JOKERS.map(j => <option key={j} value={j} />)}
+                  </datalist>
+                </div>
+                <div className="text-xs text-zinc-500 pb-2">
+                  {hunterQuery ? `${hunterMatches.length} sighting${hunterMatches.length === 1 ? "" : "s"}` : "Type a joker to hunt."}
+                </div>
+              </div>
+              {hunterQuery && hunterMatches.length === 0 && (
+                <div className="text-sm text-zinc-500 italic">
+                  No sightings of "{hunterQuery}" in antes 1-{input.maxAnte}. Try a higher max ante.
+                </div>
+              )}
+              {hunterMatches.length > 0 && (
+                <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/80 overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead className="bg-zinc-900/70 text-zinc-400 text-xs uppercase">
+                      <tr>
+                        <th className="p-2 text-left">Ante</th>
+                        <th className="p-2 text-left">Source</th>
+                        <th className="p-2 text-left">Rarity</th>
+                        <th className="p-2 text-left">Edition</th>
+                        <th className="p-2 text-left">Stickers</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {hunterMatches.map((m, i) => (
+                        <tr key={i} className="border-t border-zinc-800/60">
+                          <td className="p-2 font-mono">{m.ante}</td>
+                          <td className="p-2">
+                            {m.source === "shop" ? "Shop" : m.source === "buffoon-pack" ? `Buffoon pack (${m.packName})` : m.source}
+                          </td>
+                          <td className={`p-2 ${rarityClass(m.rarity)}`}>{RARITY_LABEL[m.rarity] || m.rarity}</td>
+                          <td className={`p-2 italic ${editionClass(m.edition)}`}>{m.edition}</td>
+                          <td className="p-2 text-amber-300/80">
+                            {[m.stickers.eternal && "Eternal", m.stickers.perishable && "Perishable", m.stickers.rental && "Rental"].filter(Boolean).join(", ") || "-"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {filtered.map(e => <SeedCard key={e.seed} entry={e} onCopy={copy} />)}
-        {filtered.length === 0 && (
-          <p className="text-xs text-muted-foreground italic md:col-span-2 text-center py-8">No seeds match the filter.</p>
-        )}
-      </div>
+          {subTab === "soul" && (
+            <div className="space-y-3">
+              <div className="text-xs text-zinc-500">
+                The Soul (rolls a random Legendary) appears in Arcana / Spectral packs. Black Hole (upgrades a poker hand) appears in Celestial / Spectral packs.
+                Both gate on <code className="text-amber-300">random("soul_*") &gt; 0.997</code> per pack.
+              </div>
+              {soulSpawns.length === 0 ? (
+                <div className="text-sm text-zinc-500 italic">
+                  No Soul or Black Hole spawns in antes 1-{input.maxAnte}.
+                </div>
+              ) : (
+                <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/80 overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead className="bg-zinc-900/70 text-zinc-400 text-xs uppercase">
+                      <tr>
+                        <th className="p-2 text-left">Ante</th>
+                        <th className="p-2 text-left">Card</th>
+                        <th className="p-2 text-left">Pack</th>
+                        <th className="p-2 text-left">Source</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {soulSpawns.map((s, i) => (
+                        <tr key={i} className="border-t border-zinc-800/60">
+                          <td className="p-2 font-mono">{s.ante}</td>
+                          <td className="p-2 text-purple-300 font-semibold">{s.card}</td>
+                          <td className="p-2">{s.packName}</td>
+                          <td className="p-2 text-zinc-400">{s.source}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
 
-      {copied && (
-        <div className="fixed bottom-4 right-4 rounded-md bg-accent text-accent-foreground px-3 py-1.5 text-xs flex items-center gap-1.5 shadow-lg">
-          <Check className="h-3.5 w-3.5" /> Seed {copied} copied
+      {!results && (
+        <div className="text-center text-sm text-zinc-500 italic py-12">
+          Enter a seed and click <b>Analyze seed</b> to see the full per-ante breakdown.
         </div>
       )}
     </div>
