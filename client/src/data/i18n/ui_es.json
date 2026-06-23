@@ -385,11 +385,12 @@
       "footer": "¿Comentarios? El repo está en GitHub. Issues y PRs bienvenidos.",
       "v1_7": {
         "title": "v1.7 - Buscador de seeds nativo",
-        "finder": "Nueva subpestana Seed Finder: elige los jokers (y ediciones) que quieras, define un ante maximo, pulsa Search. Devuelve seeds reales con la ubicacion exacta de cada coincidencia.",
+        "rework": "Pestana Seeds rediseñada por completo. Solo dos subpestanas claras: Seed Analyzer (introduce una seed, ve todo lo que contiene) y Seed Finder (introduce lo que quieres, encuentra una seed). Joker Hunter y Soul Finder ahora son vistas dentro del Analyzer.",
+        "finder": "Seed Finder usa una barra de busqueda con autocompletado (se acabo el muro de iconos): escribe el nombre de un joker, agregalo como restriccion, repite para cuantos jokers quieras.",
         "wasm": "Motor WebAssembly compilado del mismo C++ que TheSoul/Immolate, ejecutado en Web Workers paralelos en todos tus nucleos. Decenas de miles de seeds por segundo por nucleo.",
         "constraints": "Restricciones multi-joker con edicion y origen: exigir un Perkeo Negativo desde la carta Soul de un pack Spectral, o un Blueprint Policromo de cualquier tienda, o ambos a la vez.",
-        "location": "Cada coincidencia reporta la ubicacion exacta: ante, tipo de origen (tienda / pack Buffoon / carta Soul), slot de tienda o indice de pack + posicion en el pack, mas la edicion y los stickers.",
-        "icons": "Iconos de jokers por toda la pestana Seeds: cola de tienda, contenido de packs Buffoon, resultados del Joker Hunter, coincidencias del Seed Finder."
+        "location": "Las ubicaciones ahora son legibles: 'Tras Big Blind, articulo de tienda 3' o 'Tras Small Blind, 2do booster (Mega Buffoon Pack), carta #4'. Mismos labels en el spoiler del Analyzer y en el Joker Finder.",
+        "icons": "Iconos de jokers por toda la pestana Seeds: cola de tienda, contenido de boosters, resultados de busqueda, coincidencias del Finder."
       },
       "v1_6": {
         "title": "v1.6 - Motor de seeds nativo",

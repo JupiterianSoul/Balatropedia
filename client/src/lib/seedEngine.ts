@@ -535,37 +535,46 @@ export interface JokerSighting {
   stickers: JokerStickers;
   rarity: string;
   packName?: string;
+  /** 1-indexed shop slot when source=shop. */
+  shopSlot?: number;
+  /** 1-indexed pack index within ante when source=buffoon-pack. */
+  packIndex?: number;
+  /** 1-indexed card position within the pack when source=buffoon-pack. */
+  packPosition?: number;
 }
 
 /** Locate a named joker across antes. Returns first N sightings. */
 export function findJoker(results: AnteResult[], jokerName: string, max = 50): JokerSighting[] {
   const out: JokerSighting[] = [];
   for (const r of results) {
-    for (const item of r.shopQueue) {
+    r.shopQueue.forEach((item, idx) => {
+      if (out.length >= max) return;
       if (item.type === "Joker" && item.jokerData && item.jokerData.joker === jokerName) {
         out.push({
           ante: r.ante, source: "shop",
           edition: item.jokerData.edition,
           stickers: item.jokerData.stickers,
           rarity: item.jokerData.rarity,
+          shopSlot: idx + 1,
         });
-        if (out.length >= max) return out;
       }
-    }
-    for (const p of r.packs) {
+    });
+    r.packs.forEach((p, packIdx0) => {
       if (p.contents.kind === "buffoon") {
-        for (const j of p.contents.jokers) {
+        p.contents.jokers.forEach((j, pos0) => {
+          if (out.length >= max) return;
           if (j.joker === jokerName) {
             out.push({
               ante: r.ante, source: "buffoon-pack",
               edition: j.edition, stickers: j.stickers, rarity: j.rarity,
               packName: p.name,
+              packIndex: packIdx0 + 1,
+              packPosition: pos0 + 1,
             });
-            if (out.length >= max) return out;
           }
-        }
+        });
       }
-    }
+    });
   }
   return out;
 }
