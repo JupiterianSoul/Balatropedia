@@ -284,8 +284,8 @@ export default function Home() {
 
           {}
           {tab === "home" ? (
-            <div className="mount-fade flex-1 min-h-0" key={tab} data-testid="home-fullbleed">
-              <TabsContent value="home" className="mt-0"><HomeTab onNavigate={handleSelect} /></TabsContent>
+            <div className="mount-fade flex flex-1 min-h-0" key={tab} data-testid="home-fullbleed">
+              <TabsContent value="home" className="mt-0 flex-1 min-h-0 flex flex-col data-[state=inactive]:hidden"><HomeTab onNavigate={handleSelect} /></TabsContent>
             </div>
           ) : (
           <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">

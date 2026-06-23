@@ -226,14 +226,17 @@ export function SeedFinderTab() {
   useEffect(() => () => { handleRef.current?.stop(); }, []);
 
   const effectiveMaxAnte = useMemo(() => {
-    if (finder.selected.length === 0) return finder.globalMaxAnte;
-    return Math.max(finder.globalMaxAnte, ...finder.selected.map(s => s.maxAnte));
-  }, [finder.selected, finder.globalMaxAnte]);
+    if (finder.selected.length === 0) return 8;
+    return Math.max(...finder.selected.map(s => s.maxAnte));
+  }, [finder.selected]);
 
   function addJoker(name: string) {
     updateFinder(f => {
       if (f.selected.some(c => c.joker === name)) return f;
-      return { ...f, selected: [...f.selected, { joker: name, edition: "", source: "", maxAnte: f.globalMaxAnte }] };
+      const defaultMax = f.selected.length > 0
+        ? Math.max(...f.selected.map(s => s.maxAnte))
+        : 8;
+      return { ...f, selected: [...f.selected, { joker: name, edition: "", source: "", maxAnte: defaultMax }] };
     });
   }
 
@@ -280,13 +283,13 @@ export function SeedFinderTab() {
   }
 
   const selectedNames = finder.selected.map(c => c.joker);
-  const { selected, deck, stake, version, globalMaxAnte, threads, matches, progress, error, running } = finder;
+  const { selected, deck, stake, version, threads, matches, progress, error, running } = finder;
 
   return (
     <div className="space-y-4">
       {/* Run config */}
       <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/70 p-3 space-y-3">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           <div>
             <Label className="text-xs text-zinc-400">Deck</Label>
             <Select value={deck} onValueChange={v => setFinder({ deck: v })}>
@@ -313,14 +316,7 @@ export function SeedFinderTab() {
             </Select>
           </div>
           <div>
-            <Label className="text-xs text-zinc-400" title="Global cap. Per-joker max-ante can be tighter.">Max ante</Label>
-            <Input
-              type="number" min={1} max={39} value={globalMaxAnte}
-              onChange={e => setFinder({ globalMaxAnte: Math.max(1, Math.min(39, Number(e.target.value) || 1)) })}
-              className="h-8 text-xs" />
-          </div>
-          <div>
-            <Label className="text-xs text-zinc-400" title="CPU threads (Web Workers)">Threads</Label>
+            <Label className="text-xs text-zinc-400" title="Parallel CPU workers searching simultaneously. Higher = faster, but uses more CPU. Default is auto-set to your CPU cores.">CPU workers</Label>
             <Input
               type="number" min={1} max={16} value={threads}
               onChange={e => setFinder({ threads: Math.max(1, Math.min(16, Number(e.target.value) || 1)) })}
@@ -404,7 +400,7 @@ export function SeedFinderTab() {
             <MatchCard
               key={m.seed + idx}
               match={m}
-              preset={{ deck, stake, version, globalMaxAnte, jokerConstraints: selected }}
+              preset={{ deck, stake, version, globalMaxAnte: effectiveMaxAnte, jokerConstraints: selected }}
             />
           ))}
         </div>

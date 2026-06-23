@@ -383,6 +383,13 @@
       "heading": "Novedades",
       "subtitle": "Cambios recientes, organizados por versión.",
       "footer": "¿Comentarios? El repo está en GitHub. Issues y PRs bienvenidos.",
+      "v1_7_3": {
+        "title": "v1.7.3 - Finder mas rapido + pulido del Home",
+        "faster": "El Seed Finder es ~2-4x mas rapido: se duplico el limite de threads workers (8 a 16) para usar todos tus nucleos de CPU, y se cuadruplicaron los intentos por batch (5k a 20k) para reducir el coste de los postMessage.",
+        "maxante": "Eliminado el campo Max ante global redundante. Cada restriccion de joker ya tiene su propio max ante; el motor ahora calcula la cota global automaticamente.",
+        "workers": "Renombrado Threads a CPU workers con un tooltip mas claro que explica que son y que mas = mas rapido.",
+        "home": "Corregida la pantalla de inicio cortada por la mitad en desktop. El fondo animado y las bandas de jokers ahora rellenan todo el viewport."
+      },
       "v1_7_2": {
         "title": "v1.7.2 - Pulido de UX + Seed Library",
         "persist": "La pestana Seeds ahora recuerda su estado entre navegaciones: progreso del Seed Finder, vista del Analyzer, seed y resultados sobreviven a los cambios de pestana.",

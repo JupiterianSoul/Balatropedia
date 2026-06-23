@@ -109,8 +109,14 @@ export class SeedFinder {
     if (this.active) throw new Error("SeedFinder already running");
     this.active = true;
 
-    const threads = cfg.threads ?? Math.max(1, Math.min(8, navigator.hardwareConcurrency || 4));
-    const triesPerBatch = cfg.triesPerBatch ?? 5000;
+    // ---- Perf tunables ----
+    // FAILSAFE: revert to PREV_* values if any regression is observed in the field.
+    // const PREV_THREADS_CAP = 8;
+    // const PREV_TRIES_PER_BATCH = 5000;
+    const THREADS_CAP = 16;        // use full logical-core count up to 16
+    const TRIES_PER_BATCH = 20000; // larger batches => fewer postMessage round-trips
+    const threads = cfg.threads ?? Math.max(1, Math.min(THREADS_CAP, navigator.hardwareConcurrency || 4));
+    const triesPerBatch = cfg.triesPerBatch ?? TRIES_PER_BATCH;
     const maxTotalTries = cfg.maxTotalTries ?? 0;
     const versionInt = versionToInt(cfg.version);
 
