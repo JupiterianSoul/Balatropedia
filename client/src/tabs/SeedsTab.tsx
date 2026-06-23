@@ -1,12 +1,14 @@
-// Seeds tab v1.6 — native Balatro seed engine (no external links).
-// Ports Immolate / TheSoul to TypeScript. See client/src/lib/seedEngine.ts.
-//
-// Three sub-tabs:
-//   - Spoiler:      per-ante boss/voucher/tags/shop/packs with contents
-//   - Joker Hunter: locate a specific joker across antes
+// Seeds tab v1.7 — native Balatro seed engine + WASM seed finder.
+// Four sub-tabs:
+//   - Spoiler:      per-ante boss/voucher/tags/shop/packs with contents (+ icons)
+//   - Joker Hunter: locate a specific joker across antes (+ icon)
 //   - Soul Finder:  list every Soul + Black Hole spawn
+//   - Seed Finder:  inverse search — pick jokers, brute-force a matching seed
 import { useMemo, useState } from "react";
-import { Dices, Search, Sparkles, Skull, Play, Loader2 } from "lucide-react";
+import { Dices, Search, Sparkles, Skull, Play, Loader2, Target } from "lucide-react";
+import { JokerSprite } from "@/components/JokerSprite";
+import { jokerIdFromName } from "@/lib/helpers";
+import { SeedFinderTab } from "./SeedFinderTab";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -84,13 +86,18 @@ function PackBlock({ p }: { p: PackContents }) {
             {c.seal !== "No Seal" && <span className="ml-1 text-blue-300/80">[{c.seal}]</span>}
           </div>
         ))}
-        {p.contents.kind === "buffoon" && p.contents.jokers.map((j, i) => (
-          <div key={i} className="text-zinc-300">
-            {i + 1}. <span className={rarityClass(j.rarity)}>{j.joker}</span>
-            {j.edition !== "No Edition" && <span className={`ml-1 italic ${editionClass(j.edition)}`}>[{j.edition}]</span>}
-            {stickerBadge(j.stickers)}
-          </div>
-        ))}
+        {p.contents.kind === "buffoon" && p.contents.jokers.map((j, i) => {
+          const id = jokerIdFromName(j.joker);
+          return (
+            <div key={i} className="flex items-center gap-1.5 text-zinc-300">
+              <span className="text-zinc-500">{i + 1}.</span>
+              {id && <JokerSprite jokerId={id} name={j.joker} size={28} className="border-0 bg-transparent" />}
+              <span className={rarityClass(j.rarity)}>{j.joker}</span>
+              {j.edition !== "No Edition" && <span className={`italic ${editionClass(j.edition)}`}>[{j.edition}]</span>}
+              {stickerBadge(j.stickers)}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -111,25 +118,29 @@ function AnteCard({ r }: { r: AnteResult }) {
         <div>
           <div className="text-xs uppercase tracking-wider text-zinc-500 mb-1">Shop Queue</div>
           <div className="space-y-0.5 text-sm">
-            {r.shopQueue.map((it, i) => (
-              <div key={i} className="font-mono text-xs">
-                <span className="text-zinc-500 w-6 inline-block">{i + 1}.</span>
-                <span className="text-zinc-400">{it.type}:</span>{" "}
-                {it.jokerData ? (
-                  <>
-                    <span className={rarityClass(it.jokerData.rarity)}>{it.item}</span>
-                    {it.jokerData.edition !== "No Edition" && (
-                      <span className={`ml-1 italic ${editionClass(it.jokerData.edition)}`}>[{it.jokerData.edition}]</span>
-                    )}
-                    {stickerBadge(it.jokerData.stickers)}
-                  </>
-                ) : (
-                  <span className={it.item === "The Soul" || it.item === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-200"}>
-                    {it.item}
-                  </span>
-                )}
-              </div>
-            ))}
+            {r.shopQueue.map((it, i) => {
+              const jid = it.jokerData ? jokerIdFromName(it.item) : undefined;
+              return (
+                <div key={i} className="flex items-center gap-1.5 text-xs">
+                  <span className="text-zinc-500 font-mono w-6">{i + 1}.</span>
+                  {jid && <JokerSprite jokerId={jid} name={it.item} size={26} className="border-0 bg-transparent" />}
+                  <span className="text-zinc-400 font-mono">{it.type}:</span>
+                  {it.jokerData ? (
+                    <>
+                      <span className={rarityClass(it.jokerData.rarity)}>{it.item}</span>
+                      {it.jokerData.edition !== "No Edition" && (
+                        <span className={`italic ${editionClass(it.jokerData.edition)}`}>[{it.jokerData.edition}]</span>
+                      )}
+                      {stickerBadge(it.jokerData.stickers)}
+                    </>
+                  ) : (
+                    <span className={it.item === "The Soul" || it.item === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-200"}>
+                      {it.item}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
         <div>
@@ -247,7 +258,7 @@ function InputsPanel({
   );
 }
 
-type SubTab = "spoiler" | "hunter" | "soul";
+type SubTab = "spoiler" | "hunter" | "soul" | "finder";
 
 export function SeedsTab() {
   const [input, setInput] = useState<AnalysisInput>(() => defaultInput(""));
@@ -283,25 +294,33 @@ export function SeedsTab() {
           <Dices className="h-7 w-7" /> Seeds
         </h1>
         <p className="text-sm text-zinc-400">
-          Native Balatro seed analyzer. Computes shop queue, packs, vouchers, bosses, tags, and Soul/Black Hole spawns deterministically from a seed.
+          Native Balatro seed analyzer <span className="text-yellow-300">+</span> WASM seed finder. Analyze a seed, hunt jokers, find Soul spawns, or brute-force a seed matching any joker combination.
         </p>
       </div>
 
-      <InputsPanel input={input} setInput={setInput} onRun={onRun} isRunning={isRunning} />
+      <div className="flex flex-wrap gap-2 border-b border-yellow-500/20 pb-2">
+        <Button variant={subTab === "spoiler" ? "default" : "ghost"} onClick={() => setSubTab("spoiler")} size="sm" data-testid="tab-spoiler">
+          <Sparkles className="mr-2 h-4 w-4" /> Spoiler
+        </Button>
+        <Button variant={subTab === "hunter" ? "default" : "ghost"} onClick={() => setSubTab("hunter")} size="sm" data-testid="tab-hunter">
+          <Search className="mr-2 h-4 w-4" /> Joker Hunter
+        </Button>
+        <Button variant={subTab === "soul" ? "default" : "ghost"} onClick={() => setSubTab("soul")} size="sm" data-testid="tab-soul">
+          <Skull className="mr-2 h-4 w-4" /> Soul Finder
+        </Button>
+        <Button variant={subTab === "finder" ? "default" : "ghost"} onClick={() => setSubTab("finder")} size="sm" data-testid="tab-finder">
+          <Target className="mr-2 h-4 w-4" /> Seed Finder
+        </Button>
+      </div>
 
-      {results && (
+      {subTab === "finder" && <SeedFinderTab />}
+
+      {subTab !== "finder" && (
+        <InputsPanel input={input} setInput={setInput} onRun={onRun} isRunning={isRunning} />
+      )}
+
+      {subTab !== "finder" && results && (
         <>
-          <div className="flex gap-2 border-b border-yellow-500/20 pb-2">
-            <Button variant={subTab === "spoiler" ? "default" : "ghost"} onClick={() => setSubTab("spoiler")} size="sm" data-testid="tab-spoiler">
-              <Sparkles className="mr-2 h-4 w-4" /> Spoiler
-            </Button>
-            <Button variant={subTab === "hunter" ? "default" : "ghost"} onClick={() => setSubTab("hunter")} size="sm" data-testid="tab-hunter">
-              <Search className="mr-2 h-4 w-4" /> Joker Hunter
-            </Button>
-            <Button variant={subTab === "soul" ? "default" : "ghost"} onClick={() => setSubTab("soul")} size="sm" data-testid="tab-soul">
-              <Skull className="mr-2 h-4 w-4" /> Soul Finder
-            </Button>
-          </div>
 
           {subTab === "spoiler" && (
             <div className="space-y-3">
@@ -339,6 +358,7 @@ export function SeedsTab() {
                   <table className="w-full text-sm">
                     <thead className="bg-zinc-900/70 text-zinc-400 text-xs uppercase">
                       <tr>
+                        <th className="p-2 text-left"></th>
                         <th className="p-2 text-left">Ante</th>
                         <th className="p-2 text-left">Source</th>
                         <th className="p-2 text-left">Rarity</th>
@@ -347,8 +367,13 @@ export function SeedsTab() {
                       </tr>
                     </thead>
                     <tbody>
-                      {hunterMatches.map((m, i) => (
+                      {hunterMatches.map((m, i) => {
+                        const id = jokerIdFromName(hunterQuery);
+                        return (
                         <tr key={i} className="border-t border-zinc-800/60">
+                          <td className="p-1 w-[40px]">
+                            {id && i === 0 && <JokerSprite jokerId={id} name={hunterQuery} size={36} />}
+                          </td>
                           <td className="p-2 font-mono">{m.ante}</td>
                           <td className="p-2">
                             {m.source === "shop" ? "Shop" : m.source === "buffoon-pack" ? `Buffoon pack (${m.packName})` : m.source}
@@ -359,7 +384,8 @@ export function SeedsTab() {
                             {[m.stickers.eternal && "Eternal", m.stickers.perishable && "Perishable", m.stickers.rental && "Rental"].filter(Boolean).join(", ") || "-"}
                           </td>
                         </tr>
-                      ))}
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -406,7 +432,7 @@ export function SeedsTab() {
         </>
       )}
 
-      {!results && (
+      {subTab !== "finder" && !results && (
         <div className="text-center text-sm text-zinc-500 italic py-12">
           Enter a seed and click <b>Analyze seed</b> to see the full per-ante breakdown.
         </div>

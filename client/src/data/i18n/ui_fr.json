@@ -383,6 +383,14 @@
       "heading": "Nouveautés",
       "subtitle": "Changements récents, organisés par version.",
       "footer": "Un retour ? Le dépôt est sur GitHub. Issues et PRs bienvenues.",
+      "v1_7": {
+        "title": "v1.7 - Chercheur de seeds natif",
+        "finder": "Nouveau sous-onglet Seed Finder : choisis les jokers (et editions) que tu veux, fixe une ante max, lance la recherche. Retourne de vraies seeds avec la localisation exacte de chaque correspondance.",
+        "wasm": "Moteur WebAssembly compile depuis le meme C++ que TheSoul/Immolate, execute dans des Web Workers paralleles sur tous tes coeurs CPU. Dizaines de milliers de seeds par seconde par coeur.",
+        "constraints": "Contraintes multi-jokers avec edition et source : exiger un Perkeo Negatif depuis la carte Soul d'un pack Spectral, ou un Blueprint Polychrome depuis n'importe quelle boutique, ou les deux a la fois.",
+        "location": "Chaque correspondance indique la localisation exacte : ante, type de source (boutique / pack Buffoon / carte Soul), slot de boutique ou index de pack + position dans le pack, plus l'edition et les stickers.",
+        "icons": "Icones de jokers partout dans l'onglet Seeds : file de boutique, contenu des packs Buffoon, resultats du Joker Hunter, correspondances du Seed Finder."
+      },
       "v1_6": {
         "title": "v1.6 - Moteur de seeds natif",
         "native_engine": "Onglet Seeds reconstruit. Portage natif d'Immolate / TheSoul : file de boutique, packs, vouchers, boss, tags et contenu des packs deterministes par ante, calcules dans le navigateur depuis une seed. Aucun lien externe.",
