@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { Star, AlertTriangle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
-  Level, Role, Scaling, Stage, JOKER_MAP, Rarity,
+  Level, Role, Scaling, Stage, JOKER_MAP, Rarity, Popularity, Difficulty,
 } from "@/lib/helpers";
 import { useLabels, useT, useGameText } from "@/lib/i18n";
 import { playSound } from "@/lib/sound";
@@ -235,3 +235,49 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+
+const POPULARITY_TONE: Record<Popularity, string> = {
+  staple: "bg-gradient-to-b from-[hsl(45_85%_65%)] to-[hsl(45_85%_50%)] text-[hsl(198_18%_9%)]",
+  common: "bg-gradient-to-b from-[hsl(206_55%_60%)] to-[hsl(206_55%_45%)] text-white",
+  niche: "bg-gradient-to-b from-[hsl(220_10%_50%)] to-[hsl(220_10%_38%)] text-white",
+};
+export function PopularityBadge({ popularity }: { popularity: Popularity }) {
+  const labels = useLabels();
+  return (
+    <span
+      className={cn(
+        "font-display inline-flex items-center gap-1 rounded-md border-2 border-[hsl(198_18%_9%)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+        "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.3),0_2px_0_hsl(198_18%_4%)]",
+        POPULARITY_TONE[popularity],
+      )}
+      style={{ textShadow: "0 1px 0 rgba(0,0,0,0.3)" }}
+      data-testid={`badge-popularity-${popularity}`}
+      title={labels.popularityLabel}
+    >
+      {labels.popularity[popularity]}
+    </span>
+  );
+}
+
+const DIFFICULTY_TONE: Record<Difficulty, string> = {
+  easy: "bg-gradient-to-b from-[hsl(144_50%_60%)] to-[hsl(144_50%_42%)] text-white",
+  moderate: "bg-gradient-to-b from-[hsl(45_85%_65%)] to-[hsl(45_85%_50%)] text-[hsl(198_18%_9%)]",
+  hard: "bg-gradient-to-b from-[hsl(4_99%_72%)] to-[hsl(4_99%_58%)] text-white",
+};
+export function DifficultyBadge({ difficulty }: { difficulty: Difficulty }) {
+  const labels = useLabels();
+  return (
+    <span
+      className={cn(
+        "font-display inline-flex items-center gap-1 rounded-md border-2 border-[hsl(198_18%_9%)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+        "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.3),0_2px_0_hsl(198_18%_4%)]",
+        DIFFICULTY_TONE[difficulty],
+      )}
+      style={{ textShadow: "0 1px 0 rgba(0,0,0,0.3)" }}
+      data-testid={`badge-difficulty-${difficulty}`}
+      title={labels.difficultyLabel}
+    >
+      {labels.difficulty[difficulty]}
+    </span>
+  );
+}

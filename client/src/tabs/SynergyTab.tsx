@@ -7,6 +7,7 @@ import {
 import { JokerCombobox } from "@/components/JokerCombobox";
 import { JokerSprite } from "@/components/JokerSprite";
 import { SourceCitations } from "@/components/SourceCitations";
+import { PopularityBadge, DifficultyBadge } from "@/components/primitives";
 import { LName, LText } from "@/components/Localized";
 import { useT, useLabels, useCuratedText, useGameText } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -57,9 +58,13 @@ function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProp
             {partnerName.name ?? p?.name ?? c.partnerId}
           </button>
         </div>
-        <span className="shrink-0 rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-          {engineLabel}
-        </span>
+        <div className="flex shrink-0 items-center gap-1">
+          {c.popularity ? <PopularityBadge popularity={c.popularity} /> : null}
+          {c.difficulty ? <DifficultyBadge difficulty={c.difficulty} /> : null}
+          <span className="rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+            {engineLabel}
+          </span>
+        </div>
       </div>
       <p className="mt-2 text-xs leading-relaxed text-foreground/80">{why}</p>
       <SourceCitations sources={c.sources} />

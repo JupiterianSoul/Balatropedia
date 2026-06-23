@@ -152,7 +152,13 @@ export function useLabels() {
         "three_of_a_kind", "four_of_a_kind", "face_card", "held_in_hand",
         "steel", "glass", "discard", "deck_growth", "economy_snowball",
         "retrigger_engine",
+        "bloodstone_lucky", "canio_destruction", "low_card_count",
+        "no_discard", "tarot_engine", "two_pair_scaling", "vampire_enhancement",
       ]),
+      popularity: make("popularity", ["staple", "common", "niche"]),
+      difficulty: make("difficulty", ["easy", "moderate", "hard"]),
+      popularityLabel: t("ui.labels.popularity_label"),
+      difficultyLabel: t("ui.labels.difficulty_label"),
       riskPrefix: t("ui.labels.risk_prefix"),
     };
   }, [t]);

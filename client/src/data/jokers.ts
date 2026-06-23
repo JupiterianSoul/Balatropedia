@@ -9,7 +9,9 @@ export type Archetype =
   | "flush" | "straight" | "high_card" | "pair" | "two_pair"
   | "three_of_a_kind" | "four_of_a_kind" | "face_card" | "held_in_hand"
   | "steel" | "glass" | "discard" | "deck_growth" | "economy_snowball"
-  | "retrigger_engine";
+  | "retrigger_engine"
+  | "bloodstone_lucky" | "canio_destruction" | "low_card_count"
+  | "no_discard" | "tarot_engine" | "two_pair_scaling" | "vampire_enhancement";
 
 export type HandType =
   | "high_card" | "pair" | "two_pair" | "three_of_a_kind" | "straight"
@@ -2983,6 +2985,9 @@ export interface SynergySource {
   url: string;
 }
 
+export type Popularity = "staple" | "common" | "niche";
+export type Difficulty = "easy" | "moderate" | "hard";
+
 export interface Synergy {
   a: string; b: string;
   kind: SynergyKind;
@@ -2990,7 +2995,8 @@ export interface Synergy {
         | "economy" | "face_card" | "discard_volume" | "enhancement"
         | "suit_unification" | "scaling";
   why: string;
-
+  popularity?: Popularity;
+  difficulty?: Difficulty;
   sources?: SynergySource[];
 }
 
@@ -3510,6 +3516,68 @@ export const SYNERGIES: Synergy[] = [
     why: "Throwback gains X0.25 Mult per skipped blind; Credit Card allows going $20 into debt; the debt room lets you buy key pieces without cash, enabling you to skip marginally beneficial blinds and harvest Throwback stacks even on cash-tight early antes."
   },
 
+
+  // --- community-validated additions ---
+  { a: "fortune_teller", b: "steel_joker", kind: "strong_support", engine: "xmult_stack", why: "Fortune Teller permanently gains +1 Mult per Tarot card used. Steel Joker gives X0.2 Mult per Steel Card in the full deck. Spamming Tarots (especially The Chariot to make Steel Cards) grows both additive Mult and XMult simultaneously.", popularity: "common", difficulty: "moderate", sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "ComicBook.com 5 Best Joker Combos", url: "https://comicbook.com/gaming/news/best-joker-combos-balatro/" }] },
+  { a: "hologram", b: "wee_joker", kind: "core_pair", engine: "deck_manipulation", why: "Adding 2s to the deck triggers Wee Joker scaling (+8 Chips per scored 2) while simultaneously triggering Hologram's X0.25 Mult per card added. Growing the deck from 2-stacking benefits both jokers with the same action.", popularity: "common", difficulty: "moderate", sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "games.gg Wee Joker Guide", url: "https://games.gg/balatro/guides/balatro-wee-joker-guide/" }] },
+  { a: "spare_trousers", b: "square_joker", kind: "core_pair", engine: "scaling", why: "Two Pair uses exactly 4 cards, so every Two Pair hand simultaneously triggers Spare Trousers (+2 permanent Mult) and Square Joker (+4 permanent Chips). A single hand type scales two jokers at once.", popularity: "common", difficulty: "easy", sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "ComicBook.com 5 Best Joker Combos", url: "https://comicbook.com/gaming/news/best-joker-combos-balatro/" }] },
+  { a: "certificate", b: "hologram", kind: "core_pair", engine: "deck_manipulation", why: "Certificate adds a card to the deck each blind; Hologram gains X0.25 Mult per card added to deck. Together they guarantee +0.25 XMult growth per blind from Certificate alone, compounding over the run.", popularity: "staple", difficulty: "easy", sources: [{ name: "Reddit r/balatro Favorite Synergy Thread", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Reddit r/balatro What's the Best Combo/Synergy", url: "https://www.reddit.com/r/balatro/comments/1m2paks/whats_the_best_combosynergy/" }] },
+  { a: "cavendish", b: "gros_michel", kind: "core_pair", engine: "xmult_stack", why: "Gros Michel must be destroyed earlier in the run for Cavendish to appear in the shop. Intentionally keeping Gros Michel until it destroys itself (1 in 6 chance per round) then frees Cavendish (X3 Mult unconditional) as a purchasable joker.", popularity: "common", difficulty: "easy", sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }] },
+  { a: "green_joker", b: "ramen", kind: "core_pair", engine: "consistency", why: "Both Ramen (loses X0.01 Mult per discard) and Green Joker (-1 Mult per discard) reward zero-discard play. Running both in a High Card or Pair build means every saved discard protects both multipliers simultaneously.", popularity: "common", difficulty: "easy", sources: [{ name: "Reddit r/balatro What's the Best Combo/Synergy", url: "https://www.reddit.com/r/balatro/comments/1m2paks/whats_the_best_combosynergy/" }, { name: "Reddit r/balatro My poor ramen", url: "https://www.reddit.com/r/balatro/comments/1lclamc/my_poor_ramen/" }] },
+  { a: "canio", b: "trading_card", kind: "core_pair", engine: "scaling", why: "Trading Card destroys the first discarded card each blind; if Canio is held, each destroyed card grants Canio +X1 Mult. This means Canio grows by +X1 Mult every single blind passively as long as there is a card to discard.", popularity: "common", difficulty: "moderate", sources: [{ name: "Balatro Wiki - Canio", url: "https://balatrogame.fandom.com/wiki/Canio" }, { name: "Reddit r/balatro What's the Best Combo/Synergy", url: "https://www.reddit.com/r/balatro/comments/1m2paks/whats_the_best_combosynergy/" }] },
+  { a: "pareidolia", b: "vampire", kind: "strong_support", engine: "xmult_stack", why: "Pareidolia makes all cards count as face cards; Vampire gains +X0.1 Mult for each enhanced card scored and removes enhancements. With Pareidolia, every scored card that has an enhancement feeds Vampire — massively accelerating XMult stacking without needing a face-card-heavy deck.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Pareidolia + Vampire + Midas Mask", url: "https://www.reddit.com/r/balatro/comments/1hmthby/pareidolia_vampire_midas_mask/" }, { name: "Reddit r/balatro Found the pareidolia + midas mask + vampire combo", url: "https://www.reddit.com/r/balatro/comments/1hr8wuj/found_the_pareidolia_midas_mask_vampire_combo/" }] },
+  { a: "pareidolia", b: "splash", kind: "strong_support", engine: "face_card", why: "Splash makes every played card score; Pareidolia makes every card a face card. Together, every played card scores and counts as a face card, enabling synergies that require scoring face cards (Midas Mask, Sock and Buskin, Photograph) to trigger on the entire hand.", popularity: "common", difficulty: "easy", sources: [{ name: "Reddit r/balatro Blood for Cash", url: "https://www.reddit.com/r/balatro/comments/1b5rz1z/blood_for_cash/" }, { name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }] },
+  { a: "bootstraps", b: "bull", kind: "strong_support", engine: "economy", why: "Bull gives +2 Chips per $1 held at end of round; Bootstraps gives +2 Mult per $5 held (capped). Maintaining a large cash reserve powers both simultaneously — the same $20+ bank gives Bull big chip bonuses and drives Bootstraps Mult scaling.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "credit_card", b: "vagabond", kind: "strong_support", engine: "economy", why: "Vagabond creates a Tarot card when a hand is played with $0 or less; Credit Card lets you go up to -$20. Together they let you play at permanently negative balance, generating a Tarot every hand to fuel Tarot-based strategies.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }] },
+  { a: "fibonacci", b: "scholar", kind: "strong_support", engine: "consistency", why: "Scholar gives +20 Chips and +4 Mult when an Ace is scored; Fibonacci gives +8 Mult for Aces. Playing Aces triggers both Jokers simultaneously, providing both chip and mult bonuses from a single card. Scholar's Ace bonus stacks multiplicatively with Fibonacci.", popularity: "common", difficulty: "easy", sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "Balatro Wiki - Fibonacci", url: "https://balatrogame.fandom.com/wiki/Fibonacci" }] },
+  { a: "even_steven", b: "fibonacci", kind: "strong_support", engine: "consistency", why: "Even Steven gives +4 Mult for every scored even-rank card (2,4,6,8,10). Fibonacci gives +8 Mult for Aces, 2s, 3s, 5s, 8s. The ranks 2 and 8 are shared, triggering both Jokers simultaneously for +12 Mult per scored 2 or 8.", popularity: "common", difficulty: "easy", sources: [{ name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }, { name: "Balatro Wiki - Fibonacci", url: "https://balatrogame.fandom.com/wiki/Fibonacci" }] },
+  { a: "fibonacci", b: "ride_the_bus", kind: "strong_support", engine: "consistency", why: "Ride the Bus gains +1 Mult per consecutive hand without scoring a face card. Fibonacci's best cards (A,2,3,5,8) are non-face cards, so a Fibonacci-focused deck naturally avoids face cards and keeps Ride the Bus scaling safely.", popularity: "niche", difficulty: "easy", sources: [{ name: "Balatro Wiki - Fibonacci", url: "https://balatrogame.fandom.com/wiki/Fibonacci" }, { name: "Steam Community Fibonacci Guide", url: "https://steamcommunity.com/sharedfiles/filedetails/?l=spanish&id=3435934838" }] },
+  { a: "fibonacci", b: "shortcut", kind: "strong_support", engine: "consistency", why: "Shortcut allows Straights with gaps of 1. This enables the hand 8-7-5-3-A, which hits five Fibonacci numbers (A,3,5,8 plus 7 as filler) for a massive +Mult burst from a single Straight hand.", popularity: "niche", difficulty: "moderate", sources: [{ name: "Balatro Wiki - Fibonacci", url: "https://balatrogame.fandom.com/wiki/Fibonacci" }, { name: "Steam Community Fibonacci Guide", url: "https://steamcommunity.com/sharedfiles/filedetails/?l=spanish&id=3435934838" }] },
+  { a: "fibonacci", b: "hanging_chad", kind: "strong_support", engine: "retrigger", why: "Hanging Chad retriggers the first played card two additional times. If a Fibonacci-relevant card (A,2,3,5,8) is positioned first in the played hand, it fires Fibonacci's +8 Mult three times instead of once for +24 Mult from that card.", popularity: "common", difficulty: "easy", sources: [{ name: "Balatro Wiki - Fibonacci", url: "https://balatrogame.fandom.com/wiki/Fibonacci" }, { name: "Steam Community Fibonacci Guide", url: "https://steamcommunity.com/sharedfiles/filedetails/?l=spanish&id=3435934838" }] },
+  { a: "egg", b: "swashbuckler", kind: "core_pair", engine: "economy", why: "Egg gains +$3 sell value each round; Swashbuckler gives +Mult equal to the total sell value of all held Jokers. Egg's growing sell value directly feeds Swashbuckler's +Mult, scaling both passively over the run without any gameplay change.", popularity: "staple", difficulty: "easy", sources: [{ name: "Balatro Wiki - Egg", url: "https://balatrogame.fandom.com/wiki/Egg" }, { name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }] },
+  { a: "egg", b: "gift_card", kind: "strong_support", engine: "economy", why: "Gift Card raises the sell value of all Jokers (and consumables) by +$1 each blind; Egg raises its own sell value by +$3 per round. Combined they accelerate Egg's sell-value growth, which then turboboosters Swashbuckler's +Mult.", popularity: "common", difficulty: "easy", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Balatro Wiki - Egg", url: "https://balatrogame.fandom.com/wiki/Egg" }] },
+  { a: "ceremonial_dagger", b: "riff_raff", kind: "core_pair", engine: "scaling", why: "Riff-Raff creates 2 Common Jokers when a Blind is selected; Ceremonial Dagger destroys the Joker to its right when a Blind is selected and gains double its sell value as permanent +Mult. Placing Ceremonial Dagger next to a Riff-Raff token gives free +Mult every blind.", popularity: "common", difficulty: "moderate", sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }] },
+  { a: "campfire", b: "ceremonial_dagger", kind: "strong_support", engine: "scaling", why: "Ceremonial Dagger creates a rotating Joker slot vacancy; Campfire gains XMult whenever a Joker is sold. Cycling a cheap Joker into the slot Ceremonial Dagger destroys before each Blind simultaneously grows Campfire's XMult and feeds Ceremonial Dagger Mult.", popularity: "niche", difficulty: "hard", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "baron", b: "invisible_joker", kind: "strong_support", engine: "xmult_stack", why: "Invisible Joker requires holding only 2 Jokers; it then duplicates one of them with all current stacks and editions. Selling down to Baron + Invisible Joker and duplicating Baron creates 2 Barons, doubling the X1.5 Mult per King held and can copy Polychrome or Foil editions.", popularity: "niche", difficulty: "hard", sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }] },
+  { a: "hack", b: "walkie_talkie", kind: "strong_support", engine: "retrigger", why: "Hack retriggers each scored 2, 3, 4, or 5. Walkie Talkie gives +10 Chips and +4 Mult when a 10 or 4 is scored. The rank 4 is shared: Hack retriggers every scored 4, triggering Walkie Talkie's bonus multiple times per 4 in a hand.", popularity: "common", difficulty: "easy", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "blackboard", b: "stuntman", kind: "strong_support", engine: "consistency", why: "Stuntman reduces hand size by 2 but gives +250 Chips. Blackboard gives X3 Mult when all scored/held cards are Spades or Clubs only. Smaller hand size from Stuntman makes it easier to fill the hand exclusively with black-suit cards, enabling Blackboard more reliably.", popularity: "niche", difficulty: "hard", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "runner", b: "shortcut", kind: "strong_support", engine: "consistency", why: "Runner gains +15 Chips per Straight played; Shortcut allows Straights with 1-rank gaps, making Straights far easier to assemble from any deck. Together they let you build chip stacks from Straights consistently even with gaps in the rank sequence.", popularity: "common", difficulty: "easy", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Balatro Wiki - Fibonacci", url: "https://balatrogame.fandom.com/wiki/Fibonacci" }] },
+  { a: "blackboard", b: "bloodstone", kind: "strong_support", engine: "suit_unification", why: "Smeared Joker counts Hearts/Diamonds and Clubs/Spades as same-suit. Blackboard gives X3 Mult if all scored/held cards are Spades or Clubs (counting as black). Bloodstone gives X1.5 Mult per scored Heart. Smeared makes Hearts count as Spades, so Heart cards simultaneously satisfy Blackboard's all-black condition and trigger Bloodstone.", popularity: "niche", difficulty: "hard", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Reddit r/balatro What's the Best Combo/Synergy", url: "https://www.reddit.com/r/balatro/comments/1m2paks/whats_the_best_combosynergy/" }] },
+  { a: "spare_trousers", b: "supernova", kind: "strong_support", engine: "scaling", why: "Supernova gives +Mult equal to the number of times the most-played poker hand has been played. Spare Trousers incentivizes playing Two Pair repeatedly. Every Two Pair hand both scales Spare Trousers (+2 permanent Mult) and increases Supernova's counter.", popularity: "common", difficulty: "easy", sources: [{ name: "Balatro Wiki - Spare Trousers", url: "https://balatrogame.fandom.com/wiki/Spare_Trousers" }, { name: "Reddit r/balatro Spare Trousers Appreciation Thread", url: "https://www.reddit.com/r/balatro/comments/1c01mu9/spare_trousers_appreciation_thread_no_spare/" }] },
+  { a: "card_sharp", b: "spare_trousers", kind: "strong_support", engine: "xmult_stack", why: "Card Sharp gives X3 Mult when the same poker hand is played twice in a round. Spare Trousers rewards repeated Two Pair. Every round you play Two Pair twice (nearly always, given the hand needs multiple plays), Card Sharp fires X3 Mult and Spare Trousers stacks +2 Mult.", popularity: "common", difficulty: "easy", sources: [{ name: "Balatro Wiki - Spare Trousers", url: "https://balatrogame.fandom.com/wiki/Spare_Trousers" }, { name: "dood.gg Spare Trousers Guide", url: "https://dood.gg/en/balatro/jokers/spare-trousers/" }] },
+  { a: "sixth_sense", b: "vagabond", kind: "strong_support", engine: "discard_volume", why: "Vagabond generates a Tarot card when a hand is played at $0 or less. Sixth Sense destroys a 6 played solo to generate a Spectral card. Running broke with Vagabond funds Tarot creation while Sixth Sense simultaneously thins the deck and generates Spectrals for a double-engine consumable factory.", popularity: "niche", difficulty: "hard", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }] },
+  { a: "bootstraps", b: "wee_joker", kind: "strong_support", engine: "scaling", why: "Wee Joker permanently gains +8 Chips per scored 2. Bootstraps gains +2 Mult per $5 held. A 2-heavy deck generates lots of scored 2s, stacking Wee Joker's chip total. Large chip totals are worth money from economy jokers, and Bootstraps converts that held cash into Mult scaling.", popularity: "niche", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }, { name: "games.gg Wee Joker Guide", url: "https://games.gg/balatro/guides/balatro-wee-joker-guide/" }] },
+  { a: "lucky_cat", b: "wee_joker", kind: "strong_support", engine: "scaling", why: "Wee Joker scales off scored 2s; Lucky Cat gains +X0.25 Mult each time a Lucky Card triggers (1 in 5 chance per scored card, or guaranteed with Oops All 6s). Playing many 2s as Lucky Cards with Red Seals or Oops All 6s triggers both Wee Joker and Lucky Cat from the same scored cards.", popularity: "niche", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }, { name: "games.gg Wee Joker Guide", url: "https://games.gg/balatro/guides/balatro-wee-joker-guide/" }] },
+  { a: "dna", b: "sixth_sense", kind: "strong_support", engine: "deck_manipulation", why: "Sixth Sense destroys a solo played 6 to generate a Spectral card, thinning the deck of 6s. DNA duplicates a played single card to add a permanent copy. Running 6s through Sixth Sense thins bad cards, while DNA can copy the best scoring card into the deck repeatedly.", popularity: "niche", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }] },
+  { a: "driver_gloves", b: "midas_mask", kind: "strong_support", engine: "enhancement", why: "Driver's License (Driver Gloves) gives X3 Mult when 16 or more cards in the deck are enhanced. Midas Mask turns all scored face cards into Gold Cards permanently. Cycling face cards through Midas Mask quickly fills the deck with Gold-enhanced cards, enabling Driver's License far faster.", popularity: "niche", difficulty: "moderate", sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }] },
+  { a: "baron", b: "shoot_the_moon", kind: "strong_support", engine: "xmult_stack", why: "Shoot the Moon gives +13 Mult per Queen held in hand without playing them. Baron gives X1.5 Mult per King held in hand. Running a hand of held Kings and Queens provides massive +Mult (Shoot the Moon) and XMult (Baron) simultaneously from the same held cards.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "juggler", b: "troubadour", kind: "strong_support", engine: "consistency", why: "Juggler and Troubadour each increase hand size by 1. Together in a Baron/Mime build they push hand size to 11, allowing more Steel Kings or Queens to be held simultaneously, which directly multiplies Baron's XMult output proportionally.", popularity: "common", difficulty: "easy", sources: [{ name: "Balatro Wiki Guide: General Strategy", url: "https://balatrogame.fandom.com/wiki/Guide:_General_strategy" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "blueprint", b: "dna", kind: "strong_support", engine: "deck_manipulation", why: "DNA adds a permanent copy of a single-card played hand to the deck (once per round). Blueprint copies the Joker to its right. Placing Blueprint next to DNA lets Blueprint copy DNA's duplication effect — effectively doubling deck-building speed to add two copies per round instead of one.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }, { name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }] },
+  { a: "blueprint", b: "perkeo", kind: "strong_support", engine: "deck_manipulation", why: "Perkeo duplicates a consumable in hand when entering the shop. Blueprint copies the Joker to its right. Placing Blueprint next to Perkeo in the shop phase copies Perkeo's duplication, creating two copies of the target consumable instead of one per shop visit.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "burnt_joker", b: "stuntman", kind: "strong_support", engine: "consistency", why: "Burnt Joker upgrades the played poker hand's level by 1 on the first discard each round. Stuntman reduces hand size by 2 and gives +250 Chips. Both benefit from High Card or Pair-style low-card-count hands; Stuntman's chip bonus compensates for not playing full hands while Burnt Joker rapidly levels up the primary hand type.", popularity: "niche", difficulty: "easy", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "green_joker", b: "stuntman", kind: "strong_support", engine: "consistency", why: "Green Joker rewards no-discard play by stacking +Mult per hand played. Stuntman reduces hand size but gives +250 Chips — this downside is irrelevant in High Card builds where fewer cards in hand is preferred. The +Chips from Stuntman fills the chip gap that Green Joker doesn't address.", popularity: "common", difficulty: "easy", sources: [{ name: "Balatro Wiki - Green Joker", url: "https://balatrogame.fandom.com/wiki/Green_Joker" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "fortune_teller", b: "vagabond", kind: "strong_support", engine: "economy", why: "Vagabond generates a Tarot when a hand is played at $0; Fortune Teller gains +1 permanent Mult per Tarot used (retroactively counting all past Tarots). Running broke with Vagabond generates constant Tarots which feed Fortune Teller's Mult counter while also enabling deck manipulation.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Steam Balatro Best Combo Discussion", url: "https://steamcommunity.com/app/2379780/discussions/0/4346606879519735269/" }] },
+  { a: "eight_ball", b: "fortune_teller", kind: "strong_support", engine: "economy", why: "Eight Ball gives a 1 in 4 chance to create a Tarot card when an 8 is scored. Fortune Teller gains +1 permanent Mult per Tarot card used. Playing 8s through Eight Ball passively generates Tarots that retroactively stack Fortune Teller's Mult without needing dedicated consumable slots.", popularity: "common", difficulty: "easy", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "acrobat", b: "loyalty_card", kind: "conditional", engine: "xmult_stack", why: "Loyalty Card gives X4 Mult on every 6th hand played, and Acrobat gives X3 Mult on the final hand of a round. Planning to use the final hand of a round as Loyalty Card's trigger hand means both jokers fire simultaneously on the same hand — X12 combined XMult.", popularity: "niche", difficulty: "hard", sources: [{ name: "Reddit r/balatro Forget Flushes — High Card Strategy", url: "https://www.reddit.com/r/balatro/comments/1b2loe7/forget_flushes_the_best_strategy_is_high_card/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "dna", b: "wee_joker", kind: "strong_support", engine: "deck_manipulation", why: "DNA copies a single played card into the deck permanently. Copying a Red Seal 2 via DNA gives Wee Joker two scored 2s per appearance (1 normal + 1 retrigger from Red Seal), advancing its Chip total by +16 each time that card appears instead of +8.", popularity: "common", difficulty: "easy", sources: [{ name: "games.gg Wee Joker Guide", url: "https://games.gg/balatro/guides/balatro-wee-joker-guide/" }, { name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }] },
+  { a: "flower_pot", b: "splash", kind: "strong_support", engine: "suit_unification", why: "Flower Pot gives X3 Mult when a scoring hand contains a Diamond, Club, Heart, and Spade. Splash makes every played card count as scored. With Splash, having one of each suit anywhere in the 5-card hand (not needing all 4 suits in the scoring subset) consistently activates Flower Pot.", popularity: "niche", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "campfire", b: "vagabond", kind: "strong_support", engine: "economy", why: "Vagabond generates a Tarot each time a hand is played at $0 or less. Campfire gains XMult when a Joker is sold; selling down to low cash to run Vagabond feeds Campfire indirectly by enabling Joker cycling. Both want the player to operate with minimal cash.", popularity: "niche", difficulty: "hard", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "invisible_joker", b: "joker_stencil", kind: "strong_support", engine: "xmult_stack", why: "Joker Stencil gives X1 Mult per empty Joker slot. Invisible Joker duplicates one held Joker by selling down to 2 Jokers — after the dupe, you have 3 Jokers and can keep Stencil in an empty slot active. Two Stencils don't share slot counts, so each empty slot powers both independently.", popularity: "niche", difficulty: "hard", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "clever_joker", b: "spare_trousers", kind: "strong_support", engine: "consistency", why: "Clever Joker gives +80 Chips when Two Pair is played. Spare Trousers gains +2 permanent Mult per Two Pair hand. Both trigger on the same hand type — playing Two Pair simultaneously stacks Clever's flat Chips and Spare Trousers' scaling Mult.", popularity: "common", difficulty: "easy", sources: [{ name: "dood.gg Spare Trousers Guide", url: "https://dood.gg/en/balatro/jokers/spare-trousers/" }, { name: "Balatro Wiki - Spare Trousers", url: "https://balatrogame.fandom.com/wiki/Spare_Trousers" }] },
+  { a: "spare_trousers", b: "the_duo", kind: "strong_support", engine: "xmult_stack", why: "The Duo gives X2 Mult when a Pair is played. Spare Trousers scales +Mult on Two Pair hands (which always contain two Pairs). Playing Two Pair triggers The Duo's X2 Mult in addition to Spare Trousers' scaling, doubling the output of an already-stacking build.", popularity: "common", difficulty: "easy", sources: [{ name: "dood.gg Spare Trousers Guide", url: "https://dood.gg/en/balatro/jokers/spare-trousers/" }, { name: "Balatro Wiki - Spare Trousers", url: "https://balatrogame.fandom.com/wiki/Spare_Trousers" }] },
+  { a: "burglar", b: "merry_andy", kind: "strong_support", engine: "discard_volume", why: "Burglar converts all discards into +3 hands at the start of round (discards go to 0). Merry Andy gives +3 additional discards. Combined: Merry Andy's discards fuel Burglar for +3 more hands per round while Merry Andy provides 3 free discards to use for hand-shaping.", popularity: "niche", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Digital Trends Balatro Strategies", url: "https://www.digitaltrends.com/gaming/how-to-win-with-every-deck-in-balatro/" }] },
+  { a: "drunkard", b: "merry_andy", kind: "strong_support", engine: "discard_volume", why: "Merry Andy gives +3 discards per round; Drunkard gives +1 extra discard. Together they provide +4 discards per round above baseline — a significant discard-volume boost that powers all discard-dependent jokers (Yorick, Hit the Road, Castle, Burnt Joker) simultaneously.", popularity: "common", difficulty: "easy", sources: [{ name: "Balatro Wiki - Yorick", url: "https://balatrogame.fandom.com/wiki/Yorick" }, { name: "Digital Trends Balatro Strategies", url: "https://www.digitaltrends.com/gaming/how-to-win-with-every-deck-in-balatro/" }] },
+  { a: "hit_the_road", b: "merry_andy", kind: "strong_support", engine: "discard_volume", why: "Hit the Road gains +X0.5 Mult per Jack discarded. Merry Andy provides +3 extra discards per round. More discards means more opportunities to discard Jacks without wasting the standard 3 discards, allowing Hit the Road to scale faster per round.", popularity: "common", difficulty: "easy", sources: [{ name: "Balatro Wiki - Yorick", url: "https://balatrogame.fandom.com/wiki/Yorick" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "fibonacci", b: "wee_joker", kind: "core_pair", engine: "scaling", why: "Fibonacci fires +8 Mult when a 2 is scored. Wee Joker permanently gains +8 Chips when a 2 is scored. Both trigger from the exact same event — scoring a 2 — making every 2 in a played hand double-dip into both scaling jokers simultaneously.", popularity: "common", difficulty: "easy", sources: [{ name: "Balatro Wiki - Fibonacci", url: "https://balatrogame.fandom.com/wiki/Fibonacci" }, { name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }] },
+  { a: "canio", b: "glass_joker", kind: "risky_explosive", engine: "xmult_stack", why: "Glass Joker gains +X0.5 Mult each time a Glass Card is destroyed. Canio gains +X1 Mult when any face card is destroyed. Glass face cards that break simultaneously trigger both jokers — a single broken Glass King gives Canio +X1 Mult and Glass Joker +X0.5 Mult.", popularity: "niche", difficulty: "hard", sources: [{ name: "Balatro Wiki - Canio", url: "https://balatrogame.fandom.com/wiki/Canio" }, { name: "Reddit r/balatro Is Canio/DNA/Trading Card a strong synergy?", url: "https://www.reddit.com/r/balatro/comments/1ibw3w9/is_caniodnatrading_card_a_strong_synergy/" }] },
+  { a: "pareidolia", b: "trading_card", kind: "strong_support", engine: "scaling", why: "Pareidolia makes all cards count as face cards. Trading Card destroys the first discarded card each blind. With Pareidolia, every card Trading Card destroys is treated as a face card, enabling Canio to gain +X1 Mult each blind regardless of deck composition.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Is Canio/DNA/Trading Card a strong synergy?", url: "https://www.reddit.com/r/balatro/comments/1ibw3w9/is_caniodnatrading_card_a_strong_synergy/" }, { name: "Reddit r/balatro Paredolia, Canio, Trading Card combo", url: "https://www.reddit.com/r/balatro/comments/1jz4vmi/paredolia_canio_trading_card_combo/" }] },
+  { a: "bootstraps", b: "flash_card", kind: "strong_support", engine: "economy", why: "Flash Card gains +2 Mult per shop reroll. Bootstraps gains +2 Mult per $5 held. A high-economy run can generate many rerolls (stacking Flash Card) while maintaining large cash reserves (stacking Bootstraps) — both scaling axes reward the same rich-run playstyle.", popularity: "niche", difficulty: "moderate", sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "Reddit r/balatro Forget Flushes — High Card Strategy", url: "https://www.reddit.com/r/balatro/comments/1b2loe7/forget_flushes_the_best_strategy_is_high_card/" }] },
+  { a: "seeing_double", b: "smeared_joker", kind: "strong_support", engine: "suit_unification", why: "Seeing Double requires exactly one scoring Club card and one scoring card of any other suit. Smeared Joker counts Hearts/Diamonds as same suit and Clubs/Spades as same suit. With Smeared, any Spade card counts as a Club, doubling the pool of cards that can satisfy Seeing Double's Club requirement.", popularity: "niche", difficulty: "hard", sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }] },
+  { a: "bloodstone", b: "hanging_chad", kind: "strong_support", engine: "retrigger", why: "Hanging Chad retriggers the first played card two additional times. If the first card played is a Heart, Bloodstone gets three chances per card to trigger its 1 in 2 XMult (with Oops All 6s: guaranteed X1.5 Mult three times from a single Heart). Triples Bloodstone's effective trigger rate on the first position.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }] },
+  { a: "burnt_joker", b: "space_joker", kind: "core_pair", engine: "scaling", why: "Burnt Joker levels up the played hand on the first discard each round. Space Joker has a 1 in 4 chance to level up the played hand when played. Both exclusively upgrade lower-hand poker hand levels (High Card, Pair, etc.) and reward the same low-card-count build, stacking hand levels from two sources simultaneously.", popularity: "common", difficulty: "easy", sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "Reddit r/balatro Good pair build", url: "https://www.reddit.com/r/balatro/comments/1fnq63o/good_pair_build/" }] },
+  { a: "blueprint", b: "hologram", kind: "strong_support", engine: "xmult_stack", why: "Hologram gains X0.25 Mult per card added to deck. Blueprint copies the Joker to its right. Placing Blueprint next to Certificate or Marble Joker effectively doubles deck-growth speed, doubling Hologram's XMult scaling rate. With Blueprint copying DNA, deck doubling becomes a permanent XMult engine.", popularity: "common", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Stupidly Broken Combo (Hologram + Blueprint)", url: "https://www.reddit.com/r/balatro/comments/1h37hpd/stupidly_broken_combo_hologram_blueprint/" }, { name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }] },
+  { a: "splash", b: "vampire", kind: "strong_support", engine: "xmult_stack", why: "Splash makes every played card score (even non-contributing cards in a hand). Vampire gains +X0.1 Mult per enhanced card scored. With Splash, enhanced non-scoring cards (that would normally not count) now score and feed Vampire, dramatically increasing the rate of XMult stacking per hand.", popularity: "niche", difficulty: "moderate", sources: [{ name: "Reddit r/balatro Pareidolia + Vampire + Midas Mask", url: "https://www.reddit.com/r/balatro/comments/1hmthby/pareidolia_vampire_midas_mask/" }, { name: "Reddit r/balatro Synergy thread — Midas + Vampire", url: "https://www.reddit.com/r/balatro/comments/1pceanh/synergy_thats_probably_old_to_you_but_new_to_me/" }] },
+  { a: "splash", b: "wee_joker", kind: "strong_support", engine: "consistency", why: "Wee Joker requires a 2 to actually score (not just appear in the played hand). Splash makes every played card count as scored. With Splash, a 2 in any played hand (even as a kicker that doesn't form the poker hand combination) will trigger Wee Joker's +8 Chip scaling.", popularity: "common", difficulty: "easy", sources: [{ name: "games.gg Wee Joker Guide", url: "https://games.gg/balatro/guides/balatro-wee-joker-guide/" }, { name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }] },
 ];
 
 export interface Combo {
@@ -3522,7 +3590,8 @@ export interface Combo {
   risks: string[];
   why: string;
   pivotOut: string;
-
+  popularity?: Popularity;
+  difficulty?: Difficulty;
   sources?: SynergySource[];
 }
 
@@ -3932,6 +4001,232 @@ export const COMBOS: Combo[] = [
     pivotOut: "If The Idol's rotation is too unreliable to align with Ancient, replace it with The Tribe for a flat X2 on every Flush hand, keeping the Smeared + Four Fingers consistency core intact."
   },
 
+
+  // --- community-validated additions ---
+  {
+    id: "fortune_teller_steel_engine",
+    title: "Fortune Teller + Steel Machine",
+    archetype: "economy_snowball",
+    core: ["fortune_teller", "steel_joker"],
+    optional: ["cartomancer", "certificate", "vagabond"],
+    conditions: ["Use The Chariot Tarot repeatedly to convert cards to Steel", "Keep Fortune Teller until end-game — every Tarot used retroactively counts", "Stack 10+ Steel Cards in deck for Steel Joker to hit X2+ Mult"],
+    risks: ["Tarot generation rate dependent on RNG", "Steel Joker underperforms early before enough Steel Cards are accumulated", "Anti-synergy with Vampire — avoid if Vampire is in the build"],
+    why: "Fortune Teller gains +1 permanent Mult per Tarot used (retroactively, so early Tarots count even if the Joker is picked up later). Steel Joker gives X0.2 Mult per Steel Card in the full deck. Spamming The Chariot Tarot simultaneously grows both additive Mult and XMult from the same resource pool. By Ante 8, a typical run can achieve +40 Fortune Teller Mult and X3-4 Steel Joker XMult.",
+    pivotOut: "If Tarot generation is low, Fortune Teller can still work with any Tarot-heavy consumable strategy. Steel Joker can pivot into a standalone held-in-hand Steel card build.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "ComicBook.com 5 Best Joker Combos", url: "https://comicbook.com/gaming/news/best-joker-combos-balatro/" }]
+  },
+  {
+    id: "wee_joker_two_scaling",
+    title: "Wee Joker 2-Chip Machine",
+    archetype: "pair",
+    core: ["wee_joker", "hack"],
+    optional: ["fibonacci", "oops_all_6s", "lucky_cat", "bootstraps"],
+    conditions: ["Build deck around 2s — remove or minimize non-2 non-Fibonacci cards", "Aim for Red Seal 2s for double Wee Joker triggers", "Play Five of a Kind 2s if possible for maximum triggers"],
+    risks: ["Deck consistency relies on drawing 2s frequently", "Boss blinds that force specific hand types can disrupt 2-heavy hands", "Oops All 6s doubles glass card destruction chance — avoid glass on 2s"],
+    why: "Wee Joker gains +8 Chips per scored 2; Hack retriggers each scored 2 (and 3, 4, 5) once. Every scored 2 with Hack active triggers Wee Joker twice (+16 Chips per 2 per hand). Adding Fibonacci stacks +8 Mult from the same 2s. A deck of five 2s with Hack and Red Seals can scale Wee Joker past +1000 Chips within a few antes.",
+    pivotOut: "If 2s are scarce, pivot to a general Hack build with any low-rank cards (3s, 4s, 5s) and replace Wee Joker with a flat Mult source.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }]
+  },
+  {
+    id: "hologram_deck_growth",
+    title: "Hologram Deck Growth Engine",
+    archetype: "deck_growth",
+    core: ["hologram", "certificate"],
+    optional: ["dna", "marble_joker", "blueprint", "brainstorm"],
+    conditions: ["Pick up Hologram as early as possible — every card added since pick-up counts", "Run Certificate for multiple antes to maximize card additions", "Use DNA or Marble Joker as secondary card-growth sources"],
+    risks: ["Hologram only counts card additions after it is acquired — late pick-up wastes growth", "Certificate's random seal distribution can provide unwanted seal types", "Deck bloat from Marble Joker stone cards can hurt hand quality late-game"],
+    why: "Hologram gains X0.25 Mult per card added to the deck (cumulative). Certificate adds a random sealed card each Blind. Together they guarantee +0.25 XMult growth per Blind passively. With Blueprint copying Certificate, growth doubles to +0.5 XMult per Blind. By Ante 8 with this core, Hologram routinely reaches X2–X3 Mult from Certificate alone.",
+    pivotOut: "If Certificate is not available, DNA provides +0.25 XMult per round via single-card duplication. Marble Joker provides passive Stone Card addition.",
+    popularity: "staple",
+    difficulty: "easy",
+    sources: [{ name: "Reddit r/balatro What's the Best Combo/Synergy", url: "https://www.reddit.com/r/balatro/comments/1m2paks/whats_the_best_combosynergy/" }, { name: "Reddit r/balatro Certificate & Hologram Epic Strategy", url: "https://www.reddit.com/r/balatro/comments/1hbjzcg/certificate_hologram_epic_balatro_strategy/" }]
+  },
+  {
+    id: "canio_pareidolia_destruction",
+    title: "Canio Destruction Engine",
+    archetype: "face_card",
+    core: ["canio", "pareidolia", "trading_card"],
+    optional: ["blueprint", "brainstorm", "glass_joker"],
+    conditions: ["Acquire Canio early — each face card destroyed before endgame counts", "Pareidolia makes every discarded card a face card for Canio scaling", "Use Trading Card's first-discard destruction each Blind for free +X1 Mult"],
+    risks: ["Boss blinds that disable face cards also disable Canio's existing XMult", "Chicot needed if a boss blind would debuff Canio", "Pareidolia is a boss blind risk (some blinds target face cards)"],
+    why: "Canio gains +X1 Mult whenever a face card is destroyed. Pareidolia makes all cards count as face cards — so any destroyed card scales Canio. Trading Card destroys the first discarded card each Blind, providing +X1 Mult per Blind without extra setup. This creates a self-building XMult engine that scales every round passively.",
+    pivotOut: "Without Pareidolia, stick to destroying actual face cards via The Hanged Man Tarot (+X2 Mult per use). Without Trading Card, use Glass face cards to scale naturally from breakage.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Balatro Wiki - Canio", url: "https://balatrogame.fandom.com/wiki/Canio" }, { name: "Reddit r/balatro Best Canio Synergy", url: "https://www.reddit.com/r/balatro/comments/1k1bx12/best_canio_synergy/" }]
+  },
+  {
+    id: "spare_trousers_two_pair_axis",
+    title: "Two Pair Axis: Spare Trousers + Square Joker",
+    archetype: "two_pair",
+    core: ["spare_trousers", "square_joker"],
+    optional: ["clever_joker", "the_duo", "supernova", "card_sharp", "space_joker"],
+    conditions: ["Build deck to consistently draw Two Pair — duplicate key paired ranks", "Pick up both Jokers as early as possible for maximum lifetime scaling", "Aim for +60 Spare Trousers Mult and +200 Square Joker Chips by Ante 8"],
+    risks: ["Two Pair does not scale well into endgame without XMult support", "Four of a Kind and Five of a Kind do NOT trigger Spare Trousers", "Late-game requires at least one XMult joker or Spare Trousers stalls"],
+    why: "Every Two Pair hand uses exactly 4 cards — simultaneously triggering Square Joker (+4 permanent Chips) and Spare Trousers (+2 permanent Mult). Playing 30 Two Pair hands generates +120 Chips (Square) and +60 Mult (Spare Trousers) from the same plays. The Duo adds X2 Mult on Pair hands, compounding the build's output.",
+    pivotOut: "If Spare Trousers is missing, Square Joker pairs well with any 4-card hand strategy (Stuntman, Blackboard). If Square Joker is missing, Spare Trousers scales in a Two Pair / Full House build with Supernova.",
+    popularity: "common",
+    difficulty: "easy",
+    sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "ComicBook.com 5 Best Joker Combos", url: "https://comicbook.com/gaming/news/best-joker-combos-balatro/" }]
+  },
+  {
+    id: "pareidolia_midas_vampire_triple",
+    title: "Pareidolia Midas-Vampire Gold Feed Loop",
+    archetype: "face_card",
+    core: ["pareidolia", "midas_mask", "vampire"],
+    optional: ["splash", "sock_and_buskin", "photograph"],
+    conditions: ["Arrange Joker order: Midas Mask → Vampire for maximum XMult (Midas converts first, Vampire devours)", "Pareidolia must be held for all scored cards to register as face cards", "Add Splash to score non-contributing played cards as face cards too"],
+    risks: ["Vampire removes all enhancements including Gold from scored cards — cards cycle back to plain", "If Vampire is placed before Midas, order matters: Vampire eats, then Midas re-golds for next round", "Boss blinds that debuff face cards negate the entire loop"],
+    why: "Pareidolia makes every card a face card. Midas Mask turns face cards Gold when scored. Vampire gains +X0.1 Mult per enhanced card scored and removes enhancements. In order (Midas → Vampire), Midas converts all played cards to Gold, Vampire devours those Golds for +X0.5 Mult per 5-card hand. This grants roughly +X0.5 XMult per hand, compounding rapidly over multiple hands per round.",
+    pivotOut: "Without Pareidolia, the loop only fires on actual face cards (~12 in a standard deck). Consider replacing Pareidolia with a deck-thinning approach to increase face card density.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Reddit r/balatro Pareidolia + Vampire + Midas Mask", url: "https://www.reddit.com/r/balatro/comments/1hmthby/pareidolia_vampire_midas_mask/" }, { name: "Reddit r/balatro Found the pareidolia + midas mask + vampire combo", url: "https://www.reddit.com/r/balatro/comments/1hr8wuj/found_the_pareidolia_midas_mask_vampire_combo/" }]
+  },
+  {
+    id: "egg_swashbuckler_economy_mult",
+    title: "Egg-Swashbuckler Economy Mult Ladder",
+    archetype: "economy_snowball",
+    core: ["egg", "swashbuckler"],
+    optional: ["gift_card", "ceremonial_dagger", "blueprint"],
+    conditions: ["Hold Egg as long as possible — sell value compounds; sell at Ante 7-8 only", "Gift Card extends Egg's value growth to all Jokers (+$1 per blind on everything)", "Swashbuckler must be placed after flat Mult sources for correct ordering"],
+    risks: ["Swashbuckler loses its accumulated Mult if Egg is sold early", "Build provides no XMult — needs pairing with a scaling XMult joker by mid-game", "Economy focus can delay acquisition of key scoring jokers"],
+    why: "Egg gains +$3 sell value each round; Swashbuckler gives +Mult equal to the total sell value of all held Jokers. An Egg held for 8 rounds is worth +$24 sell value — directly adding +24 Mult to Swashbuckler passively. Gift Card accelerates this by adding +$1 per blind to all Joker values simultaneously.",
+    pivotOut: "Without Egg, Gift Card alone (sell-value growth from +$1/blind on all jokers) can sustain Swashbuckler at lower rate. Ceremonial Dagger can consume Egg at peak sell value for a large one-time +Mult spike.",
+    popularity: "staple",
+    difficulty: "easy",
+    sources: [{ name: "Balatro Wiki - Egg", url: "https://balatrogame.fandom.com/wiki/Egg" }, { name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }]
+  },
+  {
+    id: "no_discard_ramen_green",
+    title: "No-Discard Ramen-Green High Card",
+    archetype: "high_card",
+    core: ["ramen", "green_joker"],
+    optional: ["stuntman", "blue_joker", "supernova", "burnt_joker"],
+    conditions: ["Never discard — maintain both Ramen's X2 Mult and Green Joker's scaling", "Play High Card or Pair hands to maximize Green Joker hand-count stacking", "Find Stuntman as a +250 Chips source that doesn't require full-hand plays"],
+    risks: ["Boss blinds that force discards (e.g., The Hook) devastate both jokers simultaneously", "Ramen loses X0.01 Mult per discard — even one forced discard chips away at X2", "Late-game hand requirements may force multi-card hands, slowing Green Joker"],
+    why: "Green Joker gains +1 Mult per hand played and loses -1 Mult per card discarded. Ramen starts at X2 Mult but loses X0.01 per discard. Together in a zero-discard High Card build: Green Joker can reach +80 Mult by Ante 8, while Ramen maintains its full X2 Mult multiplier throughout — a reliable and self-consistent scoring engine.",
+    pivotOut: "If forced discards occur, prioritize protecting Ramen (it's harder to recover). Green Joker can partially recover by playing more hands. Consider adding Banner as a discard-Chips buffer.",
+    popularity: "common",
+    difficulty: "easy",
+    sources: [{ name: "Reddit r/balatro What's the Best Combo/Synergy", url: "https://www.reddit.com/r/balatro/comments/1m2paks/whats_the_best_combosynergy/" }, { name: "Reddit r/balatro My poor ramen", url: "https://www.reddit.com/r/balatro/comments/1lclamc/my_poor_ramen/" }]
+  },
+  {
+    id: "fibonacci_hack_frenzy",
+    title: "Fibonacci-Hack Low-Rank Frenzy",
+    archetype: "pair",
+    core: ["fibonacci", "hack"],
+    optional: ["wee_joker", "scholar", "even_steven", "shortcut"],
+    conditions: ["Build deck around A, 2, 3, 5, 8 cards — remove face cards and 4s/6s/7s/9s/10s", "Position Fibonacci before Hack in Joker ordering for correct scoring", "Use Abandoned Deck or thin deck to maximize Fibonacci-number density"],
+    risks: ["Single-rank heavy decks are vulnerable to boss blinds that filter specific ranks", "Hack does not retrigger Fibonacci's Mult directly — Fibonacci sees the retrigger as a separate score event", "Boss blinds that set hands to specific types (e.g., play only 1 hand type) may not align"],
+    why: "Fibonacci gives +8 Mult per scored Ace, 2, 3, 5, or 8. Hack retriggers each scored 2, 3, 4, or 5. For ranks in the overlap (2, 3, 5), each card triggers Fibonacci twice — giving +16 Mult per 2, 3, or 5 scored. With a hand of five 3s, that's +80 Mult from Fibonacci alone, before other Joker contributions.",
+    pivotOut: "If Hack is not found, Fibonacci alone supports low-rank Full House or Two Pair builds. If Fibonacci is not found, Hack pairs with Wee Joker or Walkie Talkie instead.",
+    popularity: "staple",
+    difficulty: "easy",
+    sources: [{ name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }, { name: "Balatro Wiki - Fibonacci", url: "https://balatrogame.fandom.com/wiki/Fibonacci" }]
+  },
+  {
+    id: "bull_bootstraps_interest_wall",
+    title: "Bull-Bootstraps Interest Wall",
+    archetype: "economy_snowball",
+    core: ["bull", "bootstraps"],
+    optional: ["to_the_moon", "flash_card", "golden_joker"],
+    conditions: ["Maintain $25+ at all times for Interest income and Bootstraps activation", "Buy To the Moon voucher (increases interest cap) to extend Bootstraps and Bull scaling", "Avoid spending below $20 except on critical upgrades"],
+    risks: ["High cash reserve means fewer shop purchases early — build starts slowly", "Bootstraps capped at $25 per level unless interest cap vouchers are bought", "Bull generates only Chips — needs at minimum one Mult or XMult source"],
+    why: "Bull gives +2 Chips per $1 held at end of round. Bootstraps gives +2 Mult per $5 held. Maintaining $25 gives Bull +50 Chips and Bootstraps +10 Mult per round. With both interest vouchers (cap at $50), maintaining $50 gives Bull +100 Chips and Bootstraps +20 Mult — a chip-and-Mult double-scaler from the same bank balance.",
+    pivotOut: "If economy builds don't materialize, Flash Card (reroll-based Mult) covers Bootstraps' role. If Bull is not found, Blue Joker provides Chip scaling from deck size instead.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }]
+  },
+  {
+    id: "yorick_merry_andy_discard_tower",
+    title: "Yorick-Merry Andy Discard Tower",
+    archetype: "discard",
+    core: ["yorick", "merry_andy"],
+    optional: ["drunkard", "hit_the_road", "castle", "blueprint"],
+    conditions: ["Acquire Merry Andy before Ante 4 to maximize discard volume early", "Yorick needs 23 discards total before activating — with +3 discards/round this is ~4-5 antes", "High Card play style — discard 5 cards freely every round to rush Yorick activation"],
+    risks: ["Yorick is dead weight until its 23-discard threshold is met", "Merry Andy has -1 hand size — needs Blue Deck or Juggler/Troubadour to compensate", "Boss blinds that prevent discards stall Yorick's charging phase"],
+    why: "Yorick gains +X1 Mult for every 23 cards discarded. Merry Andy provides +3 discards per round for the cost of -1 hand size. With Merry Andy, each round can generate 3+ Yorick progress discards, activating Yorick by Ante 4 instead of Ante 6-7. A second Yorick via Invisible Joker or Blueprint copies the stacked XMult.",
+    pivotOut: "Without Merry Andy, Drunkard (+1 discard) still helps charge Yorick but more slowly. If Yorick is not acquired, Merry Andy's discards fuel Hit the Road (XMult per Jack discarded) instead.",
+    popularity: "niche",
+    difficulty: "hard",
+    sources: [{ name: "Reddit r/balatro Merry Andy + Yorick = GIGA MULT (YouTube)", url: "https://www.youtube.com/watch?v=C8tqa2jRilg" }, { name: "Balatro Wiki - Yorick", url: "https://balatrogame.fandom.com/wiki/Yorick" }]
+  },
+  {
+    id: "vagabond_fortune_teller_tarot_engine",
+    title: "Vagabond Fortune Teller Tarot Engine",
+    archetype: "economy_snowball",
+    core: ["vagabond", "fortune_teller"],
+    optional: ["credit_card", "cartomancer", "eight_ball"],
+    conditions: ["Run broke ($0 or below) at all times to maximize Vagabond Tarot generation", "Credit Card lets you operate at -$20, generating Tarots every hand without interest risk", "Fortune Teller retroactively counts all past Tarots — pick it up any time in the run"],
+    risks: ["Staying broke means limited shop purchases — economy must be managed carefully", "Fortune Teller caps at about +100 Mult from Tarot use in a typical run", "Cartomancer + Vagabond can flood consumable slots — manage slot usage carefully"],
+    why: "Vagabond creates a Tarot when any hand is played with $0 or less cash. Fortune Teller gains +1 permanent Mult per Tarot card used, retroactively counting all previous Tarots. Running broke with Vagabond creates 1+ Tarot per hand played. Over 50+ hands in a run this generates +50 Mult from Fortune Teller alone, all while simultaneously manipulating the deck via Tarot card effects.",
+    pivotOut: "Without Fortune Teller, Vagabond Tarots still power Steel Joker (via The Chariot) or deck manipulation. Without Vagabond, Fortune Teller works with Cartomancer or Eight Ball for Tarot generation.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Steam Balatro Best Combo Discussion", url: "https://steamcommunity.com/app/2379780/discussions/0/4346606879519735269/" }]
+  },
+  {
+    id: "high_card_burnt_space_leveler",
+    title: "High Card Hand Leveler (Burnt + Space)",
+    archetype: "high_card",
+    core: ["burnt_joker", "space_joker"],
+    optional: ["blue_joker", "green_joker", "stuntman", "half_joker"],
+    conditions: ["Play High Card or Pair — these benefit most from rapid hand-level stacking", "Discard one card per round (any card) to trigger Burnt Joker's level-up", "Space Joker benefits from multiple hands per round — play extra throwaway hands"],
+    risks: ["Discard for Burnt Joker partially conflicts with Green Joker (-1 Mult per discard)", "Hand level inflation creates score spikes that can over-shoot if not monitored", "Space Joker is probabilistic (1 in 4 chance) — inconsistent in short rounds"],
+    why: "Burnt Joker levels the played hand by 1 on the first discard each round. Space Joker has a 1 in 4 chance to level the played hand when played. Both scale the same hand type (typically High Card) from two independent sources — one discard-triggered and one play-triggered. A High Card can realistically reach Level 10+ by Ante 5, granting enormous base Chips.",
+    pivotOut: "Without Burnt Joker, Space Joker alone still provides probabilistic hand scaling and pairs well with Stuntman (fewer cards in hand = faster level stacking). Without Space Joker, Burnt Joker alone is a reliable single-discard hand leveler.",
+    popularity: "common",
+    difficulty: "easy",
+    sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "Reddit r/balatro Good pair build", url: "https://www.reddit.com/r/balatro/comments/1fnq63o/good_pair_build/" }]
+  },
+  {
+    id: "blackboard_stuntman_high_card",
+    title: "Blackboard Stuntman Black Suit High Card",
+    archetype: "high_card",
+    core: ["blackboard", "stuntman"],
+    optional: ["smeared_joker", "blue_joker", "ramen", "green_joker"],
+    conditions: ["Remove all red-suit cards from the deck using Tarots (Death, The Fool, etc.)", "Smeared Joker makes Hearts count as Spades — dramatically eases Blackboard activation", "Stuntman's -2 hand size means only 3 cards are held and scored — easier to keep all black"],
+    risks: ["Any red card remaining in deck risks Blackboard failing", "Deck modification to remove red cards requires significant Tarot investment", "Boss blinds that add random cards to deck can re-introduce red suits"],
+    why: "Blackboard gives X3 Mult when all scored and held cards are Spades or Clubs. Stuntman gives +250 Chips with -2 hand size. The smaller hand size from Stuntman (3 held, 3 scored) makes it far easier to keep all cards black-suited, enabling Blackboard's X3 Mult condition reliably. Smeared Joker extends this by counting Hearts as Spades.",
+    pivotOut: "Without Blackboard, Stuntman alone pairs with Blue Joker (Chips from deck size) or Green Joker (Mult from hands played). Without Stuntman, Blackboard still works in a full-black deck with standard hand sizes.",
+    popularity: "niche",
+    difficulty: "hard",
+    sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "Reddit r/balatro Forget Flushes — High Card Strategy", url: "https://www.reddit.com/r/balatro/comments/1b2loe7/forget_flushes_the_best_strategy_is_high_card/" }]
+  },
+  {
+    id: "shoot_moon_baron_held_hand",
+    title: "Shoot the Moon + Baron Held-Hand Hybrid",
+    archetype: "held_in_hand",
+    core: ["shoot_the_moon", "baron"],
+    optional: ["mime", "reserved_parking", "juggler", "troubadour"],
+    conditions: ["Fill deck with Kings and Queens — Steel all of them for enhanced held-in-hand triggers", "Hold Queens in hand without playing them for Shoot the Moon +13 Mult per Queen", "Hold Kings for Baron X1.5 Mult per King — play High Card or Pair with non-royals"],
+    risks: ["Requires dedicated deck construction around Kings and Queens only", "Playing hands that score Kings loses Shoot the Moon's Queen Mult for that hand", "Boss blinds that debuff face cards negate both jokers simultaneously"],
+    why: "Shoot the Moon gives +13 Mult per Queen held in hand (not played). Baron gives X1.5 Mult per King held in hand (not played). Holding 3 Kings and 3 Queens while playing High Card with a 2 gives +39 Mult (Shoot the Moon) and X3.375 Mult (Baron from 3 Kings) simultaneously from held cards. Mime retriggers all held-in-hand effects, effectively doubling both.",
+    pivotOut: "Without Baron, Shoot the Moon still pairs with Reserved Parking (XMult from held face cards). Without Shoot the Moon, Baron pairs with Mime in the classic Baron-Mime build.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }]
+  },
+  {
+    id: "bloodstone_smeared_flush_hearts",
+    title: "Bloodstone Smeared Heart-Flush Engine",
+    archetype: "flush",
+    core: ["bloodstone", "smeared_joker"],
+    optional: ["ancient_joker", "oops_all_6s", "hanging_chad"],
+    conditions: ["Build deck toward Heart flush — thin deck to Hearts only or use Smeared to unify", "Smeared makes Diamonds count as Hearts — doubles the Heart card pool for flushes", "Oops All 6s makes Bloodstone trigger guaranteed (1 in 1) — take it whenever available"],
+    risks: ["Bloodstone is probabilistic without Oops All 6s — high variance in scoring", "Smeared Joker leaves the build vulnerable to Club/Spade boss blinds", "Ancient Joker must be set to Hearts for this to work — lock-in suit early"],
+    why: "Bloodstone gives X1.5 Mult with 1 in 2 chance per scored Heart (guaranteed with Oops All 6s). Smeared Joker makes Diamonds count as Hearts — in a Heart-Diamond flush, all 5 scored cards trigger Bloodstone. With Oops All 6s, a 5-card Heart flush triggers Bloodstone 5 times (X1.5^5 = ~7.5x XMult per hand played).",
+    pivotOut: "Without Smeared, Bloodstone still works in a pure-Heart flush deck. Without Oops All 6s, run Bloodstone with Ancient Joker (set to Hearts) for XMult per card plus Bloodstone's probabilistic XMult.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Reddit r/balatro What's the Best Combo/Synergy", url: "https://www.reddit.com/r/balatro/comments/1m2paks/whats_the_best_combosynergy/" }, { name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }]
+  },
 ];
 
 export interface ArchetypeSummary {
@@ -3942,6 +4237,9 @@ export interface ArchetypeSummary {
   scalers: string[];
   bait: string[];
   oftenLacks: string;
+  popularity?: Popularity;
+  difficulty?: Difficulty;
+  sources?: SynergySource[];
 }
 
 export const ARCHETYPES: ArchetypeSummary[] = [
@@ -4049,7 +4347,93 @@ export const ARCHETYPES: ArchetypeSummary[] = [
     scalers: ["the_idol","triboulet","baron","seltzer"],
     bait: ["stuntman"],
     oftenLacks: "Base payoff. Retriggers multiply existing effects; without a real payoff, you're tripling zero."
-  }
+  },
+
+  // --- community-validated additions ---
+  {
+    id: "no_discard",
+    name: "No-Discard Discipline",
+    wants: "Jokers that reward zero-discard play and hands that can be assembled without discarding in a thinned deck.",
+    enablers: ["ramen", "green_joker", "mystic_summit"],
+    scalers: ["supernova", "stuntman", "burnt_joker"],
+    bait: ["drunkard", "merry_andy", "delayed_gratification", "banner"],
+    oftenLacks: "XMult sources — pair with Cavendish, Card Sharp, or Acrobat to close the gap.",
+    popularity: "common",
+    difficulty: "easy",
+    sources: [{ name: "Reddit r/balatro What's the Best Combo/Synergy", url: "https://www.reddit.com/r/balatro/comments/1m2paks/whats_the_best_combosynergy/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }]
+  },
+  {
+    id: "two_pair_scaling",
+    name: "Two Pair Scaling",
+    wants: "Early Spare Trousers and Square Joker plus consistent Two Pair hands from a thinned or paired-rank deck.",
+    enablers: ["spare_trousers", "square_joker", "the_duo", "clever_joker"],
+    scalers: ["supernova", "space_joker", "card_sharp", "obelisk"],
+    bait: ["the_family", "the_trio", "four_fingers"],
+    oftenLacks: "Late-game XMult — must add Cavendish, Hologram, or Card Sharp to survive Ante 7-8.",
+    popularity: "common",
+    difficulty: "easy",
+    sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "ComicBook.com 5 Best Joker Combos", url: "https://comicbook.com/gaming/news/best-joker-combos-balatro/" }]
+  },
+  {
+    id: "bloodstone_lucky",
+    name: "Bloodstone Lucky Hearts",
+    wants: "A Heart-dense deck (via Smeared Joker or deck manipulation), Bloodstone, and Oops All 6s to push Bloodstone to guaranteed trigger.",
+    enablers: ["bloodstone", "oops_all_6s", "smeared_joker"],
+    scalers: ["ancient_joker", "hanging_chad", "the_tribe"],
+    bait: ["lucky_cat", "flower_pot", "greedy_joker"],
+    oftenLacks: "Chip sources — the build generates huge XMult but needs Scary Face, Odd Todd, or Arrowhead for chip floors.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Reddit r/balatro Best Synergies", url: "https://www.reddit.com/r/balatro/comments/1cmc683/best_synergies/" }, { name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }]
+  },
+  {
+    id: "vampire_enhancement",
+    name: "Vampire Enhancement Feeder",
+    wants: "A face-card-heavy or Pareidolia-enabled deck with Midas Mask to convert enhancements and feed Vampire's XMult stacking.",
+    enablers: ["vampire", "midas_mask", "pareidolia"],
+    scalers: ["splash", "sock_and_buskin", "photograph"],
+    bait: ["hiker", "certificate", "steel_joker"],
+    oftenLacks: "Flat Mult sources early — Vampire only provides XMult which is weak without a Mult base. Pair with Even Steven, Smiley Face, or Fortune Teller.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Reddit r/balatro Pareidolia + Vampire + Midas Mask", url: "https://www.reddit.com/r/balatro/comments/1hmthby/pareidolia_vampire_midas_mask/" }, { name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }]
+  },
+  {
+    id: "canio_destruction",
+    name: "Canio Destruction Engine",
+    wants: "Canio early plus a reliable face-card destruction mechanism (Trading Card, Pareidolia + any discard, or Glass face cards) to reach X10+ XMult.",
+    enablers: ["canio", "pareidolia", "trading_card"],
+    scalers: ["glass_joker", "blueprint", "brainstorm"],
+    bait: ["sock_and_buskin", "photograph", "triboulet"],
+    oftenLacks: "Chip sources — the build is XMult-heavy. Pair with Scary Face, Fibonacci, or Stone Joker for chips.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Balatro Wiki - Canio", url: "https://balatrogame.fandom.com/wiki/Canio" }, { name: "Reddit r/balatro Best Canio Synergy", url: "https://www.reddit.com/r/balatro/comments/1k1bx12/best_canio_synergy/" }]
+  },
+  {
+    id: "tarot_engine",
+    name: "Tarot Economy Engine",
+    wants: "High Tarot generation (via Vagabond, Cartomancer, Eight Ball, or Sixth Sense) to fuel Fortune Teller Mult scaling and deck manipulation simultaneously.",
+    enablers: ["fortune_teller", "vagabond", "cartomancer"],
+    scalers: ["steel_joker", "constellation", "eight_ball"],
+    bait: ["astronomer", "satellite", "hologram"],
+    oftenLacks: "XMult power — Fortune Teller provides only additive Mult. Needs Steel Joker or Constellation as the XMult payoff for Tarot-generated Steel Cards or Planet cards.",
+    popularity: "common",
+    difficulty: "moderate",
+    sources: [{ name: "Reddit r/balatro Favorite Joker Synergy", url: "https://www.reddit.com/r/balatro/comments/1iaisav/favorite_balatro_joker_synergy/" }, { name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }]
+  },
+  {
+    id: "low_card_count",
+    name: "Low Card Count (High Card / Pair)",
+    wants: "A thinned deck where High Card or Pair can be played reliably, with Jokers that scale off non-face-card hands and held-in-hand effects.",
+    enablers: ["stuntman", "burnt_joker", "space_joker", "half_joker"],
+    scalers: ["steel_joker", "mime", "baron", "shoot_the_moon"],
+    bait: ["fibonacci", "even_steven", "seltzer"],
+    oftenLacks: "Chip volume — High Card generates fewer chips than flush or straight. Pair with Bull, Blue Joker, or Wee Joker to hit chip minimums.",
+    popularity: "staple",
+    difficulty: "easy",
+    sources: [{ name: "Mobalytics Best Balatro Jokers Tier List", url: "https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/" }, { name: "Reddit r/balatro Forget Flushes — High Card Strategy", url: "https://www.reddit.com/r/balatro/comments/1b2loe7/forget_flushes_the_best_strategy_is_high_card/" }]
+  },
 ];
 
 export const GLOSSARY: { term: string; def: string }[] = [

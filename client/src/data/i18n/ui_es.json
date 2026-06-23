@@ -179,7 +179,22 @@
       "archetype_discard": "Descarte",
       "archetype_deck_growth": "Crecimiento del mazo",
       "archetype_economy_snowball": "Bola de nieve económica",
-      "archetype_retrigger_engine": "Motor de reactivación"
+      "archetype_retrigger_engine": "Motor de reactivación",
+      "popularity_label": "Popularidad",
+      "popularity_staple": "Imprescindible",
+      "popularity_common": "Común",
+      "popularity_niche": "De nicho",
+      "difficulty_label": "Dificultad",
+      "difficulty_easy": "Fácil",
+      "difficulty_moderate": "Moderada",
+      "difficulty_hard": "Difícil",
+      "archetype_bloodstone_lucky": "Bloodstone / Lucky",
+      "archetype_canio_destruction": "Destrucción Canio",
+      "archetype_low_card_count": "Mazo Reducido",
+      "archetype_no_discard": "Sin Descarte",
+      "archetype_tarot_engine": "Motor de Tarots",
+      "archetype_two_pair_scaling": "Two Pair Escalado",
+      "archetype_vampire_enhancement": "Vampire Mejoras"
     },
     "filters": {
       "rarity": "Rareza",

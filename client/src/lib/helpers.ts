@@ -4,6 +4,7 @@ import {
 } from "@/data/jokers";
 
 export { JOKERS, SYNERGIES, COMBOS, ARCHETYPES, GLOSSARY, JOKER_MAP };
+export type { Popularity, Difficulty } from "@/data/jokers";
 export type { Joker, Role, Scaling, Stage, Level, SynergyKind, Archetype, HandType, Synergy, Rarity };
 
 export const ROLE_LABELS: Record<Role, string> = {
@@ -166,13 +167,15 @@ export interface SynergyConnection {
   a: string;
   b: string;
   sources?: Synergy["sources"];
+  popularity?: Synergy["popularity"];
+  difficulty?: Synergy["difficulty"];
 }
 
 export function synergiesFor(id: string): SynergyConnection[] {
   const out: SynergyConnection[] = [];
   for (const s of SYNERGIES) {
-    if (s.a === id) out.push({ partnerId: s.b, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b, sources: s.sources });
-    else if (s.b === id) out.push({ partnerId: s.a, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b, sources: s.sources });
+    if (s.a === id) out.push({ partnerId: s.b, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b, sources: s.sources, popularity: s.popularity, difficulty: s.difficulty });
+    else if (s.b === id) out.push({ partnerId: s.a, kind: s.kind, engine: s.engine, why: s.why, a: s.a, b: s.b, sources: s.sources, popularity: s.popularity, difficulty: s.difficulty });
   }
   return out;
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useApp } from "@/lib/appContext";
 import { ARCHETYPES, type Archetype } from "@/lib/helpers";
-import { JokerChip, SectionLabel } from "@/components/primitives";
+import { JokerChip, SectionLabel, PopularityBadge, DifficultyBadge } from "@/components/primitives";
 import { cn } from "@/lib/utils";
 import { useT, useLabels, useCuratedText } from "@/lib/i18n";
 
@@ -36,7 +36,11 @@ function ArchetypeRow({ a, expanded, onToggle, archName, openJokerDetail, tLabel
         className="flex w-full items-center justify-between gap-3 bg-primary/10 px-4 py-3 text-left hover-elevate"
         data-testid={`button-archetype-${a.id}`}
       >
-        <span className="font-display text-base font-semibold text-accent">{archName}</span>
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="truncate font-display text-base font-semibold text-accent">{archName}</span>
+          {a.popularity ? <PopularityBadge popularity={a.popularity} /> : null}
+          {a.difficulty ? <DifficultyBadge difficulty={a.difficulty} /> : null}
+        </div>
         <ChevronDown className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform", expanded && "rotate-180")} />
       </button>
 
