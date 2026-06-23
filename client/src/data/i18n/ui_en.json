@@ -43,6 +43,8 @@
       "favorites": "Favorites",
       "glossary": "Glossary",
       "about": "About",
+      "tierlist": "Tier List",
+      "whatsnew": "What's New",
       "group": {
         "library": "Library",
         "build": "Build",
@@ -209,6 +211,8 @@
     },
     "tabs": {
       "library_search_ph": "Search Jokers by name, effect, or note…",
+      "library_search_title": "Search Jokers",
+      "library_search_hint": "Search by joker name, effect text, +Mult, X Mult, Chips, chance, $…",
       "library_sort_name": "Sort: Name (A-Z)",
       "library_sort_beginner": "Sort: Beginner-friendly",
       "library_sort_setup": "Sort: Setup difficulty",
@@ -306,6 +310,69 @@
       "myrun_reason_tag": "Shared role",
       "fav_show_note": "Note",
       "fav_hide_note": "Hide note"
+    },
+    "tierlist": {
+      "disclaimer_title": "Tier lists are guidance, not truth",
+      "disclaimer_body": "Tier lists are not 100% true and depend on multiple factors and each person can have its own opinions. Stake, deck, skill, RNG and playstyle all shift placements. Use this as a starting point, not a rule.",
+      "filter_stake": "Stake",
+      "filter_deck": "Deck",
+      "stake_any": "Any stake — General",
+      "deck_any": "Any deck — General",
+      "variant_default": "General (most use cases)",
+      "showing": "Showing",
+      "empty_tier": "No jokers in this tier for this variant.",
+      "sources": "Sources",
+      "methodology": "Methodology"
+    },
+    "whatsnew": {
+      "heading": "What's New",
+      "subtitle": "Recent changes, by version.",
+      "footer": "Have feedback? The repo is on GitHub — issues and PRs welcome.",
+      "v1_1": {
+        "title": "v1.1 — Tier list + Run Challenge",
+        "tierlist": "Community-aggregated Tier List tab with Stake and Deck variants (24 variants total).",
+        "runchallenge": "Run Challenge generator: random archetype + combo + core jokers + deck + stake + consumable hint.",
+        "colorcoding": "Color coding everywhere: +Mult, X Mult, Chips, $, chance, and tags are colorized in synergy/combo/archetype text.",
+        "mobileback": "Mobile back button no longer kicks you out — navigates between tabs first.",
+        "mobilesearch": "Mobile-friendly Library search modal (bottom sheet) with auto-focused input.",
+        "searcheffects": "Library search now matches effect text, not just names.",
+        "og": "Social preview image and Open Graph / Twitter card meta tags for shared links."
+      },
+      "v1_0_3": {
+        "title": "v1.0.3 — Data expansion",
+        "syn60": "+60 new curated synergies.",
+        "combos16": "+16 new combos.",
+        "arch7": "+7 new archetypes.",
+        "ranking": "Joker ranking backfill across all 150 jokers.",
+        "backfill": "Editorial backfill: roles, archetype fit, partners, risks."
+      },
+      "v1_0_2": {
+        "title": "v1.0.2 — Launch polish",
+        "kofi": "Ko-fi support button added.",
+        "reddit": "Launched on r/balatro.",
+        "hardening": "Server hardening, rate limiting, request validation."
+      },
+      "v1_0_1": {
+        "title": "v1.0.1 — Quality of life",
+        "sounds": "Deterministic sound effects across the UI.",
+        "comments": "Comments stripped from production bundle.",
+        "shop": "Removed legacy Shop tab; consolidated into Vouchers + Consumables."
+      }
+    },
+    "challenge": {
+      "button": "Run Challenge",
+      "title": "Run Challenge",
+      "intro": "A random build prompt — try to make it work.",
+      "archetype": "Archetype",
+      "with_combo": "With combo",
+      "core_jokers": "Core jokers",
+      "no_core": "No required core — improvise.",
+      "deck": "Deck",
+      "stake": "Stake",
+      "consumables": "Consumables to look for",
+      "watch_out": "Watch out",
+      "reroll": "Reroll",
+      "disclaimer": "Suggestions, not a script. Adapt to what the shop gives you."
     },
     "sheet": {
       "why_play": "Why play this?",

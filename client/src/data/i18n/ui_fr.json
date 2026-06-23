@@ -43,6 +43,8 @@
       "favorites": "Favoris",
       "glossary": "Glossaire",
       "about": "À propos",
+      "tierlist": "Tier List",
+      "whatsnew": "Nouveautés",
       "group": {
         "library": "Bibliothèque",
         "build": "Construction",
@@ -209,6 +211,8 @@
     },
     "tabs": {
       "library_search_ph": "Rechercher des Jokers par nom, effet ou note…",
+      "library_search_title": "Rechercher des Jokers",
+      "library_search_hint": "Recherche par nom, effet, +Mult, X Mult, Jetons, chance, $…",
       "library_sort_name": "Tri : Nom (A-Z)",
       "library_sort_beginner": "Tri : Accessible aux débutants",
       "library_sort_setup": "Tri : Difficulté de mise en place",
@@ -306,6 +310,69 @@
       "myrun_reason_tag": "Rôle partagé",
       "fav_show_note": "Note",
       "fav_hide_note": "Masquer la note"
+    },
+    "tierlist": {
+      "disclaimer_title": "Les tier lists sont indicatives, pas absolues",
+      "disclaimer_body": "Les tier lists ne sont pas des vérités absolues — elles dépendent du stake, du deck, de votre skill, de la RNG et de votre style de jeu. À utiliser comme point de départ, pas comme règle.",
+      "filter_stake": "Stake",
+      "filter_deck": "Deck",
+      "stake_any": "Tout stake — Général",
+      "deck_any": "Tout deck — Général",
+      "variant_default": "Général (la plupart des cas)",
+      "showing": "Affichage",
+      "empty_tier": "Aucun joker dans ce tier pour cette variante.",
+      "sources": "Sources",
+      "methodology": "Méthodologie"
+    },
+    "whatsnew": {
+      "heading": "Nouveautés",
+      "subtitle": "Changements récents, par version.",
+      "footer": "Des retours ? Le repo est sur GitHub — issues et PR bienvenus.",
+      "v1_1": {
+        "title": "v1.1 — Tier list + Run Challenge",
+        "tierlist": "Onglet Tier List agrégé de la communauté avec variantes par Stake et Deck (24 variantes).",
+        "runchallenge": "Générateur Run Challenge : archetype + combo + jokers clés + deck + stake + indice de consommables aléatoires.",
+        "colorcoding": "Couleurs partout : +Mult, X Mult, Jetons, $, chance et tags sont colorés dans les textes synergie/combo/archetype.",
+        "mobileback": "Le bouton retour mobile ne ferme plus l’app — il navigue entre les onglets.",
+        "mobilesearch": "Modal de recherche mobile (bottom sheet) avec champ auto-focus.",
+        "searcheffects": "La recherche Bibliothèque scanne aussi le texte d’effet, pas seulement les noms.",
+        "og": "Image de prévisualisation sociale et balises Open Graph / Twitter Card pour les liens partagés."
+      },
+      "v1_0_3": {
+        "title": "v1.0.3 — Expansion des données",
+        "syn60": "+60 nouvelles synergies curées.",
+        "combos16": "+16 nouveaux combos.",
+        "arch7": "+7 nouveaux archetypes.",
+        "ranking": "Backfill du classement sur les 150 jokers.",
+        "backfill": "Backfill éditorial : rôles, affinités, partenaires, risques."
+      },
+      "v1_0_2": {
+        "title": "v1.0.2 — Polish de lancement",
+        "kofi": "Bouton de soutien Ko-fi ajouté.",
+        "reddit": "Lancement sur r/balatro.",
+        "hardening": "Durcissement serveur, rate limiting, validation des requêtes."
+      },
+      "v1_0_1": {
+        "title": "v1.0.1 — Confort d’usage",
+        "sounds": "Effets sonores déterministes dans l’UI.",
+        "comments": "Commentaires supprimés du bundle de production.",
+        "shop": "Onglet Shop legacy supprimé ; consolidé dans Vouchers + Consumables."
+      }
+    },
+    "challenge": {
+      "button": "Run Challenge",
+      "title": "Run Challenge",
+      "intro": "Une consigne de build aléatoire — essaie de la faire marcher.",
+      "archetype": "Archetype",
+      "with_combo": "Avec combo",
+      "core_jokers": "Jokers clés",
+      "no_core": "Pas de noyau requis — improvise.",
+      "deck": "Deck",
+      "stake": "Stake",
+      "consumables": "Consommables à chercher",
+      "watch_out": "Attention à",
+      "reroll": "Relancer",
+      "disclaimer": "Des suggestions, pas un script. Adapte-toi à ce que le shop te donne."
     },
     "sheet": {
       "why_play": "Pourquoi le jouer ?",

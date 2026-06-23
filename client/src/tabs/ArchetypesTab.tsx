@@ -4,7 +4,8 @@ import { useApp } from "@/lib/appContext";
 import { ARCHETYPES, type Archetype } from "@/lib/helpers";
 import { JokerChip, SectionLabel, PopularityBadge, DifficultyBadge } from "@/components/primitives";
 import { cn } from "@/lib/utils";
-import { useT, useLabels, useCuratedText } from "@/lib/i18n";
+import { useT, useLabels, useCuratedText, useI18n } from "@/lib/i18n";
+import { FormattedBalatroText } from "@/lib/balatroText";
 
 interface ArchetypeRowProps {
   a: typeof ARCHETYPES[number];
@@ -21,6 +22,7 @@ interface ArchetypeRowProps {
 }
 
 function ArchetypeRow({ a, expanded, onToggle, archName, openJokerDetail, tLabels }: ArchetypeRowProps) {
+  const { lang } = useI18n();
   const wants = useCuratedText(`ui.archetype.${a.id}.wants`, a.wants);
   const oftenLacks = useCuratedText(`ui.archetype.${a.id}.oftenLacks`, a.oftenLacks);
   return (
@@ -47,7 +49,7 @@ function ArchetypeRow({ a, expanded, onToggle, archName, openJokerDetail, tLabel
       {expanded && (
         <div className="space-y-5 p-5">
           <blockquote className="border-l-2 border-accent pl-4 font-display text-lg leading-snug text-foreground/90">
-            {wants}
+            <FormattedBalatroText text={wants} lang={lang} />
           </blockquote>
 
           <div className="grid gap-5 sm:grid-cols-2">
@@ -74,7 +76,9 @@ function ArchetypeRow({ a, expanded, onToggle, archName, openJokerDetail, tLabel
 
           <div className="border-t border-border pt-3">
             <SectionLabel>{tLabels.oftenLacks}</SectionLabel>
-            <p className="text-sm italic leading-relaxed text-muted-foreground">{oftenLacks}</p>
+            <p className="text-sm italic leading-relaxed text-muted-foreground">
+              <FormattedBalatroText text={oftenLacks} lang={lang} />
+            </p>
           </div>
         </div>
       )}

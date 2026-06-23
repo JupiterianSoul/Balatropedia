@@ -9,7 +9,8 @@ import { JokerSprite } from "@/components/JokerSprite";
 import { SourceCitations } from "@/components/SourceCitations";
 import { PopularityBadge, DifficultyBadge } from "@/components/primitives";
 import { LName, LText } from "@/components/Localized";
-import { useT, useLabels, useCuratedText, useGameText } from "@/lib/i18n";
+import { useT, useLabels, useCuratedText, useGameText, useI18n } from "@/lib/i18n";
+import { FormattedBalatroText } from "@/lib/balatroText";
 import { cn } from "@/lib/utils";
 
 const KIND_ACCENT: Record<SynergyKind, string> = {
@@ -30,6 +31,7 @@ interface SynergyRowProps {
 }
 
 function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProps) {
+  const { lang } = useI18n();
   const p = JOKER_MAP[c.partnerId];
   const a = JOKER_MAP[c.a];
   const b = JOKER_MAP[c.b];
@@ -66,7 +68,9 @@ function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProp
           </span>
         </div>
       </div>
-      <p className="mt-2 text-xs leading-relaxed text-foreground/80">{why}</p>
+      <p className="mt-2 text-xs leading-relaxed text-foreground/80">
+        <FormattedBalatroText text={why} lang={lang} />
+      </p>
       <SourceCitations sources={c.sources} />
     </div>
   );

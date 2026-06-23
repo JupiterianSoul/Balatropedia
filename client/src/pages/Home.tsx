@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Star, X, Menu } from "lucide-react";
+import { X, Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -36,19 +36,35 @@ import { GlossaryTab } from "@/tabs/GlossaryTab";
 import { SettingsTab } from "@/tabs/SettingsTab";
 import { HelpTab } from "@/tabs/HelpTab";
 import { AboutTab } from "@/tabs/AboutTab";
+import { TierListTab } from "@/tabs/TierListTab";
+import { WhatsNewTab } from "@/tabs/WhatsNewTab";
 import { KofiFooterButton } from "@/components/KofiButton";
 
 const NAV_GROUPS: NavGroup[] = [
   { key: "library", tabs: ["library"] },
   { key: "run", tabs: ["myrun"] },
-  { key: "build", tabs: ["synergies", "combos", "archetypes", "compare", "skeleton"] },
+  { key: "build", tabs: ["synergies", "combos", "archetypes", "tierlist", "compare", "skeleton"] },
   { key: "game", tabs: ["decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
-  { key: "more", tabs: ["heatmap", "glossary", "help", "about", "settings"] },
+  { key: "more", tabs: ["heatmap", "glossary", "whatsnew", "help", "about", "settings"] },
 ];
+
+// All valid tab IDs for hash routing validation
+const VALID_TABS = new Set([
+  "library", "myrun", "synergies", "combos", "archetypes", "tierlist",
+  "compare", "skeleton", "decks", "stakes", "bosses", "vouchers",
+  "consumables", "modifiers", "heatmap", "glossary", "whatsnew",
+  "help", "about", "settings", "favorites",
+]);
 
 export default function Home() {
   const { favoriteJokers, favoriteCombos } = useApp();
-  const [tab, setTab] = useState("library");
+  // Hash-routing: initial tab from URL hash if valid
+  const initialTab = (() => {
+    if (typeof window === "undefined") return "library";
+    const h = window.location.hash.replace(/^#/, "");
+    return VALID_TABS.has(h) ? h : "library";
+  })();
+  const [tab, setTab] = useState(initialTab);
   const favCount = favoriteJokers.size + favoriteCombos.size;
   const { lang } = useI18n();
   const t = useT();
@@ -56,7 +72,36 @@ export default function Home() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const showEsBanner = lang === "es" && !esBannerDismissed;
 
+  // Mobile back-button fix: push history state on tab change, listen for popstate.
+  // Without this, the device back gesture exits the site (because the page has
+  // no history entries). With it, back navigation moves between tabs first.
+  useEffect(() => {
+    function onPop(e: PopStateEvent) {
+      const next = (e.state && typeof e.state.tab === "string" && VALID_TABS.has(e.state.tab))
+        ? e.state.tab
+        : (() => {
+            const h = window.location.hash.replace(/^#/, "");
+            return VALID_TABS.has(h) ? h : "library";
+          })();
+      setTab(next);
+      setMobileNavOpen(false);
+    }
+    window.addEventListener("popstate", onPop);
+    // Seed initial state so the first back-press has somewhere to go
+    if (!window.history.state || !window.history.state.tab) {
+      window.history.replaceState({ tab: initialTab }, "", `#${initialTab}`);
+    }
+    return () => window.removeEventListener("popstate", onPop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function handleSelect(v: string) {
+    if (v !== tab) {
+      // Only push a new history entry when actually changing tabs
+      try {
+        window.history.pushState({ tab: v }, "", `#${v}`);
+      } catch { /* ignore (e.g. embedded iframes) */ }
+    }
     setTab(v);
     setMobileNavOpen(false);
   }
@@ -81,7 +126,7 @@ export default function Home() {
     <div className="flex min-h-[100dvh] bg-background">
       <Tabs
         value={tab}
-        onValueChange={(v) => setTab(v)}
+        onValueChange={handleSelect}
         className="flex min-h-[100dvh] w-full"
       >
         {}
@@ -201,6 +246,7 @@ export default function Home() {
               <TabsContent value="synergies" className="mt-0"><SynergyTab /></TabsContent>
               <TabsContent value="combos" className="mt-0"><CombosTab /></TabsContent>
               <TabsContent value="archetypes" className="mt-0"><ArchetypesTab /></TabsContent>
+              <TabsContent value="tierlist" className="mt-0"><TierListTab /></TabsContent>
               <TabsContent value="decks" className="mt-0"><DecksTab /></TabsContent>
               <TabsContent value="stakes" className="mt-0"><StakesTab /></TabsContent>
               <TabsContent value="consumables" className="mt-0"><ConsumablesTab /></TabsContent>
@@ -214,6 +260,7 @@ export default function Home() {
               <TabsContent value="glossary" className="mt-0"><GlossaryTab /></TabsContent>
               <TabsContent value="help" className="mt-0"><HelpTab /></TabsContent>
               <TabsContent value="about" className="mt-0"><AboutTab /></TabsContent>
+              <TabsContent value="whatsnew" className="mt-0"><WhatsNewTab /></TabsContent>
               <TabsContent value="settings" className="mt-0"><SettingsTab /></TabsContent>
               <KofiFooterButton />
             </div>

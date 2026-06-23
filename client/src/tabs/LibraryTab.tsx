@@ -6,6 +6,9 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
+} from "@/components/ui/sheet";
 import { useApp } from "@/lib/appContext";
 import {
   JOKERS, ARCHETYPES,
@@ -15,7 +18,9 @@ import {
 } from "@/lib/helpers";
 import { JokerCard } from "@/components/JokerCard";
 import { FilterPill, PillGroup } from "@/components/FilterPills";
-import { useT, useLabels } from "@/lib/i18n";
+import { RunChallengeDialog } from "@/components/RunChallenge";
+import { useT, useLabels, useI18n, getGameText } from "@/lib/i18n";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type SortKey = "name" | "beginner" | "setup" | "synergy" | "rarity";
 const LEVEL_RANK: Record<Level, number> = { low: 0, med: 1, high: 2 };
@@ -30,7 +35,10 @@ export function LibraryTab() {
   const { notes } = useApp();
   const t = useT();
   const labels = useLabels();
+  const { lang } = useI18n();
+  const isMobile = useIsMobile();
   const [query, setQuery] = useState("");
+  const [searchSheetOpen, setSearchSheetOpen] = useState(false);
   const [roles, setRoles] = useState<Set<Role>>(new Set());
   const [rarities, setRarities] = useState<Set<Rarity>>(new Set());
   const [archs, setArchs] = useState<Set<Archetype>>(new Set());
@@ -54,7 +62,16 @@ export function LibraryTab() {
     let list = JOKERS.filter((j) => {
       if (q) {
         const note = (notes[`joker:${j.id}`] ?? "").toLowerCase();
-        const hay = `${j.name} ${j.summary} ${j.notes} ${note}`.toLowerCase();
+        // Search by effect text: localized name + effect + English fallback.
+        // Covers "+Mult", "X Mult", "Chips", "chance", "$" so users can find
+        // e.g. "xmult" or "in chance" across all 150 jokers.
+        const gameLocal = getGameText(lang, "jokers", j.id);
+        const gameEn = lang === "en" ? gameLocal : getGameText("en", "jokers", j.id);
+        const hay = [
+          j.name, j.summary, j.notes, note,
+          gameLocal.name, gameLocal.text,
+          gameEn.name, gameEn.text,
+        ].join(" ").toLowerCase();
         if (!hay.includes(q)) return false;
       }
       if (roles.size && !j.tags.some((t) => roles.has(t)) && !roles.has(j.mainRole)) return false;
@@ -80,21 +97,92 @@ export function LibraryTab() {
     return sorted;
   }, [query, roles, rarities, archs, hands, scalings, stages, risks, sort, notes]);
 
+  const desktopInput = (
+    <div className="relative flex-1">
+      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <Input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={t("ui.tabs.library_search_ph")}
+        data-testid="input-search-jokers"
+        className="bg-card pl-9"
+      />
+    </div>
+  );
+
+  const mobileSearchTrigger = (
+    <Sheet open={searchSheetOpen} onOpenChange={setSearchSheetOpen}>
+      <SheetTrigger asChild>
+        <button
+          type="button"
+          className="flex flex-1 items-center gap-2 rounded-md border-2 border-black bg-card px-3 py-2 text-left text-sm text-muted-foreground shadow-[2px_2px_0_hsl(198_18%_4%)] hover:bg-card/80"
+          data-testid="button-mobile-search"
+        >
+          <Search className="h-4 w-4 shrink-0" />
+          <span className="truncate">
+            {query.trim() ? <span className="text-foreground">{query}</span> : t("ui.tabs.library_search_ph")}
+          </span>
+          {query.trim() && (
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={(e) => { e.stopPropagation(); setQuery(""); }}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); setQuery(""); } }}
+              className="ml-auto inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm hover:bg-white/10"
+              data-testid="button-mobile-search-clear"
+              aria-label={t("ui.btn.clear")}
+            >
+              <X className="h-3.5 w-3.5" />
+            </span>
+          )}
+        </button>
+      </SheetTrigger>
+      <SheetContent
+        side="bottom"
+        className="max-h-[60dvh] border-t-4 border-black bg-[hsl(178_14%_13%)] font-pixel"
+        data-testid="sheet-mobile-search"
+      >
+        <SheetHeader className="border-b-2 border-black pb-3 text-left">
+          <SheetTitle className="font-display text-lg">
+            {t("ui.tabs.library_search_title")}
+          </SheetTitle>
+        </SheetHeader>
+        <div className="space-y-3 pt-4">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="search"
+              autoFocus
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("ui.tabs.library_search_ph")}
+              data-testid="input-mobile-search-jokers"
+              className="bg-card pl-9 text-base"
+            />
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            {t("ui.tabs.library_search_hint")}
+          </p>
+          <div className="flex justify-end gap-2 border-t border-border pt-3">
+            <Button variant="outline" onClick={() => setQuery("")} data-testid="button-mobile-search-reset">
+              {t("ui.btn.clear")}
+            </Button>
+            <Button onClick={() => setSearchSheetOpen(false)} data-testid="button-mobile-search-apply">
+              {t("ui.tabs.library_search_results", { n: filtered.length })}
+            </Button>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+
   return (
     <div className="space-y-5">
       {}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t("ui.tabs.library_search_ph")}
-            data-testid="input-search-jokers"
-            className="bg-card pl-9"
-          />
-        </div>
+        {isMobile ? mobileSearchTrigger : desktopInput}
+        <RunChallengeDialog />
         <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
           <SelectTrigger className="w-full bg-card sm:w-56" data-testid="select-sort">
             <SelectValue />
