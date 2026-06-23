@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { readHandoff } from "@/lib/tabHandoff";
 import { ChevronDown, Sparkles, TrendingUp, Ban, AlertCircle } from "lucide-react";
 import { useApp } from "@/lib/appContext";
 import { ARCHETYPES, type Archetype } from "@/lib/helpers";
@@ -187,6 +188,11 @@ export function ArchetypesTab() {
   const t = useT();
   const labels = useLabels();
   const [openId, setOpenId] = useState<string>("");
+
+  useEffect(() => {
+    const id = readHandoff("archetypeId");
+    if (id) setOpenId(id);
+  }, []);
 
   const tLabels = {
     enablers: t("ui.arch.enablers"),

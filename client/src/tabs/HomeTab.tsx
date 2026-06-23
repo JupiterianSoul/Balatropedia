@@ -2,17 +2,25 @@ import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { Search, Compass, Sparkles, ArrowRight, X } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { JOKERS, SYNERGIES, COMBOS, ARCHETYPES, JOKER_MAP } from "@/lib/helpers";
-import { JokerSprite } from "@/components/JokerSprite";
+import { TAROTS } from "@/data/phase3/tarots";
+import { PLANETS } from "@/data/phase3/planets";
+import { SPECTRALS } from "@/data/phase3/spectrals";
+import { VOUCHERS } from "@/data/phase3/vouchers";
+import { DECKS } from "@/data/phase3/decks";
+import { STAKES } from "@/data/phase3/stakes";
+import { ENHANCEMENTS, EDITIONS, SEALS, TAGS } from "@/data/phase3/misc";
+import { BOSSES } from "@/data/bosses";
+import { getSpriteUrl } from "@/lib/sprites";
 import { CHANGELOG } from "@/data/changelog";
 import { useOpenDetail } from "@/lib/detailContext";
+import { setHandoff } from "@/lib/tabHandoff";
+import type { EntityKind } from "@/lib/entities";
 
 interface HomeTabProps {
   onNavigate: (tab: string) => void;
 }
 
-// Balatro suit + consumable glyphs, picked at random per mount.
-const ICON_POOL = ["♠", "♥", "♦", "♣", "★", "✦", "✧", "◆", "✺", "✪", "▲", "●"];
-const COLOR_POOL = ["mult-text", "chips-text", "gold-text", "purple-text", "green-text"];
+// Description i18n keys, picked at random per mount.
 const DESC_KEYS = [
   "ui.home.desc_1",
   "ui.home.desc_2",
@@ -32,24 +40,48 @@ const DISCOVER_TABS = [
 
 const VISITED_KEY = "balatropedia.visitedTabs";
 
+type SearchHitKind =
+  | "joker"
+  | "synergy"
+  | "combo"
+  | "archetype"
+  | "tarot"
+  | "planet"
+  | "spectral"
+  | "voucher"
+  | "deck"
+  | "stake"
+  | "enhancement"
+  | "edition"
+  | "seal"
+  | "tag"
+  | "boss";
+
 interface SearchHit {
-  kind: "joker" | "synergy" | "combo" | "archetype";
+  kind: SearchHitKind;
   id: string;
   label: string;
   sub?: string;
-  // Where to go when picked.
-  go: "openJoker" | "navigateTab";
+  // Routing.
+  go: "openJoker" | "openDetail" | "navigateTab";
+  detailKind?: EntityKind;
   navigateTab?: string;
+  // Optional handoff payload to set before navigation.
+  handoff?: { key: "synergyJoker" | "comboId" | "archetypeId"; value: string };
 }
 
 function buildSearchIndex(): SearchHit[] {
   const hits: SearchHit[] = [];
+
+  // Jokers - open detail directly.
   for (const j of JOKERS) {
     hits.push({
       kind: "joker", id: j.id, label: j.name,
       sub: j.summary, go: "openJoker",
     });
   }
+
+  // Synergies - route to Synergies tab pre-filtered to one of the two jokers.
   for (const s of SYNERGIES) {
     const a = JOKER_MAP[s.a]?.name ?? s.a;
     const b = JOKER_MAP[s.b]?.name ?? s.b;
@@ -58,22 +90,72 @@ function buildSearchIndex(): SearchHit[] {
       label: `${a} + ${b}`,
       sub: s.why.slice(0, 80),
       go: "navigateTab", navigateTab: "synergies",
+      handoff: { key: "synergyJoker", value: s.a },
     });
   }
+
+  // Combos - route to Combos tab with the combo highlighted.
   for (const c of COMBOS) {
     hits.push({
       kind: "combo", id: c.id, label: c.title,
       sub: c.why.slice(0, 80),
       go: "navigateTab", navigateTab: "combos",
+      handoff: { key: "comboId", value: c.id },
     });
   }
+
+  // Archetypes - route to Archetypes tab with one expanded.
   for (const a of ARCHETYPES) {
     hits.push({
       kind: "archetype", id: a.id, label: a.name,
       sub: a.wants.slice(0, 80),
       go: "navigateTab", navigateTab: "archetypes",
+      handoff: { key: "archetypeId", value: a.id },
     });
   }
+
+  // Tarots, Planets, Spectrals, Vouchers, Decks, Stakes, Enhancements,
+  // Editions, Seals, Tags - all resolvable via useOpenDetail.
+  for (const x of TAROTS) {
+    hits.push({ kind: "tarot", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "tarot" });
+  }
+  for (const x of PLANETS) {
+    hits.push({ kind: "planet", id: x.id, label: x.name, sub: `${x.hand} - +${x.chipsPerLevel} chips / +${x.multPerLevel} mult per level`, go: "openDetail", detailKind: "planet" });
+  }
+  for (const x of SPECTRALS) {
+    hits.push({ kind: "spectral", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "spectral" });
+  }
+  for (const x of VOUCHERS) {
+    hits.push({ kind: "voucher", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "voucher" });
+  }
+  for (const x of DECKS) {
+    hits.push({ kind: "deck", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "deck" });
+  }
+  for (const x of STAKES) {
+    hits.push({ kind: "stake", id: x.id, label: x.name, sub: x.watchOut.slice(0, 80), go: "openDetail", detailKind: "stake" });
+  }
+  for (const x of ENHANCEMENTS) {
+    hits.push({ kind: "enhancement", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "enhancement" });
+  }
+  for (const x of EDITIONS) {
+    hits.push({ kind: "edition", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "edition" });
+  }
+  for (const x of SEALS) {
+    hits.push({ kind: "seal", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "seal" });
+  }
+  for (const x of TAGS) {
+    hits.push({ kind: "tag", id: x.id, label: x.name, sub: x.effect.slice(0, 80), go: "openDetail", detailKind: "tag" });
+  }
+
+  // Bosses - no detail kind; navigate to the Bosses tab.
+  for (const b of BOSSES) {
+    hits.push({
+      kind: "boss", id: b.id, label: b.name,
+      sub: b.effect.slice(0, 80),
+      go: "navigateTab", navigateTab: "bosses",
+    });
+  }
+
   return hits;
 }
 
@@ -119,15 +201,17 @@ function JokerConveyor({ direction, side, ids }: {
     >
       <div className="joker-conveyor-track">
         {list.map((id, i) => {
-          const j = JOKER_MAP[id];
-          if (!j) return null;
+          const url = getSpriteUrl(id);
+          if (!url) return null;
           return (
-            <JokerSprite
+            <img
               key={`${id}-${i}`}
-              jokerId={j.id}
-              name={j.name}
-              size={56}
-              className="opacity-80"
+              src={url}
+              alt=""
+              className="joker-conveyor-img"
+              draggable={false}
+              loading="lazy"
+              decoding="async"
             />
           );
         })}
@@ -140,9 +224,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   const t = useT();
   const openDetail = useOpenDetail();
 
-  // Randomized icons + description, chosen once per mount.
-  const icons = useMemo(() => pickRandom(ICON_POOL, 3), []);
-  const iconColors = useMemo(() => pickRandom(COLOR_POOL, 3), []);
+  // Randomized description, chosen once per mount.
   const descKey = useMemo(() => DESC_KEYS[Math.floor(Math.random() * DESC_KEYS.length)], []);
 
   // Joker IDs for the two conveyors. Memoized once per mount.
@@ -160,7 +242,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
     if (!q) return [];
     return index
       .filter((h) => h.label.toLowerCase().includes(q) || (h.sub ?? "").toLowerCase().includes(q))
-      .slice(0, 8);
+      .slice(0, 10);
   }, [index, query]);
 
   const handlePick = useCallback((hit: SearchHit) => {
@@ -168,7 +250,10 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
     setFocused(false);
     if (hit.go === "openJoker") {
       openDetail("joker", hit.id);
+    } else if (hit.go === "openDetail" && hit.detailKind) {
+      openDetail(hit.detailKind, hit.id);
     } else if (hit.go === "navigateTab" && hit.navigateTab) {
+      if (hit.handoff) setHandoff(hit.handoff.key, hit.handoff.value);
       onNavigate(hit.navigateTab);
     }
   }, [openDetail, onNavigate]);
@@ -218,8 +303,17 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
       <JokerConveyor direction="down" side="left" ids={leftIds} />
       <JokerConveyor direction="up" side="right" ids={rightIds} />
 
-      {/* Foreground content */}
-      <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 py-10 sm:py-16">
+      {/* Foreground content - constrained so it never overlaps the 64px conveyors. */}
+      <div
+        className="relative z-10 mx-auto flex flex-col items-center gap-6 px-4 py-10 sm:py-16"
+        style={{ maxWidth: "min(48rem, calc(100% - 160px))" }}
+      >
+        {/* Two suit icons above the title: spade (chips/blue) + heart (mult/red) */}
+        <div className="flex items-center justify-center gap-6" aria-hidden="true">
+          <span className="font-pixel chips-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♠</span>
+          <span className="font-pixel mult-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♥</span>
+        </div>
+
         {/* Big app title */}
         <h1
           className="font-pixel text-center leading-none drop-shadow-[0_4px_0_rgba(0,0,0,0.55)]"
@@ -230,16 +324,19 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
           <span className="chips-text">{t("ui.home.title_b")}</span>
         </h1>
 
-        {/* Randomized description with Balatro suit/glyph icons */}
+        {/* Randomized description (no random icons) */}
         <p
-          className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center font-display text-base text-foreground/90 sm:text-lg"
+          className="text-center font-display text-base text-foreground/90 sm:text-lg"
           data-testid="text-home-desc"
         >
-          <span className={`font-pixel text-xl ${iconColors[0]}`}>{icons[0]}</span>
-          <span>{t(descKey)}</span>
-          <span className={`font-pixel text-xl ${iconColors[1]}`}>{icons[1]}</span>
-          <span className={`font-pixel text-xl ${iconColors[2]}`}>{icons[2]}</span>
+          {t(descKey)}
         </p>
+
+        {/* Two suit icons below the description: diamond (mult/red) + club (chips/blue) */}
+        <div className="-mt-2 flex items-center justify-center gap-6" aria-hidden="true">
+          <span className="font-pixel mult-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♦</span>
+          <span className="font-pixel chips-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♣</span>
+        </div>
 
         {/* Search-first bar */}
         <div className="relative w-full max-w-xl" data-testid="home-search">
@@ -326,10 +423,10 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
           </span>
         </div>
 
-        {/* Latest update card */}
+        {/* Latest update card - constrained narrower than container so it never crowds the conveyors. */}
         {latest && (
           <article
-            className="casino-card mt-2 w-full max-w-2xl p-4 sm:p-5"
+            className="casino-card mt-2 w-full max-w-md p-4 sm:p-5"
             data-testid="home-latest-update"
           >
             <header className="flex flex-wrap items-center gap-2 border-b border-border pb-2">

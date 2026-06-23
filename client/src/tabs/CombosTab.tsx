@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { readHandoff } from "@/lib/tabHandoff";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -15,6 +16,8 @@ interface ComboCardProps {
   openJokerDetail: (id: string) => void;
   isFavoriteCombo: (id: string) => boolean;
   toggleFavoriteCombo: (id: string) => void;
+  highlight?: boolean;
+  cardRef?: React.Ref<HTMLDivElement>;
   tLabels: {
     corePieces: string;
     optionalSupports: string;
@@ -25,7 +28,7 @@ interface ComboCardProps {
   };
 }
 
-function ComboCard({ c, archLabel, openJokerDetail, isFavoriteCombo, toggleFavoriteCombo, tLabels }: ComboCardProps) {
+function ComboCard({ c, archLabel, openJokerDetail, isFavoriteCombo, toggleFavoriteCombo, highlight, cardRef, tLabels }: ComboCardProps) {
   const { lang } = useI18n();
   const title = useCuratedText(`ui.combo.${c.id}.title`, c.title);
   const why = useCuratedText(`ui.combo.${c.id}.why`, c.why);
@@ -34,7 +37,11 @@ function ComboCard({ c, archLabel, openJokerDetail, isFavoriteCombo, toggleFavor
   const risks = useCuratedList(`ui.combo.${c.id}.risks`, c.risks);
 
   return (
-    <div className="casino-card flex flex-col p-5" data-testid={`card-combo-${c.id}`}>
+    <div
+      ref={cardRef}
+      className={`casino-card flex flex-col p-5 transition-shadow ${highlight ? "ring-2 ring-accent shadow-[0_0_30px_hsl(var(--accent)/0.45)]" : ""}`}
+      data-testid={`card-combo-${c.id}`}
+    >
       <div className="flex items-start justify-between gap-2">
         <div>
           <h3 className="font-display text-lg font-semibold text-accent">{title}</h3>
@@ -116,6 +123,31 @@ export function CombosTab() {
   const t = useT();
   const labels = useLabels();
   const [arch, setArch] = useState<string>("all");
+  const [highlightedComboId, setHighlightedComboId] = useState<string | null>(null);
+  const targetRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const id = readHandoff("comboId");
+    if (!id) return;
+    const combo = COMBOS.find((x) => x.id === id);
+    if (!combo) return;
+    setArch(combo.archetype);
+    setHighlightedComboId(id);
+  }, []);
+
+  useEffect(() => {
+    if (!highlightedComboId) return;
+    const el = targetRef.current;
+    if (el) {
+      // Defer to next frame so the filtered grid has rendered.
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
+    // Fade out the highlight after a few seconds.
+    const tmo = window.setTimeout(() => setHighlightedComboId(null), 4000);
+    return () => window.clearTimeout(tmo);
+  }, [highlightedComboId]);
 
   const archetypes = useMemo(
     () => Array.from(new Set(COMBOS.map((c) => c.archetype))),
@@ -158,6 +190,8 @@ export function CombosTab() {
             openJokerDetail={openJokerDetail}
             isFavoriteCombo={isFavoriteCombo}
             toggleFavoriteCombo={toggleFavoriteCombo}
+            highlight={highlightedComboId === c.id}
+            cardRef={highlightedComboId === c.id ? targetRef : undefined}
             tLabels={tLabels}
           />
         ))}
