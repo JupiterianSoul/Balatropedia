@@ -593,6 +593,145 @@
   }
   .balatro-sound-toggle:hover { transform: translateY(-1px); color: hsl(var(--bal-gold)); }
   .balatro-sound-toggle:active { transform: translateY(2px); }
+
+  /* ─── Home screen live background ───
+     A slow drifting gradient ramp behind the hero plus floating suit motifs.
+     Disabled when --shake-strength: 0 (motion safe). */
+  .home-stage {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: var(--bal-r);
+  }
+  .home-stage::before {
+    content: "";
+    position: absolute;
+    inset: -10%;
+    z-index: -2;
+    background:
+      radial-gradient(60% 60% at 18% 22%, hsl(var(--bal-mult) / 0.28), transparent 60%),
+      radial-gradient(50% 50% at 82% 78%, hsl(var(--bal-chip) / 0.30), transparent 65%),
+      radial-gradient(55% 55% at 50% 105%, hsl(var(--bal-gold) / 0.20), transparent 60%),
+      linear-gradient(160deg, hsl(var(--bal-black)) 0%, hsl(var(--bal-l-black)) 100%);
+    background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+    animation: homeRamp 22s ease-in-out infinite;
+    filter: saturate(1.05);
+  }
+  @keyframes homeRamp {
+    0%, 100% { background-position: 0% 0%, 100% 100%, 50% 100%, 0 0; }
+    50%      { background-position: 30% 30%, 70% 70%, 50% 60%, 0 0; }
+  }
+  html[data-shake="off"] .home-stage::before { animation: none; }
+
+  /* CRT scanline veil over the hero */
+  .home-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.18) 0,
+      rgba(0,0,0,0.18) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+    opacity: 0.35;
+  }
+
+  /* Floating suit pip - parallax background motifs */
+  .home-suit {
+    position: absolute;
+    z-index: -1;
+    font-family: var(--font-display);
+    font-weight: 900;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    animation: homeSuitFloat var(--dur, 14s) ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  @keyframes homeSuitFloat {
+    0%   { transform: translate3d(0, 0, 0) rotate(var(--rot-from, -8deg)); opacity: 0.14; }
+    50%  { transform: translate3d(var(--dx, 14px), var(--dy, -22px), 0) rotate(var(--rot-to, 8deg)); opacity: 0.28; }
+    100% { transform: translate3d(0, 0, 0) rotate(var(--rot-from, -8deg)); opacity: 0.14; }
+  }
+  html[data-shake="off"] .home-suit { animation: none; opacity: 0.18; }
+
+  /* Tiny twinkling spark particles */
+  .home-spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: hsl(var(--bal-gold));
+    box-shadow: 0 0 8px hsl(var(--bal-gold) / 0.9), 0 0 18px hsl(var(--bal-gold) / 0.45);
+    opacity: 0;
+    animation: homeSparkTwinkle var(--dur, 5s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes homeSparkTwinkle {
+    0%, 100%   { opacity: 0; transform: scale(0.6); }
+    40%, 60%   { opacity: 0.95; transform: scale(1.0); }
+  }
+  html[data-shake="off"] .home-spark { animation: none; opacity: 0.4; }
+
+  /* Marquee chip strip on the hero - sliding pip ribbon */
+  .home-marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent 0, black 8%, black 92%, transparent 100%);
+  }
+  .home-marquee-track {
+    display: inline-flex;
+    gap: 1.5rem;
+    white-space: nowrap;
+    animation: homeMarquee 32s linear infinite;
+    will-change: transform;
+  }
+  @keyframes homeMarquee {
+    0%   { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+  html[data-shake="off"] .home-marquee-track { animation: none; }
+
+  /* Card flip hint on featured tiles */
+  .home-flip {
+    transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center bottom;
+  }
+  .home-flip:hover {
+    transform: translateY(-6px) rotate(-3deg) scale(1.06);
+  }
+
+  /* Easter-egg confetti burst - triggered by .konami-burst class on body */
+  @keyframes confettiFall {
+    0%   { transform: translate3d(var(--x, 0), -20vh, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate3d(calc(var(--x, 0) + var(--drift, 0px)), 110vh, 0) rotate(720deg); opacity: 0; }
+  }
+  .confetti-piece {
+    position: fixed;
+    top: 0;
+    width: 8px;
+    height: 12px;
+    z-index: 9999;
+    pointer-events: none;
+    animation: confettiFall var(--fall, 2.4s) cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  }
+
+  /* Subtle hover glow used on nav-card tints */
+  .home-tint-glow:hover {
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.18),
+      inset 0 0 0 1px hsl(var(--bal-gold) / 0.35),
+      0 calc(var(--bal-emboss) + 4px) 0 hsl(var(--bal-block-shadow)),
+      0 calc(var(--bal-emboss) + 10px) 18px rgba(0,0,0,0.5),
+      0 0 28px -4px hsl(var(--tint-glow, var(--bal-gold)) / 0.45);
+  }
 }
 
 @layer utilities {

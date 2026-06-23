@@ -2,9 +2,31 @@ import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 export const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 
-let authToken: string | null = null;
+const TOKEN_STORAGE_KEY = "balatropedia.authToken";
+
+function readPersistedToken(): string | null {
+  try {
+    if (typeof window === "undefined") return null;
+    return window.localStorage?.getItem(TOKEN_STORAGE_KEY) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function writePersistedToken(t: string | null) {
+  try {
+    if (typeof window === "undefined") return;
+    if (t == null) window.localStorage?.removeItem(TOKEN_STORAGE_KEY);
+    else window.localStorage?.setItem(TOKEN_STORAGE_KEY, t);
+  } catch {
+    // localStorage may be blocked (sandboxed iframe, privacy mode); fall back to in-memory only.
+  }
+}
+
+let authToken: string | null = readPersistedToken();
 export function setAuthToken(t: string | null) {
   authToken = t;
+  writePersistedToken(t);
 }
 export function getAuthToken() {
   return authToken;

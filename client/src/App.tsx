@@ -9,6 +9,7 @@ import { AuthProvider } from "@/lib/auth";
 import { I18nProvider } from "@/lib/i18n";
 import { DetailProvider } from "@/lib/detailContext";
 import { RunProvider } from "@/lib/runContext";
+import { EasterEggsProvider } from "@/lib/easterEggs";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
 
@@ -34,10 +35,12 @@ function App() {
             <AppProvider>
               <RunProvider>
                 <DetailProvider>
-                  <Toaster />
-                  <Router hook={useHashLocation}>
-                    <AppRouter />
-                  </Router>
+                  <EasterEggsProvider>
+                    <Toaster />
+                    <Router hook={useHashLocation}>
+                      <AppRouter />
+                    </Router>
+                  </EasterEggsProvider>
                 </DetailProvider>
               </RunProvider>
             </AppProvider>

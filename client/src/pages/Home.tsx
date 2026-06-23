@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { X, Menu } from "lucide-react";
 import {
@@ -17,6 +17,7 @@ import { UserButton } from "@/components/UserButton";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SoundToggle } from "@/components/SoundToggle";
 import { useI18n, useT } from "@/lib/i18n";
+import { burstConfetti } from "@/lib/confetti";
 import { HomeTab } from "@/tabs/HomeTab";
 import { JokersTab } from "@/tabs/JokersTab";
 import { MyRunTab } from "@/tabs/MyRunTab";
@@ -88,7 +89,7 @@ export default function Home() {
   // Without this, the device back gesture exits the site (because the page has
   // no history entries). With it, back navigation moves between tabs first.
   //
-  // IMPORTANT: we MUST NOT change the URL — wouter's useHashLocation owns the
+  // IMPORTANT: we MUST NOT change the URL - wouter's useHashLocation owns the
   // hash and treats it as the route path. We push state with the *same* URL
   // (passing `null` to pushState/replaceState keeps the current URL). This
   // still creates a history entry that the device back gesture can pop.
@@ -123,10 +124,24 @@ export default function Home() {
     setMobileNavOpen(false);
   }
 
+  // Logo click Easter egg: 5 rapid clicks pop confetti. Discreet.
+  const brandClicks = useRef<{ n: number; last: number }>({ n: 0, last: 0 });
+  function onBrandClick() {
+    const now = Date.now();
+    if (now - brandClicks.current.last < 700) brandClicks.current.n++;
+    else brandClicks.current.n = 1;
+    brandClicks.current.last = now;
+    if (brandClicks.current.n >= 5) {
+      brandClicks.current.n = 0;
+      burstConfetti({ count: 50, originX: 10, originY: 0 });
+    }
+    handleSelect("home");
+  }
+
   const Brand = (
     <button
       type="button"
-      onClick={() => handleSelect("home")}
+      onClick={onBrandClick}
       className="flex w-full shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]"
       data-testid="button-logo"
       aria-label="Balatropedia home"

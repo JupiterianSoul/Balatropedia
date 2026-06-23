@@ -16,11 +16,11 @@ import { cn } from "@/lib/utils";
  * Run Challenge generator
  *
  * Goal: feel like a *mission briefing* a player can actually try.
- *   - Named build with a flavor adjective (e.g. "Hot-Pursuit Flush Five")
- *   - Concrete win condition (Ante target + hand target)
- *   - Prioritized joker pool (must-have / fill-in)
- *   - Run modifiers (Deck + Stake) with explicit difficulty estimate
- *   - 2-3 razor-sharp tactical tips, plus one explicit "watch-out"
+ * - Named build with a flavor adjective (e.g. "Hot-Pursuit Flush Five")
+ * - Concrete win condition (Ante target + hand target)
+ * - Prioritized joker pool (must-have / fill-in)
+ * - Run modifiers (Deck + Stake) with explicit difficulty estimate
+ * - 2-3 razor-sharp tactical tips, plus one explicit "watch-out"
  *
  * Determinism: a seed drives mulberry32 so the same number always rebuilds
  * the same brief (Reroll picks a fresh seed).
@@ -30,18 +30,18 @@ interface Challenge {
   name: string;
   archetypeId: string;
   comboId: string | null;
-  mustHave: string[];      // up to 3 core jokers
-  fillIn: string[];        // up to 3 secondary
+  mustHave: string[]; // up to 3 core jokers
+  fillIn: string[]; // up to 3 secondary
   deckId: string;
   stakeId: string;
-  goal: string;            // win condition narrative
+  goal: string; // win condition narrative
   consumableHint: string;
-  tips: string[];          // 2-3 lines
+  tips: string[]; // 2-3 lines
   watchOut: string;
   difficulty: "Easy" | "Medium" | "Hard" | "Brutal";
 }
 
-// Flavor prefixes — applied to the archetype label to form a build name
+// Flavor prefixes - applied to the archetype label to form a build name
 const FLAVORS = [
   "Hot-Pursuit", "Cold-Steel", "Razor-Edge", "Iron-Cradle", "Bone-Deep",
   "Pocket-Aces", "Ghost-Hand", "Lucky-Seven", "Crimson", "Velvet",
@@ -49,7 +49,7 @@ const FLAVORS = [
   "Last-Call", "Stone-Cold", "Wildcard", "Knife-Fight", "Bankroll",
 ];
 
-// Per-archetype goal narratives — explicit win condition the player can chase
+// Per-archetype goal narratives - explicit win condition the player can chase
 const GOALS: Record<string, string> = {
   flush: "Beat Ante 8 by scoring at least one $200+ Flush.",
   flush_five: "Land a single Flush Five worth $1500+ before Ante 8.",
@@ -116,7 +116,7 @@ const TIPS_BY_ARCH: Record<string, string[]> = {
   flush_five: [
     "Don't play a single hand until Smeared is in.",
     "Stockpile Death/Strength for the ranks you don't yet have 5 of.",
-    "Skip Vampire — it strips your enhancements.",
+    "Skip Vampire - it strips your enhancements.",
   ],
   high_card: [
     "Sell any Joker that requires Pair+ payoff.",
@@ -129,7 +129,7 @@ const TIPS_BY_ARCH: Record<string, string[]> = {
     "Don't sell Hierophant before Ante 6.",
   ],
   straight: [
-    "Stuteley/Four Fingers first — without it the deck stalls.",
+    "Stuteley/Four Fingers first - without it the deck stalls.",
     "Refuse rank-deletion bosses by burning a card in Ante 4.",
     "Lock in The World tarot for suit pivots if shop offers it.",
   ],
@@ -140,12 +140,12 @@ const TIPS_BY_ARCH: Record<string, string[]> = {
   ],
   five_of_a_kind: [
     "Death is mandatory; skip any Ante 3 shop without one.",
-    "Don't sell Showman, even if dead — it removes ceiling caps.",
+    "Don't sell Showman, even if dead - it removes ceiling caps.",
     "Boss blind that destroys jokers = full reroll the shop.",
   ],
   straight_flush: [
     "First Ante goal: lock Four Fingers + Smeared together.",
-    "Don't waste discards on suits — discard ranks instead.",
+    "Don't waste discards on suits - discard ranks instead.",
     "Hieroglyph after Ante 5 = guaranteed straight flush window.",
   ],
   canio_destruction: [
@@ -155,11 +155,11 @@ const TIPS_BY_ARCH: Record<string, string[]> = {
   ],
   no_discard: [
     "Sell ANY Joker that triggers on discard.",
-    "Banner is the win condition — buy at any price.",
+    "Banner is the win condition - buy at any price.",
     "Boss blind that forces a discard: panic-sell and reroll.",
   ],
   tarot_engine: [
-    "Fool spam — every shop, every reroll.",
+    "Fool spam - every shop, every reroll.",
     "Tarot Merchant is the build's heart; skip without it.",
     "Don't play a hand if a Tarot pack is offered next blind.",
   ],
@@ -293,7 +293,7 @@ function JokerPick({ id, onClick }: { id: string; onClick: (id: string) => void 
 }
 
 /**
- * Inline panel — designed to live inside MyRunTab next to slot management.
+ * Inline panel - designed to live inside MyRunTab next to slot management.
  * Renders the whole brief flat (no dialog wrapper). Pass `compact` for the
  * pared-down version used inside sidebars.
  */
