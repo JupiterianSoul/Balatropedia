@@ -16,6 +16,7 @@ import { JokerSprite } from "@/components/JokerSprite";
 import { SectionLabel } from "@/components/primitives";
 import { LName } from "@/components/Localized";
 import { RunMetaSelectors } from "@/components/RunMetaSelectors";
+import { RunChallengePanel } from "@/components/RunChallenge";
 import { useRun } from "@/lib/runContext";
 import type { SavedRun } from "@/lib/useRuns";
 import { useAuth } from "@/lib/auth";
@@ -271,6 +272,9 @@ export function MyRunTab() {
             );
           })}
         </div>
+
+        {}
+        <RunChallengePanel />
       </div>
 
       {}

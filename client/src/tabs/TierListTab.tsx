@@ -39,6 +39,47 @@ interface TierListShape {
 
 const DATA = TIERLIST as TierListShape;
 
+// Build a Tier -> jokerIds map by merging two variants.
+// For each joker we average its tier rank across both variants (lower = better),
+// then re-bucket. This lets users combine Stake + Deck context honestly.
+function mergeTiers(a: TierData, b: TierData): TierData {
+  const RANK: Tier[] = ["S", "A", "B", "C", "D"]; // S=0 .. D=4
+  function indexOf(td: TierData, id: string): number {
+    for (let i = 0; i < RANK.length; i++) {
+      if (td[RANK[i]].includes(id)) return i;
+    }
+    return RANK.length - 1; // unknown -> D
+  }
+  // Collect every joker id once
+  const ids = new Set<string>();
+  for (const t of RANK) {
+    a[t].forEach((id) => ids.add(id));
+    b[t].forEach((id) => ids.add(id));
+  }
+  const out: TierData = { S: [], A: [], B: [], C: [], D: [] };
+  // Average rank, then round to nearest tier
+  for (const id of Array.from(ids)) {
+    const ra = indexOf(a, id);
+    const rb = indexOf(b, id);
+    const avg = (ra + rb) / 2;
+    const idx = Math.min(RANK.length - 1, Math.max(0, Math.round(avg)));
+    out[RANK[idx]].push(id);
+  }
+  // Preserve a stable order: original `a` ordering inside default ranking first,
+  // then any extras alphabetically.
+  for (const t of RANK) {
+    const order: Record<string, number> = {};
+    a[t].forEach((id, i) => { order[id] = i; });
+    out[t].sort((x, y) => {
+      const ox = order[x] ?? 9999;
+      const oy = order[y] ?? 9999;
+      if (ox !== oy) return ox - oy;
+      return x.localeCompare(y);
+    });
+  }
+  return out;
+}
+
 const STAKE_OPTIONS = [
   { id: "any", labelKey: "ui.tierlist.stake_any" },
   { id: "white", label: "White Stake", color: "#ffffff" },
@@ -96,15 +137,25 @@ export function TierListTab() {
   const [deck, setDeck] = useState<string>("any");
 
   const data: TierData = useMemo(() => {
-    // Priority: deck override > stake override > default
-    if (deck !== "any" && DATA.byDeck[deck]) return DATA.byDeck[deck];
-    if (stake !== "any" && DATA.byStake[stake]) return DATA.byStake[stake];
+    const stakeData = stake !== "any" ? DATA.byStake[stake] : null;
+    const deckData = deck !== "any" ? DATA.byDeck[deck] : null;
+    // Both selected -> merge by averaging ranks (true combined view).
+    if (stakeData && deckData) return mergeTiers(stakeData, deckData);
+    if (deckData) return deckData;
+    if (stakeData) return stakeData;
     return DATA.default;
   }, [stake, deck]);
 
   const variantLabel = useMemo(() => {
-    if (deck !== "any") return DECK_OPTIONS.find((d) => d.id === deck)?.label ?? deck;
-    if (stake !== "any") return STAKE_OPTIONS.find((s) => s.id === stake)?.label ?? stake;
+    const stakeLabel = stake !== "any"
+      ? (STAKE_OPTIONS.find((s) => s.id === stake)?.label ?? stake)
+      : null;
+    const deckLabel = deck !== "any"
+      ? (DECK_OPTIONS.find((d) => d.id === deck)?.label ?? deck)
+      : null;
+    if (stakeLabel && deckLabel) return `${stakeLabel} + ${deckLabel}`;
+    if (deckLabel) return deckLabel;
+    if (stakeLabel) return stakeLabel;
     return t("ui.tierlist.variant_default");
   }, [stake, deck, t]);
 
@@ -132,7 +183,7 @@ export function TierListTab() {
           <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             {t("ui.tierlist.filter_stake")}
           </label>
-          <Select value={stake} onValueChange={(v) => { setStake(v); if (v !== "any") setDeck("any"); }}>
+          <Select value={stake} onValueChange={setStake}>
             <SelectTrigger className="bg-card" data-testid="select-tierlist-stake">
               <SelectValue />
             </SelectTrigger>
@@ -157,7 +208,7 @@ export function TierListTab() {
           <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             {t("ui.tierlist.filter_deck")}
           </label>
-          <Select value={deck} onValueChange={(v) => { setDeck(v); if (v !== "any") setStake("any"); }}>
+          <Select value={deck} onValueChange={setDeck}>
             <SelectTrigger className="bg-card" data-testid="select-tierlist-deck">
               <SelectValue />
             </SelectTrigger>

@@ -213,6 +213,8 @@
       "library_search_ph": "Buscar Jokers por nombre, efecto o nota…",
       "library_search_title": "Buscar Jokers",
       "library_search_hint": "Busca por nombre, efecto, +Mult, X Mult, Fichas, probabilidad, $…",
+      "library_search_results": "Mostrar {{n}} resultados",
+      "library_search_no_results": "Sin coincidencias",
       "library_sort_name": "Orden: Nombre (A-Z)",
       "library_sort_beginner": "Orden: Apto para principiantes",
       "library_sort_setup": "Orden: Dificultad de preparación",
@@ -372,6 +374,10 @@
       "consumables": "Consumibles a buscar",
       "watch_out": "Cuidado con",
       "reroll": "Rehacer",
+      "mission": "Misión",
+      "must_have": "Jokers obligatorios",
+      "fill_in": "Jokers de relleno",
+      "tips": "Consejos tácticos",
       "disclaimer": "Son sugerencias, no un guión. Adapta según lo que te dé la tienda."
     },
     "sheet": {

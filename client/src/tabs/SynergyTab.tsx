@@ -45,8 +45,8 @@ function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProp
       className={cn("casino-card border-l-2 p-3.5", KIND_ACCENT[kind])}
       data-testid={`synergy-${selected}-${c.partnerId}`}
     >
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
           <div className="flex shrink-0 items-center gap-0.5">
             <JokerSprite jokerId={c.a} name={aName.name ?? a?.name ?? c.a} size={28} className="h-7 w-7" />
             <span className="px-0.5 text-[10px] text-muted-foreground">+</span>
@@ -54,16 +54,16 @@ function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProp
           </div>
           <button
             onClick={() => onSelect(c.partnerId)}
-            className="truncate font-display text-sm font-semibold text-accent hover:underline"
+            className="min-w-0 flex-1 truncate text-left font-display text-sm font-semibold text-accent hover:underline"
             data-testid={`button-select-partner-${c.partnerId}`}
           >
             {partnerName.name ?? p?.name ?? c.partnerId}
           </button>
         </div>
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 flex-wrap items-center gap-1">
           {c.popularity ? <PopularityBadge popularity={c.popularity} /> : null}
           {c.difficulty ? <DifficultyBadge difficulty={c.difficulty} /> : null}
-          <span className="rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <span className="max-w-[80px] truncate rounded-sm border border-border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
             {engineLabel}
           </span>
         </div>
