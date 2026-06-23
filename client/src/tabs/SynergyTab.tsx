@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useApp } from "@/lib/appContext";
+import { readHandoff } from "@/lib/tabHandoff";
 import {
   JOKER_MAP, synergiesFor, synergyKey, SYNERGY_KIND_ORDER, SYNERGY_KIND_LABELS, ENGINE_LABELS,
   SynergyKind,
@@ -81,6 +82,11 @@ export function SynergyTab() {
   const t = useT();
   const labels = useLabels();
   const [selected, setSelected] = useState<string | null>(null);
+
+  useEffect(() => {
+    const id = readHandoff("synergyJoker");
+    if (id) setSelected(id);
+  }, []);
 
   const grouped = useMemo(() => {
     if (!selected) return null;
