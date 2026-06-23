@@ -383,6 +383,15 @@
       "heading": "What's New",
       "subtitle": "Recent changes, organized by version.",
       "footer": "Have feedback? The repo is on GitHub. Issues and PRs welcome.",
+      "v1_7_2": {
+        "title": "v1.7.2 - UX polish + Seed Library",
+        "persist": "Seeds tab now remembers state across navigation: Seed Finder progress, Analyzer view, current seed and results all survive tab switches.",
+        "library": "New Seed Library sub-tab. Save any seed from the Finder with one click; the full preset (deck, stake, version, constraints) is saved alongside the seed so you can reload it later.",
+        "soul": "Soul resolution: when The Soul appears in an analyzed seed, the resolved Legendary joker and its edition are shown inline, both in the Full Spoiler and the Soul view.",
+        "spoiler": "Full Spoiler is now a collapsible per-ante list. Cleaner ante cards with less clutter; click an ante to expand its full breakdown.",
+        "wikilinks": "Wikipedia-style internal links across the app: clicking any joker icon or name opens its detail card. Works in synergies, combos, shop queues, pack contents, search results, and Seed Finder matches.",
+        "click_sfx": "Mobile fix: click sound effects now only fire on actual button taps, no longer on swipe/scroll gestures."
+      },
       "v1_7": {
         "title": "v1.7 - Native seed finder",
         "rework": "Seeds tab fully reworked. Two clean sub-tabs only: Seed Analyzer (input a seed, see everything in it) and Seed Finder (input what you want, find a matching seed). Joker Hunter and Soul Finder are now views inside the Analyzer.",

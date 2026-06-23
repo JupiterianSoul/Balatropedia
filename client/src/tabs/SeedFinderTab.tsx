@@ -1,10 +1,9 @@
-// SeedFinderTab.tsx - v1.7.1 Native seed finder, reworked UX.
-// Search bar (autocomplete) instead of icon grid. Chip list of selected jokers
-// with per-joker constraints. Match cards report human-readable locations
-// ("After Big Blind, shop item 3" / "After Small Blind, 2nd booster (Mega Buffoon Pack), position 4").
+// SeedFinderTab.tsx - v1.7.2
+// - State lifted to seedTabState singleton so it survives tab switches + reload
+// - "Save this seed" button on each match → adds to Seed Library
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus } from "lucide-react";
+import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus, BookmarkPlus, BookmarkCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -15,9 +14,10 @@ import { JokerSprite } from "@/components/JokerSprite";
 import { jokerIdFromName } from "@/lib/helpers";
 import { DECKS, STAKES, COMMON_JOKERS, UNCOMMON_JOKERS, RARE_JOKERS, LEGENDARY_JOKERS } from "@/lib/seedItems";
 import {
-  SeedFinder, type JokerConstraint, type SeedMatch, type FinderHandle, type FinderProgress,
+  SeedFinder, type JokerConstraint, type SeedMatch, type FinderHandle,
 } from "@/lib/seedFinder";
 import { describeShopSlot, describePackSlot } from "@/lib/seedFinderLocation";
+import { useSeedTabState, setFinder, updateFinder, saveSeed, isSeedSaved } from "@/lib/seedTabState";
 
 // ---- Joker dataset ----
 const ALL_JOKER_NAMES = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
@@ -102,14 +102,14 @@ function JokerSearchBar({
           value={query}
           onChange={e => { setQuery(e.target.value); setActiveIdx(0); }}
           onFocus={() => setFocused(true)}
-          onBlur={() => setTimeout(() => setFocused(false), 150)}  // delay so click registers
+          onBlur={() => setTimeout(() => setFocused(false), 150)}
           onKeyDown={onKeyDown}
           placeholder="Search a joker to add (e.g. Perkeo, Blueprint, Brainstorm)..."
           className="flex-1 bg-transparent text-sm outline-none placeholder:text-zinc-500"
           data-testid="finder-search-input"
         />
         {query && (
-          <button onClick={() => setQuery("")} className="text-zinc-500 hover:text-zinc-300">
+          <button onClick={() => setQuery("")} className="text-zinc-500 hover:text-zinc-300" data-no-sound>
             <X className="h-4 w-4" />
           </button>
         )}
@@ -132,7 +132,7 @@ function JokerSearchBar({
                 } ${isAdded ? "opacity-50" : "hover:bg-yellow-500/5"}`}
               >
                 {id ? (
-                  <JokerSprite jokerId={id} name={name} size={32} className="border-0 bg-transparent" />
+                  <JokerSprite jokerId={id} name={name} size={32} className="border-0 bg-transparent" clickable={false} />
                 ) : (
                   <div className="w-8 h-8" />
                 )}
@@ -217,61 +217,53 @@ function ConstraintRow({
 // ---- Main tab ----
 
 export function SeedFinderTab() {
-  const [selected, setSelected] = useState<JokerConstraint[]>([]);
-  const [deck, setDeck] = useState("Red Deck");
-  const [stake, setStake] = useState("White Stake");
-  const [version, setVersion] = useState("1.0.1f");
-  const [globalMaxAnte, setGlobalMaxAnte] = useState(4);
-  const [threads, setThreads] = useState(() => Math.max(1, Math.min(8, navigator.hardwareConcurrency || 4)));
+  // Read state from global store (survives tab switch + reload).
+  const finder = useSeedTabState(s => s.finder);
 
-  const [running, setRunning] = useState(false);
-  const [progress, setProgress] = useState<FinderProgress>({ totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 });
-  const [matches, setMatches] = useState<SeedMatch[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const handleRef = useRef<FinderHandle | null>(null);
   const finderRef = useRef<SeedFinder | null>(null);
 
   useEffect(() => () => { handleRef.current?.stop(); }, []);
 
   const effectiveMaxAnte = useMemo(() => {
-    if (selected.length === 0) return globalMaxAnte;
-    return Math.max(globalMaxAnte, ...selected.map(s => s.maxAnte));
-  }, [selected, globalMaxAnte]);
+    if (finder.selected.length === 0) return finder.globalMaxAnte;
+    return Math.max(finder.globalMaxAnte, ...finder.selected.map(s => s.maxAnte));
+  }, [finder.selected, finder.globalMaxAnte]);
 
   function addJoker(name: string) {
-    setSelected(prev => {
-      if (prev.some(c => c.joker === name)) return prev;
-      return [...prev, { joker: name, edition: "", source: "", maxAnte: globalMaxAnte }];
+    updateFinder(f => {
+      if (f.selected.some(c => c.joker === name)) return f;
+      return { ...f, selected: [...f.selected, { joker: name, edition: "", source: "", maxAnte: f.globalMaxAnte }] };
     });
   }
 
   function updateConstraint(i: number, next: JokerConstraint) {
-    setSelected(prev => prev.map((c, idx) => idx === i ? next : c));
+    updateFinder(f => ({ ...f, selected: f.selected.map((c, idx) => idx === i ? next : c) }));
   }
 
   function removeConstraint(i: number) {
-    setSelected(prev => prev.filter((_, idx) => idx !== i));
+    updateFinder(f => ({ ...f, selected: f.selected.filter((_, idx) => idx !== i) }));
   }
 
   function start() {
-    if (selected.length === 0 || running) return;
-    setError(null);
-    setMatches([]);
-    setProgress({ totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 });
-    setRunning(true);
+    if (finder.selected.length === 0 || finder.running) return;
+    setFinder({ error: null, matches: [], progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 }, running: true });
 
     if (!finderRef.current) finderRef.current = new SeedFinder();
     const handle = finderRef.current.start(
       {
-        jokerConstraints: selected,
+        jokerConstraints: finder.selected,
         maxAnte: effectiveMaxAnte,
-        deck, stake, version, threads,
+        deck: finder.deck,
+        stake: finder.stake,
+        version: finder.version,
+        threads: finder.threads,
       },
       {
-        onProgress: (p) => setProgress(p),
-        onMatch: (m) => setMatches(prev => [...prev, m].slice(-50)),
-        onDone: () => setRunning(false),
-        onError: (msg) => { setError(msg); setRunning(false); },
+        onProgress: (p) => setFinder({ progress: p }),
+        onMatch: (m) => updateFinder(f => ({ ...f, matches: [...f.matches, m].slice(-50) })),
+        onDone: () => setFinder({ running: false }),
+        onError: (msg) => setFinder({ error: msg, running: false }),
       }
     );
     handleRef.current = handle;
@@ -280,9 +272,15 @@ export function SeedFinderTab() {
   function stop() {
     handleRef.current?.stop();
     handleRef.current = null;
+    setFinder({ running: false });
   }
 
-  const selectedNames = selected.map(c => c.joker);
+  function clearMatches() {
+    setFinder({ matches: [], progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 } });
+  }
+
+  const selectedNames = finder.selected.map(c => c.joker);
+  const { selected, deck, stake, version, globalMaxAnte, threads, matches, progress, error, running } = finder;
 
   return (
     <div className="space-y-4">
@@ -291,21 +289,21 @@ export function SeedFinderTab() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           <div>
             <Label className="text-xs text-zinc-400">Deck</Label>
-            <Select value={deck} onValueChange={setDeck}>
+            <Select value={deck} onValueChange={v => setFinder({ deck: v })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>{DECKS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
             </Select>
           </div>
           <div>
             <Label className="text-xs text-zinc-400">Stake</Label>
-            <Select value={stake} onValueChange={setStake}>
+            <Select value={stake} onValueChange={v => setFinder({ stake: v })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>{STAKES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
             </Select>
           </div>
           <div>
             <Label className="text-xs text-zinc-400">Version</Label>
-            <Select value={version} onValueChange={setVersion}>
+            <Select value={version} onValueChange={v => setFinder({ version: v })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="1.0.1f">1.0.1f</SelectItem>
@@ -318,14 +316,14 @@ export function SeedFinderTab() {
             <Label className="text-xs text-zinc-400" title="Global cap. Per-joker max-ante can be tighter.">Max ante</Label>
             <Input
               type="number" min={1} max={39} value={globalMaxAnte}
-              onChange={e => setGlobalMaxAnte(Math.max(1, Math.min(39, Number(e.target.value) || 1)))}
+              onChange={e => setFinder({ globalMaxAnte: Math.max(1, Math.min(39, Number(e.target.value) || 1)) })}
               className="h-8 text-xs" />
           </div>
           <div>
             <Label className="text-xs text-zinc-400" title="CPU threads (Web Workers)">Threads</Label>
             <Input
               type="number" min={1} max={16} value={threads}
-              onChange={e => setThreads(Math.max(1, Math.min(16, Number(e.target.value) || 1)))}
+              onChange={e => setFinder({ threads: Math.max(1, Math.min(16, Number(e.target.value) || 1)) })}
               className="h-8 text-xs"
               disabled={running} />
           </div>
@@ -358,6 +356,11 @@ export function SeedFinderTab() {
         ) : (
           <Button onClick={stop} variant="destructive" data-testid="finder-stop">
             <Square className="mr-2 h-4 w-4" /> Stop
+          </Button>
+        )}
+        {matches.length > 0 && !running && (
+          <Button onClick={clearMatches} variant="ghost" size="sm" className="text-zinc-400">
+            Clear results
           </Button>
         )}
         <div className="flex flex-wrap gap-4 text-xs font-mono">
@@ -398,7 +401,11 @@ export function SeedFinderTab() {
             Matches ({matches.length}{matches.length >= 50 ? ", showing last 50" : ""})
           </Label>
           {matches.slice().reverse().map((m, idx) => (
-            <MatchCard key={m.seed + idx} match={m} />
+            <MatchCard
+              key={m.seed + idx}
+              match={m}
+              preset={{ deck, stake, version, globalMaxAnte, jokerConstraints: selected }}
+            />
           ))}
         </div>
       )}
@@ -406,7 +413,7 @@ export function SeedFinderTab() {
   );
 }
 
-function formatLocation(j: SeedMatch["jokerLocations"][number]): React.ReactNode {
+export function formatLocation(j: SeedMatch["jokerLocations"][number]): React.ReactNode {
   if (j.source === "shop") {
     const info = describeShopSlot(j.slot, j.ante);
     return (
@@ -447,10 +454,34 @@ function formatLocation(j: SeedMatch["jokerLocations"][number]): React.ReactNode
   return <>Ante {j.ante}</>;
 }
 
-function MatchCard({ match }: { match: SeedMatch }) {
+export function MatchCard({
+  match,
+  preset,
+  showSave = true,
+  trailing,
+}: {
+  match: SeedMatch;
+  preset?: { deck: string; stake: string; version: string; globalMaxAnte: number; jokerConstraints: JokerConstraint[] };
+  showSave?: boolean;
+  trailing?: React.ReactNode;
+}) {
+  // Re-check saved state on every render via store subscription.
+  const saved = useSeedTabState(s => preset ? isSeedSaved(match.seed, preset.deck, preset.stake, preset.version) : false);
+
+  function onSave() {
+    if (!preset || saved) return;
+    saveSeed({
+      id: `${match.seed}-${Date.now()}`,
+      seed: match.seed,
+      savedAt: Date.now(),
+      preset,
+      match,
+    });
+  }
+
   return (
     <div className="rounded-lg border border-emerald-500/40 bg-emerald-950/10 p-3 space-y-2">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <Sparkles className="h-4 w-4 text-emerald-300" />
         <span className="font-mono text-lg font-bold text-emerald-200 select-all">{match.seed}</span>
         <Button
@@ -460,6 +491,21 @@ function MatchCard({ match }: { match: SeedMatch }) {
         >
           Copy
         </Button>
+        {showSave && preset && (
+          <Button
+            size="sm"
+            variant={saved ? "ghost" : "default"}
+            disabled={saved}
+            className={`h-7 px-2 text-xs ${saved ? "text-emerald-300" : "bg-yellow-400 hover:bg-yellow-300 text-zinc-950"}`}
+            onClick={onSave}
+            title={saved ? "Already saved" : "Save seed + preset to library"}
+            data-testid={`save-seed-${match.seed}`}
+          >
+            {saved ? <BookmarkCheck className="mr-1 h-3.5 w-3.5" /> : <BookmarkPlus className="mr-1 h-3.5 w-3.5" />}
+            {saved ? "Saved" : "Save this seed"}
+          </Button>
+        )}
+        {trailing}
       </div>
       <div className="space-y-1">
         {match.jokerLocations.map((j, i) => {

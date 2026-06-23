@@ -109,6 +109,20 @@ export class Instance {
   }
   isLocked(item: string) { return this.locked.indexOf(item) !== -1; }
 
+  /** Take a shallow snapshot of mutable RNG/lock state. Restorable with restoreState(). */
+  snapshotState(): { cacheNodes: Map<string, number>; locked: string[]; generatedFirstPack: boolean } {
+    return {
+      cacheNodes: new Map(this.cacheNodes),
+      locked: this.locked.slice(),
+      generatedFirstPack: this.generatedFirstPack,
+    };
+  }
+  restoreState(snap: { cacheNodes: Map<string, number>; locked: string[]; generatedFirstPack: boolean }) {
+    this.cacheNodes = new Map(snap.cacheNodes);
+    this.locked = snap.locked.slice();
+    this.generatedFirstPack = snap.generatedFirstPack;
+  }
+
   initLocks(ante: number, freshProfile: boolean, freshRun: boolean) {
     if (ante < 2) {
       for (const b of ["The Mouth","The Fish","The Wall","The House","The Mark","The Wheel","The Arm","The Water","The Needle","The Flint"]) this.lock(b);
@@ -323,6 +337,23 @@ export class Instance {
     for (const it of pack) this.unlock(it);
     return pack;
   }
+  /** Non-destructive Soul resolution: returns Legendary+Edition without advancing RNG. */
+  resolveSoulAt(ante: number): JokerData {
+    const snap = this.snapshotState();
+    const jkr = this.nextJoker("sou", ante, false);
+    this.restoreState(snap);
+    return jkr;
+  }
+  /** Resolve all "The Soul" entries in a pack items list (non-destructive). */
+  resolveSoulsInPack(items: string[], ante: number): { position: number; card: "The Soul"; joker: JokerData }[] {
+    const out: { position: number; card: "The Soul"; joker: JokerData }[] = [];
+    items.forEach((it, idx) => {
+      if (it === "The Soul") {
+        out.push({ position: idx, card: "The Soul", joker: this.resolveSoulAt(ante) });
+      }
+    });
+    return out;
+  }
   nextCelestialPack(size: number, ante: number): string[] {
     const pack: string[] = [];
     for (let i = 0; i < size; i++) {
@@ -404,14 +435,20 @@ export class Instance {
 
 // ── High-level analysis ──────────────────────────────────────────────────────
 
+export interface SoulResolution {
+  position: number; // 0-indexed position within pack items
+  card: "The Soul";
+  joker: JokerData;
+}
+
 export interface PackContents {
   name: string;
   size: number;
   choices: number;
   contents:
-    | { kind: "tarot"; items: string[] }
+    | { kind: "tarot"; items: string[]; soulResolutions?: SoulResolution[] }
     | { kind: "planet"; items: string[] }
-    | { kind: "spectral"; items: string[] }
+    | { kind: "spectral"; items: string[]; soulResolutions?: SoulResolution[] }
     | { kind: "standard"; cards: StandardCard[] }
     | { kind: "buffoon"; jokers: JokerData[] };
 }
@@ -468,13 +505,17 @@ export function buildInstance(input: AnalysisInput): Instance {
 function generatePackContents(inst: Instance, name: string, ante: number): PackContents {
   const info: Pack = packInfo(name);
   if (info.type === "Arcana Pack") {
-    return { name, size: info.size, choices: info.choices, contents: { kind: "tarot", items: inst.nextArcanaPack(info.size, ante) } };
+    const items = inst.nextArcanaPack(info.size, ante);
+    const res = inst.resolveSoulsInPack(items, ante);
+    return { name, size: info.size, choices: info.choices, contents: { kind: "tarot", items, soulResolutions: res.length ? res : undefined } };
   }
   if (info.type === "Celestial Pack") {
     return { name, size: info.size, choices: info.choices, contents: { kind: "planet", items: inst.nextCelestialPack(info.size, ante) } };
   }
   if (info.type === "Spectral Pack") {
-    return { name, size: info.size, choices: info.choices, contents: { kind: "spectral", items: inst.nextSpectralPack(info.size, ante) } };
+    const items = inst.nextSpectralPack(info.size, ante);
+    const res = inst.resolveSoulsInPack(items, ante);
+    return { name, size: info.size, choices: info.choices, contents: { kind: "spectral", items, soulResolutions: res.length ? res : undefined } };
   }
   if (info.type === "Standard Pack") {
     return { name, size: info.size, choices: info.choices, contents: { kind: "standard", cards: inst.nextStandardPack(info.size, ante) } };
@@ -584,6 +625,10 @@ export interface SoulSighting {
   packName: string;
   source: "tarot-pack" | "spectral-pack";
   card: "The Soul" | "Black Hole";
+  /** When card === "The Soul", the resolved Legendary joker + edition. */
+  resolvedJoker?: JokerData;
+  /** 0-indexed position within the pack. */
+  position?: number;
 }
 
 /** Locate The Soul + Black Hole spawns across pack contents. */
@@ -591,19 +636,22 @@ export function findSoulSpawns(results: AnteResult[]): SoulSighting[] {
   const out: SoulSighting[] = [];
   for (const r of results) {
     for (const p of r.packs) {
-      if (p.contents.kind === "tarot") {
-        for (const it of p.contents.items) {
+      const c = p.contents;
+      if (c.kind === "tarot" || c.kind === "spectral") {
+        const resolutions = c.soulResolutions || [];
+        c.items.forEach((it, idx) => {
           if (it === "The Soul" || it === "Black Hole") {
-            out.push({ ante: r.ante, packName: p.name, source: "tarot-pack", card: it });
+            const resolved = it === "The Soul" ? resolutions.find(s => s.position === idx) : undefined;
+            out.push({
+              ante: r.ante,
+              packName: p.name,
+              source: c.kind === "tarot" ? "tarot-pack" : "spectral-pack",
+              card: it,
+              resolvedJoker: resolved ? resolved.joker : undefined,
+              position: idx,
+            });
           }
-        }
-      }
-      if (p.contents.kind === "spectral") {
-        for (const it of p.contents.items) {
-          if (it === "The Soul" || it === "Black Hole") {
-            out.push({ ante: r.ante, packName: p.name, source: "spectral-pack", card: it });
-          }
-        }
+        });
       }
     }
   }

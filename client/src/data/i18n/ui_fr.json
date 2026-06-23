@@ -383,6 +383,15 @@
       "heading": "Nouveautés",
       "subtitle": "Changements récents, organisés par version.",
       "footer": "Un retour ? Le dépôt est sur GitHub. Issues et PRs bienvenues.",
+      "v1_7_2": {
+        "title": "v1.7.2 - Polish UX + Seed Library",
+        "persist": "L'onglet Seeds memorise maintenant son etat entre les navigations : progression du Seed Finder, vue de l'Analyzer, seed et resultats survivent aux changements d'onglet.",
+        "library": "Nouveau sous-onglet Seed Library. Sauvegarde n'importe quelle seed depuis le Finder en un clic ; le preset complet (deck, stake, version, contraintes) est enregistre avec la seed pour pouvoir la recharger plus tard.",
+        "soul": "Resolution du Soul : quand The Soul apparait dans une seed analysee, le joker Legendaire resolu et son edition sont affiches directement, a la fois dans le Full Spoiler et dans la vue Soul.",
+        "spoiler": "Le Full Spoiler est maintenant une liste pliable par Ante. Cartes d'ante plus claires et moins surchargees ; clique sur une ante pour deplier tout son detail.",
+        "wikilinks": "Liens internes type Wikipedia dans toute l'app : cliquer sur n'importe quelle icone ou nom de joker ouvre sa fiche detaillee. Marche dans les synergies, combos, files de boutique, contenus de packs, resultats de recherche et matches du Seed Finder.",
+        "click_sfx": "Fix mobile : les effets sonores de clic ne se declenchent plus que sur de vrais appuis de boutons, plus jamais sur les gestes de swipe ou de scroll."
+      },
       "v1_7": {
         "title": "v1.7 - Chercheur de seeds natif",
         "rework": "Onglet Seeds entierement repense. Deux sous-onglets clairs : Seed Analyzer (entre une seed, vois tout ce qu'elle contient) et Seed Finder (entre ce que tu veux, trouve une seed). Joker Hunter et Soul Finder sont devenus des vues dans l'Analyzer.",

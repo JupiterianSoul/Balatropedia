@@ -1,11 +1,14 @@
-// SeedsTab v1.7.1 - reworked into 2 sub-tabs: Seed Analyzer (input seed -> info)
-// and Seed Finder (input wants -> find seed). Analyzer combines old Spoiler /
-// Joker Hunter / Soul Finder into one workflow with a View toggle.
+// SeedsTab v1.7.2 - 3 sub-tabs (Analyzer, Finder, Library), persisted state,
+// Soul resolution display, collapsible Full Spoiler antes.
 import { useMemo, useState } from "react";
-import { Dices, Search, Play, Loader2, Target, Telescope, Skull, Sparkles, ListTree } from "lucide-react";
+import {
+  Dices, Search, Play, Loader2, Target, Telescope, Skull, Sparkles, ListTree,
+  Library, ChevronDown, ChevronRight,
+} from "lucide-react";
 import { JokerSprite } from "@/components/JokerSprite";
 import { jokerIdFromName } from "@/lib/helpers";
 import { SeedFinderTab } from "./SeedFinderTab";
+import { SeedLibraryTab } from "./SeedLibraryTab";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,13 +16,17 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  defaultInput, runAnalysis, findJoker, findSoulSpawns,
+  runAnalysis, findJoker, findSoulSpawns,
   type AnalysisInput, type AnteResult, type PackContents, type JokerSighting,
+  type SoulSighting,
 } from "@/lib/seedEngine";
 import {
   DECKS, STAKES, COMMON_JOKERS, UNCOMMON_JOKERS, RARE_JOKERS, LEGENDARY_JOKERS,
 } from "@/lib/seedItems";
 import { describeShopSlot, describePackSlot } from "@/lib/seedFinderLocation";
+import {
+  useSeedTabState, setAnalyzer, type AnalyzerView,
+} from "@/lib/seedTabState";
 
 const ALL_JOKERS = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
   .filter((j, i, a) => a.indexOf(j) === i)
@@ -52,34 +59,66 @@ function stickerBadge(s: { eternal: boolean; perishable: boolean; rental: boolea
   return <span className="ml-1 text-[10px] text-amber-300/80">[{parts.join(", ")}]</span>;
 }
 
-// --- Pack block in spoiler ---
-function PackBlock({ p, ante }: { p: PackContents; ante: number }) {
-  // Render pack header with "After X Blind, Nth booster" hint.
-  // p has `index` is not exported; we use the array index from the parent's map below.
+// Inline Soul resolution badge.
+function SoulResolved({ joker, rarity, edition }: { joker: string; rarity: string; edition: string }) {
+  const id = jokerIdFromName(joker);
   return (
-    <div className="rounded-md border border-yellow-500/20 bg-zinc-900/60 p-2 text-sm">
-      <div className="font-semibold text-yellow-200">
-        {p.name} <span className="text-zinc-500 text-xs">(size {p.size}, choose {p.choices})</span>
+    <span className="ml-2 inline-flex items-center gap-1 align-middle">
+      <span className="text-zinc-500">→</span>
+      {id && <JokerSprite jokerId={id} name={joker} size={22} className="border-0 bg-transparent" />}
+      <span className={`font-semibold ${rarityClass(rarity)}`}>{joker}</span>
+      {edition !== "No Edition" && (
+        <span className={`italic text-xs ${editionClass(edition)}`}>[{edition}]</span>
+      )}
+    </span>
+  );
+}
+
+// --- Pack block in spoiler ---
+function PackBlock({ p }: { p: PackContents }) {
+  // Render with cleaner spacing + cards-in-cards look.
+  const isSoulCard = (it: string) => it === "The Soul" || it === "Black Hole";
+  const resolutions = (p.contents.kind === "tarot" || p.contents.kind === "spectral")
+    ? (p.contents.soulResolutions || [])
+    : [];
+
+  return (
+    <div className="rounded-md border border-yellow-500/15 bg-zinc-900/40 px-2.5 py-2 text-sm">
+      <div className="flex items-baseline justify-between gap-2 mb-1.5">
+        <div className="font-semibold text-yellow-200">{p.name}</div>
+        <div className="text-[10px] text-zinc-500">size {p.size} · pick {p.choices}</div>
       </div>
-      <div className="mt-1 text-xs space-y-0.5">
-        {p.contents.kind === "tarot" && p.contents.items.map((it, i) => (
-          <div key={i} className={it === "The Soul" || it === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-300"}>
-            {i + 1}. {it}
-          </div>
-        ))}
+      <div className="space-y-0.5 text-xs">
+        {p.contents.kind === "tarot" && p.contents.items.map((it, i) => {
+          const resolved = resolutions.find(r => r.position === i);
+          return (
+            <div key={i} className={isSoulCard(it) ? "text-purple-300 font-semibold" : "text-zinc-300"}>
+              <span className="text-zinc-500 mr-1">{i + 1}.</span>{it}
+              {resolved && (
+                <SoulResolved joker={resolved.joker.joker} rarity={resolved.joker.rarity} edition={resolved.joker.edition} />
+              )}
+            </div>
+          );
+        })}
         {p.contents.kind === "planet" && p.contents.items.map((it, i) => (
           <div key={i} className={it === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-300"}>
-            {i + 1}. {it}
+            <span className="text-zinc-500 mr-1">{i + 1}.</span>{it}
           </div>
         ))}
-        {p.contents.kind === "spectral" && p.contents.items.map((it, i) => (
-          <div key={i} className={it === "The Soul" || it === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-300"}>
-            {i + 1}. {it}
-          </div>
-        ))}
+        {p.contents.kind === "spectral" && p.contents.items.map((it, i) => {
+          const resolved = resolutions.find(r => r.position === i);
+          return (
+            <div key={i} className={isSoulCard(it) ? "text-purple-300 font-semibold" : "text-zinc-300"}>
+              <span className="text-zinc-500 mr-1">{i + 1}.</span>{it}
+              {resolved && (
+                <SoulResolved joker={resolved.joker.joker} rarity={resolved.joker.rarity} edition={resolved.joker.edition} />
+              )}
+            </div>
+          );
+        })}
         {p.contents.kind === "standard" && p.contents.cards.map((c, i) => (
           <div key={i} className={`text-zinc-300 ${editionClass(c.edition)}`}>
-            {i + 1}. {c.base}
+            <span className="text-zinc-500 mr-1">{i + 1}.</span>{c.base}
             {c.enhancement !== "No Enhancement" && <span className="text-amber-400/70"> / {c.enhancement}</span>}
             {c.edition !== "No Edition" && <span className="ml-1 italic opacity-80">[{c.edition}]</span>}
             {c.seal !== "No Seal" && <span className="ml-1 text-blue-300/80">[{c.seal}]</span>}
@@ -90,7 +129,7 @@ function PackBlock({ p, ante }: { p: PackContents; ante: number }) {
           return (
             <div key={i} className="flex items-center gap-1.5 text-zinc-300">
               <span className="text-zinc-500">{i + 1}.</span>
-              {id && <JokerSprite jokerId={id} name={j.joker} size={28} className="border-0 bg-transparent" />}
+              {id && <JokerSprite jokerId={id} name={j.joker} size={26} className="border-0 bg-transparent" />}
               <span className={rarityClass(j.rarity)}>{j.joker}</span>
               {j.edition !== "No Edition" && <span className={`italic ${editionClass(j.edition)}`}>[{j.edition}]</span>}
               {stickerBadge(j.stickers)}
@@ -102,83 +141,105 @@ function PackBlock({ p, ante }: { p: PackContents; ante: number }) {
   );
 }
 
-function AnteCard({ r }: { r: AnteResult }) {
+// --- Cleaner ante card (rendered inside the expanded row) ---
+function AnteBody({ r }: { r: AnteResult }) {
   return (
-    <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/80 p-3 shadow-md">
-      <div className="flex flex-wrap items-baseline gap-3 mb-2">
-        <h3 className="text-lg font-bold text-yellow-200">Ante {r.ante}</h3>
-        <span className="text-sm text-red-300"><b>Boss:</b> {r.boss}</span>
-        <span className="text-sm text-emerald-300"><b>Voucher:</b> {r.voucher}</span>
-        <span className="text-sm text-zinc-300"><b>Tags:</b> {r.tags[0]} (Small) · {r.tags[1]} (Big)</span>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <div>
-          <div className="text-xs uppercase tracking-wider text-zinc-500 mb-1">Shop Queue</div>
-          <div className="space-y-0.5 text-sm">
-            {r.shopQueue.map((it, i) => {
-              const slot = i + 1;
-              const info = describeShopSlot(slot, r.ante);
-              const showDivider = i > 0 && info.positionInShop === 1;
-              const jid = it.jokerData ? jokerIdFromName(it.item) : undefined;
-              return (
-                <div key={i}>
-                  {showDivider && (
-                    <div className="text-[10px] uppercase tracking-wider text-yellow-300/60 mt-2 mb-1 border-t border-yellow-500/15 pt-1">
-                      {info.blindLabel}
-                    </div>
-                  )}
-                  {i === 0 && (
-                    <div className="text-[10px] uppercase tracking-wider text-yellow-300/60 mb-1">
-                      {info.blindLabel}
-                    </div>
-                  )}
-                  <div className="flex items-center gap-1.5 text-xs">
-                    <span className="text-zinc-500 font-mono w-6">{info.positionInShop}.</span>
-                    {jid && <JokerSprite jokerId={jid} name={it.item} size={26} className="border-0 bg-transparent" />}
-                    <span className="text-zinc-400 font-mono">{it.type}:</span>
-                    {it.jokerData ? (
-                      <>
-                        <span className={rarityClass(it.jokerData.rarity)}>{it.item}</span>
-                        {it.jokerData.edition !== "No Edition" && (
-                          <span className={`italic ${editionClass(it.jokerData.edition)}`}>[{it.jokerData.edition}]</span>
-                        )}
-                        {stickerBadge(it.jokerData.stickers)}
-                      </>
-                    ) : (
-                      <span className={it.item === "The Soul" || it.item === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-200"}>
-                        {it.item}
-                      </span>
-                    )}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-2">
+      <div className="rounded-md border border-zinc-800/60 bg-zinc-950/50 p-2.5">
+        <div className="text-[10px] uppercase tracking-wider text-zinc-500 mb-1.5">Shop Queue</div>
+        <div className="space-y-0.5 text-xs">
+          {r.shopQueue.map((it, i) => {
+            const slot = i + 1;
+            const info = describeShopSlot(slot, r.ante);
+            const showDivider = i > 0 && info.positionInShop === 1;
+            const jid = it.jokerData ? jokerIdFromName(it.item) : undefined;
+            return (
+              <div key={i}>
+                {(i === 0 || showDivider) && (
+                  <div className="text-[10px] uppercase tracking-wider text-yellow-300/60 mb-1 mt-1.5 first:mt-0">
+                    {info.blindLabel}
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        <div>
-          <div className="text-xs uppercase tracking-wider text-zinc-500 mb-1">Boosters</div>
-          <div className="space-y-2">
-            {r.packs.map((p, i) => {
-              const packIdx = i + 1;
-              const info = describePackSlot(packIdx, r.ante);
-              const showDivider = i > 0 && info.positionInShop === 1;
-              return (
-                <div key={i}>
-                  {(i === 0 || showDivider) && (
-                    <div className="text-[10px] uppercase tracking-wider text-yellow-300/60 mb-1">
-                      {info.blindLabel}
-                    </div>
+                )}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-zinc-500 font-mono w-5 text-right">{info.positionInShop}.</span>
+                  {jid && <JokerSprite jokerId={jid} name={it.item} size={26} className="border-0 bg-transparent" />}
+                  <span className="text-zinc-500 font-mono text-[10px] uppercase">{it.type}</span>
+                  {it.jokerData ? (
+                    <>
+                      <span className={rarityClass(it.jokerData.rarity)}>{it.item}</span>
+                      {it.jokerData.edition !== "No Edition" && (
+                        <span className={`italic ${editionClass(it.jokerData.edition)}`}>[{it.jokerData.edition}]</span>
+                      )}
+                      {stickerBadge(it.jokerData.stickers)}
+                    </>
+                  ) : (
+                    <span className={it.item === "The Soul" || it.item === "Black Hole" ? "text-purple-300 font-semibold" : "text-zinc-200"}>
+                      {it.item}
+                    </span>
                   )}
-                  <div className="text-[10px] text-zinc-500 mb-0.5">
-                    {info.positionInShop === 1 ? "1st" : "2nd"} booster
-                  </div>
-                  <PackBlock p={p} ante={r.ante} />
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
       </div>
+      <div className="rounded-md border border-zinc-800/60 bg-zinc-950/50 p-2.5">
+        <div className="text-[10px] uppercase tracking-wider text-zinc-500 mb-1.5">Boosters</div>
+        <div className="space-y-2">
+          {r.packs.map((p, i) => {
+            const packIdx = i + 1;
+            const info = describePackSlot(packIdx, r.ante);
+            const showDivider = i > 0 && info.positionInShop === 1;
+            return (
+              <div key={i}>
+                {(i === 0 || showDivider) && (
+                  <div className="text-[10px] uppercase tracking-wider text-yellow-300/60 mb-1 mt-1.5 first:mt-0">
+                    {info.blindLabel}
+                  </div>
+                )}
+                <div className="text-[10px] text-zinc-500 mb-0.5">
+                  {info.positionInShop === 1 ? "1st" : "2nd"} booster
+                </div>
+                <PackBlock p={p} />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Collapsible ante row ---
+function AnteRow({ r, expanded, onToggle }: { r: AnteResult; expanded: boolean; onToggle: () => void }) {
+  // Detect if this ante has Soul/Black Hole spawns for the summary badge.
+  const hasSoul = r.packs.some(p =>
+    (p.contents.kind === "tarot" || p.contents.kind === "spectral")
+    && p.contents.items.some(it => it === "The Soul" || it === "Black Hole")
+  );
+
+  return (
+    <div className={`rounded-lg border bg-zinc-950/80 transition-colors ${expanded ? "border-yellow-500/40" : "border-zinc-800/60 hover:border-yellow-500/25"}`}>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full flex items-center gap-3 px-3 py-2.5 text-left"
+        data-testid={`spoiler-ante-${r.ante}`}
+      >
+        {expanded ? <ChevronDown className="h-4 w-4 text-yellow-300 shrink-0" /> : <ChevronRight className="h-4 w-4 text-zinc-500 shrink-0" />}
+        <div className="text-base font-bold text-yellow-200 w-[70px] shrink-0">Ante {r.ante}</div>
+        <div className="flex-1 min-w-0 flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-xs">
+          <span><span className="text-zinc-500">Boss </span><span className="text-red-300">{r.boss}</span></span>
+          <span><span className="text-zinc-500">Voucher </span><span className="text-emerald-300">{r.voucher}</span></span>
+          <span className="text-zinc-400"><span className="text-zinc-500">Tags </span>{r.tags[0]} · {r.tags[1]}</span>
+        </div>
+        {hasSoul && <span className="text-[10px] text-purple-300 font-semibold uppercase tracking-wider shrink-0">Soul</span>}
+      </button>
+      {expanded && (
+        <div className="px-3 pb-3">
+          <AnteBody r={r} />
+        </div>
+      )}
     </div>
   );
 }
@@ -283,8 +344,6 @@ function InputsPanel({
 
 // ---- Sub-views ----
 
-type AnalyzerView = "spoiler" | "joker" | "soul";
-
 function ViewSwitcher({ view, onChange }: { view: AnalyzerView; onChange: (v: AnalyzerView) => void }) {
   const btn = (v: AnalyzerView, label: string, Icon: any) => (
     <Button
@@ -306,8 +365,41 @@ function ViewSwitcher({ view, onChange }: { view: AnalyzerView; onChange: (v: An
   );
 }
 
+function FullSpoilerView({ results }: { results: AnteResult[] }) {
+  // Track which antes are expanded. Default: ante 1 open, others collapsed.
+  const [expanded, setExpanded] = useState<Record<number, boolean>>(() => ({ [results[0]?.ante ?? 1]: true }));
+
+  const allOpen = results.every(r => expanded[r.ante]);
+  const toggleAll = () => {
+    if (allOpen) setExpanded({});
+    else setExpanded(Object.fromEntries(results.map(r => [r.ante, true])));
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <div className="text-xs text-zinc-500">Click an ante to expand its shop queue + boosters.</div>
+        <Button size="sm" variant="ghost" onClick={toggleAll} className="text-xs h-7">
+          {allOpen ? "Collapse all" : "Expand all"}
+        </Button>
+      </div>
+      <div className="space-y-1.5">
+        {results.map(r => (
+          <AnteRow
+            key={r.ante}
+            r={r}
+            expanded={!!expanded[r.ante]}
+            onToggle={() => setExpanded(e => ({ ...e, [r.ante]: !e[r.ante] }))}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function JokerHuntView({ results, maxAnte }: { results: AnteResult[]; maxAnte: number }) {
-  const [query, setQuery] = useState("");
+  const query = useSeedTabState(s => s.analyzer.jokerQuery);
+  const setQuery = (v: string) => setAnalyzer({ jokerQuery: v });
   const matches = useMemo<JokerSighting[]>(() => query ? findJoker(results, query, 200) : [], [results, query]);
   const id = jokerIdFromName(query);
 
@@ -375,8 +467,6 @@ function JokerHuntView({ results, maxAnte }: { results: AnteResult[]; maxAnte: n
 }
 
 function renderHunterLocation(m: JokerSighting): React.ReactNode {
-  // JokerSighting source: "shop" with slot, OR "buffoon-pack" with packIndex + packName + position-in-pack.
-  // Fall back gracefully for other shapes.
   const anyM = m as any;
   if (m.source === "shop") {
     const slot = anyM.slot ?? anyM.shopSlot;
@@ -406,7 +496,7 @@ function renderHunterLocation(m: JokerSighting): React.ReactNode {
 }
 
 function SoulView({ results, maxAnte }: { results: AnteResult[]; maxAnte: number }) {
-  const spawns = useMemo(() => findSoulSpawns(results), [results]);
+  const spawns = useMemo<SoulSighting[]>(() => findSoulSpawns(results), [results]);
   return (
     <div className="space-y-3">
       <div className="text-xs text-zinc-500">
@@ -416,27 +506,34 @@ function SoulView({ results, maxAnte }: { results: AnteResult[]; maxAnte: number
       {spawns.length === 0 ? (
         <div className="text-sm text-zinc-500 italic">No Soul or Black Hole spawns in antes 1-{maxAnte}.</div>
       ) : (
-        <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/80 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-zinc-900/70 text-zinc-400 text-xs uppercase">
-              <tr>
-                <th className="p-2 text-left">Ante</th>
-                <th className="p-2 text-left">Card</th>
-                <th className="p-2 text-left">Pack</th>
-                <th className="p-2 text-left">Source</th>
-              </tr>
-            </thead>
-            <tbody>
-              {spawns.map((s, i) => (
-                <tr key={i} className="border-t border-zinc-800/60">
-                  <td className="p-2 font-mono">{s.ante}</td>
-                  <td className="p-2 text-purple-300 font-semibold">{s.card}</td>
-                  <td className="p-2">{s.packName}</td>
-                  <td className="p-2 text-zinc-400">{s.source}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="space-y-2">
+          {spawns.map((s, i) => {
+            const id = s.resolvedJoker ? jokerIdFromName(s.resolvedJoker.joker) : undefined;
+            return (
+              <div key={i} className="rounded-md border border-purple-500/30 bg-purple-950/10 p-2.5">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                  <span className="font-mono text-yellow-300">Ante {s.ante}</span>
+                  <span className="text-purple-300 font-semibold">{s.card}</span>
+                  <span className="text-zinc-400 text-xs">in {s.packName}</span>
+                  <span className="text-zinc-500 text-[10px] uppercase tracking-wider">{s.source.replace("-", " ")}</span>
+                </div>
+                {s.card === "The Soul" && s.resolvedJoker && (
+                  <div className="mt-2 flex items-center gap-2 text-sm rounded-md border border-purple-500/15 bg-zinc-950/40 px-2 py-1.5">
+                    <span className="text-zinc-500 text-xs">resolves to</span>
+                    {id && <JokerSprite jokerId={id} name={s.resolvedJoker.joker} size={32} className="border-0 bg-transparent" />}
+                    <span className={`font-semibold ${rarityClass(s.resolvedJoker.rarity)}`}>{s.resolvedJoker.joker}</span>
+                    {s.resolvedJoker.edition !== "No Edition" && (
+                      <span className={`italic text-xs ${editionClass(s.resolvedJoker.edition)}`}>[{s.resolvedJoker.edition}]</span>
+                    )}
+                    <span className="ml-auto text-[10px] text-zinc-500 uppercase tracking-wider">Legendary</span>
+                  </div>
+                )}
+                {s.card === "The Soul" && !s.resolvedJoker && (
+                  <div className="mt-1 text-[10px] text-zinc-500 italic">(Legendary resolution unavailable)</div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
@@ -445,26 +542,26 @@ function SoulView({ results, maxAnte }: { results: AnteResult[]; maxAnte: number
 
 // ---- Outer SeedsTab ----
 
-type SubTab = "analyzer" | "finder";
+type SubTab = "analyzer" | "finder" | "library";
 
 export function SeedsTab() {
   const [subTab, setSubTab] = useState<SubTab>("analyzer");
 
-  // analyzer state
-  const [input, setInput] = useState<AnalysisInput>(() => defaultInput(""));
-  const [results, setResults] = useState<AnteResult[] | null>(null);
-  const [isRunning, setIsRunning] = useState(false);
-  const [view, setView] = useState<AnalyzerView>("spoiler");
+  // Analyzer state lives in global store so it survives sub-tab switches.
+  const analyzer = useSeedTabState(s => s.analyzer);
+  const librarySize = useSeedTabState(s => s.library.length);
+  const setInput = (i: AnalysisInput) => setAnalyzer({ input: i });
+  const setView = (v: AnalyzerView) => setAnalyzer({ view: v });
 
   const onRun = () => {
-    if (!input.seed) return;
-    setIsRunning(true);
+    if (!analyzer.input.seed) return;
+    setAnalyzer({ isRunning: true });
     setTimeout(() => {
       try {
-        const r = runAnalysis(input);
-        setResults(r);
-      } finally {
-        setIsRunning(false);
+        const r = runAnalysis(analyzer.input);
+        setAnalyzer({ results: r, isRunning: false });
+      } catch {
+        setAnalyzer({ isRunning: false });
       }
     }, 0);
   };
@@ -476,7 +573,7 @@ export function SeedsTab() {
           <Dices className="h-7 w-7" /> Seeds
         </h1>
         <p className="text-sm text-zinc-400">
-          Two tools: analyze a seed you already have, or search for a seed matching what you want.
+          Analyze a seed, search for one matching your wants, or revisit your saved seeds.
         </p>
       </div>
 
@@ -497,28 +594,34 @@ export function SeedsTab() {
         >
           <Target className="mr-2 h-4 w-4" /> Seed Finder
         </Button>
+        <Button
+          variant={subTab === "library" ? "default" : "ghost"}
+          onClick={() => setSubTab("library")}
+          className={subTab === "library" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950" : ""}
+          data-testid="tab-library"
+        >
+          <Library className="mr-2 h-4 w-4" /> Seed Library
+          {librarySize > 0 && <span className="ml-1.5 text-[10px] bg-zinc-800/80 px-1.5 py-0.5 rounded">{librarySize}</span>}
+        </Button>
       </div>
 
       {subTab === "finder" && <SeedFinderTab />}
+      {subTab === "library" && <SeedLibraryTab />}
 
       {subTab === "analyzer" && (
         <div className="space-y-4">
-          <InputsPanel input={input} setInput={setInput} onRun={onRun} isRunning={isRunning} />
+          <InputsPanel input={analyzer.input} setInput={setInput} onRun={onRun} isRunning={analyzer.isRunning} />
 
-          {results && (
+          {analyzer.results && (
             <>
-              <ViewSwitcher view={view} onChange={setView} />
-              {view === "spoiler" && (
-                <div className="space-y-3">
-                  {results.map(r => <AnteCard key={r.ante} r={r} />)}
-                </div>
-              )}
-              {view === "joker" && <JokerHuntView results={results} maxAnte={input.maxAnte} />}
-              {view === "soul" && <SoulView results={results} maxAnte={input.maxAnte} />}
+              <ViewSwitcher view={analyzer.view} onChange={setView} />
+              {analyzer.view === "spoiler" && <FullSpoilerView results={analyzer.results} />}
+              {analyzer.view === "joker" && <JokerHuntView results={analyzer.results} maxAnte={analyzer.input.maxAnte} />}
+              {analyzer.view === "soul" && <SoulView results={analyzer.results} maxAnte={analyzer.input.maxAnte} />}
             </>
           )}
 
-          {!results && (
+          {!analyzer.results && (
             <div className="text-center text-sm text-zinc-500 italic py-12">
               Enter a seed and click <b>Analyze seed</b> to see boss, voucher, tags, shop queue, every booster and its contents, and locate any joker or Soul spawn.
             </div>
