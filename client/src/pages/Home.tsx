@@ -22,6 +22,7 @@ import { HomeTab } from "@/tabs/HomeTab";
 import { JokersTab } from "@/tabs/JokersTab";
 import { MyRunTab } from "@/tabs/MyRunTab";
 import { RunChallengeTab } from "@/tabs/RunChallengeTab";
+import { RunPlannerTab } from "@/tabs/RunPlannerTab";
 import { SynergyTab } from "@/tabs/SynergyTab";
 import { CombosTab } from "@/tabs/CombosTab";
 import { ArchetypesTab } from "@/tabs/ArchetypesTab";
@@ -45,7 +46,7 @@ import { KofiFooterButton } from "@/components/KofiButton";
 
 const NAV_GROUPS: NavGroup[] = [
   { key: "home", tabs: ["home"] },
-  { key: "run", tabs: ["myrun", "runchallenge"] },
+  { key: "run", tabs: ["myrun", "runchallenge", "runplanner"] },
   { key: "build", tabs: ["synergies", "combos", "archetypes", "tierlist", "compare", "skeleton"] },
   { key: "game", tabs: ["jokers", "decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
   { key: "more", tabs: ["heatmap", "glossary", "whatsnew", "help", "about", "settings"] },
@@ -53,7 +54,7 @@ const NAV_GROUPS: NavGroup[] = [
 
 // All valid tab IDs for hash routing validation
 const VALID_TABS = new Set([
-  "home", "jokers", "myrun", "runchallenge", "synergies", "combos", "archetypes", "tierlist",
+  "home", "jokers", "myrun", "runchallenge", "runplanner", "synergies", "combos", "archetypes", "tierlist",
   "compare", "skeleton", "decks", "stakes", "bosses", "vouchers",
   "consumables", "modifiers", "heatmap", "glossary", "whatsnew",
   "help", "about", "settings", "favorites",
@@ -285,6 +286,7 @@ export default function Home() {
               <TabsContent value="jokers" className="mt-0"><JokersTab /></TabsContent>
               <TabsContent value="myrun" className="mt-0"><MyRunTab /></TabsContent>
               <TabsContent value="runchallenge" className="mt-0"><RunChallengeTab /></TabsContent>
+              <TabsContent value="runplanner" className="mt-0"><RunPlannerTab /></TabsContent>
               <TabsContent value="synergies" className="mt-0"><SynergyTab /></TabsContent>
               <TabsContent value="combos" className="mt-0"><CombosTab /></TabsContent>
               <TabsContent value="archetypes" className="mt-0"><ArchetypesTab /></TabsContent>
