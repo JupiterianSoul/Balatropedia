@@ -15,8 +15,7 @@
       "pw_digit": "Un chiffre",
       "pw_symbol": "Un symbole",
       "pw_placeholder": "Choisissez un mot de passe fort",
-      "no_email_note": "Aucune vérification d'e-mail; c'est un projet de fans.",
-      "session_note": "Les sessions ne persistent pas après un rechargement; reconnectez-vous après actualisation.",
+      "session_note": "Restez connecté entre les rechargements de page sur cet appareil.",
       "welcome_back": "Content de vous revoir",
       "signed_in": "Connexion réussie.",
       "signin_failed": "Échec de la connexion",
@@ -62,7 +61,7 @@
     },
     "home": {
       "tag": "Compagnon de stratégie",
-      "intro": "Un compagnon fan-made pour Balatro — jokers, synergies, combos, archétypes, tier lists et un planificateur de build. Choisis par où commencer.",
+      "intro": "Un compagnon fan-made pour Balatro. Jokers curés, synergies, combos, archétypes, tier lists et un planificateur de build.",
       "cta_browse": "Parcourir les Jokers",
       "cta_run": "Planifier une Partie",
       "stats": "En un coup d'œil",
@@ -78,7 +77,17 @@
       "card_decks": "Compare tous les paquets et leurs effets de départ.",
       "card_stakes": "Toutes les mises et ce qui change à chaque ante.",
       "card_bosses": "Chaque blind boss, sa capacité et son contre.",
-      "card_glossary": "Référence rapide pour chaque terme de Balatro."
+      "card_glossary": "Référence rapide pour chaque terme de Balatro.",
+      "subhero": "Le site de référence Balatro le plus complet, avec le style qui va avec.",
+      "whisper": "Astuce : essayez le code Konami n'importe où.",
+      "cta_tier": "Tier List",
+      "cta_synergies": "Synergies",
+      "marquee": "JOKERS • SYNERGIES • COMBOS • ARCHÉTYPES • TIER LISTS • PLANIFICATEUR • BOSSES • STAKES • DECKS • VOUCHERS • CONSOMMABLES",
+      "hero_kicker": "Le casino est ouvert",
+      "featured_sub": "Ces jokers apparaissent dans le plus de synergies curées.",
+      "lucky_pull": "Tirage chanceux",
+      "lucky_pull_desc": "Tire un joker au hasard. Clique-le pour les détails complets.",
+      "lucky_pull_again": "Relancer"
     },
     "header": {
       "title_a": "Balatro",
@@ -339,11 +348,11 @@
     },
     "tierlist": {
       "disclaimer_title": "Les tier lists sont indicatives, pas absolues",
-      "disclaimer_body": "Les tier lists ne sont pas des vérités absolues — elles dépendent du stake, du deck, de votre skill, de la RNG et de votre style de jeu. À utiliser comme point de départ, pas comme règle.",
+      "disclaimer_body": "Les tier lists ne sont pas des vérités absolues - elles dépendent du stake, du deck, de votre skill, de la RNG et de votre style de jeu. À utiliser comme point de départ, pas comme règle.",
       "filter_stake": "Stake",
       "filter_deck": "Deck",
-      "stake_any": "Tout stake — Général",
-      "deck_any": "Tout deck — Général",
+      "stake_any": "Tout stake - Général",
+      "deck_any": "Tout deck - Général",
       "variant_default": "Général (la plupart des cas)",
       "showing": "Affichage",
       "empty_tier": "Aucun joker dans ce tier pour cette variante.",
@@ -353,47 +362,65 @@
     },
     "whatsnew": {
       "heading": "Nouveautés",
-      "subtitle": "Changements récents, par version.",
-      "footer": "Des retours ? Le repo est sur GitHub — issues et PR bienvenus.",
+      "subtitle": "Changements récents, organisés par version.",
+      "footer": "Un retour ? Le dépôt est sur GitHub. Issues et PRs bienvenues.",
       "v1_1": {
-        "title": "v1.1 — Tier list + Run Challenge",
-        "tierlist": "Onglet Tier List agrégé de la communauté avec variantes par Stake et Deck (24 variantes).",
-        "runchallenge": "Générateur Run Challenge : archetype + combo + jokers clés + deck + stake + indice de consommables aléatoires.",
-        "colorcoding": "Couleurs partout : +Mult, X Mult, Jetons, $, chance et tags sont colorés dans les textes synergie/combo/archetype.",
-        "mobileback": "Le bouton retour mobile ne ferme plus l’app — il navigue entre les onglets.",
-        "mobilesearch": "Modal de recherche mobile (bottom sheet) avec champ auto-focus.",
-        "searcheffects": "La recherche Bibliothèque scanne aussi le texte d’effet, pas seulement les noms.",
-        "og": "Image de prévisualisation sociale et balises Open Graph / Twitter Card pour les liens partagés."
+        "title": "v1.1 - Tier list + Run Challenge",
+        "tierlist": "Onglet Tier List communautaire avec variantes Stake et Deck (24 variantes au total).",
+        "runchallenge": "Générateur Run Challenge : archétype, combo, jokers de base, deck, stake et indice de consommable aléatoires.",
+        "searcheffects": "La recherche Library matche le texte d'effet, pas seulement les noms.",
+        "colorcoding": "Code couleur partout : +Mult, X Mult, Chips, $, chance, et tags colorisés dans le texte synergie/combo/archétype.",
+        "mobileback": "Le bouton retour mobile ne quitte plus l'app ; il navigue entre onglets en priorité.",
+        "mobilesearch": "Modale de recherche Library mobile (bottom sheet) avec champ auto-focalisé.",
+        "og": "Image de prévisualisation sociale et balises Open Graph / Twitter card pour les liens partagés."
       },
       "v1_0_3": {
-        "title": "v1.0.3 — Expansion des données",
+        "title": "v1.0.3 - Expansion des données",
         "syn60": "+60 nouvelles synergies curées.",
         "combos16": "+16 nouveaux combos.",
-        "arch7": "+7 nouveaux archetypes.",
-        "ranking": "Backfill du classement sur les 150 jokers.",
-        "backfill": "Backfill éditorial : rôles, affinités, partenaires, risques."
+        "arch7": "+7 nouveaux archétypes.",
+        "ranking": "Backfill du classement des jokers sur les 150 jokers.",
+        "backfill": "Backfill éditorial : rôles, fit archétype, partenaires, risques."
       },
       "v1_0_2": {
-        "title": "v1.0.2 — Polish de lancement",
+        "title": "v1.0.2 - Polissage de lancement",
         "kofi": "Bouton de soutien Ko-fi ajouté.",
-        "reddit": "Lancement sur r/balatro.",
+        "reddit": "Lancé sur r/balatro.",
         "hardening": "Durcissement serveur, rate limiting, validation des requêtes."
       },
       "v1_0_1": {
-        "title": "v1.0.1 — Confort d’usage",
-        "sounds": "Effets sonores déterministes dans l’UI.",
-        "comments": "Commentaires supprimés du bundle de production.",
-        "shop": "Onglet Shop legacy supprimé ; consolidé dans Vouchers + Consumables."
+        "title": "v1.0.1 - Qualité de vie",
+        "sounds": "Effets sonores déterministes dans toute l'UI.",
+        "comments": "Commentaires retirés du bundle de production.",
+        "shop": "Onglet Shop legacy retiré ; fusionné dans Vouchers + Consumables."
+      },
+      "v1_3": {
+        "title": "v1.3 - Lumières du casino",
+        "home_redesign": "Écran d'accueil reconstruit de zéro : fond animé, motifs de cartes en parallaxe, et un héros style Balatro.",
+        "auto_signin": "La connexion persiste désormais après un rechargement. Plus besoin de recliquer.",
+        "particles": "Effets de particules et confettis subtils dans toute l'app pour une ambiance casino plus vivante.",
+        "easter_eggs": "Quelques Easter eggs discrets cachés dans l'app pour les curieux.",
+        "no_emdash": "Passe typographique : tirets cadratins retirés partout pour une lecture plus propre.",
+        "whatsnew_dates": "Changelog réorganisé par version, dates retirées."
+      },
+      "v1_2": {
+        "title": "v1.2 - Refonte de la navigation",
+        "home_tab": "Nouvel écran d'accueil avec héros, stats, cartes de navigation rapide et jokers en vedette.",
+        "run_group": "Groupe Run : MyRun et Run Challenge sont des onglets séparés.",
+        "jokers_in_game": "Le navigateur de jokers est déplacé dans le groupe Game à côté de Decks, Stakes et Bosses.",
+        "tier_variants": "Les variantes du tier list diffèrent réellement par stake et par deck via des deltas de mécaniques.",
+        "tier_disclaimer": "L'avertissement du tier list peut être masqué via un bouton « J'ai compris ».",
+        "tier_blank_row": "Correction du rendu de ligne vide dans le tier list."
       }
     },
     "challenge": {
       "button": "Run Challenge",
       "title": "Run Challenge",
-      "intro": "Une consigne de build aléatoire — essaie de la faire marcher.",
+      "intro": "Une consigne de build aléatoire - essaie de la faire marcher.",
       "archetype": "Archetype",
       "with_combo": "Avec combo",
       "core_jokers": "Jokers clés",
-      "no_core": "Pas de noyau requis — improvise.",
+      "no_core": "Pas de noyau requis - improvise.",
       "deck": "Deck",
       "stake": "Stake",
       "consumables": "Consommables à chercher",

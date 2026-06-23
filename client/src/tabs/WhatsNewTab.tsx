@@ -1,20 +1,44 @@
 import { useT } from "@/lib/i18n";
-import { Sparkles, Wrench, ListTree, Heart, Trophy, type LucideIcon } from "lucide-react";
+import { Sparkles, Wrench, ListTree, Heart, Trophy, Compass, type LucideIcon } from "lucide-react";
 
-type EntryKind = "feature" | "data" | "fix" | "polish" | "community";
+type EntryKind = "feature" | "data" | "fix" | "polish" | "community" | "nav";
 
 interface Entry {
-  date: string;          // ISO-ish display string
   version: string;
   kind: EntryKind;
   titleKey: string;
-  bullets: string[];     // bullet keys
+  bullets: string[];
 }
 
-// Reverse-chronological — newest at top
+// Reverse-chronological, newest first. Dates intentionally omitted.
 const ENTRIES: Entry[] = [
   {
-    date: "2026-06-23",
+    version: "v1.3",
+    kind: "feature",
+    titleKey: "ui.whatsnew.v1_3.title",
+    bullets: [
+      "ui.whatsnew.v1_3.home_redesign",
+      "ui.whatsnew.v1_3.auto_signin",
+      "ui.whatsnew.v1_3.particles",
+      "ui.whatsnew.v1_3.easter_eggs",
+      "ui.whatsnew.v1_3.no_emdash",
+      "ui.whatsnew.v1_3.whatsnew_dates",
+    ],
+  },
+  {
+    version: "v1.2",
+    kind: "nav",
+    titleKey: "ui.whatsnew.v1_2.title",
+    bullets: [
+      "ui.whatsnew.v1_2.home_tab",
+      "ui.whatsnew.v1_2.run_group",
+      "ui.whatsnew.v1_2.jokers_in_game",
+      "ui.whatsnew.v1_2.tier_variants",
+      "ui.whatsnew.v1_2.tier_disclaimer",
+      "ui.whatsnew.v1_2.tier_blank_row",
+    ],
+  },
+  {
     version: "v1.1",
     kind: "feature",
     titleKey: "ui.whatsnew.v1_1.title",
@@ -29,7 +53,6 @@ const ENTRIES: Entry[] = [
     ],
   },
   {
-    date: "2026-06-22",
     version: "v1.0.3",
     kind: "data",
     titleKey: "ui.whatsnew.v1_0_3.title",
@@ -42,7 +65,6 @@ const ENTRIES: Entry[] = [
     ],
   },
   {
-    date: "2026-06-21",
     version: "v1.0.2",
     kind: "community",
     titleKey: "ui.whatsnew.v1_0_2.title",
@@ -53,7 +75,6 @@ const ENTRIES: Entry[] = [
     ],
   },
   {
-    date: "2026-06-20",
     version: "v1.0.1",
     kind: "polish",
     titleKey: "ui.whatsnew.v1_0_1.title",
@@ -71,6 +92,7 @@ const KIND_ICON: Record<EntryKind, LucideIcon> = {
   fix: Wrench,
   polish: Trophy,
   community: Heart,
+  nav: Compass,
 };
 
 const KIND_TONE: Record<EntryKind, string> = {
@@ -79,6 +101,7 @@ const KIND_TONE: Record<EntryKind, string> = {
   fix: "text-[hsl(196_50%_65%)]",
   polish: "text-[hsl(45_70%_60%)]",
   community: "text-[hsl(0_60%_70%)]",
+  nav: "text-[hsl(270_55%_72%)]",
 };
 
 export function WhatsNewTab() {
@@ -109,11 +132,8 @@ export function WhatsNewTab() {
                 <h3 className="font-display text-lg font-semibold text-accent">
                   {t(e.titleKey)}
                 </h3>
-                <span className="ml-auto flex items-center gap-2 text-xs tabular text-muted-foreground">
-                  <span className="rounded-sm border border-border px-1.5 py-0.5 font-mono">
-                    {e.version}
-                  </span>
-                  <span>{e.date}</span>
+                <span className="ml-auto rounded-sm border border-border px-1.5 py-0.5 font-mono text-xs tabular text-muted-foreground">
+                  {e.version}
                 </span>
               </div>
               <ul className="mt-3 space-y-1.5">

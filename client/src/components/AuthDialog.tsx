@@ -195,9 +195,6 @@ export function AuthDialog({
         <p className="mt-3 rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-center text-[11px] text-accent" data-testid="text-session-note">
           {t("ui.auth.session_note")}
         </p>
-        <p className="mt-1 text-center text-[11px] text-muted-foreground">
-          {t("ui.auth.no_email_note")}
-        </p>
       </DialogContent>
     </Dialog>
   );

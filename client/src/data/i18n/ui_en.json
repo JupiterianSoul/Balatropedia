@@ -15,8 +15,7 @@
       "pw_digit": "One number",
       "pw_symbol": "One symbol",
       "pw_placeholder": "Choose a strong password",
-      "no_email_note": "No email verification; this is a fan project.",
-      "session_note": "Sessions don't persist across page reloads; sign in again after refresh.",
+      "session_note": "Stay signed in across page reloads on this device.",
       "welcome_back": "Welcome back",
       "signed_in": "Signed in successfully.",
       "signin_failed": "Sign in failed",
@@ -62,7 +61,7 @@
     },
     "home": {
       "tag": "Strategy companion",
-      "intro": "A fan-made companion for Balatro — curated jokers, synergies, combos, archetypes, tier lists, and a build planner. Pick where to start.",
+      "intro": "A fan-made companion for Balatro. Curated jokers, synergies, combos, archetypes, tier lists, and a build planner.",
       "cta_browse": "Browse Jokers",
       "cta_run": "Plan a Run",
       "stats": "At a glance",
@@ -78,7 +77,17 @@
       "card_decks": "Compare every deck and its starting effect.",
       "card_stakes": "All stake modifiers and what changes per ante.",
       "card_bosses": "Every boss blind, ability, and counter.",
-      "card_glossary": "Quick reference for every Balatro term."
+      "card_glossary": "Quick reference for every Balatro term.",
+      "subhero": "The deepest Balatro reference site, with a vibe to match.",
+      "whisper": "Tip: try the Konami code anywhere.",
+      "cta_tier": "Tier List",
+      "cta_synergies": "Synergies",
+      "marquee": "JOKERS • SYNERGIES • COMBOS • ARCHETYPES • TIER LISTS • RUN PLANNER • BOSSES • STAKES • DECKS • VOUCHERS • CONSUMABLES",
+      "hero_kicker": "Casino is open",
+      "featured_sub": "These jokers show up in the most curated synergies.",
+      "lucky_pull": "Lucky Pull",
+      "lucky_pull_desc": "Spin a random joker. Click it for full details.",
+      "lucky_pull_again": "Reroll"
     },
     "header": {
       "title_a": "Balatro",
@@ -342,8 +351,8 @@
       "disclaimer_body": "Tier lists are not 100% true and depend on multiple factors and each person can have its own opinions. Stake, deck, skill, RNG and playstyle all shift placements. Use this as a starting point, not a rule.",
       "filter_stake": "Stake",
       "filter_deck": "Deck",
-      "stake_any": "Any stake — General",
-      "deck_any": "Any deck — General",
+      "stake_any": "Any stake - General",
+      "deck_any": "Any deck - General",
       "variant_default": "General (most use cases)",
       "showing": "Showing",
       "empty_tier": "No jokers in this tier for this variant.",
@@ -353,20 +362,20 @@
     },
     "whatsnew": {
       "heading": "What's New",
-      "subtitle": "Recent changes, by version.",
-      "footer": "Have feedback? The repo is on GitHub — issues and PRs welcome.",
+      "subtitle": "Recent changes, organized by version.",
+      "footer": "Have feedback? The repo is on GitHub. Issues and PRs welcome.",
       "v1_1": {
-        "title": "v1.1 — Tier list + Run Challenge",
+        "title": "v1.1 - Tier list + Run Challenge",
         "tierlist": "Community-aggregated Tier List tab with Stake and Deck variants (24 variants total).",
-        "runchallenge": "Run Challenge generator: random archetype + combo + core jokers + deck + stake + consumable hint.",
-        "colorcoding": "Color coding everywhere: +Mult, X Mult, Chips, $, chance, and tags are colorized in synergy/combo/archetype text.",
-        "mobileback": "Mobile back button no longer kicks you out — navigates between tabs first.",
+        "runchallenge": "Run Challenge generator: random archetype, combo, core jokers, deck, stake, and consumable hint.",
+        "searcheffects": "Library search now matches effect text, not just joker names.",
+        "colorcoding": "Color coding everywhere: +Mult, X Mult, Chips, $, chance, and tags colorized in synergy/combo/archetype text.",
+        "mobileback": "Mobile back button no longer kicks you out; navigates between tabs first.",
         "mobilesearch": "Mobile-friendly Library search modal (bottom sheet) with auto-focused input.",
-        "searcheffects": "Library search now matches effect text, not just names.",
         "og": "Social preview image and Open Graph / Twitter card meta tags for shared links."
       },
       "v1_0_3": {
-        "title": "v1.0.3 — Data expansion",
+        "title": "v1.0.3 - Data expansion",
         "syn60": "+60 new curated synergies.",
         "combos16": "+16 new combos.",
         "arch7": "+7 new archetypes.",
@@ -374,26 +383,44 @@
         "backfill": "Editorial backfill: roles, archetype fit, partners, risks."
       },
       "v1_0_2": {
-        "title": "v1.0.2 — Launch polish",
+        "title": "v1.0.2 - Launch polish",
         "kofi": "Ko-fi support button added.",
         "reddit": "Launched on r/balatro.",
         "hardening": "Server hardening, rate limiting, request validation."
       },
       "v1_0_1": {
-        "title": "v1.0.1 — Quality of life",
+        "title": "v1.0.1 - Quality of life",
         "sounds": "Deterministic sound effects across the UI.",
         "comments": "Comments stripped from production bundle.",
         "shop": "Removed legacy Shop tab; consolidated into Vouchers + Consumables."
+      },
+      "v1_3": {
+        "title": "v1.3 - Casino lights on",
+        "home_redesign": "Home screen rebuilt from scratch: live animated background, parallax suit motifs, and a vivid Balatro-style hero.",
+        "auto_signin": "Sign-in now persists across reloads. No more re-clicking after refresh.",
+        "particles": "Subtle particle and confetti effects across the app for a livelier casino feel.",
+        "easter_eggs": "A handful of discreet Easter eggs hidden around the app for explorers.",
+        "no_emdash": "Typography pass: em-dashes removed app-wide for cleaner reading.",
+        "whatsnew_dates": "Changelog reorganized by version, dates removed."
+      },
+      "v1_2": {
+        "title": "v1.2 - Navigation overhaul",
+        "home_tab": "New Home landing screen with hero, stats, quick-nav cards, and featured jokers.",
+        "run_group": "Run group: MyRun and Run Challenge are now separate tabs.",
+        "jokers_in_game": "Joker browser moved into the Game group alongside Decks, Stakes, and Bosses.",
+        "tier_variants": "Tier list variants now actually differ per stake and per deck using game-mechanic deltas.",
+        "tier_disclaimer": "Tier list disclaimer is dismissable with an \"I understand\" button.",
+        "tier_blank_row": "Fixed blank-row visual artefact in tier list rendering."
       }
     },
     "challenge": {
       "button": "Run Challenge",
       "title": "Run Challenge",
-      "intro": "A random build prompt — try to make it work.",
+      "intro": "A random build prompt - try to make it work.",
       "archetype": "Archetype",
       "with_combo": "With combo",
       "core_jokers": "Core jokers",
-      "no_core": "No required core — improvise.",
+      "no_core": "No required core - improvise.",
       "deck": "Deck",
       "stake": "Stake",
       "consumables": "Consumables to look for",
