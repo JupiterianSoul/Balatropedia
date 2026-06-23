@@ -797,3 +797,180 @@
     inset: -1px;
   }
 }
+
+/* ============================================================
+   v1.4 - Global CRT effect (fixed overlay on top of viewport)
+   Driven by --crt-strength on <html> (0..1).
+   data-crt="off" disables all layers; pointer-events: none always.
+   ============================================================ */
+@layer utilities {
+  :root { --crt-strength: 0.6; }
+
+  .crt-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    overflow: hidden;
+    border-radius: calc(22px * var(--crt-strength));
+    box-shadow:
+      inset 0 0 calc(120px * var(--crt-strength)) calc(20px * var(--crt-strength)) rgba(0, 0, 0, 0.55),
+      inset 0 0 calc(40px * var(--crt-strength)) calc(8px * var(--crt-strength)) rgba(0, 0, 0, 0.75);
+  }
+  html[data-crt="off"] .crt-overlay { display: none; }
+
+  .crt-overlay > * {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .crt-scanlines {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.18) 0px,
+      rgba(0, 0, 0, 0.18) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: calc(0.85 * var(--crt-strength));
+    mix-blend-mode: multiply;
+  }
+
+  .crt-rgb {
+    background-image: repeating-linear-gradient(
+      to right,
+      rgba(255, 0, 0, 0.06) 0px,
+      rgba(255, 0, 0, 0.06) 1px,
+      rgba(0, 255, 0, 0.06) 1px,
+      rgba(0, 255, 0, 0.06) 2px,
+      rgba(0, 0, 255, 0.06) 2px,
+      rgba(0, 0, 255, 0.06) 3px
+    );
+    opacity: calc(0.6 * var(--crt-strength));
+    mix-blend-mode: screen;
+  }
+
+  .crt-roll {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 45%,
+      rgba(255, 255, 255, 0.05) 49%,
+      rgba(255, 255, 255, 0.09) 50%,
+      rgba(255, 255, 255, 0.05) 51%,
+      transparent 55%,
+      transparent 100%
+    );
+    opacity: calc(0.7 * var(--crt-strength));
+    animation: crt-roll 9s linear infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes crt-roll {
+    0%   { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .crt-roll { animation: none; opacity: 0; }
+  }
+
+  .crt-vignette {
+    background: radial-gradient(
+      ellipse at center,
+      transparent 55%,
+      rgba(0, 0, 0, 0.35) 100%
+    );
+    opacity: calc(0.9 * var(--crt-strength));
+  }
+}
+
+/* ============================================================
+   v1.4 - Balatro main-menu fluid red/blue background.
+   ============================================================ */
+@layer utilities {
+  .balatro-menu-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, hsl(220 40% 8%) 0%, hsl(220 50% 4%) 100%);
+    border-radius: inherit;
+    z-index: 0;
+  }
+  .balatro-menu-bg::before,
+  .balatro-menu-bg::after {
+    content: "";
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    filter: blur(70px);
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+  .balatro-menu-bg::before {
+    background: radial-gradient(circle, hsl(var(--bal-mult) / 0.85) 0%, transparent 65%);
+    top: -15%;
+    left: -10%;
+    animation: balatro-bg-blob-a 18s ease-in-out infinite alternate;
+  }
+  .balatro-menu-bg::after {
+    background: radial-gradient(circle, hsl(var(--bal-chip) / 0.85) 0%, transparent 65%);
+    bottom: -15%;
+    right: -10%;
+    animation: balatro-bg-blob-b 22s ease-in-out infinite alternate;
+  }
+  @keyframes balatro-bg-blob-a {
+    0%   { transform: translate(0%, 0%) scale(1); }
+    33%  { transform: translate(35%, 25%) scale(1.15); }
+    66%  { transform: translate(20%, 50%) scale(0.9); }
+    100% { transform: translate(50%, 30%) scale(1.1); }
+  }
+  @keyframes balatro-bg-blob-b {
+    0%   { transform: translate(0%, 0%) scale(1); }
+    33%  { transform: translate(-30%, -20%) scale(0.95); }
+    66%  { transform: translate(-50%, -40%) scale(1.2); }
+    100% { transform: translate(-25%, -15%) scale(1.05); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .balatro-menu-bg::before,
+    .balatro-menu-bg::after { animation: none; }
+  }
+}
+
+/* ============================================================
+   v1.4 - Vertical joker conveyor strips on Home edges.
+   ============================================================ */
+@layer utilities {
+  .joker-conveyor {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 72px;
+    overflow: hidden;
+    pointer-events: none;
+    mask-image: linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+    z-index: 1;
+  }
+  .joker-conveyor-track {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    will-change: transform;
+    animation: joker-conveyor-down 38s linear infinite;
+  }
+  .joker-conveyor[data-dir="up"] .joker-conveyor-track {
+    animation-name: joker-conveyor-up;
+  }
+  @keyframes joker-conveyor-down {
+    0%   { transform: translateY(-50%); }
+    100% { transform: translateY(0%); }
+  }
+  @keyframes joker-conveyor-up {
+    0%   { transform: translateY(0%); }
+    100% { transform: translateY(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .joker-conveyor-track { animation: none; }
+  }
+}

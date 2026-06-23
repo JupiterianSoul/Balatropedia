@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette, Zap } from "lucide-react";
+import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SectionLabel } from "@/components/primitives";
@@ -12,6 +12,7 @@ import { isSoundEnabled, setSoundEnabled, getSoundVolume, setSoundVolume } from 
 import { useI18n, useT, type Lang } from "@/lib/i18n";
 import { useTheme, THEME_OPTIONS, type Theme } from "@/lib/theme";
 import { useShake, SHAKE_DEFAULTS } from "@/lib/screenshake";
+import { useCRT, CRT_DEFAULTS } from "@/lib/crt";
 import { useApp } from "@/lib/appContext";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -33,6 +34,7 @@ export function SettingsTab() {
   const [volume, setVolume] = useState(getSoundVolume());
   const { theme, setTheme } = useTheme();
   const { enabled: shakeEnabled, intensity: shakeIntensity, setEnabled: setShakeEnabled, setIntensity: setShakeIntensity } = useShake();
+  const { enabled: crtEnabled, intensity: crtIntensity, setEnabled: setCrtEnabled, setIntensity: setCrtIntensity } = useCRT();
 
   function handleSoundToggle(next: boolean) {
     setSoundOn(next);
@@ -154,6 +156,43 @@ export function SettingsTab() {
             data-testid="slider-shake"
           />
           <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.screenshake.hint")}</p>
+        </div>
+      </section>
+
+      {}
+      <section className="casino-card p-4" data-testid="section-crt">
+        <div className="mb-3 flex items-center gap-1.5">
+          <Monitor className="h-3.5 w-3.5 text-accent" />
+          <SectionLabel>{t("ui.settings.crt.title")}</SectionLabel>
+        </div>
+
+        <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-card/50 px-3 py-2">
+          <div className="font-medium text-sm">{t("ui.settings.crt.enabled")}</div>
+          <Button
+            variant={crtEnabled ? "default" : "outline"}
+            size="sm"
+            onClick={() => setCrtEnabled(!crtEnabled)}
+            data-testid="button-crt-toggle"
+          >
+            {crtEnabled ? t("ui.settings.on") : t("ui.settings.off")}
+          </Button>
+        </div>
+
+        <div className="mt-4">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">{t("ui.settings.crt.intensity")}</span>
+            <span className="font-pixel text-xs tabular text-accent">{Math.round(crtIntensity * 100)}</span>
+          </div>
+          <Slider
+            min={Math.round(CRT_DEFAULTS.min * 100)}
+            max={Math.round(CRT_DEFAULTS.max * 100)}
+            step={5}
+            value={[Math.round(crtIntensity * 100)]}
+            onValueChange={(v) => { setCrtIntensity((v[0] ?? 60) / 100); }}
+            disabled={!crtEnabled}
+            data-testid="slider-crt"
+          />
+          <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.crt.hint")}</p>
         </div>
       </section>
 

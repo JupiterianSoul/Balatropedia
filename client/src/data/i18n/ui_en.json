@@ -46,7 +46,7 @@
       "glossary": "Glossary",
       "about": "About",
       "tierlist": "Tier List",
-      "whatsnew": "What's New",
+      "whatsnew": "Updates",
       "group": {
         "home": "Home",
         "library": "Home",
@@ -87,7 +87,22 @@
       "featured_sub": "These jokers show up in the most curated synergies.",
       "lucky_pull": "Lucky Pull",
       "lucky_pull_desc": "Spin a random joker. Click it for full details.",
-      "lucky_pull_again": "Reroll"
+      "lucky_pull_again": "Reroll",
+      "title_a": "Bala",
+      "title_b": "tropedia",
+      "search_placeholder": "Search jokers, synergies, combos, archetypes...",
+      "search_empty": "No matches.",
+      "discover": "Discover Something New",
+      "discover_hint": "Picks a tab you have not visited yet.",
+      "discover_reset": "You have seen them all. Resetting.",
+      "latest_update": "Latest update",
+      "see_more": "See more updates",
+      "desc_1": "Deep strategy companion for Balatro.",
+      "desc_2": "Every joker, every synergy, every combo - in one place.",
+      "desc_3": "Plan runs, find win conditions, learn the meta.",
+      "desc_4": "A fan-made vault of jokers, archetypes, and tier lists.",
+      "desc_5": "Build planner, joker database, and synergy explorer.",
+      "desc_6": "Find your next overpowered build."
     },
     "header": {
       "title_a": "Balatro",
@@ -411,6 +426,16 @@
         "tier_variants": "Tier list variants now actually differ per stake and per deck using game-mechanic deltas.",
         "tier_disclaimer": "Tier list disclaimer is dismissable with an \"I understand\" button.",
         "tier_blank_row": "Fixed blank-row visual artefact in tier list rendering."
+      },
+      "v1_4": {
+        "title": "v1.4 - Home rebuild and CRT effect",
+        "home_rebuild": "Home screen rebuilt from scratch around a search-first bar.",
+        "menu_bg": "Animated Balatro main-menu red/blue fluid background on Home.",
+        "crt": "Global CRT screen effect with toggle and intensity slider in Settings.",
+        "conveyors": "Vertical joker conveyor belts sliding on the Home edges.",
+        "search_first": "Unified Home search across jokers, synergies, combos, and archetypes.",
+        "discover": "Discover Something New button that never sends you to the same tab twice.",
+        "updates_rename": "Sidebar 'What's New' renamed to 'Updates'."
       }
     },
     "challenge": {
@@ -1441,7 +1466,13 @@
       "sign_in_to_sync": "Sign in (top of sidebar) to sync favorites and saved runs across devices.",
       "about": "About",
       "source_code": "Source on GitHub",
-      "disclaimer": "Balatropedia is a fan-made reference. Balatro and all associated assets belong to LocalThunk and Playstack."
+      "disclaimer": "Balatropedia is a fan-made reference. Balatro and all associated assets belong to LocalThunk and Playstack.",
+      "crt": {
+        "title": "CRT screen effect",
+        "enabled": "CRT enabled",
+        "intensity": "Intensity",
+        "hint": "Rounded corners, scanlines, slow rolling line, vignette. 0 disables, 60 is the default."
+      }
     },
     "help": {
       "title": "Help & Tutorial",

@@ -10,6 +10,7 @@ import { I18nProvider } from "@/lib/i18n";
 import { DetailProvider } from "@/lib/detailContext";
 import { RunProvider } from "@/lib/runContext";
 import { EasterEggsProvider } from "@/lib/easterEggs";
+import { CRTOverlay } from "@/components/CRTOverlay";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
 
@@ -40,6 +41,7 @@ function App() {
                     <Router hook={useHashLocation}>
                       <AppRouter />
                     </Router>
+                    <CRTOverlay />
                   </EasterEggsProvider>
                 </DetailProvider>
               </RunProvider>
