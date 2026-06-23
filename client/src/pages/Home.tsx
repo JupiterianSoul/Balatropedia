@@ -162,8 +162,13 @@ export default function Home() {
         className="flex min-h-[100dvh] w-full"
       >
         {}
+        {/* Desktop sidebar: position:sticky lets it stay pinned while the right
+            pane scrolls. self-start prevents the flex container from stretching
+            this aside to match content height - without that, the aside grows
+            taller than the viewport and there's no room left for sticky to
+            engage, so it scrolls away with the page. */}
         <aside
-          className="sticky top-0 z-20 hidden h-[100dvh] w-60 shrink-0 flex-col border-r-4 border-black bg-[hsl(178_14%_13%)] shadow-[4px_0_0_hsl(198_18%_4%)] md:flex"
+          className="sticky top-0 z-20 hidden h-[100dvh] w-60 shrink-0 flex-col self-start border-r-4 border-black bg-[hsl(178_14%_13%)] shadow-[4px_0_0_hsl(198_18%_4%)] md:flex"
           data-testid="sidebar-desktop"
         >
           <div className="border-b-2 border-black bg-[hsl(150_16%_10%)] px-4 py-3">
