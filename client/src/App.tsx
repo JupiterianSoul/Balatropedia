@@ -15,10 +15,6 @@ import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
 
 function AppRouter() {
-  // This app is a single-page tab UI. Hash-based deep links (e.g. legacy
-  // `#tierlist` URLs) would otherwise resolve to NotFound under wouter's
-  // useHashLocation. Render Home for every hash path so deep links and stale
-  // bookmarks never 404. NotFound is kept for explicit future use.
   void NotFound;
   return (
     <Switch>

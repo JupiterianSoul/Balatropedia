@@ -41,7 +41,6 @@
       "consumables": "Consumibles",
       "vouchers": "Vales",
       "modifiers": "Modificadores",
-      "heatmap": "Mapa de calor",
       "bosses": "Ciegas Jefe",
       "compare": "Comparar",
       "skeleton": "Esqueleto",
@@ -316,14 +315,6 @@
       "compare_select_hint": "Selecciona de 2 a 4 Jokers para compararlos.",
       "compare_add_two": "Añade al menos dos Jokers para empezar a comparar.",
       "compare_none": "Ninguno",
-      "heatmap_title": "Mapa de calor de sinergias",
-      "heatmap_pick": "Elige un Joker…",
-      "heatmap_neg_first": "Negativos primero",
-      "heatmap_pos_first": "Positivos primero",
-      "heatmap_scale": "Escala:",
-      "heatmap_clash": "Conflicto",
-      "heatmap_neutral": "Neutral",
-      "heatmap_empty": "Selecciona un Joker para generar el mapa de calor.",
       "fav_sign_in_note": "Inicia sesión para guardar favoritos de forma permanente. Por ahora solo duran esta sesión.",
       "fav_add_saved_note": "Añadir una nota guardada…",
       "fav_add_session_note": "Añadir una nota (solo esta sesión)…",
@@ -340,12 +331,6 @@
       "myrun_voucher_frag": " · {{count}} cupones",
       "myrun_voucher_frag_one": " · {{count}} cupón",
       "compare_conflicts_with": " · en conflicto con {{names}}",
-      "heatmap_subtitle": "Elige un comodín. Cada otro Joker recibe una puntuación de pareja: oro = fuerte sinergia, rojo sangre = anti-sinergia. Haz clic en una celda para abrir su ficha.",
-      "heatmap_how_title": "Cómo leer esto",
-      "heatmap_how_b1": "Oro intenso = los dos Jokers se refuerzan (mismo arquetipo, cadena de payoff, combustible de retrigger, etc).",
-      "heatmap_how_b2": "Rojo sangre = chocan (uno destruye lo que el otro necesita, manos opuestas, etc).",
-      "heatmap_how_b3": "Neutro = sin interacción seleccionada; coexisten sin multiplicarse.",
-      "heatmap_how_b4": "Toca o haz clic en una celda para abrir el perfil de ese Joker.",
       "fav_empty": "Aún no hay favoritos. Marca Jokers y combos para guardarlos aquí. Las notas solo se guardan en esta sesión: se reiniciarán al recargar.",
       "fav_jokers": "Comodines",
       "fav_combos": "Combos",
@@ -377,7 +362,8 @@
       "empty_tier": "No hay jokers en este tier para esta variante.",
       "i_understand": "Entendido",
       "sources": "Fuentes",
-      "methodology": "Metodología"
+      "methodology": "Metodología",
+      "disclaimer_footer": "Las tier lists en esta pagina estan agregadas desde fuentes comunitarias publicas (hilos de Reddit, guias de YouTube, balatrocalc, etc.) y reflejan un consenso comunitario, no un ranking oficial de Balatro. Las fuentes estan listadas arriba; los rankings cambian con la meta."
     },
     "whatsnew": {
       "heading": "Novedades",
@@ -485,6 +471,15 @@
         "search_first": "Búsqueda unificada en Inicio: jokers, sinergias, combos, arquetipos.",
         "discover": "Botón Descubrir Algo Nuevo que nunca te lleva dos veces a la misma pestaña.",
         "updates_rename": "Barra lateral: 'What's New' renombrado a 'Actualizaciones'."
+      },
+      "v1_8": {
+        "title": "v1.8 — Pase de polish",
+        "uiscale": "Ajustes ahora tiene un slider de escala UI (80% a 160%). Los sprites de jokers y los elementos clave se redimensionan juntos sin romper el layout, en desktop y móvil.",
+        "help_deep": "La pestaña Ayuda ha sido reescrita con explicaciones profundas por pestaña para cada herramienta, en inglés, francés y español.",
+        "disclaimer": "El disclaimer de la tier list ahora se puede cerrar una vez y se recuerda. Una línea corta de recordatorio queda al final de la pestaña Tier List.",
+        "mobile_overflow": "Arreglado un bug móvil donde el lado derecho de la pestaña home se cortaba.",
+        "cleanup": "Funcionalidad Heatmap retirada. Comentarios de código eliminados de toda la base.",
+        "about_legal": "Pestaña Acerca de refrescada con atribución completa de fuentes y un disclaimer más claro de que Balatropedia es fan-made y no está afiliado con LocalThunk o Playstack."
       }
     },
     "challenge": {
@@ -1454,12 +1449,12 @@
       "title": "Acerca de Balatropedia",
       "subtitle": "Una guía de estrategia comunitaria para Balatro.",
       "what_title": "Qué es esto",
-      "what_body": "Balatropedia indexa cada joker, mazo, stake, vale, boss blind, consumible y modificador de Balatro, junto con sinergias, arquetipos y combos curados. Usa la barra lateral para navegar entre herramientas de referencia (Library, Glossary) y de planificación (My Run, Compare, Skeleton).",
+      "what_body": "Balatropedia es un compañero hecho por fans para Balatro de LocalThunk y Playstack. Indexa cada joker, mazo, stake, voucher, boss blind, consumible, edición y enhancement, y añade herramientas de planificación: cuaderno My Run, Score Calculator, Build Lab, planificador Skeleton, Seed Analyzer/Finder/Library, y una Tier List comunitaria. Se ofrece gratis, sin anuncios, y no almacena nada sobre ti más allá de lo que elijas sincronizar vía inicio de sesión con Google (favoritos, runs guardadas y tier list custom).",
       "accuracy_title": "Precisión y fuentes",
-      "accuracy_body": "Los efectos y valores base de los jokers provienen del Wiki de Balatro. Las afirmaciones de sinergia y la estrategia de combos se cruzan con guías comunitarias de confianza; las citas aparecen en línea bajo cada sinergia y combo. Lista completa de fuentes:",
+      "accuracy_body": "Los efectos de jokers, fórmulas de escalado, valores base y notas de synergy se cotejan con la wiki oficial y las guías comunitarias listadas abajo. Los números son best-effort y pueden retrasarse respecto a los parches; si encuentras un error, abre una issue en GitHub.",
       "fandom_attribution": "Texto y valores de los jokers adaptados del Wiki de Balatro bajo licencia CC-BY-SA 3.0. Los comentarios estratégicos son editoriales.",
       "disclaimer_title": "Aviso honesto",
-      "disclaimer_body": "Los consejos estratégicos son opiniones validadas por la comunidad cuando están citadas, o heurísticas curadas en otros casos. Balatro es profundo; una combinación que parece débil en teoría puede ser fuerte con el mazo/vale/stake adecuado. Si encuentras un error, abre un issue o PR.",
+      "disclaimer_body": "Balatropedia es un proyecto fan no oficial y no comercial. No está afiliado, ni avalado, ni patrocinado por LocalThunk, Playstack o cualquier autor de tier list. Todos los nombres de Balatro, referencias artísticas y mecánicas de juego pertenecen a sus respectivos propietarios y se usan aquí bajo fair-use con fines de referencia y educación. Los sprites de jokers son identificadores a escala reducida para ayudar a los jugadores a navegar la referencia; si un titular de derechos solicita la retirada de un asset, contáctanos vía el issue tracker de GitHub y será retirado prontamente. Los rankings de tier list comunitarios reflejan opiniones agregadas de las guías terceras citadas y no son autoritativos; la tier list dentro de la app te permite arrastrar jokers libremente para codificar tu propia visión.",
       "submit_correction": "Enviar una corrección en GitHub",
       "credits_title": "Créditos",
       "credit_game": "Juego de",
@@ -1522,96 +1517,137 @@
         "enabled": "CRT activado",
         "intensity": "Intensidad",
         "hint": "Esquinas redondeadas, scanlines, línea que rueda, viñeta. 0 desactiva, 60 por defecto."
+      },
+      "ui_scale": {
+        "title": "Escala de la interfaz",
+        "label": "Tamano de iconos de joker",
+        "hint": "Escala los iconos de joker en toda la app. El layout y el texto no cambian.",
+        "reset": "Reiniciar"
       }
     },
     "help": {
-      "title": "Ayuda y Tutorial",
-      "subtitle": "Elige una función a la izquierda para aprender qué hace y cómo usarla.",
-      "tip_label": "Tip",
+      "title": "Ayuda",
+      "subtitle": "Qué hace cada pestaña, cómo usarla y consejos.",
+      "tip_label": "Consejo",
       "overview": {
         "title": "Vista general",
-        "body": "Balatropedia es una referencia no oficial para Balatro. Cada Joker, deck, stake, voucher, boss blind, consumible y modificador está indexado con sinergias y arquetipos seleccionados a mano. Usa el menú lateral para saltar entre herramientas; la mayoría son pura referencia, algunas (My Run, Compare, Skeleton) ayudan a planificar una run real.",
-        "tip": "Marca con estrella cualquier cosa para añadirla a Favoritos. Inicia sesión para sincronizar entre dispositivos."
+        "body": "Balatropedia es un compañero hecho por fans para Balatro. Indexa cada joker, mazo, stake, voucher, boss blind, consumible y modificador de juego, y añade encima herramientas de planificación y análisis.\n\nLa barra lateral izquierda agrupa las pestañas por propósito. Las pestañas de referencia (Jokers, Mazos, Bosses, etc.) son pura consulta. Las pestañas de run (My Run, Compare, Skeleton, Run Challenge) ayudan a planificar una run activa o hipotética. Las herramientas (Build Lab, Score Calculator, Seeds) calculan y descubren contenido. Tier List y Synergies resumen el consenso de la comunidad.",
+        "tip": "Marca con estrella cualquier cosa para añadirla a Favoritos. Inicia sesión (Google) para sincronizar favoritos, runs guardadas, estados de Build Lab y tier lists entre dispositivos."
       },
       "library": {
-        "title": "Biblioteca",
-        "body": "Índice buscable de los 150 Jokers con descripciones, scaling, arquetipos y tags. Los filtros viven detrás del botón Filtros; pulsa para abrirlos. Alterna Mosaico/Cuadrícula/Lista desde la barra superior.",
-        "tip": "Usa los filtros para acotar por rol, rareza, stage o tipo de mano. Combina varios; se aplican como Y lógico."
+        "title": "Biblioteca de Jokers",
+        "body": "La pestaña Jokers es el índice maestro. Filtra por rareza, edición, tipo de escalado, afinidad de mano, palo, arquetipo, o búsqueda de texto completo sobre nombres y efectos.\n\nHaz clic en cualquier carta para abrir una ficha de detalle con: efecto base, fórmula de escalado cuando aplica, popularidad, dificultad, mazos/stakes recomendados, synergies, jokers counter y enlaces fuente curados.",
+        "tip": "Usa la barra de búsqueda con palabras de efecto ('retrigger', 'mult', 'descarte') para encontrar todos los jokers que tocan un mecanismo."
       },
       "myrun": {
         "title": "My Run",
-        "body": "Construye el set de Jokers que de verdad estás jugando. Elige un deck, un stake, vouchers y hasta 10 slots. La columna derecha se actualiza en vivo con sinergias curadas, arquetipos implícitos, sinergias probables (partners / arquetipo / tags compartidos) y avisos de anti-sinergia.",
-        "tip": "Las sinergias probables aparecen en dorado aunque no haya entrada curada; se infieren de los metadatos de cada Joker para que siempre recibas feedback."
+        "body": "My Run es tu cuaderno en vivo para una sesión activa de Balatro. Pega tu seed, elige mazo, stake, ante y jokers actuales, y la pestaña saca synergies relevantes, blinds counter y prioridades de shop para tu build.\n\nEl estado persiste localmente y se sincroniza con tu cuenta de Google cuando estás conectado, así que cerrar la pestaña no borra tu run.",
+        "tip": "Combina My Run con la pestaña Seeds una vez cargado un seed: las predicciones de shop y el contenido de packs se mantienen coherentes con tu motor."
+      },
+      "runchallenge": {
+        "title": "Run Challenge",
+        "body": "Un generador de desafíos diarios y bajo demanda. Elige mazo, stake, ante objetivo y un pool de jokers forzado para restringir tu run. Útil para romper hábitos y forzar builds poco habituales.\n\nCada desafío muestra el seed (cuando aplica), las restricciones y una estimación de dificultad basada en la calidad del pool de jokers.",
+        "tip": "Re-roll el desafío si pide un pool de jokers alrededor del cual no puedes construir razonablemente; el generador es intencionalmente picante."
+      },
+      "buildlab": {
+        "title": "Build Lab",
+        "body": "El Build Lab es un sandbox para theorycraftear un board de 5 jokers. Elige jokers, ediciones y la mano activa, y el lab calcula contribuciones de chips/mult y el score final para esa mano.\n\nNo es un simulador perfecto (algunas particularidades de scoring están aproximadas), pero es lo suficientemente rápido para comparar dos builds lado a lado.",
+        "tip": "Úsalo para decisiones de '¿guardo X o swap por Y?'; la columna delta muestra el impacto en el score directamente."
+      },
+      "calculator": {
+        "title": "Score Calculator",
+        "body": "Una calculadora enfocada en chips/mult/X-mult. Introduce la mano jugada, el nivel de la mano, chips y mult base, luego apila modificadores de jokers, ediciones y enhancements. La vista breakdown muestra el orden de operaciones que Balatro usa realmente.\n\nBueno para entender por qué una mano 'debería' haber puntuado más, o probar un orden de multiplicadores contra-intuitivo.",
+        "tip": "Activa 'X-mult al final' para ver cómo los jokers negativos y el orden de jokers cambian el número final."
+      },
+      "seeds": {
+        "title": "Seeds (Analyzer · Finder · Library)",
+        "body": "La pestaña Seeds tiene tres sub-pestañas.\n\nAnalyzer: pega un seed, configura mazo y stake, y el motor WASM simula los antes por adelantado, mostrando slots de shop, packs, vouchers y resoluciones de Soul por blind.\n\nFinder: busca en todo el espacio de seeds uno que coincida con tus restricciones (joker específico en ante 1, tag Negative garantizado, etc.). Ajusta workers de CPU y tries por batch para equilibrar velocidad y respuesta.\n\nLibrary: seeds notables curados y guardados por usuarios, navegables por etiqueta.",
+        "tip": "Si Finder va lento, baja los workers de CPU para liberar tu máquina; si está ocioso, súbelos. El estado persiste entre sesiones."
       },
       "synergies": {
-        "title": "Sinergias",
-        "body": "Todas las parejas curadas de Jokers, agrupadas por motor (XMult stack, retrigger, scaling, etc.). Cada entrada explica por qué la pareja funciona y de qué tipo de sinergia es.",
-        "tip": "Pulsa cualquier nombre de Joker para abrir su ficha con el resto de partners."
+        "title": "Synergies",
+        "body": "Un grafo dirigido de pairings de jokers extraído de guías comunitarias (dood.gg, Balatro HQ, Mobalytics, threads de Reddit validados). Cada enlace está anotado con por qué funciona, el tipo de motor (stack XMult, manipulación de mazo, escalado, consistencia), popularidad y dificultad.\n\nCambia entre los lados A y B para ver qué jokers se emparejan con un objetivo dado.",
+        "tip": "Ordena por tipo de motor para ver todos los stackers XMult o todos los enablers de retrigger de un vistazo."
       },
       "combos": {
         "title": "Combos",
-        "body": "Setups multi-Joker (3+ piezas) que producen un motor de salida conocido. Cada combo lista los Jokers requeridos, la mano objetivo y la dificultad de setup.",
-        "tip": "Los Combos son la versión larga de las Sinergias; úsalos como metas de build en vez de parejas ad-hoc."
+        "body": "Combos de tres jokers o más que escalan más allá de pares simples. Cada combo lista la secuencia de disparo, notas de win-rate cuando se conocen, el mazo/stake que lo permite y las guías fuente.\n\nLos combos son compromisos más pesados que los synergies y normalmente requieren preparación de mazo a lo largo de varios antes.",
+        "tip": "Filtra por popularidad 'staple' para los combos más seguros; 'experimental' es para virguerías de late-stake."
       },
       "archetypes": {
         "title": "Arquetipos",
-        "body": "Direcciones estratégicas de build (Flush, Steel, High Card, Retrigger Engine, etc.). Cada arquetipo lista enablers (cartas que lo posibilitan) y scalers (cartas que pagan), más lo que suele faltarle.",
-        "tip": "Cuando My Run muestra un arquetipo, significa que al menos dos de tus Jokers son su núcleo. Añade un scaler o enabler de su lista para comprometerte."
+        "body": "Los arquetipos de build agrupan jokers por el rol que cumplen en una run: columna de escalado, finisher XMult, enabler de retrigger, economía, control de mazo, etc.\n\nUsa esta pestaña para planificar un build alrededor de un rol más que de un solo joker, y para ver el grafo de sustitución cuando tu pick ideal no aparece en shop.",
+        "tip": "Cada arquetipo lista notas de 'cuándo comprometerse' para que no pivotes demasiado tarde."
+      },
+      "tierlist": {
+        "title": "Tier List",
+        "body": "Un ranking interactivo S/A/B/C/D de cada joker. El orden por defecto refleja el consenso comunitario agregado desde Mobalytics, TheGamer y threads de Reddit; no es autoritativo.\n\nPuedes arrastrar jokers entre tiers localmente; cuando estás conectado, tu tier list custom se sincroniza con tu cuenta. El disclaimer al final de la pestaña explica las fuentes.",
+        "tip": "Clic derecho en un joker (o pulsación larga en móvil) abre su ficha detalle sin salir de la tier list."
       },
       "compare": {
-        "title": "Comparar",
-        "body": "Comparación lado a lado de 2 a 4 Jokers. Útil para decisiones de tienda cuando dos opciones están cerca. Compara scaling, stage, arquetipos, partners y anti-sinergias.",
-        "tip": "Añade un Joker a Comparar desde cualquier ficha mediante el botón Comparar."
+        "title": "Compare",
+        "body": "Comparación lado a lado de dos jokers, mazos, vouchers o bosses. Efectos, escalado, fuentes, popularidad y synergies aparecen en columnas paralelas. Útil cuando el shop te impone una elección forzada entre dos cartas.",
+        "tip": "La fila 'delta' resalta solo las diferencias; ignora las filas iguales para decidir rápido."
       },
       "skeleton": {
-        "title": "Esqueleto",
-        "body": "Construye una plantilla de 5 Jokers por slot de motor (Chips / Flat Mult / XMult / Retrigger / Consistencia). Elige un Joker por slot para ver qué tan bien se sostiene el esqueleto.",
-        "tip": "Trata el Esqueleto como un plano, no como una receta; muchas runs cambian los roles de slot a mitad de partida."
+        "title": "Skeleton",
+        "body": "Skeleton es un planificador de run de 5 slots: elige mazo, stake y build objetivo, luego compromete jokers ante por ante para probar si el plan sobrevive las restricciones de boss blind.\n\nNo simula scoring; es un check estructural contra efectos de blind, particularidades de mazo y prerrequisitos de joker.",
+        "tip": "Usa Skeleton antes de gastar dinero de shop en ante 1; un check de 30 segundos a menudo salva toda la run."
       },
       "decks": {
-        "title": "Decks",
-        "body": "Todos los decks base y desbloqueables con su efecto inicial y arquetipos preferidos.",
-        "tip": "Elige un deck antes de rellenar My Run; algunos arquetipos solo florecen en decks específicos."
+        "title": "Mazos",
+        "body": "Cada mazo con su modificador de inicio, notas de compatibilidad de stake y ganchos estratégicos extraídos de las guías de mazo de dood.gg. Haz clic en un mazo para los arquetipos de build que funcionan especialmente bien con él.",
+        "tip": "Plasma y Abandoned tienen las mayores diferencias en curva de score; la pestaña de mazo lo detalla."
       },
       "stakes": {
         "title": "Stakes",
-        "body": "Los ocho stakes del Blanco al Dorado, con lo que cada uno cambia (tamaño de Blinds, scaling de tienda, Tags restringidos, etc.) y la curva de dificultad.",
-        "tip": "Los stakes altos castigan setups lentos; prioriza Jokers de stage temprano por encima del Black Stake."
+        "body": "Todos los stakes de Blanco a Oro, con el modificador acumulado que cada uno añade. Incluye una referencia rápida de qué jokers están nerfeados (probabilidad Eternal/Perishable/Rented) y qué condiciones de run se aprietan en stakes altos.",
+        "tip": "Al subir stakes, el Black Stake (jokers Perishable) es el mayor cambio mental; combina esta pestaña con Tier List filtrada por 'sobrevive Black'."
       },
       "bosses": {
         "title": "Boss Blinds",
-        "body": "Todos los Boss Blinds con su efecto, las manos/Jokers que desactivan y cómo contrarrestarlos. Planifica una ronda antes.",
-        "tip": "Reserva consumibles y Jokers de alto impacto para Boss Blinds. Algunos (The Pillar, The Plant) cuentean fuertemente arquetipos concretos."
+        "body": "Cada boss blind, su condición de disable, los antes donde puede aparecer y estrategias counter. Las pestañas filtran por rango de ante y tipo de efecto (ban de palo, ban de mano, penalización de scoring, etc.).",
+        "tip": "Cuando My Run señala un boss próximo, esta pestaña abre directamente a una ficha counter por boss con jokers recomendados."
       },
       "vouchers": {
         "title": "Vouchers",
-        "body": "Todos los vouchers, su coste y su upgrade. Útil para decisiones de compra a media-tardía.",
-        "tip": "Muchos arquetipos (Steel, Glass, Discard) necesitan un voucher específico para escalar; revisa el campo `oftenLacks` del arquetipo."
+        "body": "Cada voucher y su upgrade tier 2, con precio en shop, prerrequisitos y estimaciones de impacto. Los vouchers son decisiones que definen la run; esta pestaña ayuda a pesarlas.",
+        "tip": "Ordena por 'impacto económico' para hacer subir los vouchers que imprimen dinero (Overstock, Reroll Surplus); ordena por 'escalado' para los enablers de build."
       },
       "consumables": {
         "title": "Consumibles",
-        "body": "Tarots, Planetas y Espectrales, con sus efectos y las builds que más ayudan.",
-        "tip": "Las cartas de Planeta suben de nivel manos de forma permanente; prioriza las de tu mano de scoring. Los Espectrales son situacionales pero potentes."
+        "body": "Tarots, Planetas, Espectrales y cartas especiales. Cada entrada muestra el efecto exacto, cuándo es más eficiente (ej. las cartas Planeta suben la mano adecuada) y si se destruye al usarse.",
+        "tip": "Usa la barra de búsqueda con términos como 'enhancement', 'edición' o 'destruir' para encontrar todo consumible que toque un mecanismo."
       },
       "modifiers": {
         "title": "Modificadores",
-        "body": "Enhancements (Bonus, Mult, Wild, Glass, Steel, Stone, Gold, Lucky), Ediciones (Foil, Holographic, Polychrome, Negative) y Sellos (Rojo, Morado, Azul, Dorado).",
-        "tip": "Apilar enhancement + edición + sello en una carta puede producir salidas absurdas. Planifica Negative en Jokers que no quieras vender."
-      },
-      "heatmap": {
-        "title": "Heatmap",
-        "body": "Elige cualquier Joker y mira cómo se empareja con todos los demás, coloreado por fuerza de sinergia.",
-        "tip": "Verde = fuerte, rojo = anti, gris = neutro. Úsalo para descubrir partners inesperados."
+        "body": "Ediciones de carta (Foil, Holographic, Polychrome, Negative) y enhancements (Bonus, Mult, Wild, Glass, Steel, Stone, Gold, Lucky). Stats, conflictos y mejores pairings están listados para cada uno.",
+        "tip": "Negative es la única edición que da un slot de joker; la pestaña de modificadores hace explícito el trade-off vs XMult bruto."
       },
       "glossary": {
         "title": "Glosario",
-        "body": "Definiciones de cada término específico de Balatro usado en la app; Mult, Chips, XMult, Retrigger, nivel de mano, etc.",
-        "tip": "Ábrelo a la par que My Run mientras aprendes el juego."
+        "body": "Definiciones en español claro de cada término de gameplay que usa Balatropedia: chips, mult, XMult, retrigger, secuencia de scoring, blind, ante, etc. Útil leyendo notas de synergy que asumen jerga.",
+        "tip": "Las entradas del glosario se enlazan desde el texto de efecto de jokers vía enlaces wiki subrayados; haz clic para saltar directamente aquí."
       },
       "favorites": {
         "title": "Favoritos",
-        "body": "Todo lo que has marcado con estrella; Jokers y combos en un sitio. Añade notas para recordar por qué marcaste cada uno.",
-        "tip": "Inicia sesión para mantener favoritos entre dispositivos; si no, viven solo en esta sesión del navegador."
+        "body": "Todo lo que has marcado con estrella (jokers, mazos, vouchers, consumibles, modificadores, bosses, stakes, arquetipos, combos) reunido en una pestaña. Filtra por tipo para planificar alrededor solo de los que te importan.",
+        "tip": "Inicia sesión con Google para mantener los favoritos entre dispositivos; si no, viven solo en este navegador."
+      },
+      "whatsnew": {
+        "title": "Novedades",
+        "body": "El changelog versión por versión. Nuevas funcionalidades, actualizaciones de datos de balance, fixes y polish están categorizados con iconos. La pestaña home muestra solo la entrada más reciente; esta pestaña las muestra todas.",
+        "tip": "Marca esta pestaña si seguiste el proyecto desde versiones tempranas; el changelog acumulado es corto y fácil de ojear."
+      },
+      "about": {
+        "title": "Acerca de",
+        "body": "Objetivos del proyecto, atribución, guías fuente y el disclaimer de que Balatropedia es fan-made y no está afiliado con LocalThunk o Playstack. Enlaces al repositorio GitHub y al issue tracker.",
+        "tip": "¿Encontraste un número equivocado o un joker que falta? El enlace 'Submit a correction' abre una issue de GitHub pre-rellenada."
+      },
+      "settings": {
+        "title": "Ajustes",
+        "body": "Tema (oscuro/claro), idioma (English / Français / Español), toggle de efectos de sonido, slider de escala UI (80% a 160%) y controles de cuenta. El slider de escala UI redimensiona sprites de jokers y elementos clave sin romper el layout; útil en desktops de alta densidad y pantallas móviles grandes.",
+        "tip": "Si los sprites se ven muy pequeños en un monitor 4K, sube la escala UI a 130-140%. En móvil, deja en 100% salvo necesidad de accesibilidad específica."
       }
     },
     "kofi": {

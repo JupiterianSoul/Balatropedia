@@ -172,10 +172,8 @@ export function ScoreCalculatorTab() {
   const [eyeBoss, setEyeBoss] = useState(false);
   const [obsPlanets, setObsPlanets] = useState<HandKey[]>([]);
 
-  // Plasma deck flag derived from selected deck
   const plasmaDeck = deckId === "plasma";
 
-  // Auto-detect hand from played cards (when toggle on)
   useEffect(() => {
     if (!autoDetectHand) return;
     if (played.length === 0) return;
@@ -250,7 +248,7 @@ export function ScoreCalculatorTab() {
         </TabsList>
 
         <TabsContent value="setup" className="space-y-4 mt-4">
-          {/* Deck + hand selector */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
@@ -296,7 +294,7 @@ export function ScoreCalculatorTab() {
             )}
           </section>
 
-          {/* Played cards */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold">{t("calculator.played", "Played cards")} ({played.length}/5)</h3>
@@ -315,7 +313,7 @@ export function ScoreCalculatorTab() {
             </div>
           </section>
 
-          {/* In-hand cards */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold">{t("calculator.inHand", "In-hand (not played)")} ({inHand.length}/8)</h3>
@@ -334,7 +332,7 @@ export function ScoreCalculatorTab() {
             </div>
           </section>
 
-          {/* Jokers */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold">{t("calculator.jokers", "Jokers (left to right)")} ({jokers.length}/5)</h3>
@@ -356,7 +354,7 @@ export function ScoreCalculatorTab() {
             {jokers.length === 0 && <p className="text-xs text-muted-foreground italic">No jokers. Add some to see their contribution.</p>}
           </section>
 
-          {/* Modifiers */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-3">
             <h3 className="text-sm font-semibold">{t("calculator.modifiers", "Modifiers")}</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
@@ -386,7 +384,7 @@ export function ScoreCalculatorTab() {
         </TabsContent>
 
         <TabsContent value="result" className="space-y-4 mt-4">
-          {/* Score output */}
+          { }
           <section className="rounded-lg border-2 border-accent/40 bg-card/60 p-4 space-y-3">
             <div className="flex items-baseline justify-center gap-4">
               <div className="text-center">
@@ -414,7 +412,7 @@ export function ScoreCalculatorTab() {
             )}
           </section>
 
-          {/* Summary breakdown */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <h3 className="text-sm font-semibold">Contribution summary</h3>
             <SummaryTable result={result} />
@@ -422,7 +420,7 @@ export function ScoreCalculatorTab() {
         </TabsContent>
 
         <TabsContent value="timeline" className="mt-4">
-          {/* Timeline */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3">
             <h3 className="text-sm font-semibold mb-2">{t("calculator.timeline", "Score timeline")}</h3>
             <div className="overflow-x-auto">
@@ -471,11 +469,9 @@ export function ScoreCalculatorTab() {
   );
 }
 
-// SummaryTable: groups timeline by phase and shows total contribution per source
 function SummaryTable({ result }: { result: ReturnType<typeof computeScore> }) {
   const bySource: Record<string, { chips: number; mult: number; xMult: number }> = {};
   for (const row of result.timeline) {
-    // Group by stripped source (remove "card", "Red Seal retrigger" prefixes)
     const cleanSource = row.source
       .replace(/^(card|Gold Seal retrigger|Red Seal retrigger|[\w_]+ retrigger)\s*/, "")
       .trim() || row.source;

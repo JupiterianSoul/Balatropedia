@@ -104,7 +104,6 @@ export const ALL_SCALINGS = Object.keys(SCALING_LABELS) as Scaling[];
 export const ALL_STAGES: Stage[] = ["early", "mid", "late"];
 export const ALL_LEVELS: Level[] = ["low", "med", "high"];
 
-/** Reverse lookup: joker display name -> id (for sprite/JOKER_MAP). */
 export const NAME_TO_ID: Record<string, string> = Object.fromEntries(JOKERS.map(j => [j.name, j.id]));
 export function jokerIdFromName(name: string): string | undefined {
   return NAME_TO_ID[name];
@@ -470,20 +469,6 @@ export function pairScore(aId: string, bId: string): number {
   if (a.tags.some((t) => b.tags.includes(t))) score += 1;
   if (a.antiSynergies.includes(bId) || b.antiSynergies.includes(aId)) score -= 3;
   return score;
-}
-
-export interface HeatmapEntry {
-  id: string;
-  name: string;
-  score: number;
-}
-
-export function heatmapFor(jokerId: string): HeatmapEntry[] {
-  return JOKERS.filter((j) => j.id !== jokerId).map((j) => ({
-    id: j.id,
-    name: j.name,
-    score: pairScore(jokerId, j.id),
-  }));
 }
 
 export interface EngineCategory {

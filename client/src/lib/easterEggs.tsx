@@ -8,10 +8,6 @@ const KONAMI = [
   "b","a",
 ];
 
-// Listens for two hidden inputs:
-//   1) The classic Konami code -> chip-blue confetti burst.
-//   2) Typing "balatro" anywhere -> red mult confetti burst.
-// Both ignore typing inside <input>, <textarea>, contenteditable.
 export function EasterEggsProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
 
@@ -31,7 +27,6 @@ export function EasterEggsProvider({ children }: { children: React.ReactNode }) 
     function onKey(e: KeyboardEvent) {
       if (isTyping(e.target)) return;
 
-      // Konami
       const next = e.key.length === 1 ? e.key.toLowerCase() : e.key;
       konami.push(next);
       if (konami.length > KONAMI.length) konami.shift();
@@ -45,7 +40,6 @@ export function EasterEggsProvider({ children }: { children: React.ReactNode }) 
         return;
       }
 
-      // Word buffer: detect "balatro"
       if (e.key.length === 1) {
         buffer += e.key.toLowerCase();
         if (buffer.length > 20) buffer = buffer.slice(-20);
@@ -57,7 +51,6 @@ export function EasterEggsProvider({ children }: { children: React.ReactNode }) 
             description: "You typed the magic word.",
           });
         }
-        // reset buffer after 3s of no keys
         if (bufferTimer) window.clearTimeout(bufferTimer);
         bufferTimer = window.setTimeout(() => { buffer = ""; }, 3000);
       }

@@ -25,7 +25,7 @@ function readStoredBool(key: string, fallback: boolean): boolean {
     const raw = window.localStorage.getItem(key);
     if (raw === "true") return true;
     if (raw === "false") return false;
-  } catch { /* blocked */ }
+  } catch {  }
   return fallback;
 }
 
@@ -37,7 +37,7 @@ function readStoredNumber(key: string, fallback: number): number {
       const n = Number(raw);
       if (Number.isFinite(n)) return clamp(n);
     }
-  } catch { /* blocked */ }
+  } catch {  }
   return fallback;
 }
 
@@ -62,7 +62,7 @@ export function CRTProvider({ children }: { children: ReactNode }) {
       try {
         window.localStorage.setItem(ENABLED_KEY, String(enabled));
         window.localStorage.setItem(INTENSITY_KEY, String(intensity));
-      } catch { /* blocked */ }
+      } catch {  }
     }
   }, [enabled, intensity]);
 

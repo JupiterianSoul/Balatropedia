@@ -12,36 +12,21 @@ import { useT, useLabels, useI18n, useGameText } from "@/lib/i18n";
 import { FormattedBalatroText } from "@/lib/balatroText";
 import { cn } from "@/lib/utils";
 
-/* ------------------------------------------------------------------------ *
- * Run Challenge generator
- *
- * Goal: feel like a *mission briefing* a player can actually try.
- * - Named build with a flavor adjective (e.g. "Hot-Pursuit Flush Five")
- * - Concrete win condition (Ante target + hand target)
- * - Prioritized joker pool (must-have / fill-in)
- * - Run modifiers (Deck + Stake) with explicit difficulty estimate
- * - 2-3 razor-sharp tactical tips, plus one explicit "watch-out"
- *
- * Determinism: a seed drives mulberry32 so the same number always rebuilds
- * the same brief (Reroll picks a fresh seed).
- * ------------------------------------------------------------------------ */
-
 interface Challenge {
   name: string;
   archetypeId: string;
   comboId: string | null;
-  mustHave: string[]; // up to 3 core jokers
-  fillIn: string[]; // up to 3 secondary
+  mustHave: string[];
+  fillIn: string[];
   deckId: string;
   stakeId: string;
-  goal: string; // win condition narrative
+  goal: string;
   consumableHint: string;
-  tips: string[]; // 2-3 lines
+  tips: string[];
   watchOut: string;
   difficulty: "Easy" | "Medium" | "Hard" | "Brutal";
 }
 
-// Flavor prefixes - applied to the archetype label to form a build name
 const FLAVORS = [
   "Hot-Pursuit", "Cold-Steel", "Razor-Edge", "Iron-Cradle", "Bone-Deep",
   "Pocket-Aces", "Ghost-Hand", "Lucky-Seven", "Crimson", "Velvet",
@@ -49,7 +34,6 @@ const FLAVORS = [
   "Last-Call", "Stone-Cold", "Wildcard", "Knife-Fight", "Bankroll",
 ];
 
-// Per-archetype goal narratives - explicit win condition the player can chase
 const GOALS: Record<string, string> = {
   flush: "Beat Ante 8 by scoring at least one $200+ Flush.",
   flush_five: "Land a single Flush Five worth $1500+ before Ante 8.",
@@ -77,7 +61,6 @@ const GOALS: Record<string, string> = {
 };
 const GOAL_FALLBACK = "Beat Ante 8 with this build's signature hand as your scorer.";
 
-// Consumable strategy hints per archetype
 const CONSUMABLES: Record<string, string> = {
   flush: "Hierophant for pair fills, The World to unify suits, Tower for filler bricks.",
   flush_five: "Smeared is mandatory. Cryptid + 2x Strength makes Flush Fives trivial.",
@@ -106,7 +89,6 @@ const CONSUMABLES: Record<string, string> = {
 const CONSUMABLE_FALLBACK =
   "Use Tarots/Spectrals that match your archetype's hand; rerolls beat buys when the shop is cold.";
 
-// Per-archetype tactical tips (3-line punch list)
 const TIPS_BY_ARCH: Record<string, string[]> = {
   flush: [
     "Skip any shop without a flush enabler in Ante 1-2.",
@@ -170,7 +152,6 @@ const TIPS_FALLBACK = [
   "Save 1 discard for boss-blind pivots.",
 ];
 
-// Deck difficulty modifier (cheap heuristic; could be data-driven)
 const DECK_DIFFICULTY: Record<string, number> = {
   red: 0, blue: 0, yellow: 0, black: 1, magic: 1, nebula: 1, ghost: 1,
   abandoned: 1, checkered: 0, zodiac: 1, painted: 1, anaglyph: 1,
@@ -211,13 +192,11 @@ function buildChallenge(seed: number, archLabel: (id: string) => string): Challe
   const archCombos = COMBOS.filter((c) => c.archetype === arch.id);
   const combo = archCombos.length ? pick(rng, archCombos) : null;
 
-  // Must-have: combo core (up to 3) OR archetype enablers (up to 3)
   const mustPool = combo
     ? combo.core
     : arch.enablers.slice(0, 4);
   const mustHave = shuffle(rng, mustPool).slice(0, 3);
 
-  // Fill-in: combo optional + arch scalers + arch enablers we didn't already use
   const fillPool = Array.from(
     new Set([
       ...(combo?.optional ?? []),
@@ -243,7 +222,6 @@ function buildChallenge(seed: number, archLabel: (id: string) => string): Challe
     arch.oftenLacks ??
     "Don't lock in too early; keep one flex slot for unexpected boss blinds.";
 
-  // Difficulty estimate
   const dScore =
     (DECK_DIFFICULTY[deck.id] ?? 0) +
     (STAKE_DIFFICULTY[stake.id] ?? 0) +
@@ -284,7 +262,7 @@ function JokerPick({ id, onClick }: { id: string; onClick: (id: string) => void 
       className="group flex items-center gap-2 rounded-md border border-border bg-card/60 px-2 py-1.5 text-left transition-colors hover:border-accent/60 hover:bg-card"
       data-testid={`challenge-joker-${id}`}
     >
-      <JokerSprite jokerId={id} name={displayName} size={28} className="h-7 w-7 shrink-0" />
+      <JokerSprite jokerId={id} name={displayName} size={32} />
       <span className="truncate text-[12px] font-medium text-foreground/90 group-hover:text-accent">
         {displayName}
       </span>
@@ -292,11 +270,6 @@ function JokerPick({ id, onClick }: { id: string; onClick: (id: string) => void 
   );
 }
 
-/**
- * Inline panel - designed to live inside MyRunTab next to slot management.
- * Renders the whole brief flat (no dialog wrapper). Pass `compact` for the
- * pared-down version used inside sidebars.
- */
 export function RunChallengePanel() {
   const t = useT();
   const labels = useLabels();
@@ -304,7 +277,6 @@ export function RunChallengePanel() {
   const { openJokerDetail } = useApp();
   const [seed, setSeed] = useState(() => Date.now() & 0x7fffffff);
 
-  // Resolve archetype label outside of the closure so it picks up i18n
   const resolveArchLabel = (id: string) =>
     labels.archetype[id as Archetype] ??
     ARCHETYPE_LABELS[id as Archetype] ??
@@ -321,7 +293,7 @@ export function RunChallengePanel() {
       className="casino-card overflow-hidden border-l-4 border-l-accent p-0"
       data-testid="panel-run-challenge"
     >
-      {/* Header strip */}
+      { }
       <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-black bg-[hsl(150_16%_10%)] px-4 py-2.5">
         <div className="flex items-center gap-2 min-w-0">
           <Dices className="h-4 w-4 shrink-0 text-accent" strokeWidth={2.5} />
@@ -351,7 +323,7 @@ export function RunChallengePanel() {
       </div>
 
       <div className="space-y-4 p-4">
-        {/* Mission name + goal */}
+        { }
         <div>
           <div className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
             {t("ui.challenge.mission")}
@@ -378,7 +350,7 @@ export function RunChallengePanel() {
           )}
         </div>
 
-        {/* Must-have jokers */}
+        { }
         <div>
           <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/80">
             <Swords className="h-3.5 w-3.5 text-[hsl(0_75%_70%)]" strokeWidth={2.5} />
@@ -397,7 +369,7 @@ export function RunChallengePanel() {
           </div>
         </div>
 
-        {/* Fill-in jokers */}
+        { }
         {ch.fillIn.length > 0 && (
           <div>
             <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -411,7 +383,7 @@ export function RunChallengePanel() {
           </div>
         )}
 
-        {/* Run modifiers: Deck + Stake */}
+        { }
         <div className="grid gap-2 sm:grid-cols-2">
           <div className="rounded-md border border-border bg-card/40 p-2.5">
             <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
@@ -445,7 +417,7 @@ export function RunChallengePanel() {
           </div>
         </div>
 
-        {/* Tactical tips */}
+        { }
         <div>
           <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/80">
             <Lightbulb className="h-3.5 w-3.5 text-[hsl(45_85%_60%)]" strokeWidth={2.5} />
@@ -464,7 +436,7 @@ export function RunChallengePanel() {
           </ul>
         </div>
 
-        {/* Consumables guide */}
+        { }
         <div className="rounded-md border border-[hsl(280_30%_45%)]/30 bg-[hsl(280_30%_25%)]/15 p-2.5">
           <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[hsl(280_50%_80%)]">
             <Shield className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -475,7 +447,7 @@ export function RunChallengePanel() {
           </p>
         </div>
 
-        {/* Watch out */}
+        { }
         <div className="rounded-md border border-destructive/40 bg-destructive/[0.07] p-2.5">
           <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[hsl(0_70%_78%)]">
             <Skull className="h-3.5 w-3.5" strokeWidth={2.5} />

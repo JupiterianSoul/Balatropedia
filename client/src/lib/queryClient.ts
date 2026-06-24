@@ -19,7 +19,6 @@ function writePersistedToken(t: string | null) {
     if (t == null) window.localStorage?.removeItem(TOKEN_STORAGE_KEY);
     else window.localStorage?.setItem(TOKEN_STORAGE_KEY, t);
   } catch {
-    // localStorage may be blocked (sandboxed iframe, privacy mode); fall back to in-memory only.
   }
 }
 

@@ -1,16 +1,3 @@
-// Balatro seed engine — port of Immolate / TheSoul (MIT-licensed) to TypeScript.
-// Reference: https://github.com/SpectralPack/TheSoul/blob/main/include/functions.hpp
-//
-// Usage:
-//   const inst = new Instance("8Q47WV6K");
-//   inst.setDeck("Red Deck");
-//   inst.setStake("White Stake");
-//   inst.initLocks(1, false, true);     // freshRun, not freshProfile
-//   const ante = analyzeAnte(inst, 1);  // {boss, voucher, tags, shop, packs}
-//
-// Every random("ID") call uses a *fresh* LuaRandom seeded by get_node(ID).
-// get_node mutates an in-memory cache, so identical IDs produce different
-// streams over time. The class is NOT pure — instantiate fresh per analysis.
 
 import { LuaRandom, pseudohash, round13 } from "./seedRng";
 import {
@@ -23,7 +10,6 @@ import type {
   JokerData, JokerStickers, Pack, ShopItem, ShopRates, StandardCard, WeightedItem,
 } from "./seedItems";
 
-// Alias for clarity — VOUCHERS is laid out as pairs of [base, upgrade].
 const VOUCHERS_PAIRS = VOUCHERS;
 
 export interface InstParams {
@@ -41,7 +27,7 @@ function defaultParams(): InstParams {
     stake: "White Stake",
     showman: false,
     sixesFactor: 1,
-    version: 10103, // 1.0.1c — TheSoul default. Use 10104+ for modern.
+    version: 10103,
     vouchers: [],
   };
 }
@@ -60,7 +46,6 @@ export class Instance {
     this.params = defaultParams();
   }
 
-  // ── Core node + RNG ───────────────────────────────────────────────────────
   getNode(id: string): number {
     if (!this.cacheNodes.has(id)) {
       this.cacheNodes.set(id, pseudohash(id + this.seed));
@@ -101,7 +86,6 @@ export class Instance {
     return items[idx - 1].item;
   }
 
-  // ── Lock helpers ──────────────────────────────────────────────────────────
   lock(item: string) { this.locked.push(item); }
   unlock(item: string) {
     const i = this.locked.indexOf(item);
@@ -109,7 +93,6 @@ export class Instance {
   }
   isLocked(item: string) { return this.locked.indexOf(item) !== -1; }
 
-  /** Take a shallow snapshot of mutable RNG/lock state. Restorable with restoreState(). */
   snapshotState(): { cacheNodes: Map<string, number>; locked: string[]; generatedFirstPack: boolean } {
     return {
       cacheNodes: new Map(this.cacheNodes),
@@ -151,7 +134,6 @@ export class Instance {
     if (ante === 6) this.unlock("The Ox");
   }
 
-  // ── Card generators ───────────────────────────────────────────────────────
   nextTarot(source: string, ante: number, soulable: boolean): string {
     const a = String(ante);
     if (soulable && (this.params.showman || !this.isLocked("The Soul")) && this.random("soul_Tarot" + a) > 0.997) {
@@ -180,7 +162,6 @@ export class Instance {
   nextJoker(source: string, ante: number, hasStickers: boolean): JokerData {
     const a = String(ante);
 
-    // Rarity
     let rarity: string;
     if (source === "sou") rarity = "4";
     else if (source === "wra") rarity = "3";
@@ -191,7 +172,6 @@ export class Instance {
       rarity = poll > 0.95 ? "3" : poll > 0.7 ? "2" : "1";
     }
 
-    // Edition
     let editionRate = 1;
     if (this.isVoucherActive("Glow Up")) editionRate = 4;
     else if (this.isVoucherActive("Hone")) editionRate = 2;
@@ -203,7 +183,6 @@ export class Instance {
     else if (editionPoll > 1 - 0.04 * editionRate) edition = "Foil";
     else edition = "No Edition";
 
-    // Joker pool by rarity + version
     let joker = "Joker";
     if (rarity === "4") {
       joker = this.params.version > 10099
@@ -220,7 +199,6 @@ export class Instance {
       joker = this.randchoice("Joker1" + source + a, pool);
     }
 
-    // Stickers
     const stickers: JokerStickers = { eternal: false, perishable: false, rental: false };
     if (hasStickers) {
       const isShop = source !== "buf";
@@ -256,7 +234,6 @@ export class Instance {
     return { joker, rarity, edition, stickers };
   }
 
-  // ── Shop ─────────────────────────────────────────────────────────────────
   getShopInstance(): ShopRates {
     let tarotRate = 4, planetRate = 4, playingCardRate = 0, spectralRate = 0;
     if (this.params.deck === "Ghost Deck") spectralRate = 2;
@@ -293,7 +270,6 @@ export class Instance {
     return { type: "Tarot", item: "The Fool" };
   }
 
-  // ── Packs ────────────────────────────────────────────────────────────────
   nextPack(ante: number): string {
     if (ante <= 2 && !this.generatedFirstPack && this.params.version > 10099) {
       this.generatedFirstPack = true;
@@ -337,14 +313,12 @@ export class Instance {
     for (const it of pack) this.unlock(it);
     return pack;
   }
-  /** Non-destructive Soul resolution: returns Legendary+Edition without advancing RNG. */
   resolveSoulAt(ante: number): JokerData {
     const snap = this.snapshotState();
     const jkr = this.nextJoker("sou", ante, false);
     this.restoreState(snap);
     return jkr;
   }
-  /** Resolve all "The Soul" entries in a pack items list (non-destructive). */
   resolveSoulsInPack(items: string[], ante: number): { position: number; card: "The Soul"; joker: JokerData }[] {
     const out: { position: number; card: "The Soul"; joker: JokerData }[] = [];
     items.forEach((it, idx) => {
@@ -390,7 +364,6 @@ export class Instance {
     return pack;
   }
 
-  // ── Vouchers / deck / stake / tag / boss ─────────────────────────────────
   isVoucherActive(v: string) { return this.params.vouchers.indexOf(v) !== -1; }
   activateVoucher(v: string) {
     this.params.vouchers.push(v);
@@ -433,10 +406,8 @@ export class Instance {
   }
 }
 
-// ── High-level analysis ──────────────────────────────────────────────────────
-
 export interface SoulResolution {
-  position: number; // 0-indexed position within pack items
+  position: number;
   card: "The Soul";
   joker: JokerData;
 }
@@ -486,11 +457,10 @@ export function defaultInput(seed: string): AnalysisInput {
     freshRun: true,
     maxAnte: 8,
     cardsPerAnte: 15,
-    packsPerAnte: 6, // Matches TheSoul's natural ante 2+ count; ante 1 auto-caps to 4.
+    packsPerAnte: 6,
   };
 }
 
-/** Build a fully-initialized Instance. */
 export function buildInstance(input: AnalysisInput): Instance {
   const inst = new Instance(input.seed);
   inst.params.version = input.version;
@@ -501,7 +471,6 @@ export function buildInstance(input: AnalysisInput): Instance {
   return inst;
 }
 
-/** Generate pack contents based on pack name. */
 function generatePackContents(inst: Instance, name: string, ante: number): PackContents {
   const info: Pack = packInfo(name);
   if (info.type === "Arcana Pack") {
@@ -526,26 +495,19 @@ function generatePackContents(inst: Instance, name: string, ante: number): PackC
   return { name, size: info.size, choices: info.choices, contents: { kind: "tarot", items: [] } };
 }
 
-/** Analyze one ante. Mutates the instance. Matches TheSoul's per-ante loop. */
 export function analyzeAnte(inst: Instance, ante: number, input: AnalysisInput): AnteResult {
   inst.initUnlocks(ante, input.freshProfile);
   const boss = inst.nextBoss(ante);
   const voucher = inst.nextVoucher(ante);
-  // After rolling the voucher, lock it and unlock its tier-2 partner (matches
-  // TheSoul's index.html loop). This is what makes Ante 2 different from
-  // Ante 1 when the same voucher pool is rolled.
   inst.lock(voucher);
   for (let i = 0; i < VOUCHERS_PAIRS.length; i += 2) {
     if (VOUCHERS_PAIRS[i] === voucher) inst.unlock(VOUCHERS_PAIRS[i + 1]);
   }
   const tags: [string, string] = [inst.nextTag(ante), inst.nextTag(ante)];
 
-  // Shop queue
   const shopQueue: ShopItem[] = [];
   for (let i = 0; i < input.cardsPerAnte; i++) shopQueue.push(inst.nextShopItem(ante));
 
-  // Packs: TheSoul uses 4 on ante 1 and 6 on every other ante (free dynamic
-  // shop + boss/blind packs). The cap honors the user's packsPerAnte slider.
   const naturalPackCount = ante === 1 ? 4 : 6;
   const packCount = Math.min(input.packsPerAnte, naturalPackCount);
   const packs: PackContents[] = [];
@@ -557,7 +519,6 @@ export function analyzeAnte(inst: Instance, ante: number, input: AnalysisInput):
   return { ante, boss, voucher, tags, shopQueue, packs };
 }
 
-/** Run full analysis over all antes. */
 export function runAnalysis(input: AnalysisInput): AnteResult[] {
   const inst = buildInstance(input);
   const out: AnteResult[] = [];
@@ -567,8 +528,6 @@ export function runAnalysis(input: AnalysisInput): AnteResult[] {
   return out;
 }
 
-// ── Search helpers (for Joker hunter + Soul finder UIs) ──────────────────────
-
 export interface JokerSighting {
   ante: number;
   source: "shop" | "buffoon-pack" | "soul-tarot" | "soul-spectral";
@@ -576,15 +535,11 @@ export interface JokerSighting {
   stickers: JokerStickers;
   rarity: string;
   packName?: string;
-  /** 1-indexed shop slot when source=shop. */
   shopSlot?: number;
-  /** 1-indexed pack index within ante when source=buffoon-pack. */
   packIndex?: number;
-  /** 1-indexed card position within the pack when source=buffoon-pack. */
   packPosition?: number;
 }
 
-/** Locate a named joker across antes. Returns first N sightings. */
 export function findJoker(results: AnteResult[], jokerName: string, max = 50): JokerSighting[] {
   const out: JokerSighting[] = [];
   for (const r of results) {
@@ -625,13 +580,10 @@ export interface SoulSighting {
   packName: string;
   source: "tarot-pack" | "spectral-pack";
   card: "The Soul" | "Black Hole";
-  /** When card === "The Soul", the resolved Legendary joker + edition. */
   resolvedJoker?: JokerData;
-  /** 0-indexed position within the pack. */
   position?: number;
 }
 
-/** Locate The Soul + Black Hole spawns across pack contents. */
 export function findSoulSpawns(results: AnteResult[]): SoulSighting[] {
   const out: SoulSighting[] = [];
   for (const r of results) {

@@ -38,7 +38,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
       )}
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-start gap-2.5">
-          <JokerSprite jokerId={joker.id} name={displayName} size={48} className="h-12 w-12 sm:h-14 sm:w-14" />
+          <JokerSprite jokerId={joker.id} name={displayName} size={56} />
           <h3 className="min-w-0 font-display text-base font-bold leading-tight gold-text">
             {displayName}
           </h3>

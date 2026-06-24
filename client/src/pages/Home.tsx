@@ -28,7 +28,6 @@ import { SeedsTab } from "@/tabs/SeedsTab";
 import { SynergyTab } from "@/tabs/SynergyTab";
 import { CombosTab } from "@/tabs/CombosTab";
 import { ArchetypesTab } from "@/tabs/ArchetypesTab";
-import { HeatmapTab } from "@/tabs/HeatmapTab";
 import { BossBlindsTab } from "@/tabs/BossBlindsTab";
 import { DecksTab } from "@/tabs/DecksTab";
 import { StakesTab } from "@/tabs/StakesTab";
@@ -51,21 +50,18 @@ const NAV_GROUPS: NavGroup[] = [
   { key: "run", tabs: ["myrun", "runchallenge", "buildlab", "calculator", "seeds"] },
   { key: "build", tabs: ["synergies", "combos", "archetypes", "tierlist", "compare", "skeleton"] },
   { key: "game", tabs: ["jokers", "decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
-  { key: "more", tabs: ["heatmap", "glossary", "whatsnew", "help", "about", "settings"] },
+  { key: "more", tabs: ["glossary", "whatsnew", "help", "about", "settings"] },
 ];
 
-// All valid tab IDs for hash routing validation
 const VALID_TABS = new Set([
   "home", "jokers", "myrun", "runchallenge", "buildlab", "calculator", "seeds", "synergies", "combos", "archetypes", "tierlist",
   "compare", "skeleton", "decks", "stakes", "bosses", "vouchers",
-  "consumables", "modifiers", "heatmap", "glossary", "whatsnew",
+  "consumables", "modifiers", "glossary", "whatsnew",
   "help", "about", "settings", "favorites",
-  // legacy aliases
   "library",
   "runplanner",
 ]);
 
-// Legacy tab redirects (old hash links continue to work)
 const LEGACY_REDIRECTS: Record<string, string> = {
   library: "jokers",
   runplanner: "buildlab",
@@ -73,10 +69,6 @@ const LEGACY_REDIRECTS: Record<string, string> = {
 
 export default function Home() {
   const { favoriteJokers, favoriteCombos } = useApp();
-  // Initial tab from history state (set by previous in-app navigation).
-  // We do NOT read from window.location.hash because wouter's useHashLocation
-  // owns the hash and treats it as the route path (#/ => '/'). Touching it
-  // would route us to NotFound.
   const initialTab = (() => {
     if (typeof window === "undefined") return "home";
     const st = window.history.state;
@@ -93,14 +85,6 @@ export default function Home() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const showEsBanner = lang === "es" && !esBannerDismissed;
 
-  // Mobile back-button fix: push history state on tab change, listen for popstate.
-  // Without this, the device back gesture exits the site (because the page has
-  // no history entries). With it, back navigation moves between tabs first.
-  //
-  // IMPORTANT: we MUST NOT change the URL - wouter's useHashLocation owns the
-  // hash and treats it as the route path. We push state with the *same* URL
-  // (passing `null` to pushState/replaceState keeps the current URL). This
-  // still creates a history entry that the device back gesture can pop.
   useEffect(() => {
     function onPop(e: PopStateEvent) {
       let next = (e.state && typeof e.state.tab === "string" && VALID_TABS.has(e.state.tab))
@@ -111,11 +95,10 @@ export default function Home() {
       setMobileNavOpen(false);
     }
     window.addEventListener("popstate", onPop);
-    // Seed initial state so the first back-press has somewhere to go
     if (!window.history.state || typeof window.history.state.tab !== "string") {
       try {
         window.history.replaceState({ tab: initialTab }, "");
-      } catch { /* ignore */ }
+      } catch {  }
     }
     return () => window.removeEventListener("popstate", onPop);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,16 +106,14 @@ export default function Home() {
 
   function handleSelect(v: string) {
     if (v !== tab) {
-      // Push a new history entry without changing the URL (keeps wouter happy)
       try {
         window.history.pushState({ tab: v }, "");
-      } catch { /* ignore (e.g. embedded iframes) */ }
+      } catch {  }
     }
     setTab(v);
     setMobileNavOpen(false);
   }
 
-  // Logo click Easter egg: 5 rapid clicks pop confetti. Discreet.
   const brandClicks = useRef<{ n: number; last: number }>({ n: 0, last: 0 });
   function onBrandClick() {
     const now = Date.now();
@@ -163,17 +144,13 @@ export default function Home() {
   );
 
   return (
-    // Outer is locked to viewport height on desktop with overflow-hidden so the
-    // sidebar and right pane become two independent scroll contexts (standard
-    // Slack/Discord/Notion layout). Mobile keeps document scroll because the
-    // sidebar isn't shown there.
     <div className="flex min-h-[100dvh] bg-background md:h-[100dvh] md:min-h-0 md:overflow-hidden">
       <Tabs
         value={tab}
         onValueChange={handleSelect}
         className="flex min-h-[100dvh] w-full md:h-[100dvh] md:min-h-0"
       >
-        {/* Desktop sidebar: its own scroll context, never scrolls with the page. */}
+        { }
         <aside
           className="z-20 hidden h-[100dvh] w-60 shrink-0 flex-col border-r-4 border-black bg-[hsl(178_14%_13%)] shadow-[4px_0_0_hsl(198_18%_4%)] md:flex"
           data-testid="sidebar-desktop"
@@ -198,7 +175,7 @@ export default function Home() {
           </div>
         </aside>
 
-        {/* Right pane: its own independent vertical scroll on desktop. */}
+        { }
         <div className="flex min-w-0 flex-1 flex-col md:h-[100dvh] md:overflow-y-auto">
           {}
           <header className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden">
@@ -284,8 +261,8 @@ export default function Home() {
 
           {}
           {tab === "home" ? (
-            <div className="mount-fade flex flex-1 min-h-0" key={tab} data-testid="home-fullbleed">
-              <TabsContent value="home" className="mt-0 flex-1 min-h-0 flex flex-col data-[state=inactive]:hidden"><HomeTab onNavigate={handleSelect} /></TabsContent>
+            <div className="mount-fade flex flex-1 min-h-0 min-w-0 w-full" key={tab} data-testid="home-fullbleed">
+              <TabsContent value="home" className="mt-0 flex-1 min-h-0 min-w-0 w-full flex flex-col data-[state=inactive]:hidden"><HomeTab onNavigate={handleSelect} /></TabsContent>
             </div>
           ) : (
           <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
@@ -305,7 +282,6 @@ export default function Home() {
               <TabsContent value="consumables" className="mt-0"><ConsumablesTab /></TabsContent>
               <TabsContent value="vouchers" className="mt-0"><VouchersTab /></TabsContent>
               <TabsContent value="modifiers" className="mt-0"><ModifiersTab /></TabsContent>
-              <TabsContent value="heatmap" className="mt-0"><HeatmapTab /></TabsContent>
               <TabsContent value="bosses" className="mt-0"><BossBlindsTab /></TabsContent>
               <TabsContent value="compare" className="mt-0"><CompareTab /></TabsContent>
               <TabsContent value="skeleton" className="mt-0"><SkeletonTab /></TabsContent>

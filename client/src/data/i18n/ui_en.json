@@ -41,7 +41,6 @@
       "consumables": "Consumables",
       "vouchers": "Vouchers",
       "modifiers": "Modifiers",
-      "heatmap": "Heatmap",
       "bosses": "Boss Blinds",
       "compare": "Compare",
       "skeleton": "Skeleton",
@@ -316,14 +315,6 @@
       "compare_select_hint": "Select 2-4 Jokers to compare side by side.",
       "compare_add_two": "Add at least two Jokers to start comparing.",
       "compare_none": "None listed",
-      "heatmap_title": "Synergy Heatmap",
-      "heatmap_pick": "Pick a Joker…",
-      "heatmap_neg_first": "Negatives first",
-      "heatmap_pos_first": "Positives first",
-      "heatmap_scale": "Scale:",
-      "heatmap_clash": "Clash",
-      "heatmap_neutral": "Neutral",
-      "heatmap_empty": "Select a Joker to build the heatmap.",
       "fav_sign_in_note": "Sign in to save favorites permanently. Right now they only last this session.",
       "fav_add_saved_note": "Add a saved note…",
       "fav_add_session_note": "Add a note (session only)…",
@@ -340,12 +331,6 @@
       "myrun_voucher_frag": " · {{count}} vouchers",
       "myrun_voucher_frag_one": " · {{count}} voucher",
       "compare_conflicts_with": " · conflicts with {{names}}",
-      "heatmap_subtitle": "Pick any Joker. Every other Joker in the game gets a pair score against it: gold means strong synergy, oxblood means anti-synergy. Click any cell to open that Joker's full detail.",
-      "heatmap_how_title": "How to read this",
-      "heatmap_how_b1": "Higher gold = the two Jokers reinforce each other (shared archetype, payoff chain, retrigger fuel, etc).",
-      "heatmap_how_b2": "Oxblood = they fight (one destroys what the other needs, opposite hand types, etc).",
-      "heatmap_how_b3": "Neutral = no curated interaction; they coexist but don't multiply.",
-      "heatmap_how_b4": "Tap or click a cell to jump into that Joker's profile and explore deeper.",
       "fav_empty": "No favorites yet. Star Jokers and Combos to save them here. Notes are kept in this session only; they'll reset on refresh.",
       "fav_jokers": "Jokers",
       "fav_combos": "Combos",
@@ -377,7 +362,8 @@
       "empty_tier": "No jokers in this tier for this variant.",
       "i_understand": "I understand",
       "sources": "Sources",
-      "methodology": "Methodology"
+      "methodology": "Methodology",
+      "disclaimer_footer": "Tier lists on this page are aggregated from public community sources (Reddit threads, YouTube guides, balatrocalc, etc.) and reflect community consensus, not an official Balatro ranking. Sources are listed above; rankings change as the meta evolves."
     },
     "whatsnew": {
       "heading": "What's New",
@@ -485,6 +471,15 @@
         "search_first": "Unified Home search across jokers, synergies, combos, and archetypes.",
         "discover": "Discover Something New button that never sends you to the same tab twice.",
         "updates_rename": "Sidebar 'What's New' renamed to 'Updates'."
+      },
+      "v1_8": {
+        "title": "v1.8 — Polish pass",
+        "uiscale": "Settings now has a UI scale slider (80% to 160%). Joker sprites and key elements rescale together without breaking layout, on desktop and mobile.",
+        "help_deep": "Help tab rewritten with deep per-tab explanations for every tool, in English, Français and Español.",
+        "disclaimer": "Tier list disclaimer is now dismissable once and remembered. A short reminder line stays at the bottom of the Tier List tab.",
+        "mobile_overflow": "Fixed a mobile bug where the right side of the home tab was cut off.",
+        "cleanup": "Heatmap feature removed. Source comments stripped from the entire codebase.",
+        "about_legal": "About tab refreshed with full source attribution and a clearer disclaimer that Balatropedia is fan-made and unaffiliated with LocalThunk or Playstack."
       }
     },
     "challenge": {
@@ -1454,12 +1449,12 @@
       "title": "About Balatropedia",
       "subtitle": "A community-sourced strategy companion for Balatro.",
       "what_title": "What this is",
-      "what_body": "Balatropedia indexes every joker, deck, stake, voucher, boss blind, consumable, and modifier in Balatro, paired with curated synergies, archetypes, and combo blueprints. Use the sidebar to jump between reference tools (Library, Glossary) and planning tools (My Run, Compare, Skeleton).",
+      "what_body": "Balatropedia is a fan-made companion for Balatro by LocalThunk and Playstack. It indexes every joker, deck, stake, voucher, boss blind, consumable, edition and enhancement, then adds planning tools: My Run notebook, Score Calculator, Build Lab, Skeleton run planner, Seed Analyzer/Finder/Library, and a community-driven Tier List. It is offered free, has no ads, and stores nothing about you beyond what you choose to sync via Google sign-in (your favorites, saved runs, and custom tier list).",
       "accuracy_title": "Accuracy & sources",
-      "accuracy_body": "Joker effects and base values are pulled from the Balatro Wiki. Synergy claims and combo strategy are cross-referenced against community-trusted guides; citations appear inline below each synergy and combo. The full source list:",
+      "accuracy_body": "Joker effects, scaling formulas, base values and synergy notes are cross-referenced against the official wiki and the community guides listed below. Numbers are best-effort and can lag patches; if you spot a mistake, please open an issue on GitHub.",
       "fandom_attribution": "Joker text and base values adapted from the Balatro Wiki under CC-BY-SA 3.0. Strategy commentary is editorial.",
       "disclaimer_title": "Honest disclaimer",
-      "disclaimer_body": "Strategy tips are community-validated opinions where cited, and curated heuristics elsewhere. Balatro is deep; a pairing that looks weak in theory may be strong with the right deck/voucher/stake setup. If you find something wrong, please open an issue or PR.",
+      "disclaimer_body": "Balatropedia is an unofficial, non-commercial fan project. It is not affiliated with, endorsed by, or sponsored by LocalThunk, Playstack, or any joker tier-list author. All Balatro names, art references and gameplay mechanics belong to their respective owners and are used here under fair-use for reference and educational purposes. Joker sprites are reduced-scale identifiers used to help players navigate the reference; if a rights holder requests removal of any asset, contact us via the GitHub issue tracker and it will be removed promptly. Community tier-list orderings reflect aggregated opinions from cited third-party guides and are not authoritative; the in-app tier list lets you drag jokers freely to encode your own view.",
       "submit_correction": "Submit a correction on GitHub",
       "credits_title": "Credits",
       "credit_game": "Game by",
@@ -1522,96 +1517,137 @@
         "enabled": "CRT enabled",
         "intensity": "Intensity",
         "hint": "Rounded corners, scanlines, slow rolling line, vignette. 0 disables, 60 is the default."
+      },
+      "ui_scale": {
+        "title": "Interface scale",
+        "label": "Joker icon size",
+        "hint": "Scales joker icons across the app. Layout and text remain unchanged.",
+        "reset": "Reset"
       }
     },
     "help": {
-      "title": "Help & Tutorial",
-      "subtitle": "Pick a feature on the left to learn what it does and how to use it.",
+      "title": "Help",
+      "subtitle": "What every tab does, how to use it, and tips.",
       "tip_label": "Tip",
       "overview": {
         "title": "Overview",
-        "body": "Balatropedia is an unofficial reference for Balatro. Every joker, deck, stake, voucher, boss blind, consumable, and modifier is indexed with curated synergies and archetypes. Use the sidebar to jump between tools; most are pure reference, a few (My Run, Compare, Skeleton) help you plan an actual run.",
-        "tip": "Star anything to add it to Favorites. Sign in to sync favorites and saved runs across devices."
+        "body": "Balatropedia is a fan-made companion for Balatro. It indexes every joker, deck, stake, voucher, boss blind, consumable, and gameplay modifier, then layers planning and analysis tools on top.\n\nThe left sidebar groups tabs by purpose. Reference tabs (Jokers, Decks, Bosses, etc.) are pure lookup. Run tabs (My Run, Compare, Skeleton, Run Challenge) help you plan an active or hypothetical run. Tools (Build Lab, Score Calculator, Seeds) crunch numbers and discover content. Tier List and Synergies summarize community consensus.",
+        "tip": "Star anything to add it to Favorites. Sign in (Google) to sync favorites, saved runs, build lab states, and tier list edits across devices."
       },
       "library": {
-        "title": "Library",
-        "body": "Searchable index of all 150 jokers with full descriptions, scaling, archetypes, and tags. Filters live behind the Filters button; click it to open them. Toggle Mosaic/Grid/List from the top bar.",
-        "tip": "Use the filters to narrow by role, rarity, stage, or hand type. Combine multiple filters; they AND together."
+        "title": "Jokers Library",
+        "body": "The Jokers tab is the master index. Filter by rarity, edition, scaling type, hand affinity, suit, archetype, or full-text search across names and effects.\n\nClick any card to open a detail sheet with: base effect, scaling formula when applicable, popularity rating, difficulty, recommended decks/stakes, synergies, counter jokers, and curated source links.",
+        "tip": "Use the search bar with effect words ('retrigger', 'mult', 'discard') to find every joker that touches a mechanic."
       },
       "myrun": {
         "title": "My Run",
-        "body": "Build the joker set you're actually running. Pick a deck, stake, vouchers, and up to 10 joker slots. The right column live-updates with: curated synergies (hand-tuned pairs), implied archetypes, likely-synergy heuristics (partners / shared archetype / shared tags), and anti-synergy warnings.",
-        "tip": "Likely synergies appear in gold even when no curated entry exists; they're inferred from each joker's metadata so you always get feedback."
+        "body": "My Run is your live notebook for an active Balatro session. Paste your seed, pick your deck, stake, ante, and current jokers, then the tab surfaces relevant synergies, counter blinds, and shop priorities for your build.\n\nState persists locally and syncs to your Google account when signed in, so closing the tab does not wipe your run.",
+        "tip": "Pair My Run with the Seeds tab once a seed is loaded: shop predictions and pack contents stay consistent with your engine."
+      },
+      "runchallenge": {
+        "title": "Run Challenge",
+        "body": "A daily and on-demand challenge generator. Picks a deck, stake, ante target, and a forced joker pool to constrain your run. Useful for breaking habits and forcing unfamiliar builds.\n\nEach challenge displays the seed (when applicable), constraints, and a difficulty estimate based on the joker pool quality.",
+        "tip": "Re-roll the challenge if it asks for a joker pool you cannot reasonably build around; the generator is deliberately spicy."
+      },
+      "buildlab": {
+        "title": "Build Lab",
+        "body": "The Build Lab is a sandbox for theorycrafting a 5-joker board. Pick jokers, editions, and the active hand, and the lab computes chip and mult contributions plus the final score for that hand.\n\nIt is not a perfect simulator (some scoring quirks are approximated), but it is fast enough to compare two builds side by side.",
+        "tip": "Use it to test 'should I keep X or swap for Y' decisions; the delta column shows score impact directly."
+      },
+      "calculator": {
+        "title": "Score Calculator",
+        "body": "A focused chip/mult/X-mult calculator. Enter the played hand, hand level, base chips and mult, then layer modifiers from jokers, editions, and enhancements. The breakdown view shows the order of operations Balatro actually uses.\n\nGood for understanding why a hand 'should' have scored more, or proving a counter-intuitive multiplier ordering.",
+        "tip": "Toggle 'X-mult last' to see how negative jokers and joker order change the final number."
+      },
+      "seeds": {
+        "title": "Seeds (Analyzer · Finder · Library)",
+        "body": "The Seeds tab has three sub-tabs.\n\nAnalyzer: paste a seed, configure deck and stake, and the WASM engine simulates antes ahead of time, showing shop slots, packs, vouchers, and Soul resolutions per blind.\n\nFinder: search the entire seed space for a seed matching your constraints (specific joker in ante 1, a guaranteed Negative tag, etc.). Adjust CPU workers and tries per batch to trade speed against responsiveness.\n\nLibrary: curated and user-saved notable seeds, browsable by tag.",
+        "tip": "If Finder is slow, lower CPU workers to free your machine; if it's idle, push them higher. State persists between sessions."
       },
       "synergies": {
         "title": "Synergies",
-        "body": "Browse every curated joker pair, grouped by engine (XMult stack, retrigger, scaling, etc.). Each entry explains why the pair works and what kind of synergy it is.",
-        "tip": "Click any joker name to open the detail sheet with all its other partners."
+        "body": "A directed graph of joker pairings drawn from community guides (dood.gg, Balatro HQ, Mobalytics, validated Reddit threads). Each link is annotated with why it works, the engine type (XMult stack, deck manipulation, scaling, consistency), popularity, and difficulty.\n\nSwitch between A and B sides to see what jokers pair with a given target.",
+        "tip": "Sort by engine type to find every XMult stacker or every retrigger enabler at a glance."
       },
       "combos": {
         "title": "Combos",
-        "body": "Multi-joker setups (3+ pieces) that produce a known high-output engine. Each combo lists the required jokers, the hand it targets, and rough setup difficulty.",
-        "tip": "Combos are the long-form version of Synergies; use them as build goals rather than ad-hoc pairings."
+        "body": "Three-plus joker combos that escalate beyond simple pairs. Each combo lists the trigger sequence, win-rate notes when known, the deck/stake that enables it, and source guides.\n\nCombos are heavier commitments than synergies and usually require deck preparation across multiple antes.",
+        "tip": "Filter by 'staple' popularity for the safest combos; 'experimental' is for late-stake stunts."
       },
       "archetypes": {
         "title": "Archetypes",
-        "body": "Strategic build directions (Flush, Steel, High Card, Retrigger Engine, etc.). Each archetype lists enablers (cards that make it possible) and scalers (cards that pay it off), plus what it usually lacks.",
-        "tip": "When My Run shows an archetype, it means at least two of your jokers core that build. Add a scaler or enabler from its list to commit."
+        "body": "Build archetypes group jokers by the role they fill in a run: scaling backbone, XMult finisher, retrigger enabler, economy, deck control, etc.\n\nUse this tab to plan a build around a role rather than a single joker, and to see the substitution graph when your ideal pick does not appear in shop.",
+        "tip": "Each archetype lists 'when to commit' notes so you do not pivot too late."
+      },
+      "tierlist": {
+        "title": "Tier List",
+        "body": "An interactive S/A/B/C/D ranking of every joker. The default ordering reflects community consensus aggregated from Mobalytics, TheGamer, and Reddit threads; it is not authoritative.\n\nYou can drag jokers between tiers locally; when signed in, your custom tier list syncs to your account. The disclaimer at the bottom of the tab explains the sourcing.",
+        "tip": "Right-click a joker (or long-press on mobile) to open its detail sheet without leaving the tier list."
       },
       "compare": {
         "title": "Compare",
-        "body": "Side-by-side comparison of 2-4 jokers. Useful for shop decisions when two options are close. Compares scaling, stage, archetypes, partners, and anti-synergies.",
-        "tip": "Add a joker to Compare from any detail sheet via the Compare button."
+        "body": "Side-by-side compare for any two jokers, decks, vouchers, or bosses. Effects, scaling, sources, popularity, and synergies appear in parallel columns. Useful when shop hands you a forced choice between two cards.",
+        "tip": "The 'delta' row highlights only the differences; ignore matching rows to decide quickly."
       },
       "skeleton": {
         "title": "Skeleton",
-        "body": "Build a 5-joker template by engine slot (Chips / Flat Mult / XMult / Retrigger / Consistency). Pick one joker per slot to see how well the skeleton holds together.",
-        "tip": "Treat Skeleton as a blueprint, not a prescription; many runs swap slot roles mid-game."
+        "body": "Skeleton is a 5-slot run planner: pick a deck, stake, and target build, then commit jokers ante by ante to test whether the plan survives boss blind constraints.\n\nIt does not simulate scoring; it is a structural check against blind effects, deck quirks, and joker prerequisites.",
+        "tip": "Use Skeleton before you commit shop money on ante 1; a 30-second sanity check often saves the whole run."
       },
       "decks": {
         "title": "Decks",
-        "body": "Every base and unlockable deck with its starting effect and best-fit archetypes.",
-        "tip": "Pick a deck before you fill My Run; some archetypes only flourish on specific decks."
+        "body": "Every deck with its starting modifier, stake compatibility notes, and strategic hooks pulled from dood.gg deck guides. Click a deck for build archetypes that perform especially well with it.",
+        "tip": "Plasma and Abandoned have the biggest score-curve differences; the deck tab spells out the implications."
       },
       "stakes": {
         "title": "Stakes",
-        "body": "All eight stakes from White through Gold, with what each one changes (Blind size, shop scaling, restricted Tags, etc.) and the difficulty curve.",
-        "tip": "Higher stakes punish slow setup; bias toward early-stage jokers above Black Stake."
+        "body": "All stakes from White to Gold, with the cumulative modifier each one adds. Includes a quick reference for which jokers are nerfed (Eternal/Perishable/Rented chance) and which run conditions tighten at higher stakes.",
+        "tip": "When laddering stakes, the Black Stake (Perishable jokers) is the hardest mental shift; pair this tab with Tier List filtered by 'survives Black'."
       },
       "bosses": {
         "title": "Boss Blinds",
-        "body": "Every boss blind with its effect, the hands/jokers it disables, and how to counter it. Plan one round ahead.",
-        "tip": "Save consumables and high-impact jokers for boss blinds. Some bosses (The Pillar, The Plant) hard-counter specific archetypes."
+        "body": "Every boss blind, its disable condition, the antes it can appear at, and counter strategies. Tabs filter by ante range and effect type (suit ban, hand ban, scoring penalty, etc.).",
+        "tip": "When My Run flags an upcoming boss, this tab opens directly to a per-boss counter card with recommended jokers."
       },
       "vouchers": {
         "title": "Vouchers",
-        "body": "All vouchers, their cost, and their upgrade. Useful for shop-buy decisions in mid-late game.",
-        "tip": "Many archetypes (Steel, Glass, Discard) need a specific voucher to scale; check the archetype's `oftenLacks` field."
+        "body": "Every voucher and its tier-2 upgrade, with shop pricing, prerequisites, and impact estimates. Vouchers are run-defining choices; this tab helps weigh them.",
+        "tip": "Sort by 'economic impact' to surface money-printing vouchers (Overstock, Reroll Surplus) first; sort by 'scaling' for build-enablers."
       },
       "consumables": {
         "title": "Consumables",
-        "body": "Tarots, Planets, and Spectrals, with their effects and which builds they help most.",
-        "tip": "Planet cards level hands permanently; prioritize ones for your scoring hand. Spectrals are situational but powerful."
+        "body": "Tarots, Planets, Spectrals, and the special cards. Each entry shows the exact effect, when it is most efficient (e.g. Planet cards level up the right hand type), and whether it is destroyed on use.",
+        "tip": "Use the search bar with terms like 'enhancement', 'edition', or 'destroy' to find every consumable that touches a mechanic."
       },
       "modifiers": {
         "title": "Modifiers",
-        "body": "Enhancements (Bonus, Mult, Wild, Glass, Steel, Stone, Gold, Lucky), Editions (Foil, Holographic, Polychrome, Negative), and Seals (Red, Purple, Blue, Gold).",
-        "tip": "Stacking enhancement + edition + seal on one card can produce silly output. Plan for Negative on jokers you don't want to sell."
-      },
-      "heatmap": {
-        "title": "Heatmap",
-        "body": "Pick any joker and see how it pairs with every other joker, color-coded by synergy strength.",
-        "tip": "Green = strong, red = anti, grey = neutral. Use it to discover unexpected partners."
+        "body": "Card editions (Foil, Holographic, Polychrome, Negative) and enhancements (Bonus, Mult, Wild, Glass, Steel, Stone, Gold, Lucky). Stats, conflicts, and best pairings are listed for each.",
+        "tip": "Negative is the only edition that gives a joker slot; the modifiers tab makes the trade-off vs raw XMult explicit."
       },
       "glossary": {
         "title": "Glossary",
-        "body": "Definitions for every Balatro-specific term used across the app; Mult, Chips, XMult, Retrigger, Hand level, etc.",
-        "tip": "Open this side-by-side with My Run when learning the game."
+        "body": "Plain-English definitions for every gameplay term Balatropedia uses: chips, mult, XMult, retrigger, scoring sequence, blind, ante, etc. Useful when reading synergy notes that assume jargon.",
+        "tip": "Glossary entries are linked from joker effect text via underlined wiki-style links; click to jump straight here."
       },
       "favorites": {
         "title": "Favorites",
-        "body": "Everything you've starred; jokers and combos in one place. Add notes to remember why you favorited each one.",
-        "tip": "Sign in to keep favorites across devices; otherwise they live only in this browser session."
+        "body": "Everything you have starred (jokers, decks, vouchers, consumables, modifiers, bosses, stakes, archetypes, combos) collected in one tab. Filter by type to plan around just the ones you care about.",
+        "tip": "Sign in with Google to keep favorites across devices; otherwise they live in this browser only."
+      },
+      "whatsnew": {
+        "title": "What's New",
+        "body": "The version-by-version changelog. New features, balance-data updates, fixes, and polish are categorized with icons. The home tab shows only the most recent entry; this tab shows them all.",
+        "tip": "Bookmark this tab if you watched the project from earlier versions; the cumulative changelog is short and easy to skim."
+      },
+      "about": {
+        "title": "About",
+        "body": "Project goals, attribution, source guides, and the disclaimer that Balatropedia is fan-made and not affiliated with LocalThunk or Playstack. Links to the GitHub repository and the issue tracker live here.",
+        "tip": "Found a wrong number or a missing joker? The 'Submit a correction' link opens a pre-filled GitHub issue."
+      },
+      "settings": {
+        "title": "Settings",
+        "body": "Theme (dark/light), language (English / Français / Español), sound effects toggle, UI scale slider (80% to 160%), and account controls. The UI scale slider rescales joker sprites and key UI elements without breaking layout; useful on high-DPI desktops and large mobile screens.",
+        "tip": "If sprites feel too small on a 4K monitor, push UI scale to 130-140%. On phones, leave it at 100% unless you have specific accessibility needs."
       }
     },
     "kofi": {

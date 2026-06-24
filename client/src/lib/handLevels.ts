@@ -1,13 +1,3 @@
-/**
- * Balatro hand base stats per level.
- *
- * Each hand has a base (chips, mult) at level 1 and a per-level delta.
- * The level-up cost (planet card) increases each level by (chipsPerLevel,
- * multPerLevel). Values come from the public Balatro Hands Reference.
- *
- * "any" is not a real Balatro hand - it's only used by the joker dataset to
- * indicate hand-agnostic effects.
- */
 export type HandKey =
   | "high_card"
   | "pair"
@@ -54,7 +44,6 @@ export const ALL_HANDS: HandKey[] = [
   "five_of_a_kind", "flush_house", "flush_five",
 ];
 
-/** Returns (chips, mult) for a hand at the given level (1-indexed, clamped 1..50). */
 export function getHandStats(hand: HandKey, level: number): { chips: number; mult: number } {
   const stats = HAND_LEVELS[hand];
   const lvl = Math.max(1, Math.min(50, Math.floor(level)));
@@ -65,12 +54,6 @@ export function getHandStats(hand: HandKey, level: number): { chips: number; mul
   };
 }
 
-/**
- * Standard 5-card poker probabilities (52-card deck, no jokers).
- * Used by the hand-probability panel. Values are percentages.
- * Note: Balatro hands are computed from up to 5 played cards in an 8-card hand,
- * not from drawing 5 - so these are reference baselines, not exact in-game odds.
- */
 export const HAND_PROBABILITY_PCT: Record<HandKey, number> = {
   high_card: 50.12,
   pair: 42.26,
@@ -82,7 +65,6 @@ export const HAND_PROBABILITY_PCT: Record<HandKey, number> = {
   four_of_a_kind: 0.024,
   straight_flush: 0.0014,
   royal_flush: 0.000154,
-  // Balatro-exclusive hands need enhancements/wild cards to appear naturally.
   five_of_a_kind: 0,
   flush_house: 0,
   flush_five: 0,

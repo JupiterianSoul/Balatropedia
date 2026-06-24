@@ -139,12 +139,10 @@ export function CombosTab() {
     if (!highlightedComboId) return;
     const el = targetRef.current;
     if (el) {
-      // Defer to next frame so the filtered grid has rendered.
       requestAnimationFrame(() => {
         el.scrollIntoView({ behavior: "smooth", block: "center" });
       });
     }
-    // Fade out the highlight after a few seconds.
     const tmo = window.setTimeout(() => setHighlightedComboId(null), 4000);
     return () => window.clearTimeout(tmo);
   }, [highlightedComboId]);

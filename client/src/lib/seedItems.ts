@@ -1,11 +1,3 @@
-// Balatro item lists ported verbatim from Immolate / TheSoul (MIT-licensed).
-// Reference: https://github.com/SpectralPack/TheSoul/blob/main/include/items.hpp
-//
-// Three rarity lists per joker tier exist to cover game versions:
-//   *_100   — Balatro 1.0.0  (legacy)
-//   *_101C  — Balatro 1.0.1c (intermediate)
-//   (base)  — Balatro 1.0.1d and later (modern, default)
-// The version threshold logic lives in seedEngine.ts.
 
 export interface ShopRates {
   jokerRate: number;
@@ -23,13 +15,13 @@ export interface JokerStickers {
 
 export interface JokerData {
   joker: string;
-  rarity: string; // "1" Common, "2" Uncommon, "3" Rare, "4" Legendary
-  edition: string; // "No Edition" | "Foil" | "Holographic" | "Polychrome" | "Negative"
+  rarity: string;
+  edition: string;
   stickers: JokerStickers;
 }
 
 export interface ShopItem {
-  type: string; // "Joker" | "Tarot" | "Planet" | "Spectral" | "Playing Card"
+  type: string;
   item: string;
   jokerData?: JokerData;
 }
@@ -56,7 +48,6 @@ export const ENHANCEMENTS: string[] = [
   "Bonus", "Mult", "Wild", "Glass", "Steel", "Stone", "Gold", "Lucky",
 ];
 
-// Card codes: <Suit>_<Rank>. C=Clubs, D=Diamonds, H=Hearts, S=Spades. T=10.
 export const CARDS: string[] = [
   "C_2","C_3","C_4","C_5","C_6","C_7","C_8","C_9","C_A","C_J","C_K","C_Q","C_T",
   "D_2","D_3","D_4","D_5","D_6","D_7","D_8","D_9","D_A","D_J","D_K","D_Q","D_T",
@@ -197,7 +188,6 @@ export const LEGENDARY_JOKERS: string[] = [
   "Canio","Triboulet","Yorick","Chicot","Perkeo",
 ];
 
-// Vouchers in pairs: base / upgraded.
 export const VOUCHERS: string[] = [
   "Overstock","Overstock Plus","Clearance Sale","Liquidation","Hone","Glow Up",
   "Reroll Surplus","Reroll Glut","Crystal Ball","Omen Globe","Telescope",
@@ -207,7 +197,6 @@ export const VOUCHERS: string[] = [
   "Director's Cut","Retcon","Paint Brush","Palette",
 ];
 
-// Spectrals: two RETRY slots represent The Soul + Black Hole forced rolls.
 export const SPECTRALS: string[] = [
   "Familiar","Grim","Incantation","Talisman","Aura","Wraith","Sigil","Ouija",
   "Ectoplasm","Immolate","Ankh","Deja Vu","Hex","Trance","Medium","Cryptid",
@@ -222,7 +211,6 @@ export const TAGS: string[] = [
   "Orbital Tag","Economy Tag",
 ];
 
-// Bosses: names starting with "T" are normal blinds; non-"T" are Finishers (ante % 8 == 0).
 export const BOSSES: string[] = [
   "The Arm","The Club","The Eye","Amber Acorn","Cerulean Bell","Crimson Heart",
   "Verdant Leaf","Violet Vessel","The Fish","The Flint","The Goad","The Head",
@@ -242,16 +230,12 @@ export const STAKES: string[] = [
   "Purple Stake","Orange Stake","Gold Stake",
 ];
 
-/** Parse pack name -> {type, size, choices}. Matches packInfo() from C++. */
 export function packInfo(pack: string): Pack {
   if (pack[0] === "M") {
-    // "Mega X Pack"
     return { type: pack.substring(5), size: (pack[5] === "B" || pack[6] === "p") ? 4 : 5, choices: 2 };
   } else if (pack[0] === "J") {
-    // "Jumbo X Pack"
     return { type: pack.substring(6), size: (pack[6] === "B" || pack[7] === "p") ? 4 : 5, choices: 1 };
   } else {
-    // "X Pack"
     return { type: pack, size: (pack[0] === "B" || pack[1] === "p") ? 2 : 3, choices: 1 };
   }
 }

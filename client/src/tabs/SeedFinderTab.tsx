@@ -1,6 +1,3 @@
-// SeedFinderTab.tsx - v1.7.2
-// - State lifted to seedTabState singleton so it survives tab switches + reload
-// - "Save this seed" button on each match → adds to Seed Library
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus, BookmarkPlus, BookmarkCheck } from "lucide-react";
@@ -19,7 +16,6 @@ import {
 import { describeShopSlot, describePackSlot } from "@/lib/seedFinderLocation";
 import { useSeedTabState, setFinder, updateFinder, saveSeed, isSeedSaved } from "@/lib/seedTabState";
 
-// ---- Joker dataset ----
 const ALL_JOKER_NAMES = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
   .filter((j, i, a) => a.indexOf(j) === i)
   .sort();
@@ -47,8 +43,6 @@ function editionClass(edition: string): string {
   if (edition === "Negative") return "text-zinc-100 font-semibold";
   return "text-zinc-300";
 }
-
-// ---- Autocomplete joker search bar ----
 
 function JokerSearchBar({
   onAdd,
@@ -149,8 +143,6 @@ function JokerSearchBar({
   );
 }
 
-// ---- Per-joker constraint row ----
-
 function ConstraintRow({
   c, onChange, onRemove,
 }: {
@@ -214,10 +206,7 @@ function ConstraintRow({
   );
 }
 
-// ---- Main tab ----
-
 export function SeedFinderTab() {
-  // Read state from global store (survives tab switch + reload).
   const finder = useSeedTabState(s => s.finder);
 
   const handleRef = useRef<FinderHandle | null>(null);
@@ -287,7 +276,7 @@ export function SeedFinderTab() {
 
   return (
     <div className="space-y-4">
-      {/* Run config */}
+      { }
       <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/70 p-3 space-y-3">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           <div>
@@ -326,7 +315,7 @@ export function SeedFinderTab() {
         </div>
       </div>
 
-      {/* Joker search bar */}
+      { }
       <div className="space-y-2">
         <Label className="text-xs text-zinc-400">
           Target jokers {selected.length > 0 && <span className="text-yellow-300">({selected.length})</span>}
@@ -334,7 +323,7 @@ export function SeedFinderTab() {
         <JokerSearchBar onAdd={addJoker} selectedNames={selectedNames} />
       </div>
 
-      {/* Selected constraints */}
+      { }
       {selected.length > 0 && (
         <div className="space-y-1.5">
           {selected.map((c, i) => (
@@ -343,7 +332,7 @@ export function SeedFinderTab() {
         </div>
       )}
 
-      {/* Run controls */}
+      { }
       <div className="flex flex-wrap items-center gap-3 rounded-md border border-yellow-500/15 bg-zinc-950/60 p-3">
         {!running ? (
           <Button onClick={start} disabled={selected.length === 0} className="bg-yellow-400 hover:bg-yellow-300 text-zinc-950" data-testid="finder-start">
@@ -461,7 +450,6 @@ export function MatchCard({
   showSave?: boolean;
   trailing?: React.ReactNode;
 }) {
-  // Re-check saved state on every render via store subscription.
   const saved = useSeedTabState(s => preset ? isSeedSaved(match.seed, preset.deck, preset.stake, preset.version) : false);
 
   function onSave() {

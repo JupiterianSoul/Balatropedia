@@ -1,9 +1,3 @@
-// Lightweight singleton store for Seed Finder + Analyzer + Library state.
-// Keeps state alive across sub-tab switches (component unmount) and persists
-// non-volatile fields to localStorage for cross-reload continuity.
-//
-// We deliberately avoid heavy dependencies — uses useSyncExternalStore so any
-// component can subscribe to slices and re-render on update.
 
 import { useSyncExternalStore } from "react";
 import type {
@@ -18,17 +12,17 @@ const LS_KEY = "balatro_seed_tab_state_v1";
 export type AnalyzerView = "spoiler" | "joker" | "soul";
 
 export interface SavedSeed {
-  id: string;          // unique
+  id: string;
   seed: string;
-  savedAt: number;     // epoch ms
+  savedAt: number;
   preset: {
     deck: string;
     stake: string;
-    version: string;   // human-readable e.g. "1.0.1f"
+    version: string;
     globalMaxAnte: number;
     jokerConstraints: JokerConstraint[];
   };
-  match: SeedMatch;    // full match details for re-rendering as a card
+  match: SeedMatch;
   note?: string;
 }
 
@@ -39,7 +33,6 @@ export interface FinderState {
   version: string;
   globalMaxAnte: number;
   threads: number;
-  // Last run results (kept across tab switches; volatile across reload).
   matches: SeedMatch[];
   progress: FinderProgress;
   error: string | null;
@@ -51,7 +44,6 @@ export interface AnalyzerState {
   results: AnteResult[] | null;
   view: AnalyzerView;
   isRunning: boolean;
-  // Optional state for sub-views so their inputs survive too
   jokerQuery: string;
 }
 
@@ -63,8 +55,6 @@ interface State {
 
 function defaultFinder(): FinderState {
   const cores = typeof navigator !== "undefined" ? navigator.hardwareConcurrency : 4;
-  // Default to ALL logical cores (capped at 16) for maximum throughput.
-  // Previous cap of 8 left half the CPU idle on modern machines.
   return {
     selected: [],
     deck: "Red Deck",
@@ -111,7 +101,6 @@ function loadInitial(): State {
     const raw = window.localStorage.getItem(LS_KEY);
     if (!raw) return base;
     const parsed = JSON.parse(raw);
-    // Persist non-volatile fields only. Skip running flags & in-flight progress.
     if (parsed.finder) {
       base.finder.selected = parsed.finder.selected ?? base.finder.selected;
       base.finder.deck = parsed.finder.deck ?? base.finder.deck;
@@ -132,7 +121,6 @@ function loadInitial(): State {
       base.library = parsed.library;
     }
   } catch {
-    // ignore
   }
   return base;
 }
@@ -141,10 +129,8 @@ let state: State = loadInitial();
 const listeners = new Set<() => void>();
 
 function emit() {
-  // Snapshot must be a new object so React's getSnapshot detects change.
   state = { ...state };
   listeners.forEach(l => l());
-  // Persist (debounced via microtask).
   scheduleSave();
 }
 
@@ -156,7 +142,6 @@ function scheduleSave() {
     saveScheduled = false;
     try {
       if (typeof window === "undefined" || !window.localStorage) return;
-      // Strip volatile fields before persisting.
       const persisted = {
         finder: {
           selected: state.finder.selected,
@@ -178,7 +163,6 @@ function scheduleSave() {
       };
       window.localStorage.setItem(LS_KEY, JSON.stringify(persisted));
     } catch {
-      // ignore quota/JSON errors
     }
   });
 }
@@ -194,7 +178,6 @@ export function useSeedTabState<T>(selector: (s: State) => T): T {
   return useSyncExternalStore(subscribe, () => selector(state), () => selector(state));
 }
 
-// --- Setters for Finder ---
 export function setFinder(patch: Partial<FinderState>) {
   state = { ...state, finder: { ...state.finder, ...patch } };
   listeners.forEach(l => l());
@@ -206,16 +189,13 @@ export function updateFinder(updater: (f: FinderState) => FinderState) {
   scheduleSave();
 }
 
-// --- Setters for Analyzer ---
 export function setAnalyzer(patch: Partial<AnalyzerState>) {
   state = { ...state, analyzer: { ...state.analyzer, ...patch } };
   listeners.forEach(l => l());
   scheduleSave();
 }
 
-// --- Library ---
 export function saveSeed(seed: SavedSeed) {
-  // Avoid duplicates on (seed, preset hash).
   const exists = state.library.some(s => s.seed === seed.seed && s.preset.deck === seed.preset.deck && s.preset.stake === seed.preset.stake && s.preset.version === seed.preset.version);
   if (exists) return false;
   state = { ...state, library: [...state.library, seed] };
@@ -234,4 +214,4 @@ export function isSeedSaved(seed: string, deck: string, stake: string, version: 
   return state.library.some(s => s.seed === seed && s.preset.deck === deck && s.preset.stake === stake && s.preset.version === version);
 }
 
-void emit; // keep type usage
+void emit;

@@ -1,11 +1,3 @@
-/**
- * Tab handoff: one-shot session-storage messages used when navigating from
- * the Home search bar to a specific tab. The receiving tab reads the value
- * once in a mount-effect and clears it so subsequent visits start fresh.
- *
- * Used in v1.4.1 to make a search-result click in Home land on the exact
- * synergy / combo / archetype the user picked, not just the tab.
- */
 
 const KEYS = {
   synergyJoker: "balatropedia.handoff.synergyJoker",
@@ -19,7 +11,6 @@ export function setHandoff(key: HandoffKey, value: string): void {
   try {
     sessionStorage.setItem(KEYS[key], value);
   } catch {
-    // sessionStorage may be unavailable (private browsing, embed). Silently drop.
   }
 }
 

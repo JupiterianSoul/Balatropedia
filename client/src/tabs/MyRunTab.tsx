@@ -243,7 +243,7 @@ export function MyRunTab() {
               >
                 {j ? (
                   <>
-                    <JokerSprite jokerId={j.id} name={j.name} size={44} className="h-11 w-11" />
+                    <JokerSprite jokerId={j.id} name={j.name} size={44} />
                     <button
                       onClick={() => openJokerDetail(j.id)}
                       className="min-w-0 flex-1 truncate text-left font-display text-sm text-accent hover:underline"

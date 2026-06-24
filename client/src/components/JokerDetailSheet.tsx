@@ -45,7 +45,7 @@ export function JokerDetailSheet() {
               <SheetHeader className="space-y-2 pr-8 text-left">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex min-w-0 items-start gap-3">
-                    <JokerSprite jokerId={j.id} name={displayName} size={104} className="h-[88px] w-[88px] sm:h-[104px] sm:w-[104px]" />
+                    <JokerSprite jokerId={j.id} name={displayName} size={104} />
                     <div className="min-w-0">
                       <SheetTitle className="font-pixel text-2xl leading-tight text-accent">
                         {displayName}
