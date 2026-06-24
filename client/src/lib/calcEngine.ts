@@ -1,48 +1,8 @@
-// Balatro scoring engine. Order follows the in-game activation sequence
-// (Reddit RulerD breakdown and Balatro Wiki Activation Sequence):
-//
-//   1. PRE-SCORING (state-only, no chips/mult yet): hand-modifier triggers like
-//      Vampire (absorbs enhancements), Ride the Bus +1 per straight, Square +4 chips
-//      per 4-card hand, Green Joker +1 per hand. We simulate the count increment
-//      as a state-only update before scoring.
-//
-//   2. BASE: hand level chips and base mult.
-//
-//   3. DEALT HAND (per scored card, left to right):
-//        a) base rank chips (or +50 if Stone)
-//        b) card enhancement (+30 Bonus chips, +4 Mult, x2 Glass, +20 Lucky mult on 1/5)
-//        c) card edition (+50 Foil chips, +10 Holo mult, x1.5 Poly mult)
-//        d) per-card joker effects (Fibonacci, Photograph, Smiley/Scary Face,
-//           Greedy/Lusty/Wrathful/Gluttonous, Even Steven/Odd Todd, Walkie Talkie,
-//           Hiker permanent stamp, Business Card 1/2 $2, Triboulet K/Q x2 each)
-//        e) Gold Seal: re-runs steps a..d once (acts as a built-in retrigger on
-//           the card's scoring portion).
-//        f) Red Seal: extra full retrigger of steps a..d on this card.
-//        g) Retrigger jokers (Hack on 2-5, Sock and Buskin on faces, Dusk on last
-//           hand, Seltzer 5 times, Hanging Chad on first scored card 2 extra times):
-//           additional repeats of steps a..d on the matching cards.
-//
-//   4. HELD IN HAND (per card left to right): Steel x1.5, Baron x1.5 per K, Shoot
-//      the Moon +13 per Q, Raised Fist 2x lowest rank, then in-hand retriggers
-//      (Mime: each held effect triggers twice; Red Seal in hand: each held card
-//      triggers twice).
-//
-//   5. INDEPENDENT JOKERS left to right. For each joker:
-//        a) Foil edition (+50 chips, applied BEFORE main effect per Wiki)
-//        b) Holo edition (+10 mult)
-//        c) Main effect (xMult, +Mult, +Chips, or scaling state read)
-//        d) Polychrome edition (x1.5 mult AFTER main effect)
-//      Blueprint/Brainstorm copy the main effect only, NOT editions.
-//
-//   6. FINAL: deck/voucher post-modifiers (Plasma squares the average, Flint already
-//      halved base in step 2, Observatory x1.5 per matching planet in consumables).
 
 import type {
   CalcInput, CalcResult, PlayingCard, JokerInstance, ScorePhaseLine, HandKey, Rank, Suit,
 } from "../../../shared/calcTypes";
 import { getHandStats } from "./handLevels";
-
-// ----------------- helpers -----------------
 
 const RANK_CHIPS: Record<Rank, number> = {
   "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9,
@@ -64,7 +24,6 @@ function isOdd(rank: Rank): boolean {
 }
 
 function suitOf(card: PlayingCard, wantedSuit: Suit): boolean {
-  // Wild enhancement acts as any suit
   if (card.enhancement === "wild") return true;
   if (card.enhancement === "stone") return false;
   return card.suit === wantedSuit;
@@ -75,7 +34,6 @@ function round(n: number, p = 0): number {
   return Math.round(n * m) / m;
 }
 
-// Push a timeline row and update running totals.
 function push(
   tl: ScorePhaseLine[],
   st: { chips: number; mult: number },
@@ -87,9 +45,6 @@ function push(
   tl.push({ ...line, chipsAfter: round(st.chips), multAfter: round(st.mult, 2) });
 }
 
-// ----------------- card-stage scoring -----------------
-// Score a single card's contribution (rank + enh + edition + per-card joker bonuses).
-// Called once for the dealt-hand pass, again on Gold Seal, again on Red Seal, again per retrigger joker.
 function scoreOneCard(
   card: PlayingCard,
   tl: ScorePhaseLine[],
@@ -98,33 +53,27 @@ function scoreOneCard(
   triggerLabel: string,
 ) {
   const label = `${card.rank}${card.suit}`;
-  // Rank chips (stone gives the +50 below, no rank chips)
   if (card.enhancement !== "stone") {
     const rc = RANK_CHIPS[card.rank];
     if (rc) push(tl, st, { phase: "card", source: `${triggerLabel} ${label} rank`, chipsAdd: rc });
   }
-  // Enhancement
   switch (card.enhancement) {
     case "bonus": push(tl, st, { phase: "card", source: `${triggerLabel} Bonus ${label}`, chipsAdd: 30 }); break;
     case "mult":  push(tl, st, { phase: "card", source: `${triggerLabel} Mult ${label}`, multAdd: 4 }); break;
     case "glass": push(tl, st, { phase: "card", source: `${triggerLabel} Glass ${label}`, xMult: 2, note: "1-in-4 destroy risk" }); break;
     case "stone": push(tl, st, { phase: "card", source: `${triggerLabel} Stone ${label}`, chipsAdd: 50 }); break;
     case "lucky": push(tl, st, { phase: "card", source: `${triggerLabel} Lucky ${label}`, multAdd: 4, note: "expected (1/5 * +20 mult)" }); break;
-    // steel/gold are held-in-hand only
   }
-  // Edition
   switch (card.edition) {
     case "foil": push(tl, st, { phase: "card", source: `${triggerLabel} Foil ${label}`, chipsAdd: 50 }); break;
     case "holo": push(tl, st, { phase: "card", source: `${triggerLabel} Holo ${label}`, multAdd: 10 }); break;
     case "poly": push(tl, st, { phase: "card", source: `${triggerLabel} Poly ${label}`, xMult: 1.5 }); break;
   }
-  // Per-card joker effects (a joker can act on each scored card)
   for (const j of ctx.jokers) {
     if (j.disabled) continue;
     const fn = PER_CARD_FX[j.jokerId];
     if (fn) fn(card, j, tl, st, ctx, triggerLabel);
   }
-  // Gold seal awards $3 (utility), shown as a note for transparency
   if (card.seal === "gold") {
     push(tl, st, { phase: "card", source: `${triggerLabel} Gold Seal ${label}`, note: "+$3 (utility)", multAdd: 0 });
   }
@@ -136,7 +85,6 @@ interface CardCtx {
   pareidolia: boolean;
 }
 
-// Per-card joker effects: triggered for every scored card (including retriggers).
 type PerCardFx = (
   card: PlayingCard,
   j: JokerInstance,
@@ -183,7 +131,6 @@ const PER_CARD_FX: Record<string, PerCardFx> = {
     }
   },
   hiker: (c, _j, tl, st, _ctx, lbl) => {
-    // permanent +5 chips stamp on the card. We display the immediate +5 as one-time.
     push(tl, st, { phase: "card", source: `${lbl} Hiker stamp on ${c.rank}${c.suit}`, chipsAdd: 5, note: "permanent +5 chip mark" });
   },
   business_card: (c, _j, tl, st, ctx, lbl) => {
@@ -193,7 +140,6 @@ const PER_CARD_FX: Record<string, PerCardFx> = {
     if (c.rank === "K" || c.rank === "Q") push(tl, st, { phase: "card", source: `${lbl} Triboulet on ${c.rank}${c.suit}`, xMult: 2 });
   },
   photograph: (c, _j, tl, st, ctx, lbl) => {
-    // Triggers on the FIRST scored face card only. We mark the first hit using ctx state via a marker.
     const marker = "__photo_fired__";
     if (!(j_marker as any)[marker] && isFace(c, ctx.pareidolia)) {
       (j_marker as any)[marker] = true;
@@ -202,12 +148,7 @@ const PER_CARD_FX: Record<string, PerCardFx> = {
   },
 };
 
-// Per-pass marker to track Photograph "first face" across the dealt-hand iteration.
-// Reset at the start of computeScore.
 const j_marker = {} as { __photo_fired__?: boolean };
-
-// ----------------- independent joker effects -----------------
-// Each handler runs in the Joker phase (step 5), AFTER Foil/Holo and BEFORE Poly.
 
 interface JokerCtx {
   input: CalcInput;
@@ -216,7 +157,6 @@ interface JokerCtx {
   tl: ScorePhaseLine[];
   jokers: JokerInstance[];
   pareidolia: boolean;
-  // Pre-computed aggregates of the played hand
   playedFaces: number;
   playedHearts: number;
   playedDiamonds: number;
@@ -227,7 +167,7 @@ interface JokerCtx {
   playedCount: number;
   steelHeld: number;
   goldHeld: number;
-  unscoredCount: number; // played cards length (we treat all as scored for now)
+  unscoredCount: number;
 }
 
 type JokerHandler = (c: JokerCtx) => void;
@@ -242,8 +182,6 @@ function xMult(n: number, src: string): JokerHandler {
   return (c) => push(c.tl, c.state, { phase: "joker", source: src, xMult: n });
 }
 
-// Hand-trigger jokers fire only if the played hand contains the matching combination.
-// We pass the HandKey through input.hand for the "highest detected hand"; helper functions detect sub-hands.
 function handContainsPair(input: CalcInput): boolean {
   return ["pair","two_pair","three_of_a_kind","four_of_a_kind","five_of_a_kind","full_house","flush_house","flush_five"].includes(input.hand);
 }
@@ -267,20 +205,17 @@ function handContainsFullHouse(input: CalcInput): boolean {
 }
 
 const JOKER_FX: Record<string, JokerHandler> = {
-  // ----- common +Mult -----
   joker: flatMult(4, "Joker"),
   jolly_joker: (c) => { if (handContainsPair(c.input)) push(c.tl, c.state, { phase: "joker", source: "Jolly Joker", multAdd: 8 }); },
   zany_joker: (c) => { if (handContainsThreeOAK(c.input)) push(c.tl, c.state, { phase: "joker", source: "Zany Joker", multAdd: 12 }); },
   mad_joker: (c) => { if (handContainsTwoPair(c.input)) push(c.tl, c.state, { phase: "joker", source: "Mad Joker", multAdd: 10 }); },
   crazy_joker: (c) => { if (handContainsStraight(c.input)) push(c.tl, c.state, { phase: "joker", source: "Crazy Joker", multAdd: 12 }); },
   droll_joker: (c) => { if (handContainsFlush(c.input)) push(c.tl, c.state, { phase: "joker", source: "Droll Joker", multAdd: 10 }); },
-  // ----- common +Chips -----
   sly_joker: (c) => { if (handContainsPair(c.input)) push(c.tl, c.state, { phase: "joker", source: "Sly Joker", chipsAdd: 50 }); },
   wily_joker: (c) => { if (handContainsThreeOAK(c.input)) push(c.tl, c.state, { phase: "joker", source: "Wily Joker", chipsAdd: 100 }); },
   clever_joker: (c) => { if (handContainsTwoPair(c.input)) push(c.tl, c.state, { phase: "joker", source: "Clever Joker", chipsAdd: 80 }); },
   devious_joker: (c) => { if (handContainsStraight(c.input)) push(c.tl, c.state, { phase: "joker", source: "Devious Joker", chipsAdd: 100 }); },
   crafty_joker: (c) => { if (handContainsFlush(c.input)) push(c.tl, c.state, { phase: "joker", source: "Crafty Joker", chipsAdd: 80 }); },
-  // ----- hand-size triggers -----
   half_joker: (c) => { if (c.playedCount <= 3) push(c.tl, c.state, { phase: "joker", source: "Half Joker", multAdd: 20 }); },
   banner: (c) => {
     const d = c.instance.state.count ?? 0;
@@ -294,7 +229,6 @@ const JOKER_FX: Record<string, JokerHandler> = {
     if (c.instance.state.active) push(c.tl, c.state, { phase: "joker", source: "Loyalty Card", xMult: 4 });
   },
   misprint: (c) => push(c.tl, c.state, { phase: "joker", source: "Misprint", multAdd: 12, note: "expected (0-23 random, avg 11.5)" }),
-  // ----- legendaries that score in joker phase -----
   yorick: (c) => {
     const x = c.instance.state.xmult ?? 1;
     if (x > 1) push(c.tl, c.state, { phase: "joker", source: "Yorick", xMult: x, note: `xMult = ${x}` });
@@ -305,14 +239,12 @@ const JOKER_FX: Record<string, JokerHandler> = {
   },
   chicot: (c) => push(c.tl, c.state, { phase: "joker", source: "Chicot", note: "disables boss blind (utility)", multAdd: 0 }),
   perkeo: (c) => push(c.tl, c.state, { phase: "joker", source: "Perkeo", note: "copies a consumable (utility)", multAdd: 0 }),
-  // ----- the_X (hand-trigger xMult) -----
   the_duo: (c) => { if (handContainsPair(c.input)) push(c.tl, c.state, { phase: "joker", source: "The Duo", xMult: 2 }); },
   the_trio: (c) => { if (handContainsThreeOAK(c.input)) push(c.tl, c.state, { phase: "joker", source: "The Trio", xMult: 3 }); },
   the_family: (c) => { if (handContainsFourOAK(c.input)) push(c.tl, c.state, { phase: "joker", source: "The Family", xMult: 4 }); },
   the_order: (c) => { if (handContainsStraight(c.input)) push(c.tl, c.state, { phase: "joker", source: "The Order", xMult: 3 }); },
   the_tribe: (c) => { if (handContainsFlush(c.input)) push(c.tl, c.state, { phase: "joker", source: "The Tribe", xMult: 2 }); },
   the_duo_2: (c) => { if (handContainsFullHouse(c.input)) push(c.tl, c.state, { phase: "joker", source: "The Duo (full house)", xMult: 2 }); },
-  // ----- scaling -----
   ride_the_bus: (c) => {
     const n = c.instance.state.count ?? 0;
     if (n) push(c.tl, c.state, { phase: "joker", source: "Ride the Bus", multAdd: n, note: `count = ${n}` });
@@ -386,11 +318,9 @@ const JOKER_FX: Record<string, JokerHandler> = {
     if (x > 1) push(c.tl, c.state, { phase: "joker", source: "Throwback", xMult: x, note: `${(x - 1) / 0.25} blinds skipped` });
   },
   to_the_moon: (c) => push(c.tl, c.state, { phase: "joker", source: "To the Moon", note: "$1 per $5 (utility)", multAdd: 0 }),
-  // ----- per-joker count -----
   abstract_joker: (c) => push(c.tl, c.state, { phase: "joker", source: "Abstract Joker", multAdd: c.jokers.length * 3, note: `${c.jokers.length} jokers x3` }),
   cavendish: xMult(3, "Cavendish"),
   gros_michel: flatMult(15, "Gros Michel"),
-  // ----- steel / held -----
   steel_joker: (c) => {
     const inDeck = c.instance.state.count ?? c.steelHeld;
     const x = 1 + 0.2 * inDeck;
@@ -401,18 +331,14 @@ const JOKER_FX: Record<string, JokerHandler> = {
     if (inDeck) push(c.tl, c.state, { phase: "joker", source: "Stone Joker", chipsAdd: inDeck * 25, note: `${inDeck} stone in deck` });
   },
   golden_ticket: (c) => push(c.tl, c.state, { phase: "joker", source: "Golden Ticket", note: "$4 per Gold scored (utility)", multAdd: 0 }),
-  // ----- raised fist / baron / shoot the moon (in-hand effects fire in held phase, but we list here for completeness) -----
-  // ----- misc scaling -----
   swashbuckler: (c) => {
     const v = c.instance.state.value ?? 0;
     if (v) push(c.tl, c.state, { phase: "joker", source: "Swashbuckler", multAdd: v, note: `sum sell value = ${v}` });
   },
   burglar: (c) => push(c.tl, c.state, { phase: "joker", source: "Burglar", note: "+3 hands, no discards (utility)", multAdd: 0 }),
-  // ----- chip cards -----
   splash: (c) => push(c.tl, c.state, { phase: "joker", source: "Splash", note: "every played card scores", multAdd: 0 }),
   blueprint: (c) => push(c.tl, c.state, { phase: "joker", source: "Blueprint", note: "copies right joker (handled by COPY logic)", multAdd: 0 }),
   brainstorm: (c) => push(c.tl, c.state, { phase: "joker", source: "Brainstorm", note: "copies leftmost joker (handled by COPY logic)", multAdd: 0 }),
-  // ----- economy / utility -----
   bull: (c) => push(c.tl, c.state, { phase: "joker", source: "Bull", note: "+2 chips per $1 (money input needed)", multAdd: 0 }),
   bootstraps: (c) => push(c.tl, c.state, { phase: "joker", source: "Bootstraps", note: "+2 mult per $5 (money input needed)", multAdd: 0 }),
   egg: (c) => push(c.tl, c.state, { phase: "joker", source: "Egg", note: "+$3 sell value per round (utility)", multAdd: 0 }),
@@ -422,7 +348,6 @@ const JOKER_FX: Record<string, JokerHandler> = {
     const enh = c.instance.state.count ?? 0;
     if (enh >= 16) push(c.tl, c.state, { phase: "joker", source: "Driver's License", xMult: 3, note: `${enh} enhanced cards in deck` });
   },
-  // ----- raised fist (held-phase joker; fires in held phase) -----
   raised_fist: (c) => {
     const ranks = c.input.inHand.filter(p => p.enhancement !== "stone").map(p => RANK_CHIPS[p.rank as Rank] ?? 0);
     if (ranks.length) {
@@ -438,7 +363,6 @@ const JOKER_FX: Record<string, JokerHandler> = {
     const queens = c.input.inHand.filter(p => p.rank === "Q").length;
     if (queens) push(c.tl, c.state, { phase: "joker", source: "Shoot the Moon", multAdd: queens * 13, note: `${queens} Queen(s) in hand` });
   },
-  // ----- additional jokers -----
   arrowhead: (c) => {
     const spades = c.input.played.filter(p => suitOf(p, "S")).length;
     if (spades) push(c.tl, c.state, { phase: "joker", source: "Arrowhead", chipsAdd: spades * 50, note: `${spades} Spade(s) scored` });
@@ -472,17 +396,13 @@ const JOKER_FX: Record<string, JokerHandler> = {
     if (handsLeft === 0) push(c.tl, c.state, { phase: "joker", source: "Acrobat", xMult: 3, note: "final hand" });
   },
   bull_2: flatMult(4, "Bull (alt)"),
-  // ----- joker stew -----
   joker_stencil: (c) => {
     const empty = c.instance.state.count ?? 0;
     if (empty) push(c.tl, c.state, { phase: "joker", source: "Joker Stencil", xMult: 1 + empty, note: `${empty} empty joker slots` });
   },
   banner_2: flatChips(0, "Banner"),
-  // Other entries fall through to generic.
 };
 
-// ----------------- retrigger jokers -----------------
-// Each retrigger joker is matched per scored card. Returns number of EXTRA triggers for that card.
 function extraTriggersFor(card: PlayingCard, j: JokerInstance, ctx: CardCtx, idx: number, total: number): number {
   if (j.disabled) return 0;
   switch (j.jokerId) {
@@ -495,23 +415,17 @@ function extraTriggersFor(card: PlayingCard, j: JokerInstance, ctx: CardCtx, idx
     case "seltzer":
       return 5;
     case "dusk":
-      // Triggers on the last hand of the round; user toggles via 'active' state
       return j.state.active ? 1 : 0;
     default:
       return 0;
   }
 }
 
-// ----------------- main entry -----------------
-
 export function computeScore(input: CalcInput): CalcResult {
   const tl: ScorePhaseLine[] = [];
   const warnings: string[] = [];
-  // Reset per-pass markers
   delete j_marker.__photo_fired__;
 
-  // Step 1 - Pre-scoring (state-only mutations would happen here in-game;
-  // we surface them as informational notes since the user provides scaling state directly)
   const preScoring: string[] = [];
   for (const j of input.jokers) {
     if (j.disabled) continue;
@@ -529,7 +443,6 @@ export function computeScore(input: CalcInput): CalcResult {
     }
   }
 
-  // Step 2 - base
   const base = getHandStats(input.hand, input.handLevel);
   let chipsBase = base.chips;
   let multBase = base.mult;
@@ -544,22 +457,17 @@ export function computeScore(input: CalcInput): CalcResult {
   const pareidolia = input.jokers.some(j => j.jokerId === "pareidolia" && !j.disabled);
   const ctx: CardCtx = { input, jokers: input.jokers, pareidolia };
 
-  // Step 3 - dealt hand, per scored card left to right
   const scored = input.played.filter(p => p.selected !== false);
   for (let i = 0; i < scored.length; i++) {
     const card = scored[i];
-    // 3a-d: base score
     scoreOneCard(card, tl, state, ctx, "card");
 
-    // 3e: gold seal retrigger (one extra full repeat)
     if (card.seal === "gold") {
       scoreOneCard(card, tl, state, ctx, "Gold Seal retrigger");
     }
-    // 3f: red seal retrigger (one extra full repeat)
     if (card.seal === "red") {
       scoreOneCard(card, tl, state, ctx, "Red Seal retrigger");
     }
-    // 3g: joker-driven retriggers
     for (const j of input.jokers) {
       const extra = extraTriggersFor(card, j, ctx, i, scored.length);
       for (let k = 0; k < extra; k++) {
@@ -568,7 +476,6 @@ export function computeScore(input: CalcInput): CalcResult {
     }
   }
 
-  // Step 4 - held in hand
   const steelHeld = input.inHand.filter(p => p.enhancement === "steel").length;
   const goldHeld = input.inHand.filter(p => p.enhancement === "gold").length;
   const hasMime = input.jokers.some(j => j.jokerId === "mime" && !j.disabled);
@@ -583,7 +490,6 @@ export function computeScore(input: CalcInput): CalcResult {
   if (goldHeld > 0) {
     push(tl, state, { phase: "held", source: `Gold held`, note: `+$${goldHeld * 3} (utility, not score)`, multAdd: 0 });
   }
-  // Baron / Shoot the Moon / Raised Fist fire here in-game (held phase). We schedule them as joker rows.
   for (const j of input.jokers) {
     if (j.disabled) continue;
     if (j.jokerId === "baron" || j.jokerId === "shoot_the_moon" || j.jokerId === "raised_fist") {
@@ -599,15 +505,11 @@ export function computeScore(input: CalcInput): CalcResult {
     }
   }
 
-  // Step 5 - independent joker phase
   for (const j of input.jokers) {
     if (j.disabled) continue;
-    // Skip held-phase jokers (already handled in step 4)
     if (j.jokerId === "baron" || j.jokerId === "shoot_the_moon" || j.jokerId === "raised_fist") continue;
-    // Edition pre-effects (Foil, Holo) before main
     if (j.edition === "foil") push(tl, state, { phase: "joker", source: `Foil ${j.jokerId}`, chipsAdd: 50 });
     if (j.edition === "holo") push(tl, state, { phase: "joker", source: `Holo ${j.jokerId}`, multAdd: 10 });
-    // Main effect
     const fx = JOKER_FX[j.jokerId];
     const jctx = buildJokerCtx(input, j, state, tl, steelHeld, goldHeld, pareidolia);
     if (fx) {
@@ -615,11 +517,9 @@ export function computeScore(input: CalcInput): CalcResult {
     } else {
       push(tl, state, { phase: "joker", source: j.jokerId, note: "effect not modelled (edition still applies)", multAdd: 0 });
     }
-    // Polychrome AFTER main
     if (j.edition === "poly") push(tl, state, { phase: "joker", source: `Poly ${j.jokerId}`, xMult: 1.5 });
   }
 
-  // Step 6 - final modifiers
   if (input.modifiers.observatory) {
     const matching = input.observatoryPlanets.filter(p => p === input.hand).length;
     for (let i = 0; i < matching; i++) {
@@ -674,12 +574,9 @@ function buildJokerCtx(
   };
 }
 
-// ----------------- auto hand detector -----------------
-// Detect the highest hand type from a set of played cards (so the UI can auto-pick).
-
 export function detectHand(played: PlayingCard[]): HandKey {
   if (played.length === 0) return "high_card";
-  const scored = played.filter(p => p.enhancement !== "stone"); // stones don't contribute to ranks
+  const scored = played.filter(p => p.enhancement !== "stone");
   if (scored.length === 0) return "high_card";
 
   const ranks = scored.map(p => p.rank);
@@ -687,11 +584,9 @@ export function detectHand(played: PlayingCard[]): HandKey {
   for (const r of ranks) counts.set(r, (counts.get(r) ?? 0) + 1);
   const countVals = Array.from(counts.values()).sort((a, b) => b - a);
 
-  // Flush detection (using wild as any-suit)
   const suitCounts = new Map<Suit, number>();
   for (const p of scored) {
     if (p.enhancement === "wild") {
-      // Wild contributes to every suit for flush check; we conservatively pick the dominant suit
       for (const s of ["S","H","D","C"] as Suit[]) suitCounts.set(s, (suitCounts.get(s) ?? 0) + 1);
     } else {
       suitCounts.set(p.suit, (suitCounts.get(p.suit) ?? 0) + 1);
@@ -700,7 +595,6 @@ export function detectHand(played: PlayingCard[]): HandKey {
   const maxSuit = Math.max(0, ...Array.from(suitCounts.values()));
   const isFlush = scored.length === 5 && maxSuit === 5;
 
-  // Straight detection: sorted unique ranks form a consecutive sequence of 5
   const rankOrder: Record<Rank, number> = {
     "A": 14, "K": 13, "Q": 12, "J": 11, "T": 10, "9": 9, "8": 8, "7": 7, "6": 6, "5": 5, "4": 4, "3": 3, "2": 2,
   };
@@ -709,40 +603,23 @@ export function detectHand(played: PlayingCard[]): HandKey {
   let isRoyal = false;
   if (nums.length === 5) {
     if (nums[4] - nums[0] === 4) isStraight = true;
-    // A-2-3-4-5 wheel
     if (nums.join(",") === "2,3,4,5,14") isStraight = true;
-    // T-J-Q-K-A royal
     if (nums.join(",") === "10,11,12,13,14") { isStraight = true; isRoyal = true; }
   }
 
-  // Flush five (5 same-rank same-suit)
   if (countVals[0] === 5 && isFlush) return "flush_five";
-  // Five of a kind (5 same rank, no flush)
   if (countVals[0] === 5) return "five_of_a_kind";
-  // Flush house (3OAK + pair, all same suit)
   if (countVals[0] === 3 && countVals[1] === 2 && isFlush) return "flush_house";
-  // Straight flush / royal flush
   if (isStraight && isFlush) return isRoyal ? "royal_flush" : "straight_flush";
-  // Four of a kind
   if (countVals[0] === 4) return "four_of_a_kind";
-  // Full house
   if (countVals[0] === 3 && countVals[1] === 2) return "full_house";
-  // Flush
   if (isFlush) return "flush";
-  // Straight
   if (isStraight) return "straight";
-  // 3oak
   if (countVals[0] === 3) return "three_of_a_kind";
-  // Two pair
   if (countVals[0] === 2 && countVals[1] === 2) return "two_pair";
-  // Pair
   if (countVals[0] === 2) return "pair";
   return "high_card";
 }
-
-// ----------------- joker order optimiser -----------------
-// Try all permutations of jokers (up to 5 = 120) and return the order with the highest score.
-// Returns the new permutation and the delta vs current order.
 
 export function optimizeJokerOrder(input: CalcInput): { best: JokerInstance[]; baseScore: number; bestScore: number } {
   if (input.jokers.length <= 1) {

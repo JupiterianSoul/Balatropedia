@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor } from "lucide-react";
+import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SectionLabel } from "@/components/primitives";
@@ -13,6 +13,7 @@ import { useI18n, useT, type Lang } from "@/lib/i18n";
 import { useTheme, THEME_OPTIONS, type Theme } from "@/lib/theme";
 import { useShake, SHAKE_DEFAULTS } from "@/lib/screenshake";
 import { useCRT, CRT_DEFAULTS } from "@/lib/crt";
+import { useUIScale, UI_SCALE_MIN, UI_SCALE_MAX, UI_SCALE_STEP } from "@/lib/uiScale";
 import { useApp } from "@/lib/appContext";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -35,6 +36,7 @@ export function SettingsTab() {
   const { theme, setTheme } = useTheme();
   const { enabled: shakeEnabled, intensity: shakeIntensity, setEnabled: setShakeEnabled, setIntensity: setShakeIntensity } = useShake();
   const { enabled: crtEnabled, intensity: crtIntensity, setEnabled: setCrtEnabled, setIntensity: setCrtIntensity } = useCRT();
+  const { scale: uiScale, setScale: setUIScale } = useUIScale();
 
   function handleSoundToggle(next: boolean) {
     setSoundOn(next);
@@ -120,6 +122,31 @@ export function SettingsTab() {
           })}
         </div>
         <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.theme.hint")}</p>
+      </section>
+
+      <section className="casino-card p-4" data-testid="section-ui-scale">
+        <div className="mb-3 flex items-center gap-1.5">
+          <Maximize2 className="h-3.5 w-3.5 text-accent" />
+          <SectionLabel>{t("ui.settings.ui_scale.title")}</SectionLabel>
+        </div>
+        <div className="mb-2 flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">{t("ui.settings.ui_scale.label")}</span>
+          <span className="font-pixel text-xs tabular text-accent">{Math.round(uiScale * 100)}%</span>
+        </div>
+        <Slider
+          min={Math.round(UI_SCALE_MIN * 100)}
+          max={Math.round(UI_SCALE_MAX * 100)}
+          step={Math.round(UI_SCALE_STEP * 100)}
+          value={[Math.round(uiScale * 100)]}
+          onValueChange={(v) => { setUIScale((v[0] ?? 100) / 100); }}
+          data-testid="slider-ui-scale"
+        />
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <p className="text-xs text-muted-foreground">{t("ui.settings.ui_scale.hint")}</p>
+          <Button variant="outline" size="sm" onClick={() => setUIScale(1)} data-testid="button-ui-scale-reset">
+            {t("ui.settings.ui_scale.reset")}
+          </Button>
+        </div>
       </section>
 
       {}

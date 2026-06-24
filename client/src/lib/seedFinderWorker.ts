@@ -1,14 +1,7 @@
-// seedFinderWorker.ts - Web Worker running the Immolate WASM engine.
-// Loads /wasm/immolate.js from public, then receives search batches.
 
 let Module: any = null;
 let ready = false;
 
-// ---- Per-worker constraint cache ----
-// Constraints don't change between batches within a single search run.
-// Allocating/freeing embind vectors every batch (1000s of times) is heap
-// churn we can avoid by caching them and only rebuilding when the input
-// signature changes.
 let cachedSig: string | null = null;
 let cachedJc: any = null;
 let cachedVc: any = null;
@@ -23,13 +16,7 @@ function disposeCached() {
 
 async function initModule() {
   if (Module) return Module;
-  // Load Emscripten glue from public/ via importScripts (workers can't use ES imports
-  // for the wasm glue, since it does its own dynamic fetching).
-  // The Emscripten output is "MODULARIZE=1" so it exposes a factory function.
-  // We import the JS as a script (worker can do `importScripts`).
-  // Vite serves files from /public/ at the root.
   (self as any).importScripts("/wasm/immolate.js");
-  // After import, global `Immolate` is the factory
   const factory = (self as any).Immolate;
   Module = await factory({
     locateFile: (p: string) => p.endsWith(".wasm") ? "/wasm/immolate.wasm" : p,
@@ -72,8 +59,6 @@ self.onmessage = async (e: MessageEvent) => {
     try {
       const m: SearchMessage = msg;
 
-      // Build a cheap signature of the constraint inputs. If unchanged from
-      // the last batch we skip the embind vector rebuild entirely.
       const sig =
         m.deck + "|" + m.stake + "|" + m.versionInt + "|" + m.maxAnte + "|" +
         JSON.stringify(m.jokerConstraints) + "|" +
@@ -112,8 +97,6 @@ self.onmessage = async (e: MessageEvent) => {
         cachedJc, cachedVc, cachedTc
       );
 
-      // Marshal embind vectors to plain JS only when there's actually a match.
-      // No match = empty vectors = pointless 3 method calls + comparison.
       const jLocs: any[] = [];
       const vLocs: any[] = [];
       const tLocs: any[] = [];

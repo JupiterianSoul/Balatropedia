@@ -236,9 +236,6 @@ export function installGlobalSoundDelegation() {
   if (typeof document === 'undefined') return;
   delegationInstalled = true;
 
-  // Use 'click' instead of 'pointerdown' so scroll/swipe gestures don't trigger
-  // SFX on mobile. The native click event only fires after pointerdown+pointerup
-  // without significant movement.
   document.addEventListener('click', handlePointer, { capture: true });
   document.addEventListener('keydown', handleKey as EventListener, { capture: true });
 }

@@ -1,5 +1,3 @@
-// SeedsTab v1.7.2 - 3 sub-tabs (Analyzer, Finder, Library), persisted state,
-// Soul resolution display, collapsible Full Spoiler antes.
 import { useMemo, useState } from "react";
 import {
   Dices, Search, Play, Loader2, Target, Telescope, Skull, Sparkles, ListTree,
@@ -59,7 +57,6 @@ function stickerBadge(s: { eternal: boolean; perishable: boolean; rental: boolea
   return <span className="ml-1 text-[10px] text-amber-300/80">[{parts.join(", ")}]</span>;
 }
 
-// Inline Soul resolution badge.
 function SoulResolved({ joker, rarity, edition }: { joker: string; rarity: string; edition: string }) {
   const id = jokerIdFromName(joker);
   return (
@@ -74,9 +71,7 @@ function SoulResolved({ joker, rarity, edition }: { joker: string; rarity: strin
   );
 }
 
-// --- Pack block in spoiler ---
 function PackBlock({ p }: { p: PackContents }) {
-  // Render with cleaner spacing + cards-in-cards look.
   const isSoulCard = (it: string) => it === "The Soul" || it === "Black Hole";
   const resolutions = (p.contents.kind === "tarot" || p.contents.kind === "spectral")
     ? (p.contents.soulResolutions || [])
@@ -141,7 +136,6 @@ function PackBlock({ p }: { p: PackContents }) {
   );
 }
 
-// --- Cleaner ante card (rendered inside the expanded row) ---
 function AnteBody({ r }: { r: AnteResult }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-2">
@@ -210,9 +204,7 @@ function AnteBody({ r }: { r: AnteResult }) {
   );
 }
 
-// --- Collapsible ante row ---
 function AnteRow({ r, expanded, onToggle }: { r: AnteResult; expanded: boolean; onToggle: () => void }) {
-  // Detect if this ante has Soul/Black Hole spawns for the summary badge.
   const hasSoul = r.packs.some(p =>
     (p.contents.kind === "tarot" || p.contents.kind === "spectral")
     && p.contents.items.some(it => it === "The Soul" || it === "Black Hole")
@@ -243,8 +235,6 @@ function AnteRow({ r, expanded, onToggle }: { r: AnteResult; expanded: boolean; 
     </div>
   );
 }
-
-// ---- Inputs (shared by all analyzer views) ----
 
 function InputsPanel({
   input, setInput, onRun, isRunning,
@@ -342,8 +332,6 @@ function InputsPanel({
   );
 }
 
-// ---- Sub-views ----
-
 function ViewSwitcher({ view, onChange }: { view: AnalyzerView; onChange: (v: AnalyzerView) => void }) {
   const btn = (v: AnalyzerView, label: string, Icon: any) => (
     <Button
@@ -366,7 +354,6 @@ function ViewSwitcher({ view, onChange }: { view: AnalyzerView; onChange: (v: An
 }
 
 function FullSpoilerView({ results }: { results: AnteResult[] }) {
-  // Track which antes are expanded. Default: ante 1 open, others collapsed.
   const [expanded, setExpanded] = useState<Record<number, boolean>>(() => ({ [results[0]?.ante ?? 1]: true }));
 
   const allOpen = results.every(r => expanded[r.ante]);
@@ -540,14 +527,11 @@ function SoulView({ results, maxAnte }: { results: AnteResult[]; maxAnte: number
   );
 }
 
-// ---- Outer SeedsTab ----
-
 type SubTab = "analyzer" | "finder" | "library";
 
 export function SeedsTab() {
   const [subTab, setSubTab] = useState<SubTab>("analyzer");
 
-  // Analyzer state lives in global store so it survives sub-tab switches.
   const analyzer = useSeedTabState(s => s.analyzer);
   const librarySize = useSeedTabState(s => s.library.length);
   const setInput = (i: AnalysisInput) => setAnalyzer({ input: i });

@@ -15,17 +15,13 @@ export function JokerSprite({
   name: string;
   size?: number;
   className?: string;
-  /** When true (default), clicking the sprite opens the joker detail sheet. */
   clickable?: boolean;
-  /** Override the default openJokerDetail behavior. */
   onClick?: (jokerId: string) => void;
 }) {
   const url = getSpriteUrl(jokerId);
   const [failed, setFailed] = useState(false);
   const showImg = url && !failed;
 
-  // useApp can throw if rendered outside provider; gate the hook call via try.
-  // Safe pattern: read directly since the entire app is wrapped in AppProvider.
   const { openJokerDetail } = useApp();
 
   const inner = (
@@ -61,9 +57,14 @@ export function JokerSprite({
     className,
   );
 
+  const sizedStyle = {
+    width: `calc(${size}px * var(--ui-scale, 1))`,
+    height: `calc(${size}px * var(--ui-scale, 1))`,
+  };
+
   if (!clickable || !jokerId) {
     return (
-      <div className={baseCls} style={{ width: size, height: size }} aria-hidden={false}>
+      <div className={baseCls} style={sizedStyle} aria-hidden={false}>
         {inner}
       </div>
     );
@@ -83,7 +84,7 @@ export function JokerSprite({
         baseCls,
         "cursor-pointer transition-transform hover:scale-105 hover:border-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
       )}
-      style={{ width: size, height: size }}
+      style={sizedStyle}
       title={name}
       aria-label={name}
       data-sound="click"

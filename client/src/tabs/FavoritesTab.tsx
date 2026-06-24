@@ -72,7 +72,7 @@ function JokerFavRow({
       )}
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-start gap-2.5">
-          <JokerSprite jokerId={j.id} name={displayName} size={48} className="h-12 w-12 sm:h-14 sm:w-14" />
+          <JokerSprite jokerId={j.id} name={displayName} size={56} />
           <h3 className="min-w-0 font-display text-base font-bold leading-tight gold-text">
             <LName category="jokers" id={j.id} fallback={j.name} />
           </h3>
@@ -175,7 +175,7 @@ function ComboFavRow({
               className="flex items-center gap-1.5 rounded-md border border-border bg-card/60 px-2 py-1"
               data-testid={`fav-combo-${c.id}-joker-${j.id}`}
             >
-              <JokerSprite jokerId={j.id} name={j.name} size={28} className="h-7 w-7" />
+              <JokerSprite jokerId={j.id} name={j.name} size={32} />
               <span className="font-display text-xs">
                 <LName category="jokers" id={j.id} fallback={j.name} />
               </span>

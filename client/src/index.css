@@ -19,6 +19,7 @@
 
 :root,
 .dark {
+  --ui-scale: 1;
   --button-outline: rgba(255, 255, 255, 0.10);
   --badge-outline: rgba(0, 0, 0, 0.30);
   --opaque-button-border-intensity: 9;

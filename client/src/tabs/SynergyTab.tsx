@@ -49,9 +49,9 @@ function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProp
       <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <div className="flex shrink-0 items-center gap-0.5">
-            <JokerSprite jokerId={c.a} name={aName.name ?? a?.name ?? c.a} size={28} className="h-7 w-7" />
+            <JokerSprite jokerId={c.a} name={aName.name ?? a?.name ?? c.a} size={32} />
             <span className="px-0.5 text-[10px] text-muted-foreground">+</span>
-            <JokerSprite jokerId={c.b} name={bName.name ?? b?.name ?? c.b} size={28} className="h-7 w-7" />
+            <JokerSprite jokerId={c.b} name={bName.name ?? b?.name ?? c.b} size={32} />
           </div>
           <button
             onClick={() => onSelect(c.partnerId)}

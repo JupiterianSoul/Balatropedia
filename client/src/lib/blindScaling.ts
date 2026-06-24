@@ -1,10 +1,3 @@
-/**
- * Balatro blind chip requirements per ante.
- *
- * Each ante has a base "small blind" requirement. Big blind = 1.5x small,
- * boss blind = 2x small. Some stakes (Green+) scale the boss bonus higher,
- * but the planner uses the base values as a clear reference.
- */
 export interface BlindTargets {
   ante: number;
   small: number;
@@ -12,8 +5,6 @@ export interface BlindTargets {
   boss: number;
 }
 
-// Anchor table for the small blind requirement at each ante (White Stake).
-// Source: Balatro reference / community wiki.
 const SMALL_BLIND_BY_ANTE: Record<number, number> = {
   1: 300,
   2: 800,

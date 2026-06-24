@@ -3748,8 +3748,6 @@ export const SYNERGIES: Synergy[] = [
     difficulty: "hard"
   },
 
-
-  // --- community-validated additions ---
   { a: "fortune_teller", b: "steel_joker", kind: "strong_support", engine: "xmult_stack", why: "Fortune Teller permanently gains +1 Mult per Tarot card used. Steel Joker gives X0.2 Mult per Steel Card in the full deck. Spamming Tarots (especially The Chariot to make Steel Cards) grows both additive Mult and XMult simultaneously.", popularity: "common", difficulty: "moderate", sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "ComicBook.com 5 Best Joker Combos", url: "https://comicbook.com/gaming/news/best-joker-combos-balatro/" }] },
   { a: "hologram", b: "wee_joker", kind: "core_pair", engine: "deck_manipulation", why: "Adding 2s to the deck triggers Wee Joker scaling (+8 Chips per scored 2) while simultaneously triggering Hologram's X0.25 Mult per card added. Growing the deck from 2-stacking benefits both jokers with the same action.", popularity: "common", difficulty: "moderate", sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "games.gg Wee Joker Guide", url: "https://games.gg/balatro/guides/balatro-wee-joker-guide/" }] },
   { a: "spare_trousers", b: "square_joker", kind: "core_pair", engine: "scaling", why: "Two Pair uses exactly 4 cards, so every Two Pair hand simultaneously triggers Spare Trousers (+2 permanent Mult) and Square Joker (+4 permanent Chips). A single hand type scales two jokers at once.", popularity: "common", difficulty: "easy", sources: [{ name: "dood.gg Joker Synergy Guide", url: "https://dood.gg/en/balatro/guides/joker-synergy/" }, { name: "ComicBook.com 5 Best Joker Combos", url: "https://comicbook.com/gaming/news/best-joker-combos-balatro/" }] },
@@ -4281,8 +4279,6 @@ export const COMBOS: Combo[] = [
     difficulty: "hard"
   },
 
-
-  // --- community-validated additions ---
   {
     id: "fortune_teller_steel_engine",
     title: "Fortune Teller + Steel Machine",
@@ -4659,7 +4655,6 @@ export const ARCHETYPES: ArchetypeSummary[] = [
     difficulty: "moderate"
   },
 
-  // --- community-validated additions ---
   {
     id: "no_discard",
     name: "No-Discard Discipline",

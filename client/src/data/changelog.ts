@@ -1,6 +1,3 @@
-// Shared changelog source. WhatsNewTab renders the full list,
-// HomeTab renders only ENTRIES[0] as a "latest update" card.
-// Reverse-chronological, newest first. Dates intentionally omitted.
 
 export type ChangelogKind = "feature" | "data" | "fix" | "polish" | "community" | "nav";
 
@@ -12,6 +9,19 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "v1.8",
+    kind: "polish",
+    titleKey: "ui.whatsnew.v1_8.title",
+    bullets: [
+      "ui.whatsnew.v1_8.uiscale",
+      "ui.whatsnew.v1_8.help_deep",
+      "ui.whatsnew.v1_8.disclaimer",
+      "ui.whatsnew.v1_8.mobile_overflow",
+      "ui.whatsnew.v1_8.cleanup",
+      "ui.whatsnew.v1_8.about_legal",
+    ],
+  },
   {
     version: "v1.7.4",
     kind: "polish",

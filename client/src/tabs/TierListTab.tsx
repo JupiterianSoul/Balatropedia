@@ -39,25 +39,20 @@ interface TierListShape {
 
 const DATA = TIERLIST as TierListShape;
 
-// Build a Tier -> jokerIds map by merging two variants.
-// For each joker we average its tier rank across both variants (lower = better),
-// then re-bucket. This lets users combine Stake + Deck context honestly.
 function mergeTiers(a: TierData, b: TierData): TierData {
-  const RANK: Tier[] = ["S", "A", "B", "C", "D"]; // S=0 .. D=4
+  const RANK: Tier[] = ["S", "A", "B", "C", "D"];
   function indexOf(td: TierData, id: string): number {
     for (let i = 0; i < RANK.length; i++) {
       if (td[RANK[i]].includes(id)) return i;
     }
-    return RANK.length - 1; // unknown -> D
+    return RANK.length - 1;
   }
-  // Collect every joker id once
   const ids = new Set<string>();
   for (const t of RANK) {
     a[t].forEach((id) => ids.add(id));
     b[t].forEach((id) => ids.add(id));
   }
   const out: TierData = { S: [], A: [], B: [], C: [], D: [] };
-  // Average rank, then round to nearest tier
   for (const id of Array.from(ids)) {
     const ra = indexOf(a, id);
     const rb = indexOf(b, id);
@@ -65,8 +60,6 @@ function mergeTiers(a: TierData, b: TierData): TierData {
     const idx = Math.min(RANK.length - 1, Math.max(0, Math.round(avg)));
     out[RANK[idx]].push(id);
   }
-  // Preserve a stable order: original `a` ordering inside default ranking first,
-  // then any extras alphabetically.
   for (const t of RANK) {
     const order: Record<string, number> = {};
     a[t].forEach((id, i) => { order[id] = i; });
@@ -122,7 +115,7 @@ function JokerCell({ id, onClick }: { id: string; onClick: (id: string) => void 
       className="group flex flex-col items-center gap-0.5 rounded-md p-1 transition-transform hover:scale-110 hover:bg-white/5"
       data-testid={`tierlist-joker-${id}`}
     >
-      <JokerSprite jokerId={id} name={displayName} size={48} className="h-12 w-12" />
+      <JokerSprite jokerId={id} name={displayName} size={56} />
       <span className="hidden truncate text-[10px] text-foreground/70 group-hover:block lg:block lg:max-w-[80px]">
         {displayName}
       </span>
@@ -135,12 +128,20 @@ export function TierListTab() {
   const { openJokerDetail } = useApp();
   const [stake, setStake] = useState<string>("any");
   const [deck, setDeck] = useState<string>("any");
-  const [disclaimerHidden, setDisclaimerHidden] = useState<boolean>(false);
+  const [disclaimerHidden, setDisclaimerHidden] = useState<boolean>(() => {
+    if (typeof window === "undefined" || !window.localStorage) return false;
+    try { return window.localStorage.getItem("balatro.tierlist.disclaimerHidden") === "1"; } catch { return false; }
+  });
+  function dismissDisclaimer() {
+    setDisclaimerHidden(true);
+    if (typeof window !== "undefined" && window.localStorage) {
+      try { window.localStorage.setItem("balatro.tierlist.disclaimerHidden", "1"); } catch { return; }
+    }
+  }
 
   const data: TierData = useMemo(() => {
     const stakeData = stake !== "any" ? DATA.byStake[stake] : null;
     const deckData = deck !== "any" ? DATA.byDeck[deck] : null;
-    // Both selected -> merge by averaging ranks (true combined view).
     if (stakeData && deckData) return mergeTiers(stakeData, deckData);
     if (deckData) return deckData;
     if (stakeData) return stakeData;
@@ -162,7 +163,7 @@ export function TierListTab() {
 
   return (
     <div className="space-y-5">
-      {/* Disclaimer */}
+      { }
       {!disclaimerHidden && (
         <div
           className="flex items-start gap-3 rounded-md border-2 border-accent/40 bg-accent/5 p-4"
@@ -178,7 +179,7 @@ export function TierListTab() {
             </p>
             <button
               type="button"
-              onClick={() => setDisclaimerHidden(true)}
+              onClick={dismissDisclaimer}
               className="mt-1 inline-flex items-center gap-1.5 rounded border border-accent/50 bg-accent/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-accent transition-colors hover:bg-accent/25"
               data-testid="button-tierlist-dismiss-disclaimer"
             >
@@ -189,7 +190,7 @@ export function TierListTab() {
         </div>
       )}
 
-      {/* Selectors */}
+      { }
       <div className="flex flex-wrap items-end gap-3">
         <div className="min-w-[180px] flex-1">
           <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -238,7 +239,7 @@ export function TierListTab() {
         </div>
       </div>
 
-      {/* Tier rows */}
+      { }
       <div className="space-y-2">
         {TIER_ORDER.map((tier) => {
           const ids = data[tier] ?? [];
@@ -285,7 +286,7 @@ export function TierListTab() {
         })}
       </div>
 
-      {/* Sources */}
+      { }
       <div className="space-y-2 border-t border-border pt-4">
         <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           {t("ui.tierlist.sources")}
@@ -319,6 +320,13 @@ export function TierListTab() {
           </details>
         )}
       </div>
+
+      <p
+        className="pt-2 text-[11px] leading-relaxed text-muted-foreground/70"
+        data-testid="tierlist-footer-disclaimer"
+      >
+        {t("ui.tierlist.disclaimer_footer")}
+      </p>
     </div>
   );
 }

@@ -19,7 +19,6 @@ interface HomeTabProps {
   onNavigate: (tab: string) => void;
 }
 
-// Description i18n keys, picked at random per mount.
 const DESC_KEYS = [
   "ui.home.desc_1",
   "ui.home.desc_2",
@@ -29,12 +28,11 @@ const DESC_KEYS = [
   "ui.home.desc_6",
 ];
 
-// All discoverable tabs (excludes home itself).
 const DISCOVER_TABS = [
   "myrun", "runchallenge",
   "synergies", "combos", "archetypes", "tierlist", "compare", "skeleton",
   "jokers", "decks", "stakes", "bosses", "vouchers", "consumables", "modifiers",
-  "heatmap", "glossary", "whatsnew", "help", "about", "settings",
+  "glossary", "whatsnew", "help", "about", "settings",
 ];
 
 const VISITED_KEY = "balatropedia.visitedTabs";
@@ -126,7 +124,7 @@ function readVisited(): Set<string> {
     if (!raw) return new Set();
     const arr = JSON.parse(raw);
     if (Array.isArray(arr)) return new Set(arr.filter((x) => typeof x === "string"));
-  } catch { /* ignore */ }
+  } catch {  }
   return new Set();
 }
 
@@ -134,13 +132,12 @@ function writeVisited(s: Set<string>) {
   if (typeof window === "undefined" || !window.sessionStorage) return;
   try {
     window.sessionStorage.setItem(VISITED_KEY, JSON.stringify(Array.from(s)));
-  } catch { /* ignore */ }
+  } catch {  }
 }
 
 function JokerConveyor({ direction, side, ids }: {
   direction: "up" | "down"; side: "left" | "right"; ids: string[];
 }) {
-  // Duplicate the list for a seamless loop.
   const list = useMemo(() => [...ids, ...ids], [ids]);
   return (
     <div
@@ -175,7 +172,6 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
 
   const descKey = useMemo(() => DESC_KEYS[Math.floor(Math.random() * DESC_KEYS.length)], []);
 
-  // Larger conveyor lists so they fill tall desktop viewports edge-to-edge.
   const leftIds = useMemo(() => pickRandom(JOKERS.map((j) => j.id), 20), []);
   const rightIds = useMemo(() => pickRandom(JOKERS.map((j) => j.id), 20), []);
 
@@ -235,28 +231,23 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
   }, [focused]);
 
   return (
-    // Full-bleed home view. Mobile has a sticky header (~60px), so we lock to
-    // calc(100dvh-60px). On desktop the right pane is itself a 100dvh scroll
-    // container, so h-full picks up that height exactly. overflow-hidden means
-    // the user only ever sees this one view, no scroll.
     <div
       className="relative w-full overflow-hidden h-[calc(100dvh-60px)] md:h-full"
       data-testid="tab-home"
     >
-      {/* Animated Balatro main-menu red/blue background, fills the entire view. */}
+      { }
       <div className="balatro-menu-bg" aria-hidden="true" />
 
-      {/* Vertical joker conveyors anchored to the FULL view edges. */}
+      { }
       <JokerConveyor direction="down" side="left" ids={leftIds} />
       <JokerConveyor direction="up" side="right" ids={rightIds} />
 
-      {/* Foreground content. Vertical-center on mobile, top-aligned-ish on desktop.
-          Padding clears the 64px conveyors on both sides. */}
+      { }
       <div
-        className="relative z-10 mx-auto flex h-full w-full flex-col items-center justify-center gap-5 px-20 py-6 sm:gap-6 sm:py-10"
+        className="relative z-10 mx-auto flex h-full w-full min-w-0 flex-col items-center justify-center gap-5 px-[72px] py-6 sm:gap-6 sm:px-20 sm:py-10"
         style={{ maxWidth: "min(64rem, 100%)" }}
       >
-        {/* Big app title - moved higher via smaller top padding above */}
+        { }
         <h1
           className="font-pixel text-center leading-none drop-shadow-[0_4px_0_rgba(0,0,0,0.55)]"
           style={{ fontSize: "clamp(3rem, 11vw, 7rem)" }}
@@ -266,7 +257,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
           <span className="chips-text">{t("ui.home.title_b")}</span>
         </h1>
 
-        {/* Description */}
+        { }
         <p
           className="max-w-2xl text-center font-display text-base text-foreground/90 sm:text-lg md:text-xl"
           data-testid="text-home-desc"
@@ -274,7 +265,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
           {t(descKey)}
         </p>
 
-        {/* All 4 suit icons in one row under the description. */}
+        { }
         <div
           className="flex items-center justify-center gap-6 sm:gap-8"
           aria-hidden="true"
@@ -285,7 +276,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
           <span className="font-pixel chips-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)" }}>♣</span>
         </div>
 
-        {/* Search bar */}
+        { }
         <div className="relative w-full max-w-xl" data-testid="home-search">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -315,7 +306,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
             )}
           </div>
 
-          {/* Autocomplete dropdown - capped to fit within the view */}
+          { }
           {focused && query.trim() && (
             <div
               className="casino-card absolute z-20 mt-2 max-h-72 w-full overflow-y-auto p-1 shadow-2xl"
@@ -353,7 +344,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
           )}
         </div>
 
-        {/* Two-button row: Discover + What's New */}
+        { }
         <div className="flex flex-col items-center gap-2">
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button

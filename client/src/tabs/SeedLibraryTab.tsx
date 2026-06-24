@@ -1,7 +1,3 @@
-// SeedLibraryTab.tsx - v1.7.2
-// Lists saved seeds (seed + preset + full match details). Each entry uses the
-// same MatchCard layout as Seed Finder. Adds Delete and "Load preset back into
-// Finder" actions per row.
 
 import { Trash2, Library, Upload, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,8 +31,6 @@ export function SeedLibraryTab() {
       globalMaxAnte: s.preset.globalMaxAnte,
       selected: s.preset.jokerConstraints,
     });
-    // The user must then switch to the Finder tab manually — we'd need a
-    // parent callback to flip subTab. Toast-like feedback via console for now.
   }
 
   if (library.length === 0) {
@@ -53,7 +47,6 @@ export function SeedLibraryTab() {
     );
   }
 
-  // Newest first
   const sorted = [...library].sort((a, b) => b.savedAt - a.savedAt);
 
   return (

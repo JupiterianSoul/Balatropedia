@@ -1,24 +1,19 @@
-// Lightweight DOM-only confetti for one-off celebratory bursts.
-// No deps. Uses CSS keyframes (confettiFall) declared in index.css.
-//
-// Usage: burstConfetti({ count: 80 })
-//   or:  burstConfetti({ count: 30, originX: 50, originY: 50 })
 
 const COLORS = [
-  "hsl(0 70% 60%)",     // mult red
-  "hsl(200 60% 60%)",   // chip blue
-  "hsl(45 85% 60%)",    // gold
-  "hsl(145 50% 55%)",   // money green
-  "hsl(270 55% 65%)",   // spectral purple
+  "hsl(0 70% 60%)",
+  "hsl(200 60% 60%)",
+  "hsl(45 85% 60%)",
+  "hsl(145 50% 55%)",
+  "hsl(270 55% 65%)",
 ];
 
 const SHAPES = ["♠", "♥", "♦", "♣", "★"];
 
 interface BurstOptions {
   count?: number;
-  originX?: number; // 0-100 vw
-  originY?: number; // 0-100 vh
-  duration?: number; // ms
+  originX?: number;
+  originY?: number;
+  duration?: number;
   useSuits?: boolean;
 }
 
@@ -33,7 +28,6 @@ export function burstConfetti(opts: BurstOptions = {}) {
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  // Respect motion preference (shake-strength = 0 disables shakes app-wide)
   const shake = document.documentElement.getAttribute("data-shake");
   if (shake === "off") return;
 
@@ -79,7 +73,6 @@ export function burstConfetti(opts: BurstOptions = {}) {
     container.appendChild(piece);
   }
 
-  // Clean up after the longest possible animation
   window.setTimeout(() => {
     container.remove();
   }, duration + 1800);

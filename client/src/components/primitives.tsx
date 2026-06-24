@@ -235,7 +235,6 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-
 const POPULARITY_TONE: Record<Popularity, string> = {
   staple: "bg-gradient-to-b from-[hsl(45_85%_65%)] to-[hsl(45_85%_50%)] text-[hsl(198_18%_9%)]",
   common: "bg-gradient-to-b from-[hsl(206_55%_60%)] to-[hsl(206_55%_45%)] text-white",

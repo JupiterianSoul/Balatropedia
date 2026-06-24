@@ -1,11 +1,3 @@
-// Build Lab — recommendation engine that takes 1-3 anchor jokers and outputs:
-//   - detected archetypes
-//   - ranked partner suggestions (by pairScore + curated partners)
-//   - hand focus (which hand the build wants to play)
-//   - planet priorities (which hands to level)
-//   - boss watch (which bosses cripple this build)
-//   - scaling tracker tips (which jokers in build are scaling, what to feed them)
-//   - anti-synergy warnings
 import { useMemo, useState } from "react";
 import { FlaskConical, X, Sparkles, AlertTriangle, Target, Skull, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +12,6 @@ import {
 import { useGameText } from "@/lib/i18n";
 
 function HandFocus({ ids }: { ids: string[] }) {
-  // Aggregate joker.hands across the anchors and rank by frequency
   const counts: Record<string, number> = {};
   for (const id of ids) {
     const j = JOKER_MAP[id];
@@ -64,8 +55,6 @@ function ScalingTracker({ ids }: { ids: string[] }) {
 }
 
 function BossWatch({ ids }: { ids: string[] }) {
-  // Heuristic: cross-reference boss effects with joker tags.
-  // We hard-code the most punishing boss/joker conflicts.
   const warns: { boss: string; why: string }[] = [];
   const has = (role: string) => ids.some(id => {
     const j = JOKER_MAP[id]; if (!j) return false;
@@ -85,7 +74,6 @@ function BossWatch({ ids }: { ids: string[] }) {
   if (warns.length === 0) {
     return <p className="text-xs text-muted-foreground italic">No common boss disasters identified.</p>;
   }
-  // dedupe by boss
   const seen = new Set<string>();
   const uniq = warns.filter(w => seen.has(w.boss) ? false : (seen.add(w.boss), true));
   return (
@@ -101,7 +89,6 @@ function BossWatch({ ids }: { ids: string[] }) {
 }
 
 function PartnerSuggestions({ ids }: { ids: string[] }) {
-  // Aggregate pairScore across all candidate jokers vs the anchor set
   const candidates = useMemo(() => {
     if (ids.length === 0) return [];
     const scored = JOKERS
@@ -185,7 +172,7 @@ export function BuildLabTab() {
         </p>
       </div>
 
-      {/* Anchor picker */}
+      { }
       <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
         <h3 className="text-sm font-semibold">Anchors ({anchors.length}/3)</h3>
         <div className="flex flex-wrap gap-2">
@@ -211,7 +198,7 @@ export function BuildLabTab() {
 
       {anchors.length > 0 && (
         <>
-          {/* Archetypes */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-accent" />
@@ -230,7 +217,7 @@ export function BuildLabTab() {
             )}
           </section>
 
-          {/* Hand focus + Planet priorities */}
+          { }
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
               <div className="flex items-center gap-2">
@@ -249,13 +236,13 @@ export function BuildLabTab() {
             </section>
           </div>
 
-          {/* Partners */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <h3 className="text-sm font-semibold">Ranked partner suggestions</h3>
             <PartnerSuggestions ids={anchors} />
           </section>
 
-          {/* Synergies + Anti */}
+          { }
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
               <h3 className="text-sm font-semibold">Active synergies ({synergies.length + heuristics.length})</h3>
@@ -300,7 +287,7 @@ export function BuildLabTab() {
             </section>
           </div>
 
-          {/* Boss watch */}
+          { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <div className="flex items-center gap-2">
               <Skull className="h-4 w-4 text-rose-500" />

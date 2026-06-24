@@ -61,9 +61,6 @@ export function JokersTab() {
     let list = JOKERS.filter((j) => {
       if (q) {
         const note = (notes[`joker:${j.id}`] ?? "").toLowerCase();
-        // Search by effect text: localized name + effect + English fallback.
-        // Covers "+Mult", "X Mult", "Chips", "chance", "$" so users can find
-        // e.g. "xmult" or "in chance" across all 150 jokers.
         const gameLocal = getGameText(lang, "jokers", j.id);
         const gameEn = lang === "en" ? gameLocal : getGameText("en", "jokers", j.id);
         const hay = [
