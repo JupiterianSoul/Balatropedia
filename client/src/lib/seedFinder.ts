@@ -100,9 +100,19 @@ export class SeedFinder {
     this.active = true;
 
     const THREADS_CAP = 16;
-    const TRIES_PER_BATCH = 50000;
-    const threads = cfg.threads ?? Math.max(1, Math.min(THREADS_CAP, navigator.hardwareConcurrency || 4));
-    const triesPerBatch = cfg.triesPerBatch ?? TRIES_PER_BATCH;
+    // Adaptive batch sizing: small batches keep low-end devices responsive
+    // (UI doesn't freeze), large batches reduce postMessage overhead on fast
+    // hardware. We start small and grow per-worker after the first batch
+    // completes — see autoTuneBatch below.
+    const cores = navigator.hardwareConcurrency || 4;
+    const lowEnd = cores <= 4;
+    const INITIAL_TRIES_PER_BATCH = lowEnd ? 10_000 : 50_000;
+    const MAX_TRIES_PER_BATCH = lowEnd ? 25_000 : 200_000;
+    // Per-worker current batch size (auto-tuned)
+    const batchSizes: number[] = [];
+    const batchStart: number[] = [];
+    const threads = cfg.threads ?? Math.max(1, Math.min(THREADS_CAP, cores));
+    const triesPerBatch = cfg.triesPerBatch ?? INITIAL_TRIES_PER_BATCH;
     const maxTotalTries = cfg.maxTotalTries ?? 0;
     const versionInt = versionToInt(cfg.version);
 
@@ -146,6 +156,8 @@ export class SeedFinder {
       );
       this.workers.push(worker);
 
+      // Per-worker adaptive batch size, starts at the global initial size
+      if (batchSizes[i] === undefined) batchSizes[i] = triesPerBatch;
       const dispatchBatch = () => {
         if (stopped) return;
         if (maxTotalTries > 0 && totalTries >= maxTotalTries) {
@@ -158,10 +170,11 @@ export class SeedFinder {
           return;
         }
         const rngSeed = (Math.floor(Math.random() * 0xffffffff) ^ (i * 2654435761)) >>> 0;
+        batchStart[i] = performance.now();
         worker.postMessage({
           type: "search",
           rngSeed,
-          triesBatch: triesPerBatch,
+          triesBatch: batchSizes[i],
           maxAnte: cfg.maxAnte,
           deck: cfg.deck,
           stake: cfg.stake,
@@ -170,6 +183,19 @@ export class SeedFinder {
           voucherConstraints: cfg.voucherConstraints ?? [],
           tagConstraints: cfg.tagConstraints ?? [],
         });
+      };
+
+      // Auto-tune: target ~250ms per batch so UI stays responsive on low-end
+      // devices, but throughput stays high on fast ones (fewer postMessage round-trips).
+      const autoTuneBatch = () => {
+        const ms = performance.now() - (batchStart[i] || 0);
+        if (!ms || ms <= 0) return;
+        const target = lowEnd ? 250 : 400;
+        if (ms < target * 0.6) {
+          batchSizes[i] = Math.min(MAX_TRIES_PER_BATCH, Math.floor(batchSizes[i] * 1.5));
+        } else if (ms > target * 1.6) {
+          batchSizes[i] = Math.max(2_000, Math.floor(batchSizes[i] * 0.7));
+        }
       };
 
       worker.onmessage = (e) => {
@@ -184,6 +210,7 @@ export class SeedFinder {
           return;
         }
         if (msg.type === "result") {
+          autoTuneBatch();
           totalTries += msg.tries;
           if (msg.seed) {
             const match: SeedMatch = {

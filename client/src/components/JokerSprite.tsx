@@ -93,6 +93,7 @@ export function JokerSprite({
       title={name}
       aria-label={name}
       data-sound="click"
+      data-sprite="joker"
     >
       {inner}
     </button>

@@ -15,6 +15,7 @@ import {
 } from "@/lib/seedFinder";
 import { describeShopSlot, describePackSlot } from "@/lib/seedFinderLocation";
 import { useSeedTabState, setFinder, updateFinder, saveSeed, isSeedSaved } from "@/lib/seedTabState";
+import { SeedReproductionPanel } from "@/components/SeedReproductionPanel";
 
 const ALL_JOKER_NAMES = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
   .filter((j, i, a) => a.indexOf(j) === i)
@@ -206,6 +207,52 @@ function ConstraintRow({
   );
 }
 
+/**
+ * Friendly Search Speed selector. Maps an opaque thread count to a tier
+ * label that any user can understand. The dropdown always shows ONE current
+ * tier label regardless of how many cores the device has.
+ */
+function SpeedSelect({
+  value, onChange, disabled,
+}: {
+  value: number;
+  onChange: (n: number) => void;
+  disabled?: boolean;
+}) {
+  const cores = typeof navigator !== "undefined" ? (navigator.hardwareConcurrency || 4) : 4;
+  const highCount = Math.max(4, Math.min(8, cores));
+  const maxCount = Math.max(highCount + 2, Math.min(16, cores * 2));
+
+  // Distinct tier values (deduplicated for low-core devices)
+  const tiersRaw: Array<{ key: string; label: string; n: number }> = [
+    { key: "eco",    label: `Eco — 1 worker (low CPU)`,             n: 1 },
+    { key: "low",    label: `Low — 2 workers`,                       n: 2 },
+    { key: "medium", label: `Medium — 4 workers`,                    n: 4 },
+    { key: "high",   label: `High — ${highCount} workers (auto)`,    n: highCount },
+    { key: "max",    label: `Max — ${maxCount} workers (oversubscribe)`, n: maxCount },
+  ];
+  // De-duplicate by n while keeping the most descriptive label
+  const seen = new Set<number>();
+  const tiers = tiersRaw.filter(t => { if (seen.has(t.n)) return false; seen.add(t.n); return true; });
+
+  // Snap incoming value to the closest tier
+  const current = tiers.reduce((best, t) => Math.abs(t.n - value) < Math.abs(best.n - value) ? t : best, tiers[0]);
+
+  return (
+    <Select value={current.key} onValueChange={(k) => {
+      const t = tiers.find(x => x.key === k);
+      if (t) onChange(t.n);
+    }} disabled={disabled}>
+      <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+      <SelectContent>
+        {tiers.map(t => (
+          <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
 export function SeedFinderTab() {
   const finder = useSeedTabState(s => s.finder);
 
@@ -305,12 +352,8 @@ export function SeedFinderTab() {
             </Select>
           </div>
           <div>
-            <Label className="text-xs text-zinc-400" title="Parallel CPU workers searching simultaneously. Higher = faster, but uses more CPU. Default is auto-set to your CPU cores.">CPU workers</Label>
-            <Input
-              type="number" min={1} max={16} value={threads}
-              onChange={e => setFinder({ threads: Math.max(1, Math.min(16, Number(e.target.value) || 1)) })}
-              className="h-8 text-xs"
-              disabled={running} />
+            <Label className="text-xs text-zinc-400" title="How much of your device's CPU to use for the search. Higher = faster but heavier. 'Eco' is recommended for older phones.">Search speed</Label>
+            <SpeedSelect value={threads} onChange={n => setFinder({ threads: n })} disabled={running} />
           </div>
         </div>
       </div>
@@ -492,6 +535,9 @@ export function MatchCard({
         {trailing}
       </div>
       <div className="space-y-1">
+        {preset && (
+          <SeedReproductionPanel match={match} preset={{ deck: preset.deck, stake: preset.stake, version: preset.version }} />
+        )}
         {match.jokerLocations.map((j, i) => {
           const id = jokerIdFromName(j.joker);
           return (
