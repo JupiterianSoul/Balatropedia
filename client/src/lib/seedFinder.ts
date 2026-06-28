@@ -99,7 +99,7 @@ export class SeedFinder {
     if (this.active) throw new Error("SeedFinder already running");
     this.active = true;
 
-    const THREADS_CAP = 16;
+    const THREADS_CAP = 32;
     // Adaptive batch sizing: small batches keep low-end devices responsive
     // (UI doesn't freeze), large batches reduce postMessage overhead on fast
     // hardware. We start small and grow per-worker after the first batch

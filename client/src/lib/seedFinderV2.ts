@@ -1,22 +1,14 @@
-// Balatropedia adapter for the new Rust+WASM Seed Engine (beta).
+// Balatropedia adapter for the Rust+WASM Seed Engine (beta V2).
 //
-// Exposes the SAME public interface as ./seedFinder.ts so SeedFinderTab can
-// swap implementations behind a beta toggle. The interface stays minimal:
+// Same public interface as ./seedFinder.ts so SeedFinderTab can swap engines
+// behind a beta toggle. Fan-outs N web workers; each one loads either the
+// SIMD or scalar WASM bundle (auto-detected), and scans a disjoint slice of
+// the base-35 seed space.
 //
-//   const f = new SeedFinderV2();
-//   const handle = f.start(config, callbacks);
-//   handle.stop();
-//   const matches = await handle.promise;
-//
-// Internally this fan-outs N web workers, each loading the WASM engine from
-// /engine-v2/ (vendored from the new Balatro-Seed-Searcher repo). Each worker
-// scans a disjoint slice of the base-35 seed space.
-//
-// IMPORTANT honest-disclosure notes (mirrored in the in-product beta tooltip):
-//   - This engine doesn't yet model Standard pack card-level contents.
-//   - It hasn't been bit-for-bit cross-checked with Immolate at 100k+ scale —
-//     only statistical sanity (rarities/packs/lock state).
-//   - Therefore the public Immolate-backed finder remains the default.
+// Honest-disclosure (mirrored in the in-product tooltip):
+//   - Standard pack card-level contents not yet modelled.
+//   - No bit-for-bit Immolate parity sweep yet (only 100k statistical sanity).
+//   - The original Immolate-backed finder remains the verified default.
 
 import type {
   FinderCallbacks,
@@ -26,15 +18,13 @@ import type {
   SeedMatch,
 } from "./seedFinder";
 
-// ─── Filter DSL translation ──────────────────────────────────────────────────
-// Engine filter shape (must match engine/src/filter.rs):
-//   { clauses: [{ kind: "ante_shop_has_joker", ante, slot, joker }, ...],
-//     partial: bool, min_score: number|null }
-//
-// We only translate the joker constraints for v0; voucher/tag constraints
-// stay Immolate-only until we wire them through the engine API.
+// ─── Filter DSL translation ─────────────────────────────────────────────────
+// Engine filter shape (matches engine/src/filter.rs):
+//   { clauses: [{ kind, ... }, ...], partial: bool, min_score: number|null }
 type EngineClause =
   | { kind: "ante_shop_has_joker"; ante: number; slot: number; joker: string }
+  | { kind: "ante_tag_is"; ante: number; position: number; tag: string }
+  | { kind: "voucher_is"; ante: number; voucher: string }
   | { kind: "ante_pack_contains"; ante: number; pack_index: number; card: string };
 
 interface EngineFilter {
@@ -46,35 +36,34 @@ interface EngineFilter {
 function buildFilterJson(cfg: FinderConfig): string {
   const clauses: EngineClause[] = [];
 
+  // Jokers — "any slot up to maxAnte" means we emit one clause per (ante).
+  // Slot 0 = "any slot" in engine semantics.
   for (const jc of cfg.jokerConstraints) {
-    // For each constraint, search any slot up to maxAnte. We emit one clause
-    // per ante to let the engine short-circuit at the earliest match.
     for (let ante = 1; ante <= jc.maxAnte; ante++) {
-      // Slot 0 = "any slot" in the engine semantics.
-      clauses.push({
-        kind: "ante_shop_has_joker",
-        ante,
-        slot: 0,
-        joker: jc.joker,
-      });
+      clauses.push({ kind: "ante_shop_has_joker", ante, slot: 0, joker: jc.joker });
     }
   }
 
-  const filter: EngineFilter = {
-    clauses,
-    partial: false,
-    min_score: null,
-  };
-  return JSON.stringify(filter);
+  // Vouchers (engine already supports VoucherIs).
+  for (const vc of cfg.voucherConstraints ?? []) {
+    for (let ante = 1; ante <= vc.maxAnte; ante++) {
+      clauses.push({ kind: "voucher_is", ante, voucher: vc.voucher });
+    }
+  }
+
+  // Tags (engine supports TagIs at positions 1+2).
+  for (const tc of cfg.tagConstraints ?? []) {
+    for (let ante = 1; ante <= tc.maxAnte; ante++) {
+      clauses.push({ kind: "ante_tag_is", ante, position: 0, tag: tc.tag });
+    }
+  }
+
+  return JSON.stringify({ clauses, partial: false, min_score: null });
 }
 
 // ─── Worker dispatch ────────────────────────────────────────────────────────
-
 const SEED_LEN = 8;
-// Total search space size for an 8-char seed (35^8) doesn't fit cleanly in
-// a u64 div by hand, but the engine treats `count` as an upper bound — we
-// just feed it a huge number per worker and let the user stop.
-const HUGE_COUNT = (1n << 60n); // effectively unbounded
+const HUGE_COUNT = (1n << 60n); // effectively unbounded; user stops manually
 
 export class SeedFinderV2 {
   private workers: Worker[] = [];
@@ -85,29 +74,55 @@ export class SeedFinderV2 {
     this.active = true;
 
     const cores = navigator.hardwareConcurrency || 4;
-    const threads = cfg.threads ?? Math.max(1, Math.min(16, cores));
+    // Cap at 32 — modern threadrippers / m-series studios can hit this.
+    const threads = cfg.threads ?? Math.max(1, Math.min(32, cores));
     const filterJson = buildFilterJson(cfg);
 
-    // URLs to the vendored engine. Vite serves /public/* at the root.
-    const jsUrl = new URL("/engine-v2/balatro_seed_engine.js", self.location.origin).toString();
-    const wasmUrl = new URL("/engine-v2/balatro_seed_engine_bg.wasm", self.location.origin).toString();
+    const origin = self.location.origin;
+    const scalarJs = new URL("/engine-v2/balatro_seed_engine.js", origin).toString();
+    const scalarWasm = new URL("/engine-v2/balatro_seed_engine_bg.wasm", origin).toString();
+    const simdJs = new URL("/engine-v2-simd/balatro_seed_engine.js", origin).toString();
+    const simdWasm = new URL("/engine-v2-simd/balatro_seed_engine_bg.wasm", origin).toString();
 
     const allMatches: SeedMatch[] = [];
-    let totalTries = 0n;
-    let matches = 0;
+    // Per-worker scan counts. We sum these on every progress callback so the
+    // headline rate reflects total throughput across all workers (the previous
+    // implementation overwrote a single number per progress event, severely
+    // under-reporting on multi-worker runs).
+    const perWorkerScanned = new Array<number>(threads).fill(0);
+    let matchesCount = 0;
     const startedAt = performance.now();
     let stopped = false;
     let resolveOuter: (m: SeedMatch[]) => void = () => {};
     const promise = new Promise<SeedMatch[]>((res) => { resolveOuter = res; });
 
-    let progressTimer: number | null = window.setInterval(() => {
+    // Track which engine each worker reported using. We surface a single
+    // string ("SIMD" / "scalar" / "mixed") via the onProgress.engine field.
+    let simdWorkers = 0;
+    let scalarWorkers = 0;
+    const engineLabel = () =>
+      simdWorkers === 0 && scalarWorkers === 0 ? "loading"
+      : scalarWorkers === 0 ? "SIMD"
+      : simdWorkers === 0 ? "scalar"
+      : "mixed";
+
+    const progressTimer: number | null = window.setInterval(() => {
+      const total = perWorkerScanned.reduce((a, b) => a + b, 0);
       const elapsedMs = performance.now() - startedAt;
-      const seedsPerSec = elapsedMs > 0 ? Number((totalTries * 1000n) / BigInt(Math.max(1, Math.round(elapsedMs)))) : 0;
-      cb.onProgress?.({ totalTries: Number(totalTries), elapsedMs, seedsPerSec, matches });
+      const seedsPerSec = elapsedMs > 0 ? Math.round((total * 1000) / elapsedMs) : 0;
+      cb.onProgress?.({
+        totalTries: total,
+        elapsedMs,
+        seedsPerSec,
+        matches: matchesCount,
+        // Extra hint for the UI; existing typing in seedFinder.ts allows any extra
+        // fields because the consumer treats progress as `any` (see SeedFinderTab).
+        engine: engineLabel(),
+      } as any);
     }, 250);
 
     const cleanup = () => {
-      if (progressTimer != null) { clearInterval(progressTimer); progressTimer = null; }
+      if (progressTimer != null) clearInterval(progressTimer);
       this.workers.forEach(w => w.terminate());
       this.workers = [];
       this.active = false;
@@ -123,6 +138,7 @@ export class SeedFinderV2 {
     };
 
     let workersDone = 0;
+
     for (let i = 0; i < threads; i++) {
       const worker = new Worker(
         new URL("./seedFinderV2Worker.ts", import.meta.url),
@@ -130,20 +146,20 @@ export class SeedFinderV2 {
       );
       this.workers.push(worker);
 
-      // Per-worker rank stride: worker i starts at rank i * 10^15 and scans
-      // forward. With 16 workers and a 35^8 ~ 2.25e12 space this overlaps
-      // ranks across workers, but since each worker also gets a different
-      // random nonce baked into start_rank we still cover diverse seeds.
-      const startRank = (BigInt(i) * 100_000_000_000n + BigInt(Math.floor(Math.random() * 1_000_000_000)));
+      // Disjoint start ranks per worker. We use a 60-bit stride so workers
+      // never overlap within a reasonable run, plus a random nonce so two
+      // consecutive searches don't repeat the same ranks.
+      const workerNonce = Math.floor(Math.random() * 1_000_000_000);
+      const startRank = (BigInt(i) * 100_000_000_000n + BigInt(workerNonce));
+      const workerIdx = i;
 
       worker.onmessage = (ev) => {
         const msg = ev.data;
         if (msg.type === "matches") {
           for (const m of msg.matches as Array<{ score: number; seed: string }>) {
-            // Engine returns just (seed, score). We don't yet have per-joker
-            // location metadata from the new engine — we surface the seed with
-            // empty location arrays so downstream UI still renders the card.
-            // Users can click "Verify with Immolate" to get the full breakdown.
+            // No per-joker locations yet from the engine. Surface the seed
+            // with placeholder locations so the MatchCard UI renders;
+            // users can click "Verify with Immolate" to get the breakdown.
             const dummyLocations: JokerLocation[] = cfg.jokerConstraints.map((jc) => ({
               joker: jc.joker,
               edition: jc.edition ?? "",
@@ -163,13 +179,18 @@ export class SeedFinderV2 {
               tagLocations: [],
             };
             allMatches.push(match);
-            matches++;
+            matchesCount++;
             cb.onMatch?.(match);
           }
         } else if (msg.type === "progress") {
-          totalTries = BigInt(msg.totalScanned);
+          // Worker reports cumulative `scanned` for itself.
+          perWorkerScanned[workerIdx] = Number(msg.scanned);
+        } else if (msg.type === "ready") {
+          if (msg.simd) simdWorkers++; else scalarWorkers++;
+        } else if (msg.type === "error") {
+          cb.onError?.(typeof msg.message === "string" ? msg.message : "Worker error");
         } else if (msg.type === "done") {
-          totalTries += BigInt(msg.totalScanned);
+          perWorkerScanned[workerIdx] = Number(msg.scanned);
           workersDone++;
           if (workersDone >= threads && !stopped) {
             stopped = true;
@@ -181,13 +202,15 @@ export class SeedFinderV2 {
       };
 
       worker.onerror = (err) => {
-        cb.onError?.(err.message || "Worker error");
+        cb.onError?.(err.message || "Worker error (uncaught)");
       };
 
       worker.postMessage({
         type: "scan",
-        jsUrl,
-        wasmUrl,
+        scalarJs,
+        scalarWasm,
+        simdJs,
+        simdWasm,
         filterJson,
         startRank: startRank.toString(),
         count: HUGE_COUNT.toString(),

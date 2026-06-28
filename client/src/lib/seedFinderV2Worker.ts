@@ -1,11 +1,21 @@
-// Balatropedia worker — new Rust+WASM Seed Engine (beta).
-// Lives parallel to seedFinderWorker.ts (Immolate). Toggle in SeedFinderTab.
+// Balatropedia worker — Rust+WASM Seed Engine V2 (beta).
+//
+// Sits parallel to seedFinderWorker.ts (Immolate); selection happens via the
+// beta toggle in SeedFinderTab.
+//
+// Performance notes:
+//   - First message carries BOTH scalar and SIMD bundle URLs. The worker runs
+//     a 30-byte WebAssembly.validate() probe; if SIMD is supported, it loads
+//     the SIMD bundle, otherwise scalar.
+//   - Batch sizing is adaptive (target ~250 ms / scan_chunk). Initial batch is
+//     200k and the cap is 2M so fast PCs reach steady-state quickly.
+//   - postMessage frequency is bounded: at most one progress message every
+//     250 ms; matches batched up to the same window.
+//   - Hot loop avoids BigInt arithmetic: cursor/remaining are tracked as
+//     regular Numbers (35^8 ≈ 2.25e12, fits easily in IEEE 754 integer range),
+//     converted to BigInt only at the WASM boundary.
 
 /// <reference lib="webworker" />
-
-// We don't import types directly — the engine ships its own .d.ts in
-// /engine-v2 but Vite serves it as a static asset. We load via dynamic import
-// from a Worker-relative URL (set up by SeedFinderV2.dispatch below).
 
 type EngineModule = {
   init: () => void;
@@ -21,11 +31,30 @@ type EngineModule = {
   ) => Uint8Array;
 };
 
-let enginePromise: Promise<EngineModule> | null = null;
+// ─── SIMD detection ──────────────────────────────────────────────────────────
+// Tiny WebAssembly module that uses a v128 op. WebAssembly.validate returns
+// true iff the engine supports SIMD. Safari shipped this in 16.4 (Mar 2023);
+// all evergreen browsers support it.
+const SIMD_TEST_BYTES = new Uint8Array([
+  0x00, 0x61, 0x73, 0x6d,
+  0x01, 0x00, 0x00, 0x00,
+  0x01, 0x05, 0x01, 0x60, 0x00, 0x01, 0x7b,
+  0x03, 0x02, 0x01, 0x00,
+  0x0a, 0x0a, 0x01, 0x08, 0x00, 0x41, 0x00, 0xfd, 0x0f, 0xfd, 0x62, 0x0b,
+]);
+function detectSimd(): boolean {
+  try { return WebAssembly.validate(SIMD_TEST_BYTES); }
+  catch { return false; }
+}
 
-async function getEngine(jsUrl: string, wasmUrl: string): Promise<EngineModule> {
+let enginePromise: Promise<{ engine: EngineModule; simd: boolean }> | null = null;
+
+async function getEngine(scalarJs: string, scalarWasm: string, simdJs: string, simdWasm: string) {
   if (!enginePromise) {
     enginePromise = (async () => {
+      const simd = detectSimd();
+      const jsUrl = simd ? simdJs : scalarJs;
+      const wasmUrl = simd ? simdWasm : scalarWasm;
       const mod = await import(/* @vite-ignore */ jsUrl) as {
         default: (opts?: { module_or_path?: string }) => Promise<unknown>;
         init: () => void;
@@ -33,14 +62,14 @@ async function getEngine(jsUrl: string, wasmUrl: string): Promise<EngineModule> 
       };
       await mod.default({ module_or_path: wasmUrl });
       mod.init();
-      return { init: mod.init, scan_chunk: mod.scan_chunk };
+      return { engine: { init: mod.init, scan_chunk: mod.scan_chunk }, simd };
     })();
   }
   return enginePromise;
 }
 
-// Record: 8 bytes rank LE + 1 byte score + 8 bytes seed (right-padded space)
-const RECORD_SIZE = 17;
+// ─── Record decoding ────────────────────────────────────────────────────────
+const RECORD_SIZE = 17; // 8 (rank LE) + 1 (score) + 8 (seed, right-padded space)
 const decoder = new TextDecoder("utf-8");
 
 function decodeRecords(buf: Uint8Array): Array<{ score: number; seed: string }> {
@@ -55,7 +84,7 @@ function decodeRecords(buf: Uint8Array): Array<{ score: number; seed: string }> 
   return out;
 }
 
-// Map Balatropedia deck name → engine deck index (matches wasm_api::deck_from_idx).
+// ─── Deck / stake mapping (matches engine wasm_api::deck_from_idx) ──────────
 const DECK_IDX: Record<string, number> = {
   "Red Deck": 0, "Blue Deck": 1, "Yellow Deck": 2, "Green Deck": 3,
   "Black Deck": 4, "Magic Deck": 5, "Nebula Deck": 6, "Ghost Deck": 7,
@@ -69,10 +98,12 @@ const STAKE_IDX: Record<string, number> = {
 
 type ScanMsg = {
   type: "scan";
-  jsUrl: string;
-  wasmUrl: string;
+  scalarJs: string;
+  scalarWasm: string;
+  simdJs: string;
+  simdWasm: string;
   filterJson: string;
-  startRank: string; // bigint as decimal string
+  startRank: string;
   count: string;
   seedLen: number;
   deck: string;
@@ -89,58 +120,102 @@ self.addEventListener("message", (ev: MessageEvent) => {
   if (msg.type === "scan") { void handleScan(msg as ScanMsg); }
 });
 
+// Adaptive batch tuning constants.
+const TARGET_BATCH_MS = 250;
+const INITIAL_BATCH = 200_000;
+const MIN_BATCH = 5_000;
+const MAX_BATCH = 2_000_000;
+const PROGRESS_INTERVAL_MS = 250;
+
 async function handleScan(msg: ScanMsg): Promise<void> {
   stopRequested = false;
-  const engine = await getEngine(msg.jsUrl, msg.wasmUrl);
 
+  let engineInfo: { engine: EngineModule; simd: boolean };
+  try {
+    engineInfo = await getEngine(msg.scalarJs, msg.scalarWasm, msg.simdJs, msg.simdWasm);
+    // Tell main thread which engine is active (once per worker, on first scan).
+    (self as any).postMessage({ type: "ready", simd: engineInfo.simd });
+  } catch (e: any) {
+    (self as any).postMessage({ type: "error", message: e?.message ?? String(e) });
+    return;
+  }
+
+  const { engine } = engineInfo;
   const deckIdx = DECK_IDX[msg.deck] ?? 0;
   const stakeIdx = STAKE_IDX[msg.stake] ?? 0;
   const seedLen = msg.seedLen;
 
-  let cursor = BigInt(msg.startRank);
-  let remaining = BigInt(msg.count);
-  let batch = 50_000n;
+  // Use Number for the hot loop. Rank space is 35^8 ≈ 2.25e12, far below
+  // Number.MAX_SAFE_INTEGER (2^53 ≈ 9e15).
+  let cursor = Number(BigInt(msg.startRank));
+  let remaining = Number(BigInt(msg.count));
+  let batch = INITIAL_BATCH;
   const startedAt = performance.now();
-  let totalScanned = 0n;
+  let totalScanned = 0;
   let lastProgress = startedAt;
+  let pendingMatches: Array<{ score: number; seed: string }> = [];
+  let lastMatchFlush = startedAt;
 
-  while (remaining > 0n && !stopRequested) {
+  while (remaining > 0 && !stopRequested) {
     const thisBatch = remaining < batch ? remaining : batch;
     const t0 = performance.now();
-    const raw = engine.scan_chunk(
-      msg.filterJson, cursor, thisBatch, seedLen,
-      deckIdx, stakeIdx, msg.partial, msg.minScore,
-    );
+
+    let raw: Uint8Array;
+    try {
+      raw = engine.scan_chunk(
+        msg.filterJson,
+        BigInt(cursor),
+        BigInt(thisBatch),
+        seedLen,
+        deckIdx,
+        stakeIdx,
+        msg.partial,
+        msg.minScore,
+      );
+    } catch (e: any) {
+      (self as any).postMessage({ type: "error", message: e?.message ?? String(e) });
+      return;
+    }
     const dt = performance.now() - t0;
 
     const matches = decodeRecords(raw);
     if (matches.length > 0) {
-      (self as any).postMessage({ type: "matches", matches });
+      pendingMatches.push(...matches);
     }
 
     cursor += thisBatch;
     remaining -= thisBatch;
     totalScanned += thisBatch;
 
-    // adaptive: target 250 ms
+    // Adaptive batch sizing (target TARGET_BATCH_MS per scan_chunk).
     if (dt > 0) {
-      const ratio = 250 / dt;
-      let next = BigInt(Math.round(Number(batch) * ratio));
-      if (next < 2_000n) next = 2_000n;
-      if (next > 500_000n) next = 500_000n;
+      const ratio = TARGET_BATCH_MS / dt;
+      let next = Math.round(batch * ratio);
+      if (next < MIN_BATCH) next = MIN_BATCH;
+      if (next > MAX_BATCH) next = MAX_BATCH;
       batch = next;
     }
 
     const now = performance.now();
-    if (now - lastProgress >= 250) {
+    if (pendingMatches.length > 0 && (now - lastMatchFlush >= PROGRESS_INTERVAL_MS || pendingMatches.length >= 32)) {
+      (self as any).postMessage({ type: "matches", matches: pendingMatches });
+      pendingMatches = [];
+      lastMatchFlush = now;
+    }
+    if (now - lastProgress >= PROGRESS_INTERVAL_MS) {
       (self as any).postMessage({
         type: "progress",
-        totalScanned: totalScanned.toString(),
+        scanned: totalScanned,
         elapsedMs: now - startedAt,
       });
       lastProgress = now;
     }
   }
 
-  (self as any).postMessage({ type: "done", totalScanned: totalScanned.toString() });
+  // Final flush.
+  if (pendingMatches.length > 0) {
+    (self as any).postMessage({ type: "matches", matches: pendingMatches });
+    pendingMatches = [];
+  }
+  (self as any).postMessage({ type: "done", scanned: totalScanned });
 }

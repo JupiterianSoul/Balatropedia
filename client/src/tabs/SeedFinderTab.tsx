@@ -223,14 +223,16 @@ function SpeedSelect({
   const cores = typeof navigator !== "undefined" ? (navigator.hardwareConcurrency || 4) : 4;
   const highCount = Math.max(4, Math.min(8, cores));
   const maxCount = Math.max(highCount + 2, Math.min(16, cores * 2));
+  const extremeCount = Math.max(maxCount + 2, Math.min(32, cores * 3));
 
   // Distinct tier values (deduplicated for low-core devices)
   const tiersRaw: Array<{ key: string; label: string; n: number }> = [
-    { key: "eco",    label: `Eco — 1 worker (low CPU)`,             n: 1 },
-    { key: "low",    label: `Low — 2 workers`,                       n: 2 },
-    { key: "medium", label: `Medium — 4 workers`,                    n: 4 },
-    { key: "high",   label: `High — ${highCount} workers (auto)`,    n: highCount },
-    { key: "max",    label: `Max — ${maxCount} workers (oversubscribe)`, n: maxCount },
+    { key: "eco",     label: `Eco — 1 worker (low CPU)`,                       n: 1 },
+    { key: "low",     label: `Low — 2 workers`,                                 n: 2 },
+    { key: "medium",  label: `Medium — 4 workers`,                              n: 4 },
+    { key: "high",    label: `High — ${highCount} workers (auto)`,              n: highCount },
+    { key: "max",     label: `Max — ${maxCount} workers (oversubscribe)`,      n: maxCount },
+    { key: "extreme", label: `Extreme — ${extremeCount} workers (24+ core PCs)`, n: extremeCount },
   ];
   // De-duplicate by n while keeping the most descriptive label
   const seen = new Set<number>();
@@ -355,9 +357,14 @@ export function SeedFinderTab() {
             <span className="font-semibold text-purple-300">Try the new engine (beta)</span>
             <span className="ml-1 rounded bg-purple-500/30 px-1 py-0.5 text-[10px] uppercase tracking-wide text-purple-200">v2</span>
             <span className="block text-zinc-400">
-              Rust + WASM rewrite — lock-aware draws, pack contents, sticker rolls.
-              Honest gaps: Standard pack card-level modelling not done; no bit-for-bit Immolate parity yet.
-              Joker constraints only. Default (Immolate) stays the verified path.
+              Rust + WASM rewrite — lock-aware draws, pack contents, sticker rolls,
+              SIMD-accelerated when your browser supports it.
+              Supports joker, voucher and tag constraints; pack contents at the level
+              of "contains card X" for arcana/spectral/celestial/buffoon (Standard pack
+              card-level modelling not done yet).
+              Honest gaps: no bit-for-bit Immolate parity sweep yet (only 100k
+              statistical sanity). Default (Immolate) stays the verified path;
+              click "Verify with Immolate" on a match to confirm.
             </span>
           </label>
         </div>
@@ -433,6 +440,9 @@ export function SeedFinderTab() {
           <div><span className="text-zinc-500">rate </span><span className="text-yellow-200">{progress.seedsPerSec.toLocaleString()}/s</span></div>
           <div><span className="text-zinc-500">elapsed </span><span className="text-yellow-200">{(progress.elapsedMs / 1000).toFixed(1)}s</span></div>
           <div><span className="text-zinc-500">matches </span><span className="text-emerald-300">{matches.length}</span></div>
+          {useV2Engine && (progress as any).engine && (
+            <div><span className="text-zinc-500">engine </span><span className="text-purple-300">v2 {(progress as any).engine}</span></div>
+          )}
         </div>
         {running && <Loader2 className="h-4 w-4 animate-spin text-yellow-300 ml-auto" />}
       </div>
