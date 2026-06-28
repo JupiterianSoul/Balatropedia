@@ -42,20 +42,23 @@ import { SettingsTab } from "@/tabs/SettingsTab";
 import { HelpTab } from "@/tabs/HelpTab";
 import { AboutTab } from "@/tabs/AboutTab";
 import { TierListTab } from "@/tabs/TierListTab";
+import { MyTierListsTab } from "@/tabs/MyTierListsTab";
+import { SynergyAuditTab } from "@/tabs/SynergyAuditTab";
+import { SeedGuideTab } from "@/tabs/SeedGuideTab";
 import { WhatsNewTab } from "@/tabs/WhatsNewTab";
 import { KofiFooterButton } from "@/components/KofiButton";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 const NAV_GROUPS: NavGroup[] = [
   { key: "home", tabs: ["home"] },
-  { key: "run", tabs: ["myrun", "runchallenge", "buildlab", "calculator", "seeds"] },
-  { key: "build", tabs: ["synergies", "combos", "archetypes", "tierlist", "compare", "skeleton"] },
+  { key: "run", tabs: ["myrun", "runchallenge", "buildlab", "calculator", "seeds", "seedguide"] },
+  { key: "build", tabs: ["synergies", "synergyaudit", "combos", "archetypes", "tierlist", "mytierlists", "compare", "skeleton"] },
   { key: "game", tabs: ["jokers", "decks", "stakes", "bosses", "vouchers", "consumables", "modifiers"] },
   { key: "more", tabs: ["glossary", "whatsnew", "help", "about", "settings"] },
 ];
 
 const VALID_TABS = new Set([
-  "home", "jokers", "myrun", "runchallenge", "buildlab", "calculator", "seeds", "synergies", "combos", "archetypes", "tierlist",
+  "home", "jokers", "myrun", "runchallenge", "buildlab", "calculator", "seeds", "seedguide", "synergies", "synergyaudit", "combos", "archetypes", "tierlist", "mytierlists",
   "compare", "skeleton", "decks", "stakes", "bosses", "vouchers",
   "consumables", "modifiers", "glossary", "whatsnew",
   "help", "about", "settings", "favorites",
@@ -288,6 +291,9 @@ export default function Home() {
               <TabsContent value="combos" className="mt-0"><CombosTab /></TabsContent>
               <TabsContent value="archetypes" className="mt-0"><ArchetypesTab /></TabsContent>
               <TabsContent value="tierlist" className="mt-0"><TierListTab /></TabsContent>
+              <TabsContent value="mytierlists" className="mt-0"><MyTierListsTab /></TabsContent>
+              <TabsContent value="synergyaudit" className="mt-0"><SynergyAuditTab /></TabsContent>
+              <TabsContent value="seedguide" className="mt-0"><SeedGuideTab /></TabsContent>
               <TabsContent value="decks" className="mt-0"><DecksTab /></TabsContent>
               <TabsContent value="stakes" className="mt-0"><StakesTab /></TabsContent>
               <TabsContent value="consumables" className="mt-0"><ConsumablesTab /></TabsContent>

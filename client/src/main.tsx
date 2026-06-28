@@ -7,6 +7,7 @@ import { CRTProvider } from "./lib/crt";
 import { UIScaleProvider, readStoredSync, apply as applyUIScale } from "./lib/uiScale";
 import { installGlobalSoundDelegation } from "./lib/sound";
 import { installAudioUnlock } from "./lib/sounds";
+import { installCloudSync } from "./lib/cloudSync";
 
 // Apply persisted UI scale before first paint to avoid flash of default size.
 applyUIScale(readStoredSync());
@@ -26,6 +27,7 @@ try {
 
 installGlobalSoundDelegation();
 installAudioUnlock();
+installCloudSync();
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider>

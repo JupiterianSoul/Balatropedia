@@ -78,6 +78,7 @@
     "express": "^5.0.1",
     "express-rate-limit": "^8.5.2",
     "express-session": "^1.18.1",
+    "firebase": "^12.15.0",
     "framer-motion": "^11.13.1",
     "helmet": "^8.2.0",
     "html2canvas": "^1.4.1",
