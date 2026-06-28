@@ -36,7 +36,19 @@
 ### Seed Engine
 
 - **Analyzer**: paste a seed, simulate antes ahead with the WASM engine, see shops, packs, vouchers, Soul resolutions
-- **Finder**: search the entire seed space against constraints (joker in ante 1, guaranteed Negative tag, etc.), tunable CPU workers and tries per batch
+- **Finder (V1)**: Immolate-based, fully verified. Default search path.
+- **Finder (V2 beta)**: opt-in toggle that swaps to the in-house
+  [Balatro Seed Searcher](https://github.com/JupiterianSoul/Balatro-Seed-Searcher)
+  Rust+WASM engine — SIMD when the browser supports it, scalar otherwise,
+  with disjunction (`AnyOf`) clauses so a single joker constraint matches
+  if it appears in any of the requested antes. Verified pool spellings
+  match Immolate's `lib/debug.cl` (`Mr. Bones`, `Riff-raff`, `Mail-In Rebate`,
+  `Driver's License`, `Stuntman`/`Vampire` rarities), with a `Verify with
+  Immolate` button on each match to re-check via the V1 engine.
+- **Device-aware Search Speed**: auto-detects core count, mobile vs PC,
+  and reported RAM, then picks a sensible default worker count (Eco on
+  low-end phones, Extreme on 24+ core workstations). A `?` popover next to
+  the dropdown explains the tiers in plain English.
 - **Library**: curated and user-saved notable seeds
 
 ### Tier List & Community
@@ -81,7 +93,7 @@ Balatropedia is an unofficial, non-commercial fan project. It is not affiliated 
 
 - **Frontend**: React + TypeScript, Vite, Tailwind CSS, shadcn/ui, Wouter routing
 - **Backend**: Express, Drizzle ORM, Neon Postgres
-- **Seed Engine**: Rust compiled to WebAssembly, Web Worker pool
+- **Seed Engine**: dual stack — Immolate WASM (verified default) and an in-house Rust→WASM engine (V2 beta) with SIMD detection. Both run in a Web Worker pool sized by an on-device profiler.
 - **Auth**: Google OAuth via Passport
 - **i18n**: in-tree JSON dictionaries (English, Français, Español)
 - **Hosting**: Render (Frankfurt)
