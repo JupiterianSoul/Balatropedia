@@ -13,6 +13,7 @@ import { DECKS, STAKES, COMMON_JOKERS, UNCOMMON_JOKERS, RARE_JOKERS, LEGENDARY_J
 import {
   SeedFinder, type JokerConstraint, type SeedMatch, type FinderHandle,
 } from "@/lib/seedFinder";
+import { SeedFinderV2 } from "@/lib/seedFinderV2";
 import { describeShopSlot, describePackSlot } from "@/lib/seedFinderLocation";
 import { useSeedTabState, setFinder, updateFinder, saveSeed, isSeedSaved } from "@/lib/seedTabState";
 import { SeedReproductionPanel } from "@/components/SeedReproductionPanel";
@@ -258,6 +259,16 @@ export function SeedFinderTab() {
 
   const handleRef = useRef<FinderHandle | null>(null);
   const finderRef = useRef<SeedFinder | null>(null);
+  const finderV2Ref = useRef<SeedFinderV2 | null>(null);
+
+  // Beta toggle for the new Rust+WASM engine. Persisted to localStorage.
+  const [useV2Engine, setUseV2Engine] = useState<boolean>(() => {
+    try { return localStorage.getItem("seed-finder-v2-beta") === "1"; }
+    catch { return false; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem("seed-finder-v2-beta", useV2Engine ? "1" : "0"); } catch {}
+  }, [useV2Engine]);
 
   useEffect(() => () => { handleRef.current?.stop(); }, []);
 
@@ -288,23 +299,28 @@ export function SeedFinderTab() {
     if (finder.selected.length === 0 || finder.running) return;
     setFinder({ error: null, matches: [], progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 }, running: true });
 
-    if (!finderRef.current) finderRef.current = new SeedFinder();
-    const handle = finderRef.current.start(
-      {
-        jokerConstraints: finder.selected,
-        maxAnte: effectiveMaxAnte,
-        deck: finder.deck,
-        stake: finder.stake,
-        version: finder.version,
-        threads: finder.threads,
-      },
-      {
-        onProgress: (p) => setFinder({ progress: p }),
-        onMatch: (m) => updateFinder(f => ({ ...f, matches: [...f.matches, m].slice(-50) })),
-        onDone: () => setFinder({ running: false }),
-        onError: (msg) => setFinder({ error: msg, running: false }),
-      }
-    );
+    const cfg = {
+      jokerConstraints: finder.selected,
+      maxAnte: effectiveMaxAnte,
+      deck: finder.deck,
+      stake: finder.stake,
+      version: finder.version,
+      threads: finder.threads,
+    };
+    const cbs = {
+      onProgress: (p: any) => setFinder({ progress: p }),
+      onMatch: (m: SeedMatch) => updateFinder(f => ({ ...f, matches: [...f.matches, m].slice(-50) })),
+      onDone: () => setFinder({ running: false }),
+      onError: (msg: string) => setFinder({ error: msg, running: false }),
+    };
+    let handle: FinderHandle;
+    if (useV2Engine) {
+      if (!finderV2Ref.current) finderV2Ref.current = new SeedFinderV2();
+      handle = finderV2Ref.current.start(cfg, cbs);
+    } else {
+      if (!finderRef.current) finderRef.current = new SeedFinder();
+      handle = finderRef.current.start(cfg, cbs);
+    }
     handleRef.current = handle;
   }
 
@@ -325,6 +341,27 @@ export function SeedFinderTab() {
     <div className="space-y-4">
       { }
       <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/70 p-3 space-y-3">
+        {/* Beta engine toggle — runs the new Rust+WASM finder when on. */}
+        <div className="flex items-start gap-2 rounded border border-purple-500/30 bg-purple-950/20 p-2">
+          <input
+            id="v2-engine-toggle"
+            type="checkbox"
+            className="mt-1 h-4 w-4 accent-purple-400"
+            checked={useV2Engine}
+            onChange={(e) => setUseV2Engine(e.target.checked)}
+            disabled={running}
+          />
+          <label htmlFor="v2-engine-toggle" className="text-xs text-zinc-300 leading-snug">
+            <span className="font-semibold text-purple-300">Try the new engine (beta)</span>
+            <span className="ml-1 rounded bg-purple-500/30 px-1 py-0.5 text-[10px] uppercase tracking-wide text-purple-200">v2</span>
+            <span className="block text-zinc-400">
+              Rust + WASM rewrite — lock-aware draws, pack contents, sticker rolls.
+              Honest gaps: Standard pack card-level modelling not done; no bit-for-bit Immolate parity yet.
+              Joker constraints only. Default (Immolate) stays the verified path.
+            </span>
+          </label>
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           <div>
             <Label className="text-xs text-zinc-400">Deck</Label>
