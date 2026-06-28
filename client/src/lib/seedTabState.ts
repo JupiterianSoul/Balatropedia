@@ -33,10 +33,13 @@ export interface FinderState {
   version: string;
   globalMaxAnte: number;
   threads: number;
+  batchSize: number;
   matches: SeedMatch[];
   progress: FinderProgress;
   error: string | null;
   running: boolean;
+  throughput: number;
+  wasmActive: boolean;
 }
 
 export interface AnalyzerState {
@@ -62,10 +65,13 @@ function defaultFinder(): FinderState {
     version: "1.0.1f",
     globalMaxAnte: 8,
     threads: Math.max(1, Math.min(16, cores || 4)),
+    batchSize: 10_000,
     matches: [],
     progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 },
     error: null,
     running: false,
+    throughput: 0,
+    wasmActive: false,
   };
 }
 

@@ -17,6 +17,8 @@
 
 import { insertFavoriteSchema, insertRunSchema, updateFavoriteSchema, updateRunSchema, updateLanguageSchema } from "@shared/schema";
 import type { Favorite, Run, PublicUser } from "@shared/schema";
+import type { TierList } from "@/lib/tierTypes";
+import { makeDefaultTiers } from "@/lib/tierTypes";
 
 // ---------- KV backend ----------
 
@@ -78,6 +80,11 @@ const K_FAVORITES = `${NS}.favorites`;
 const K_RUNS = `${NS}.runs`;
 const K_LANGUAGE = `${NS}.language`;
 const K_NEXT_ID = `${NS}.nextId`;
+const K_TIERLISTS = `${NS}.tierlists`;
+
+// Caps
+const MAX_TIERLISTS = 20;
+const MAX_TIERS_PER_LIST = 12;
 
 const LOCAL_USER_ID = 1;
 
@@ -289,6 +296,53 @@ export async function handleLocal(
     return noContent();
   }
 
+  // ----- tierlists -----
+  if (path === "/api/tierlists" && method === "GET") {
+    const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+    return jsonResponse(lists);
+  }
+  if (path === "/api/tierlists" && method === "POST") {
+    const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+    if (lists.length >= MAX_TIERLISTS) return errorResponse(`Tier list limit reached (${MAX_TIERLISTS}).`, 409);
+    const body = data as Partial<TierList> | undefined;
+    const now = Date.now();
+    const list: TierList = {
+      id: `tl-${now}-${Math.random().toString(36).slice(2, 7)}`,
+      name: body?.name ?? "My Tier List",
+      createdAt: now, updatedAt: now,
+      tiers: body?.tiers ?? makeDefaultTiers(),
+      itemPool: body?.itemPool ?? "jokers",
+    };
+    lists.push(list);
+    await writeJson(K_TIERLISTS, lists);
+    return jsonResponse(list, 201);
+  }
+  if (path.startsWith("/api/tierlists/") && method === "GET") {
+    const id = path.split("/api/tierlists/")[1];
+    const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+    const list = lists.find((l) => l.id === id);
+    if (!list) return errorResponse("Tier list not found", 404);
+    return jsonResponse(list);
+  }
+  if (path.startsWith("/api/tierlists/") && method === "PATCH") {
+    const id = path.split("/api/tierlists/")[1];
+    const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+    const idx = lists.findIndex((l) => l.id === id);
+    if (idx < 0) return errorResponse("Tier list not found", 404);
+    const patch = data as Partial<TierList>;
+    if (patch.tiers !== undefined && patch.tiers.length > MAX_TIERS_PER_LIST)
+      return errorResponse(`Tier count limit reached (${MAX_TIERS_PER_LIST}).`, 409);
+    lists[idx] = { ...lists[idx], ...patch, id: lists[idx].id, createdAt: lists[idx].createdAt, updatedAt: Date.now() };
+    await writeJson(K_TIERLISTS, lists);
+    return jsonResponse(lists[idx]);
+  }
+  if (path.startsWith("/api/tierlists/") && method === "DELETE") {
+    const id = path.split("/api/tierlists/")[1];
+    const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+    await writeJson(K_TIERLISTS, lists.filter((l) => l.id !== id));
+    return noContent();
+  }
+
   // Health probe — used in some places to verify connectivity.
   if (path === "/api/health") return jsonResponse({ ok: true });
 
@@ -297,3 +351,81 @@ export async function handleLocal(
 
 export const APP_MODE = (import.meta.env.VITE_APP_MODE as string | undefined) ?? "web";
 export const IS_LOCAL = APP_MODE === "local";
+
+// ---------- Tier list direct CRUD helpers ----------
+
+export async function getTierLists(): Promise<TierList[]> {
+  return readJson<TierList[]>(K_TIERLISTS, []);
+}
+
+export async function getTierList(id: string): Promise<TierList | null> {
+  const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+  return lists.find((l) => l.id === id) ?? null;
+}
+
+export async function createTierList(opts: { name: string; itemPool: TierList["itemPool"] }): Promise<{ ok: true; list: TierList } | { ok: false; error: string }> {
+  const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+  if (lists.length >= MAX_TIERLISTS) return { ok: false, error: `Tier list limit reached (${MAX_TIERLISTS}).` };
+  const now = Date.now();
+  const list: TierList = {
+    id: `tl-${now}-${Math.random().toString(36).slice(2, 7)}`,
+    name: opts.name, createdAt: now, updatedAt: now,
+    tiers: makeDefaultTiers(), itemPool: opts.itemPool,
+  };
+  lists.push(list);
+  await writeJson(K_TIERLISTS, lists);
+  return { ok: true, list };
+}
+
+export async function updateTierList(id: string, patch: Partial<Omit<TierList, "id" | "createdAt">>): Promise<{ ok: true; list: TierList } | { ok: false; error: string }> {
+  const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+  const idx = lists.findIndex((l) => l.id === id);
+  if (idx < 0) return { ok: false, error: "Tier list not found" };
+  if (patch.tiers !== undefined && patch.tiers.length > MAX_TIERS_PER_LIST)
+    return { ok: false, error: `Tier count limit reached (${MAX_TIERS_PER_LIST}).` };
+  lists[idx] = { ...lists[idx], ...patch, id: lists[idx].id, createdAt: lists[idx].createdAt, updatedAt: Date.now() };
+  await writeJson(K_TIERLISTS, lists);
+  return { ok: true, list: lists[idx] };
+}
+
+export async function deleteTierList(id: string): Promise<void> {
+  const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+  await writeJson(K_TIERLISTS, lists.filter((l) => l.id !== id));
+}
+
+export async function duplicateTierList(id: string): Promise<{ ok: true; list: TierList } | { ok: false; error: string }> {
+  const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+  if (lists.length >= MAX_TIERLISTS) return { ok: false, error: `Tier list limit reached (${MAX_TIERLISTS}).` };
+  const src = lists.find((l) => l.id === id);
+  if (!src) return { ok: false, error: "Tier list not found" };
+  const now = Date.now();
+  const copy: TierList = {
+    ...src,
+    id: `tl-${now}-${Math.random().toString(36).slice(2, 7)}`,
+    name: `${src.name} (copy)`,
+    createdAt: now, updatedAt: now,
+    tiers: src.tiers.map((t) => ({
+      ...t,
+      id: `tier-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      itemIds: [...t.itemIds],
+    })),
+  };
+  lists.push(copy);
+  await writeJson(K_TIERLISTS, lists);
+  return { ok: true, list: copy };
+}
+
+export async function importSharedTierList(list: TierList): Promise<{ ok: true; list: TierList } | { ok: false; error: string }> {
+  const lists = await readJson<TierList[]>(K_TIERLISTS, []);
+  if (lists.length >= MAX_TIERLISTS) return { ok: false, error: `Tier list limit reached (${MAX_TIERLISTS}).` };
+  const now = Date.now();
+  const imported: TierList = {
+    ...list,
+    id: `tl-${now}-${Math.random().toString(36).slice(2, 7)}`,
+    name: `${list.name} (imported)`,
+    createdAt: now, updatedAt: now,
+  };
+  lists.push(imported);
+  await writeJson(K_TIERLISTS, lists);
+  return { ok: true, list: imported };
+}
