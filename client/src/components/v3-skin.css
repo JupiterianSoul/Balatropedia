@@ -1,58 +1,49 @@
 /* ============================================================
-   Balatropedia v3 skin — applies the PoC visual language to the
-   real app via targeted overrides. Loaded globally from App.tsx.
+   Balatropedia v3 skin overrides
+   Loaded globally from App.tsx. Augments existing app styles to
+   match the PoC (balatro-poc/index.html).
    ============================================================ */
 
-/* ---------- 1. Global background: red radial + noise overlay ---------- */
-html.v3-skin body {
-  background-color: #1a0604 !important;
-  background-image:
-    radial-gradient(
-      ellipse at 50% 18%,
-      #c4291d 0%,
-      #8c1810 30%,
-      #4a0d08 60%,
-      #1a0604 100%
-    ) !important;
-  background-size: auto !important;
-  background-position: center top !important;
-  background-attachment: fixed !important;
-}
-
-/* Subtle moving noise overlay sitting above the body bg but below content.
-   Uses an absolutely positioned ::before pinned to viewport. */
-html.v3-skin body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  mix-blend-mode: overlay;
-  opacity: 0.55;
-}
-
-/* Vignette: dim the edges */
-html.v3-skin body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
+/* ---------- Make the existing red/blue blob bg MORE VIVID ---------- */
+html.v3-skin .balatro-menu-bg {
   background: radial-gradient(
-    ellipse at center,
-    transparent 35%,
-    rgba(0, 0, 0, 0.55) 100%
-  );
+    circle at 50% 50%,
+    #0e0612 0%,
+    #050207 100%
+  ) !important;
 }
 
-/* Ensure all real content is above the overlays */
-html.v3-skin #root {
-  position: relative;
-  z-index: 1;
+html.v3-skin .balatro-menu-bg::before {
+  /* RED blob — bigger, brighter, less blurred for visibility */
+  background: radial-gradient(
+    circle,
+    #ff4757 0%,
+    #c4291d 35%,
+    transparent 70%
+  ) !important;
+  width: 110% !important;
+  height: 110% !important;
+  filter: blur(55px) !important;
+  opacity: 0.95 !important;
+  mix-blend-mode: screen !important;
 }
 
-/* ---------- 2. Topbar: dark slate with red drop-shadow on logo ---------- */
+html.v3-skin .balatro-menu-bg::after {
+  /* BLUE blob — same treatment */
+  background: radial-gradient(
+    circle,
+    #4aa8ff 0%,
+    #1e6fb5 35%,
+    transparent 70%
+  ) !important;
+  width: 110% !important;
+  height: 110% !important;
+  filter: blur(55px) !important;
+  opacity: 0.95 !important;
+  mix-blend-mode: screen !important;
+}
+
+/* ---------- Topbar: PoC dark slate with red logo drop-shadow ---------- */
 html.v3-skin header {
   background: linear-gradient(180deg, #1c262a 0%, #0f1618 100%) !important;
   border-bottom: 3px solid #000 !important;
@@ -61,7 +52,6 @@ html.v3-skin header {
     inset 0 -1px 0 rgba(255, 255, 255, 0.04) !important;
 }
 
-/* Top-bar logo wordmark — give it the tilt + red drop-shadow */
 html.v3-skin header h1 {
   transform: rotate(-2deg);
   letter-spacing: 1px;
@@ -70,7 +60,7 @@ html.v3-skin header h1 {
     0 3px 0 #a8261e !important;
 }
 
-/* ---------- 3. Section titles — pixel font, tilt, red drop-shadow ---------- */
+/* ---------- Section titles ---------- */
 html.v3-skin h2.text-2xl,
 html.v3-skin h2.text-xl,
 html.v3-skin h2.text-3xl,
@@ -84,7 +74,7 @@ html.v3-skin .section-title {
   display: inline-block;
 }
 
-/* ---------- 4. Cards: white frame, thick black border, deal-in animation ---------- */
+/* ---------- Joker card frames ---------- */
 html.v3-skin [data-card-frame="joker"],
 html.v3-skin .joker-card-frame {
   background: linear-gradient(180deg, #fefefe 0%, #d8d8d8 100%) !important;
@@ -108,7 +98,7 @@ html.v3-skin .joker-card-frame:hover {
     0 0 35px rgba(244, 75, 60, 0.5) !important;
 }
 
-/* ---------- 5. Buttons: chunky pixel buttons with hard shadow ---------- */
+/* ---------- Primary buttons: pixel/chunky red ---------- */
 html.v3-skin button[data-variant="primary"],
 html.v3-skin .btn-balatro-primary {
   background: linear-gradient(180deg, #f44b3c 0%, #a8261e 100%) !important;
@@ -138,18 +128,34 @@ html.v3-skin .btn-balatro-primary:active {
     inset 0 -3px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
-/* ---------- 6. Info panels / sheets: black overlay with thick border ---------- */
-html.v3-skin .info-panel,
-html.v3-skin [data-panel="info"] {
+/* ---------- Generic buttons in Home (Discover / What's New / etc.) ---------- */
+html.v3-skin [data-testid^="button-home"] {
+  font-family: "m6x11plus", monospace !important;
+  letter-spacing: 1px !important;
+  border: 3px solid #000 !important;
+  border-radius: 12px !important;
+  box-shadow:
+    0 5px 0 #000,
+    inset 0 -3px 0 rgba(0, 0, 0, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.15) !important;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  transition: transform 0.1s ease, filter 0.15s ease !important;
+}
+
+html.v3-skin [data-testid^="button-home"]:active {
+  transform: translateY(4px);
+}
+
+/* ---------- Search input in Home: white card with thick border ---------- */
+html.v3-skin [data-testid="home-search"] input {
   background: rgba(0, 0, 0, 0.55) !important;
   border: 3px solid #000 !important;
   border-radius: 12px !important;
-  padding: 12px 14px;
-  color: #e6e6e6;
-  text-shadow: 1px 1px 0 #000;
+  font-family: "m6x11plus", monospace !important;
+  color: #fff !important;
 }
 
-/* ---------- 7. Bottom tab bar — match PoC slate-to-black gradient ---------- */
+/* ---------- Bottom tab bar ---------- */
 html.v3-skin nav[data-mobile-bottom-nav],
 html.v3-skin .balatro-bottom-nav {
   background: linear-gradient(0deg, #0b1416 0%, #1c262a 100%) !important;
@@ -157,11 +163,17 @@ html.v3-skin .balatro-bottom-nav {
   box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Active bottom-nav button: red glow, pop-up scale */
 html.v3-skin nav[data-mobile-bottom-nav] button[aria-current="page"],
 html.v3-skin .balatro-bottom-nav button[aria-current="page"] {
   color: #f44b3c !important;
   text-shadow: 1px 1px 0 #000;
   transform: translateY(-3px) scale(1.05);
   filter: drop-shadow(0 0 6px rgba(244, 75, 60, 0.7));
+}
+
+/* ---------- Hide the joker conveyor columns (PoC doesn't have them) ---------- */
+html.v3-skin .joker-conveyor,
+html.v3-skin [data-joker-conveyor],
+html.v3-skin [class*="JokerConveyor"] {
+  display: none !important;
 }
