@@ -1,7 +1,8 @@
 /* ============================================================
-   Balatropedia v3 splash screen
-   Two-tone Balatro (blue/red), blurred chromatic halo,
-   smooth cross-fade into the home page.
+   Balatropedia v3 splash
+   - BALATRO red, PEDIA blue
+   - Animated blurred red+blue blob background
+   - Smooth fade into home
    ============================================================ */
 
 .balatro-splash-v3 {
@@ -12,10 +13,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 22px;
   overflow: hidden;
+  background: #0a0205;
   opacity: 1;
-  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.75s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 
@@ -23,124 +25,169 @@
   opacity: 0;
   transform: scale(1.04);
   transition:
-    opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity 0.75s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Moving radial-red background */
-.balatro-splash-v3-bg {
+/* -------- Animated blurred blobs (red + blue) -------- */
+.splash-blob {
   position: absolute;
-  inset: -20%;
-  background: radial-gradient(
-    ellipse at 50% 35%,
-    #c4291d 0%,
-    #8c1810 28%,
-    #4a0d08 55%,
-    #1a0604 90%
-  );
-  animation: splash-bg-pulse 4s ease-in-out infinite alternate;
-  z-index: 0;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.78;
+  pointer-events: none;
+  will-change: transform;
+  mix-blend-mode: screen;
 }
 
-@keyframes splash-bg-pulse {
-  0% {
-    transform: scale(1) rotate(0deg);
-    filter: brightness(1);
-  }
-  100% {
-    transform: scale(1.06) rotate(1.5deg);
-    filter: brightness(1.12);
-  }
+.splash-blob-red-1 {
+  width: 55vw; height: 55vw;
+  background: radial-gradient(circle, #ff2233 0%, #c4291d 45%, transparent 75%);
+  top: -10vw; left: -10vw;
+  animation: blob-drift-1 7s ease-in-out infinite alternate;
+}
+.splash-blob-red-2 {
+  width: 65vw; height: 65vw;
+  background: radial-gradient(circle, #ff4757 0%, #a8261e 45%, transparent 75%);
+  bottom: -15vw; right: -15vw;
+  animation: blob-drift-2 9s ease-in-out infinite alternate;
+}
+.splash-blob-red-3 {
+  width: 40vw; height: 40vw;
+  background: radial-gradient(circle, #f44b3c 0%, #8c1810 50%, transparent 80%);
+  top: 50%; left: 60%;
+  animation: blob-drift-3 6s ease-in-out infinite alternate;
+}
+.splash-blob-blue-1 {
+  width: 60vw; height: 60vw;
+  background: radial-gradient(circle, #2db4ff 0%, #1e6fb5 45%, transparent 75%);
+  top: 15%; right: -10vw;
+  animation: blob-drift-4 8s ease-in-out infinite alternate;
+}
+.splash-blob-blue-2 {
+  width: 50vw; height: 50vw;
+  background: radial-gradient(circle, #4aa8ff 0%, #1e90ff 45%, transparent 75%);
+  bottom: -8vw; left: -8vw;
+  animation: blob-drift-5 7.5s ease-in-out infinite alternate;
+}
+.splash-blob-blue-3 {
+  width: 45vw; height: 45vw;
+  background: radial-gradient(circle, #6cb4ff 0%, #2563eb 50%, transparent 80%);
+  top: 60%; left: 10%;
+  animation: blob-drift-6 10s ease-in-out infinite alternate;
 }
 
-/* Subtle noise overlay */
-.balatro-splash-v3-noise {
+@keyframes blob-drift-1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30vw, 20vh) scale(1.25); }
+}
+@keyframes blob-drift-2 {
+  0%   { transform: translate(0, 0) scale(1.1); }
+  100% { transform: translate(-25vw, -25vh) scale(0.9); }
+}
+@keyframes blob-drift-3 {
+  0%   { transform: translate(0, 0) scale(0.9); }
+  100% { transform: translate(-20vw, 15vh) scale(1.2); }
+}
+@keyframes blob-drift-4 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-30vw, 25vh) scale(1.15); }
+}
+@keyframes blob-drift-5 {
+  0%   { transform: translate(0, 0) scale(1.05); }
+  100% { transform: translate(25vw, -20vh) scale(0.95); }
+}
+@keyframes blob-drift-6 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(20vw, -22vh) scale(1.18); }
+}
+
+/* Center vignette so the title pops */
+.splash-vignette {
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  mix-blend-mode: overlay;
-  opacity: 0.7;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 25%,
+    rgba(0, 0, 0, 0.45) 75%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
   z-index: 1;
-  animation: splash-noise-shift 2s steps(8) infinite;
 }
 
-@keyframes splash-noise-shift {
-  0%   { transform: translate(0, 0); }
-  20%  { transform: translate(-5px, 3px); }
-  40%  { transform: translate(4px, -2px); }
-  60%  { transform: translate(-3px, 5px); }
-  80%  { transform: translate(5px, 1px); }
-  100% { transform: translate(0, 0); }
+/* Subtle film grain */
+.splash-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.15 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+  opacity: 0.6;
 }
 
-/* Title row */
+/* -------- Title: BALATRO red / PEDIA blue -------- */
 .balatro-splash-v3-title {
   position: relative;
   z-index: 2;
   font-family: "m6x11plus", "Courier New", monospace;
-  font-size: clamp(52px, 13vw, 104px);
-  letter-spacing: 6px;
+  font-size: clamp(48px, 13vw, 100px);
+  letter-spacing: 4px;
   line-height: 1;
   display: flex;
   gap: 0;
   transform: rotate(-2deg);
+  animation: title-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
-/* Each letter is a wrapper containing a blurred glow + crisp main */
-.splash-letter {
-  position: relative;
+@keyframes title-pop {
+  0%   { opacity: 0; transform: rotate(-2deg) scale(0.5) translateY(-30px); }
+  60%  { opacity: 1; transform: rotate(-2deg) scale(1.08) translateY(0); }
+  100% { opacity: 1; transform: rotate(-2deg) scale(1) translateY(0); }
+}
+
+.splash-word {
   display: inline-block;
-  opacity: 0;
-  transform: translateY(-80px) rotate(-15deg) scale(0.5);
-  animation:
-    splash-letter-drop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
-    splash-letter-float 2.4s ease-in-out infinite;
+  position: relative;
+  text-shadow:
+    0 0 12px currentColor,
+    0 0 28px currentColor,
+    0 0 55px currentColor,
+    3px 3px 0 rgba(0, 0, 0, 0.85);
+  filter: drop-shadow(0 0 22px currentColor);
 }
 
-/* Blurred chromatic halo behind the letter (same glyph, blurred) */
-.splash-letter-glow {
+/* Blurred ghost behind each word — gives that 'blurred font' look */
+.splash-word::before {
+  content: attr(data-text);
   position: absolute;
   inset: 0;
-  display: block;
-  filter: blur(14px) saturate(1.4);
+  color: inherit;
+  filter: blur(14px);
   opacity: 0.85;
-  z-index: 0;
-  /* Pulse the glow gently */
-  animation: splash-glow-pulse 1.8s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
 }
 
-/* The crisp letter on top */
-.splash-letter-main {
-  position: relative;
-  z-index: 1;
-  text-shadow:
-    2px 2px 0 #000,
-    0 3px 0 rgba(0, 0, 0, 0.6);
+.splash-word-red {
+  color: #f44b3c;
+  animation: word-float-red 2.4s ease-in-out infinite;
 }
 
-@keyframes splash-letter-drop {
-  0% {
-    opacity: 0;
-    transform: translateY(-80px) rotate(-15deg) scale(0.5);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(8px) rotate(2deg) scale(1.05);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) rotate(0deg) scale(1);
-  }
+.splash-word-blue {
+  color: #1e90ff;
+  animation: word-float-blue 2.4s ease-in-out infinite;
 }
 
-@keyframes splash-letter-float {
+@keyframes word-float-red {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
+  50%      { transform: translateY(-5px); }
 }
 
-@keyframes splash-glow-pulse {
-  0%, 100% { opacity: 0.7; filter: blur(14px) saturate(1.4); }
-  50%      { opacity: 1;   filter: blur(18px) saturate(1.6); }
+@keyframes word-float-blue {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(5px); }
 }
 
 /* Tagline */
@@ -152,10 +199,10 @@
   letter-spacing: 5px;
   color: #fff;
   opacity: 0;
-  animation: splash-sub-in 0.5s ease forwards 0.95s;
+  animation: splash-sub-in 0.5s ease forwards 0.9s;
   text-shadow: 1px 1px 0 #000;
 }
 
 @keyframes splash-sub-in {
-  to { opacity: 0.85; }
+  to { opacity: 0.9; }
 }
