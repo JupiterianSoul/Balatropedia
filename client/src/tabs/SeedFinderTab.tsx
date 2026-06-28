@@ -1,12 +1,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus, BookmarkPlus, BookmarkCheck } from "lucide-react";
+import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus, BookmarkPlus, BookmarkCheck, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { detectDeviceProfile, type DeviceProfile } from "@/lib/deviceProfile";
 import { JokerSprite } from "@/components/JokerSprite";
 import { jokerIdFromName } from "@/lib/helpers";
 import { DECKS, STAKES, COMMON_JOKERS, UNCOMMON_JOKERS, RARE_JOKERS, LEGENDARY_JOKERS } from "@/lib/seedItems";
@@ -214,13 +216,14 @@ function ConstraintRow({
  * tier label regardless of how many cores the device has.
  */
 function SpeedSelect({
-  value, onChange, disabled,
+  value, onChange, disabled, profile,
 }: {
   value: number;
   onChange: (n: number) => void;
   disabled?: boolean;
+  profile: DeviceProfile;
 }) {
-  const cores = typeof navigator !== "undefined" ? (navigator.hardwareConcurrency || 4) : 4;
+  const cores = profile.cores || 4;
   const highCount = Math.max(4, Math.min(8, cores));
   const maxCount = Math.max(highCount + 2, Math.min(16, cores * 2));
   const extremeCount = Math.max(maxCount + 2, Math.min(32, cores * 3));
@@ -230,7 +233,7 @@ function SpeedSelect({
     { key: "eco",     label: `Eco — 1 worker (low CPU)`,                       n: 1 },
     { key: "low",     label: `Low — 2 workers`,                                 n: 2 },
     { key: "medium",  label: `Medium — 4 workers`,                              n: 4 },
-    { key: "high",    label: `High — ${highCount} workers (auto)`,              n: highCount },
+    { key: "high",    label: `High — ${highCount} workers`,                    n: highCount },
     { key: "max",     label: `Max — ${maxCount} workers (oversubscribe)`,      n: maxCount },
     { key: "extreme", label: `Extreme — ${extremeCount} workers (24+ core PCs)`, n: extremeCount },
   ];
@@ -248,16 +251,69 @@ function SpeedSelect({
     }} disabled={disabled}>
       <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
       <SelectContent>
-        {tiers.map(t => (
-          <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
-        ))}
+        <div className="px-2 py-1.5 text-[10px] uppercase tracking-wide text-zinc-500 border-b border-zinc-800 mb-1">
+          Detected: {profile.label}
+        </div>
+        {tiers.map(t => {
+          const isRec = t.key === profile.recommendedTier;
+          return (
+            <SelectItem key={t.key} value={t.key}>
+              {t.label}{isRec ? "  ★ recommended" : ""}
+            </SelectItem>
+          );
+        })}
       </SelectContent>
     </Select>
   );
 }
 
+/**
+ * Plain-English explainer for "Search speed". Opens from a small ? button
+ * next to the label. We keep this short and avoid jargon — most users just
+ * want to know whether bumping it up will help or melt their phone.
+ */
+function SpeedHelp({ profile }: { profile: DeviceProfile }) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex items-center justify-center h-4 w-4 rounded-full text-zinc-500 hover:text-yellow-300 transition-colors"
+          aria-label="What is search speed?"
+        >
+          <HelpCircle className="h-3.5 w-3.5" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 text-xs leading-relaxed space-y-2 bg-zinc-950 border-yellow-500/30">
+        <div className="font-semibold text-yellow-300 text-sm">How search speed works</div>
+        <p className="text-zinc-300">
+          Search speed is how many parallel workers crunch seeds on your
+          device at the same time. More workers = more seeds per second,
+          but also more heat and more CPU usage.
+        </p>
+        <ul className="text-zinc-300 space-y-1 list-disc pl-4">
+          <li><span className="text-emerald-300">Eco / Low</span> — light, good for phones or background search.</li>
+          <li><span className="text-yellow-200">Medium / High</span> — balanced, your computer stays usable.</li>
+          <li><span className="text-orange-300">Max / Extreme</span> — pushes your CPU hard, fans will spin.</li>
+        </ul>
+        <div className="rounded border border-yellow-500/20 bg-yellow-500/5 p-2 text-zinc-300">
+          We detected <span className="text-yellow-200">{profile.label}</span>
+          {" "}and picked <span className="text-yellow-200">{profile.recommendedTier}</span> as the default.
+          You can override it anytime.
+        </div>
+        <p className="text-zinc-500">
+          Going past the recommendation usually gives diminishing returns —
+          your cores are already busy. On phones it can also cause stutter
+          or heat throttling, which actually slows the search down.
+        </p>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export function SeedFinderTab() {
   const finder = useSeedTabState(s => s.finder);
+  const deviceProfile = useMemo(() => detectDeviceProfile(), []);
 
   const handleRef = useRef<FinderHandle | null>(null);
   const finderRef = useRef<SeedFinder | null>(null);
@@ -396,8 +452,11 @@ export function SeedFinderTab() {
             </Select>
           </div>
           <div>
-            <Label className="text-xs text-zinc-400" title="How much of your device's CPU to use for the search. Higher = faster but heavier. 'Eco' is recommended for older phones.">Search speed</Label>
-            <SpeedSelect value={threads} onChange={n => setFinder({ threads: n })} disabled={running} />
+            <div className="flex items-center gap-1.5">
+              <Label className="text-xs text-zinc-400">Search speed</Label>
+              <SpeedHelp profile={deviceProfile} />
+            </div>
+            <SpeedSelect value={threads} onChange={n => setFinder({ threads: n })} disabled={running} profile={deviceProfile} />
           </div>
         </div>
       </div>
