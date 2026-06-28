@@ -11,6 +11,7 @@ import { DetailProvider } from "@/lib/detailContext";
 import { RunProvider } from "@/lib/runContext";
 import { EasterEggsProvider } from "@/lib/easterEggs";
 import { CRTOverlay } from "@/components/CRTOverlay";
+import { BalatroSplash } from "@/components/BalatroSplash";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
 
@@ -38,6 +39,8 @@ function App() {
                       <AppRouter />
                     </Router>
                     <CRTOverlay />
+                    {/* Animated splash — renders above everything on first app mount */}
+                    <BalatroSplash />
                   </EasterEggsProvider>
                 </DetailProvider>
               </RunProvider>

@@ -25,3 +25,11 @@ createRoot(document.getElementById("root")!).render(
   </ThemeProvider>,
 );
 
+// Hide Capacitor native splash after React mounts (native platform only).
+// The React BalatroSplash animation takes over from here.
+if ((window as any).Capacitor?.isNativePlatform?.()) {
+  import("@capacitor/splash-screen")
+    .then((m) => m.SplashScreen.hide({ fadeOutDuration: 200 }))
+    .catch(() => {});
+}
+
