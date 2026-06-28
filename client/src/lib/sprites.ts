@@ -27,7 +27,7 @@ export function getSpriteUrl(jokerId: string): string | undefined {
 }
 
 export function getLogoUrl(): string {
-  if (IS_LOCAL) return localUrl(LOCAL.logo);
-  // Original logo URL — kept identical so web behaviour is unchanged.
-  return "https://static.wikia.nocookie.net/balatrogame/images/e/ef/Joker.png/revision/latest";
+  // New Balatropedia logo (red/blue blurred joker card). Bundled locally,
+  // works in both web and APK builds.
+  return "/balatropedia-logo.png";
 }
