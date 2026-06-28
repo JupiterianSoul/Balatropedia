@@ -4,8 +4,11 @@ import "./index.css";
 import { ThemeProvider } from "./lib/theme";
 import { ShakeProvider } from "./lib/screenshake";
 import { CRTProvider } from "./lib/crt";
-import { UIScaleProvider } from "./lib/uiScale";
+import { UIScaleProvider, readStoredSync, apply as applyUIScale } from "./lib/uiScale";
 import { installGlobalSoundDelegation } from "./lib/sound";
+
+// Apply persisted UI scale before first paint to avoid flash of default size.
+applyUIScale(readStoredSync());
 
 if (!window.location.hash) {
   window.location.hash = "#/";

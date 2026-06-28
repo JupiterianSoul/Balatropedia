@@ -76,6 +76,13 @@ export default function Home() {
     if (st && typeof st.tab === "string" && VALID_TABS.has(st.tab)) {
       return LEGACY_REDIRECTS[st.tab] ?? st.tab;
     }
+    // Apply persisted startup tab preference (if not "last" or unset).
+    try {
+      const startupPref = window.localStorage.getItem("balatropedia.local.startupTab");
+      if (startupPref && startupPref !== "last" && VALID_TABS.has(startupPref)) {
+        return startupPref;
+      }
+    } catch { /* ignore */ }
     return "home";
   })();
   const [tab, setTab] = useState(initialTab);
