@@ -1471,7 +1471,7 @@
         "hint": "Solo afecta a superficies; los colores de identidad de Balatro (mult rojo, chip azul, money dorado) quedan fijos.",
         "felt": {
           "label": "Fieltro",
-          "desc": "Mesa de casino verde por defecto."
+          "desc": "Mesa de casino gris por defecto."
         },
         "midnight": {
           "label": "Medianoche",

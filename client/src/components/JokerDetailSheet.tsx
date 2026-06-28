@@ -10,7 +10,7 @@ import {
   RolePill, RiskBadge, StageBadge, ScalingBadge, StarToggle, JokerChip, SectionLabel, RarityBadge,
 } from "./primitives";
 import { JokerSprite } from "./JokerSprite";
-import { Sparkles } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useGameText, useT, useLabels, useCuratedText, useI18n } from "@/lib/i18n";
 import type { WhyRule, UseCaseRule } from "@/lib/helpers";
@@ -38,9 +38,10 @@ export function JokerDetailSheet() {
         className={
           isMobile
             ? "flex w-full flex-col overflow-hidden p-0"
-            : "flex w-full flex-col overflow-hidden p-0 sm:max-w-none md:max-w-[min(1200px,90vw)] lg:max-w-[min(1320px,92vw)]"
+            : "flex w-full flex-col overflow-hidden p-0 sm:max-w-none md:max-w-[min(640px,50vw)] lg:max-w-[min(720px,50vw)] md:!right-auto md:!left-1/2 md:!-translate-x-1/2 md:!border md:!rounded-lg md:!top-1/2 md:!-translate-y-1/2"
         }
-        style={isMobile ? { height: "100dvh", maxHeight: "100dvh" } : { height: "100dvh" }}
+        style={isMobile ? { height: "100dvh", maxHeight: "100dvh" } : { height: "min(92dvh, 920px)" }}
+        hideClose
         data-testid="sheet-joker-detail"
       >
         {j && (
@@ -61,12 +62,24 @@ export function JokerDetailSheet() {
                       )}
                     </div>
                   </div>
-                  <StarToggle
-                    active={isFavoriteJoker(j.id)}
-                    onToggle={() => toggleFavoriteJoker(j.id)}
-                    testId={`button-favorite-detail-${j.id}`}
-                    size={20}
-                  />
+                  <div className="flex items-center gap-2 shrink-0">
+                    <StarToggle
+                      active={isFavoriteJoker(j.id)}
+                      onToggle={() => toggleFavoriteJoker(j.id)}
+                      testId={`button-favorite-detail-${j.id}`}
+                      size={20}
+                    />
+                    <button
+                      type="button"
+                      onClick={closeJokerDetail}
+                      data-testid={`button-close-detail-${j.id}`}
+                      aria-label="Close"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-md text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2"
+                      style={{ backgroundColor: '#dc2626', border: '1px solid #991b1b' }}
+                    >
+                      <X className="h-5 w-5" strokeWidth={2.5} />
+                    </button>
+                  </div>
                 </div>
                 <p className="text-sm text-foreground/90">
                   <FormattedBalatroText text={localized.text || j.summary} id={j.id} lang={lang} />
