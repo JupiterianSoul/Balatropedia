@@ -1,18 +1,20 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus, BookmarkPlus, BookmarkCheck } from "lucide-react";
+import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus, BookmarkPlus, BookmarkCheck, Cpu, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { JokerSprite } from "@/components/JokerSprite";
 import { jokerIdFromName } from "@/lib/helpers";
 import { DECKS, STAKES, COMMON_JOKERS, UNCOMMON_JOKERS, RARE_JOKERS, LEGENDARY_JOKERS } from "@/lib/seedItems";
 import {
   SeedFinder, type JokerConstraint, type SeedMatch, type FinderHandle,
 } from "@/lib/seedFinder";
+import { WASM_FINDER_ENABLED, WASM_SIMD_SUPPORTED, SAB_AVAILABLE } from "@/lib/seedFinderWasm";
 import { describeShopSlot, describePackSlot } from "@/lib/seedFinderLocation";
 import { useSeedTabState, setFinder, updateFinder, saveSeed, isSeedSaved } from "@/lib/seedTabState";
 
@@ -250,9 +252,10 @@ export function SeedFinderTab() {
         stake: finder.stake,
         version: finder.version,
         threads: finder.threads,
+        triesPerBatch: finder.batchSize,
       },
       {
-        onProgress: (p) => setFinder({ progress: p }),
+        onProgress: (p) => setFinder({ progress: p, throughput: p.seedsPerSec }),
         onMatch: (m) => updateFinder(f => ({ ...f, matches: [...f.matches, m].slice(-50) })),
         onDone: () => setFinder({ running: false }),
         onError: (msg) => setFinder({ error: msg, running: false }),
@@ -272,7 +275,8 @@ export function SeedFinderTab() {
   }
 
   const selectedNames = finder.selected.map(c => c.joker);
-  const { selected, deck, stake, version, threads, matches, progress, error, running } = finder;
+  const { selected, deck, stake, version, threads, batchSize, matches, progress, error, running } = finder;
+  const maxThreads = navigator.hardwareConcurrency || 4;
 
   return (
     <div className="space-y-4">
@@ -305,13 +309,58 @@ export function SeedFinderTab() {
             </Select>
           </div>
           <div>
-            <Label className="text-xs text-zinc-400" title="Parallel CPU workers searching simultaneously. Higher = faster, but uses more CPU. Default is auto-set to your CPU cores.">CPU workers</Label>
-            <Input
-              type="number" min={1} max={16} value={threads}
-              onChange={e => setFinder({ threads: Math.max(1, Math.min(16, Number(e.target.value) || 1)) })}
-              className="h-8 text-xs"
-              disabled={running} />
+            <Label className="text-xs text-zinc-400" title="Batch size per worker per tick.">Batch size</Label>
+            <Select value={String(batchSize)} onValueChange={v => setFinder({ batchSize: Number(v) })} disabled={running}>
+              <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5000">5k</SelectItem>
+                <SelectItem value="10000">10k</SelectItem>
+                <SelectItem value="25000">25k</SelectItem>
+                <SelectItem value="50000">50k</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <Label className="text-xs flex items-center gap-1.5 text-zinc-400">
+              <Cpu className="h-3.5 w-3.5" />
+              Workers
+              <span className="text-zinc-500 font-normal">(detected: {maxThreads} cores)</span>
+            </Label>
+            <span className="text-xs font-mono text-yellow-300">{threads}</span>
+          </div>
+          <Slider
+            min={1}
+            max={Math.min(16, maxThreads)}
+            step={1}
+            value={[threads]}
+            onValueChange={([v]) => setFinder({ threads: v })}
+            disabled={running}
+            className="w-full"
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono pt-0.5">
+          <span className="flex items-center gap-1 text-zinc-500">
+            <Zap className="h-3 w-3" />
+            Engine:
+            <span className={WASM_FINDER_ENABLED ? "text-emerald-400" : "text-zinc-400"}>
+              {WASM_FINDER_ENABLED ? "WASM" : "JS fallback"}
+            </span>
+          </span>
+          <span className="text-zinc-500">
+            SIMD: <span className={WASM_SIMD_SUPPORTED ? "text-emerald-400" : "text-zinc-500"}>{WASM_SIMD_SUPPORTED ? "yes" : "no"}</span>
+          </span>
+          <span className="text-zinc-500">
+            SAB: <span className={SAB_AVAILABLE ? "text-emerald-400" : "text-zinc-500"}>{SAB_AVAILABLE ? "yes" : "no"}</span>
+          </span>
+          {running && progress.seedsPerSec > 0 && (
+            <span className="text-yellow-200 font-semibold">
+              {progress.seedsPerSec.toLocaleString()} seeds/sec
+            </span>
+          )}
         </div>
       </div>
 
