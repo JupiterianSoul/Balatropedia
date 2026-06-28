@@ -415,12 +415,20 @@ export function SeedFinderTab() {
             <span className="block text-zinc-400">
               Rust + WASM rewrite — lock-aware draws, pack contents, sticker rolls,
               SIMD-accelerated when your browser supports it.
-              Supports joker, voucher and tag constraints; pack contents at the level
-              of "contains card X" for arcana/spectral/celestial/buffoon (Standard pack
-              card-level modelling not done yet).
-              Honest gaps: no bit-for-bit Immolate parity sweep yet (only 100k
-              statistical sanity). Default (Immolate) stays the verified path;
-              click "Verify with Immolate" on a match to confirm.
+              <span className="block mt-1">
+                What works on V2 today: shop slot 0 jokers (Common/Uncommon/Rare),
+                vouchers, tags (first position), and pack-contents "any of the
+                first 6 packs contains X" for arcana/spectral/celestial/buffoon.
+                Legendaries are matched via the Soul gate (seed has The Soul in
+                any arcana/spectral pack 1..maxAnte); V2 doesn't yet resolve
+                which Legendary that Soul will roll into.
+              </span>
+              <span className="block mt-1">
+                Honest gaps: multi-slot shop scan (slot 0 only), standard pack
+                card-level modelling, edition matching, and a bit-for-bit
+                Immolate parity sweep. Default (Immolate) stays the verified
+                path; click "Verify with Immolate" on a match to confirm.
+              </span>
             </span>
           </label>
         </div>

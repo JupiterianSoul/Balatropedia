@@ -17,6 +17,19 @@ import type {
   JokerLocation,
   SeedMatch,
 } from "./seedFinder";
+import { LEGENDARY_JOKERS } from "./seedItems";
+
+// Maximum shop pack slots scanned per ante for pack-based clauses. Default
+// run config exposes 6 packs/ante; we scan 0..PACK_SLOTS-1.
+const PACK_SLOTS = 6;
+
+// Soul + Wraith are the only Balatro pack drops that yield a guaranteed
+// legendary or rare joker respectively. We can't yet resolve *which*
+// legendary a given Soul becomes inside the engine, so legendary joker
+// constraints currently match seeds where *any* Soul fires in 1..maxAnte.
+function isLegendary(name: string): boolean {
+  return LEGENDARY_JOKERS.includes(name);
+}
 
 // ─── Filter DSL translation ─────────────────────────────────────────────────
 // Engine filter shape (matches engine/src/filter.rs):
@@ -26,6 +39,7 @@ type EngineClause =
   | { kind: "ante_tag_is"; ante: number; position: number; tag: string }
   | { kind: "voucher_is"; ante: number; voucher: string }
   | { kind: "ante_pack_contains"; ante: number; pack_index: number; card: string }
+  | { kind: "ante_any_pack_contains"; ante: number; max_packs: number; card: string }
   | { kind: "any_of"; clauses: EngineClause[] };
 
 interface EngineFilter {
@@ -42,12 +56,39 @@ function buildFilterJson(cfg: FinderConfig): string {
   // version emitted one flat clause per (constraint, ante) and ran in
   // strict-AND mode, which silently demanded the joker appear in EVERY
   // ante — hence the zero matches.
+  //
+  // Source routing:
+  //   - shop / empty                 → ante_shop_has_joker (slot 0 only)
+  //   - buffoon-pack                 → ante_pack_contains over slots 0..5
+  //   - arcana-soul / spectral-soul  → ante_pack_contains for "The Soul"
+  //                                    (Soul forces a random Legendary;
+  //                                    we surface the seed but don't yet
+  //                                    resolve which legendary lands)
+  //   - spectral-wraith              → ante_pack_contains for "Wraith"
+  //                                    (Wraith forces a random Rare joker)
+  //
+  // If the target joker itself is a Legendary, we override source: the
+  // shop never rolls legendaries, so the only way to match is via Soul
+  // in arcana/spectral packs. We emit a Soul gate across both pack
+  // families for ante 1..maxAnte.
   for (const jc of cfg.jokerConstraints) {
     const subs: EngineClause[] = [];
+    const wantsLegendary = isLegendary(jc.joker);
+    const srcRaw = (jc as any).source as string | undefined;
+    const effectiveSource = wantsLegendary
+      ? "legendary-soul"
+      : (srcRaw && srcRaw !== "" ? srcRaw : "shop");
+
     for (let ante = 1; ante <= jc.maxAnte; ante++) {
-      // Slot 0 = first shop slot. Multi-slot modelling lands with the
-      // voucher chain; for now slot 0 is the only one engine-side.
-      subs.push({ kind: "ante_shop_has_joker", ante, slot: 0, joker: jc.joker });
+      if (effectiveSource === "shop") {
+        subs.push({ kind: "ante_shop_has_joker", ante, slot: 0, joker: jc.joker });
+      } else if (effectiveSource === "buffoon-pack") {
+        subs.push({ kind: "ante_any_pack_contains", ante, max_packs: PACK_SLOTS, card: jc.joker });
+      } else if (effectiveSource === "arcana-soul" || effectiveSource === "spectral-soul" || effectiveSource === "legendary-soul") {
+        subs.push({ kind: "ante_any_pack_contains", ante, max_packs: PACK_SLOTS, card: "The Soul" });
+      } else if (effectiveSource === "spectral-wraith") {
+        subs.push({ kind: "ante_any_pack_contains", ante, max_packs: PACK_SLOTS, card: "Wraith" });
+      }
     }
     if (subs.length === 1) clauses.push(subs[0]);
     else if (subs.length > 1) clauses.push({ kind: "any_of", clauses: subs });
