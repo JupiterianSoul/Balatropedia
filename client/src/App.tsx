@@ -11,6 +11,7 @@ import { DetailProvider } from "@/lib/detailContext";
 import { RunProvider } from "@/lib/runContext";
 import { EasterEggsProvider } from "@/lib/easterEggs";
 import { CRTOverlay } from "@/components/CRTOverlay";
+import { BalatroSplashV3 } from "@/components/BalatroSplashV3";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
 
@@ -38,6 +39,7 @@ function App() {
                       <AppRouter />
                     </Router>
                     <CRTOverlay />
+                    <BalatroSplashV3 />
                   </EasterEggsProvider>
                 </DetailProvider>
               </RunProvider>
