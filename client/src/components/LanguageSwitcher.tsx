@@ -9,9 +9,17 @@ import { Languages, Check } from "lucide-react";
 
 const LANGS: Lang[] = ["en", "fr", "es"];
 
-export function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  /** Compact mode: icon + 2-char code only, no extra chrome. Used in mobile header. */
+  compact?: boolean;
+}
+
+export function LanguageSwitcher({ compact }: LanguageSwitcherProps = {}) {
   const { lang, setLang } = useI18n();
   const t = useT();
+
+  // Short 2-char code for compact display
+  const shortCode = lang.toUpperCase().slice(0, 2);
 
   return (
     <DropdownMenu>
@@ -23,7 +31,11 @@ export function LanguageSwitcher() {
           data-testid="language-switcher"
         >
           <Languages className="h-3.5 w-3.5" aria-hidden />
-          <span>{t(`ui.lang.${lang}`)}</span>
+          {compact ? (
+            <span aria-hidden>{shortCode}</span>
+          ) : (
+            <span>{t(`ui.lang.${lang}`)}</span>
+          )}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[8rem]">

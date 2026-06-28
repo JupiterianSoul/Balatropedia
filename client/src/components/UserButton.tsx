@@ -14,7 +14,12 @@ import { AuthDialog } from "./AuthDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useT } from "@/lib/i18n";
 
-export function UserButton() {
+interface UserButtonProps {
+  /** Compact mode: icon only, no text label. Used in mobile header. */
+  compact?: boolean;
+}
+
+export function UserButton({ compact }: UserButtonProps = {}) {
   const { user, isSignedIn, signOut } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -34,9 +39,10 @@ export function UserButton() {
           className="shrink-0 gap-1.5 border-accent/40 bg-card text-xs hover:border-accent/70"
           onClick={() => setDialogOpen(true)}
           data-testid="button-signin-header"
+          title={t("ui.user.sign_in")}
         >
           <UserIcon className="h-3.5 w-3.5" />
-          {t("ui.user.sign_in")}
+          {!compact && t("ui.user.sign_in")}
         </Button>
         <AuthDialog open={dialogOpen} onOpenChange={setDialogOpen} />
       </>
@@ -54,10 +60,12 @@ export function UserButton() {
           title={user!.email}
         >
           <UserIcon className="h-3.5 w-3.5 text-accent" />
-          <span data-testid="text-user-status">
-            {t("ui.user.signed_in_short")}
-          </span>
-          <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+          {!compact && (
+            <span data-testid="text-user-status">
+              {t("ui.user.signed_in_short")}
+            </span>
+          )}
+          {!compact && <ChevronDown className="h-3.5 w-3.5 opacity-60" />}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52">
