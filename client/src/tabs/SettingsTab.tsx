@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor, Maximize2, Expand, Type } from "lucide-react";
+import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor, Maximize2, Expand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SectionLabel } from "@/components/primitives";
@@ -17,8 +17,8 @@ import { useUIScale, UI_SCALE_MIN, UI_SCALE_MAX, UI_SCALE_STEP } from "@/lib/uiS
 import {
   useAppScale,
   APP_SCALE_MIN, APP_SCALE_MAX, APP_SCALE_STEP,
-  TEXT_SCALE_MIN, TEXT_SCALE_MAX, TEXT_SCALE_STEP,
 } from "@/lib/appScale";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useApp } from "@/lib/appContext";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -42,7 +42,11 @@ export function SettingsTab() {
   const { enabled: shakeEnabled, intensity: shakeIntensity, setEnabled: setShakeEnabled, setIntensity: setShakeIntensity } = useShake();
   const { enabled: crtEnabled, intensity: crtIntensity, setEnabled: setCrtEnabled, setIntensity: setCrtIntensity } = useCRT();
   const { scale: uiScale, setScale: setUIScale } = useUIScale();
-  const { appScale, setAppScale, textScale, setTextScale } = useAppScale();
+  const { appScale, setAppScale } = useAppScale();
+  const isMobile = useIsMobile();
+  // Slider feedback during drag — zoom only commits on release so the
+  // user can actually see the slider while moving it.
+  const [pendingAppScale, setPendingAppScale] = useState<number>(appScale);
 
   function handleSoundToggle(next: boolean) {
     setSoundOn(next);
@@ -155,57 +159,34 @@ export function SettingsTab() {
         </div>
       </section>
 
-      {/* UI SIZE (whole interface zoom) */}
-      <section className="casino-card p-4" data-testid="section-app-scale">
-        <div className="mb-3 flex items-center gap-1.5">
-          <Expand className="h-3.5 w-3.5 text-accent" />
-          <SectionLabel>UI Size</SectionLabel>
-        </div>
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">Overall interface size</span>
-          <span className="font-pixel text-xs tabular text-accent">{Math.round(appScale * 100)}%</span>
-        </div>
-        <Slider
-          min={Math.round(APP_SCALE_MIN * 100)}
-          max={Math.round(APP_SCALE_MAX * 100)}
-          step={Math.round(APP_SCALE_STEP * 100)}
-          value={[Math.round(appScale * 100)]}
-          onValueChange={(v) => { setAppScale((v[0] ?? 100) / 100); }}
-          data-testid="slider-app-scale"
-        />
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">Scales the whole interface — buttons, panels and fonts grow together.</p>
-          <Button variant="outline" size="sm" onClick={() => setAppScale(1)} data-testid="button-app-scale-reset">
-            Reset
-          </Button>
-        </div>
-      </section>
-
-      {/* TEXT SIZE (font-size only) */}
-      <section className="casino-card p-4" data-testid="section-text-scale">
-        <div className="mb-3 flex items-center gap-1.5">
-          <Type className="h-3.5 w-3.5 text-accent" />
-          <SectionLabel>Text Size</SectionLabel>
-        </div>
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">Text-only scale</span>
-          <span className="font-pixel text-xs tabular text-accent">{Math.round(textScale * 100)}%</span>
-        </div>
-        <Slider
-          min={Math.round(TEXT_SCALE_MIN * 100)}
-          max={Math.round(TEXT_SCALE_MAX * 100)}
-          step={Math.round(TEXT_SCALE_STEP * 100)}
-          value={[Math.round(textScale * 100)]}
-          onValueChange={(v) => { setTextScale((v[0] ?? 100) / 100); }}
-          data-testid="slider-text-scale"
-        />
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">Adjusts text size across the app, leaving layout alone.</p>
-          <Button variant="outline" size="sm" onClick={() => setTextScale(1)} data-testid="button-text-scale-reset">
-            Reset
-          </Button>
-        </div>
-      </section>
+      {/* UI SIZE (desktop only — mobile uses native phone zoom) */}
+      {!isMobile && (
+        <section className="casino-card p-4" data-testid="section-app-scale">
+          <div className="mb-3 flex items-center gap-1.5">
+            <Expand className="h-3.5 w-3.5 text-accent" />
+            <SectionLabel>UI Size</SectionLabel>
+          </div>
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">Overall interface size</span>
+            <span className="font-pixel text-xs tabular text-accent">{Math.round(pendingAppScale * 100)}%</span>
+          </div>
+          <Slider
+            min={Math.round(APP_SCALE_MIN * 100)}
+            max={Math.round(APP_SCALE_MAX * 100)}
+            step={Math.round(APP_SCALE_STEP * 100)}
+            value={[Math.round(pendingAppScale * 100)]}
+            onValueChange={(v) => { setPendingAppScale((v[0] ?? 100) / 100); }}
+            onValueCommit={(v) => { setAppScale((v[0] ?? 100) / 100); }}
+            data-testid="slider-app-scale"
+          />
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <p className="text-xs text-muted-foreground">Scales the whole interface. Applies when you release the slider.</p>
+            <Button variant="outline" size="sm" onClick={() => { setPendingAppScale(1); setAppScale(1); }} data-testid="button-app-scale-reset">
+              Reset
+            </Button>
+          </div>
+        </section>
+      )}
 
       {}
       <section className="casino-card p-4" data-testid="section-screenshake">
