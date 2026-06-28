@@ -35,13 +35,17 @@ export function JokerDetailSheet() {
     <Sheet open={!!j} onOpenChange={(o) => !o && closeJokerDetail()}>
       <SheetContent
         side={isMobile ? "bottom" : "right"}
-        className="flex w-full flex-col overflow-hidden p-0 sm:max-w-md"
+        className={
+          isMobile
+            ? "flex w-full flex-col overflow-hidden p-0"
+            : "flex w-full flex-col overflow-hidden p-0 sm:max-w-none md:max-w-[min(1200px,90vw)] lg:max-w-[min(1320px,92vw)]"
+        }
         style={isMobile ? { height: "100dvh", maxHeight: "100dvh" } : { height: "100dvh" }}
         data-testid="sheet-joker-detail"
       >
         {j && (
           <div className="flex h-full flex-col overflow-hidden">
-            <div className="flex-1 overflow-y-auto overscroll-contain p-5">
+            <div className="flex-1 overflow-y-auto overscroll-contain p-5 md:p-8">
               <SheetHeader className="space-y-2 pr-8 text-left">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex min-w-0 items-start gap-3">
@@ -77,9 +81,9 @@ export function JokerDetailSheet() {
                 </div>
               </SheetHeader>
 
-              <div className="mt-6 space-y-6">
+              <div className="mt-6 space-y-6 md:grid md:grid-cols-2 md:gap-6 md:space-y-0">
                 {}
-                <section className="rounded-md border border-accent/25 bg-accent/[0.04] p-3.5" data-testid="section-why-play">
+                <section className="rounded-md border border-accent/25 bg-accent/[0.04] p-3.5 md:col-span-2" data-testid="section-why-play">
                   <div className="mb-2.5 flex items-center gap-1.5">
                     <Sparkles className="h-3.5 w-3.5 text-accent" />
                     <SectionLabel>{t("ui.sheet.why_play")}</SectionLabel>
