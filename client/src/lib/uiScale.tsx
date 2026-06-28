@@ -2,7 +2,14 @@ import {
   createContext, useContext, useEffect, useMemo, useState, type ReactNode,
 } from "react";
 
-const STORAGE_KEY = "balatro-ui-scale";
+/**
+ * Persistence key — uses balatropedia.local. prefix so it's cleared with
+ * the "Clear local data" action in Settings.
+ */
+const PREF_KEY = "balatropedia.local.uiScale";
+/** Legacy localStorage key kept for migration. */
+const LS_KEY = "balatro-ui-scale";
+
 const DEFAULT_SCALE = 1.0;
 export const UI_SCALE_MIN = 0.8;
 export const UI_SCALE_MAX = 1.6;
@@ -15,15 +22,17 @@ interface UIScaleState {
 
 const UIScaleContext = createContext<UIScaleState | null>(null);
 
-function clamp(n: number): number {
+export function clamp(n: number): number {
   if (!Number.isFinite(n)) return DEFAULT_SCALE;
   return Math.max(UI_SCALE_MIN, Math.min(UI_SCALE_MAX, n));
 }
 
-function readStored(): number {
+/** Read from localStorage (sync, used on initial render). */
+export function readStoredSync(): number {
   if (typeof window === "undefined" || !window.localStorage) return DEFAULT_SCALE;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    // Check new key first, fall back to legacy key.
+    const raw = window.localStorage.getItem(PREF_KEY) ?? window.localStorage.getItem(LS_KEY);
     if (!raw) return DEFAULT_SCALE;
     const n = parseFloat(raw);
     return clamp(n);
@@ -32,21 +41,33 @@ function readStored(): number {
   }
 }
 
-function apply(n: number) {
+export function apply(n: number) {
   if (typeof document === "undefined") return;
   document.documentElement.style.setProperty("--ui-scale", String(n));
 }
 
+/** Persist to both localStorage and Capacitor Preferences (async, best-effort). */
+async function persist(n: number) {
+  const str = String(n);
+  // Always write localStorage for web compatibility.
+  try {
+    window.localStorage.setItem(PREF_KEY, str);
+  } catch { /* ignore */ }
+  // Also write Capacitor Preferences when on native platform.
+  if ((window as any).Capacitor?.isNativePlatform?.()) {
+    try {
+      const { Preferences } = await import("@capacitor/preferences");
+      await Preferences.set({ key: PREF_KEY, value: str });
+    } catch { /* ignore */ }
+  }
+}
+
 export function UIScaleProvider({ children }: { children: ReactNode }) {
-  const [scale, setScaleState] = useState<number>(() => readStored());
+  const [scale, setScaleState] = useState<number>(() => readStoredSync());
 
   useEffect(() => {
     apply(scale);
-    if (typeof window !== "undefined" && window.localStorage) {
-      try { window.localStorage.setItem(STORAGE_KEY, String(scale)); } catch {
-        return;
-      }
-    }
+    persist(scale);
   }, [scale]);
 
   const value = useMemo<UIScaleState>(() => ({

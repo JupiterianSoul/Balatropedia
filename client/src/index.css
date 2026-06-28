@@ -275,7 +275,11 @@
 @layer base {
   * { @apply border-border; }
 
-  html { font-feature-settings: "ss01", "cv11"; }
+  html {
+    font-feature-settings: "ss01", "cv11";
+    /* Proportional zoom via --ui-scale (default 1). Scales all rem-based sizes. */
+    font-size: calc(16px * var(--ui-scale));
+  }
 
   /* Pixel-font defaults for all headings */
   h1, h2, h3, h4 {

@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor, Maximize2 } from "lucide-react";
+import {
+  Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink,
+  Star, Music, Palette, Zap, Monitor, Maximize2, Smartphone, Home as HomeIcon,
+  RotateCcw, BookOpen, Vibrate,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SectionLabel } from "@/components/primitives";
@@ -8,6 +12,9 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
+} from "@/components/ui/sheet";
 import { isSoundEnabled, setSoundEnabled, getSoundVolume, setSoundVolume } from "@/lib/sound";
 import { useI18n, useT, type Lang } from "@/lib/i18n";
 import { useTheme, THEME_OPTIONS, type Theme } from "@/lib/theme";
@@ -18,11 +25,54 @@ import { useApp } from "@/lib/appContext";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 
+const PREF_KEY_HAPTICS = "balatropedia.local.haptics";
+const PREF_KEY_STARTUP_TAB = "balatropedia.local.startupTab";
+
 const LANG_OPTIONS: { code: Lang; label: string }[] = [
   { code: "en", label: "English" },
   { code: "fr", label: "Français" },
   { code: "es", label: "Español" },
 ];
+
+const STARTUP_TAB_OPTIONS = [
+  { value: "home", label: "Home" },
+  { value: "jokers", label: "Jokers" },
+  { value: "tierlist", label: "Tier List" },
+  { value: "favorites", label: "Favorites" },
+  { value: "settings", label: "Settings" },
+  { value: "last", label: "Last visited" },
+];
+
+const OSS_ATTRIBUTIONS = [
+  { name: "React", license: "MIT", url: "https://reactjs.org" },
+  { name: "Vite", license: "MIT", url: "https://vitejs.dev" },
+  { name: "Capacitor", license: "MIT", url: "https://capacitorjs.com" },
+  { name: "Tailwind CSS", license: "MIT", url: "https://tailwindcss.com" },
+  { name: "framer-motion", license: "MIT", url: "https://www.framer.com/motion" },
+  { name: "lucide-react", license: "ISC", url: "https://lucide.dev" },
+  { name: "shadcn/ui", license: "MIT", url: "https://ui.shadcn.com" },
+  { name: "TanStack Query", license: "MIT", url: "https://tanstack.com/query" },
+];
+
+function readPref(key: string, fallback: string): string {
+  try {
+    return window.localStorage.getItem(key) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writePref(key: string, value: string) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch { /* ignore */ }
+  // Also write Capacitor Preferences on native (best-effort).
+  if ((window as any).Capacitor?.isNativePlatform?.()) {
+    import("@capacitor/preferences")
+      .then(({ Preferences }) => Preferences.set({ key, value }))
+      .catch(() => {});
+  }
+}
 
 export function SettingsTab() {
   const t = useT();
@@ -38,6 +88,20 @@ export function SettingsTab() {
   const { enabled: crtEnabled, intensity: crtIntensity, setEnabled: setCrtEnabled, setIntensity: setCrtIntensity } = useCRT();
   const { scale: uiScale, setScale: setUIScale } = useUIScale();
 
+  // Haptic feedback toggle
+  const [hapticsOn, setHapticsOn] = useState(() => readPref(PREF_KEY_HAPTICS, "true") !== "false");
+  function handleHapticsToggle(next: boolean) {
+    setHapticsOn(next);
+    writePref(PREF_KEY_HAPTICS, String(next));
+  }
+
+  // Startup tab
+  const [startupTab, setStartupTab] = useState(() => readPref(PREF_KEY_STARTUP_TAB, "home"));
+  function handleStartupTab(val: string) {
+    setStartupTab(val);
+    writePref(PREF_KEY_STARTUP_TAB, val);
+  }
+
   function handleSoundToggle(next: boolean) {
     setSoundOn(next);
     setSoundEnabled(next);
@@ -50,7 +114,6 @@ export function SettingsTab() {
   }
 
   function handleResetFavorites() {
-
     Array.from(favoriteJokers).forEach((id) => toggleFavoriteJoker(id));
     Array.from(favoriteCombos).forEach((id) => toggleFavoriteCombo(id));
     toast({ title: t("ui.settings.reset_done") });
@@ -65,6 +128,36 @@ export function SettingsTab() {
     }
   }
 
+  async function handleClearLocalData() {
+    // Clear all balatropedia.local.* keys from localStorage
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < window.localStorage.length; i++) {
+        const k = window.localStorage.key(i);
+        if (k && k.startsWith("balatropedia.local.")) keysToRemove.push(k);
+      }
+      keysToRemove.forEach((k) => window.localStorage.removeItem(k));
+    } catch { /* ignore */ }
+
+    // Also clear Capacitor Preferences if native
+    if ((window as any).Capacitor?.isNativePlatform?.()) {
+      try {
+        const { Preferences } = await import("@capacitor/preferences");
+        const { keys } = await Preferences.keys();
+        await Promise.all(
+          keys
+            .filter((k) => k.startsWith("balatropedia.local."))
+            .map((k) => Preferences.remove({ key: k })),
+        );
+      } catch { /* ignore */ }
+    }
+
+    window.location.reload();
+  }
+
+  // App version from build-time define (vite.config.ts)
+  const appVersion = typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "dev";
+
   return (
     <div className="mx-auto max-w-3xl space-y-6" data-testid="tab-settings">
       <header>
@@ -72,7 +165,7 @@ export function SettingsTab() {
         <p className="text-sm text-muted-foreground">{t("ui.settings.subtitle")}</p>
       </header>
 
-      {}
+      {/* Language */}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <Languages className="h-3.5 w-3.5 text-accent" />
@@ -93,7 +186,7 @@ export function SettingsTab() {
         <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.language_hint")}</p>
       </section>
 
-      {}
+      {/* Theme */}
       <section className="casino-card p-4" data-testid="section-theme">
         <div className="mb-3 flex items-center gap-1.5">
           <Palette className="h-3.5 w-3.5 text-accent" />
@@ -124,6 +217,7 @@ export function SettingsTab() {
         <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.theme.hint")}</p>
       </section>
 
+      {/* Display size */}
       <section className="casino-card p-4" data-testid="section-ui-scale">
         <div className="mb-3 flex items-center gap-1.5">
           <Maximize2 className="h-3.5 w-3.5 text-accent" />
@@ -149,7 +243,7 @@ export function SettingsTab() {
         </div>
       </section>
 
-      {}
+      {/* Screen shake */}
       <section className="casino-card p-4" data-testid="section-screenshake">
         <div className="mb-3 flex items-center gap-1.5">
           <Zap className="h-3.5 w-3.5 text-accent" />
@@ -186,7 +280,7 @@ export function SettingsTab() {
         </div>
       </section>
 
-      {}
+      {/* CRT */}
       <section className="casino-card p-4" data-testid="section-crt">
         <div className="mb-3 flex items-center gap-1.5">
           <Monitor className="h-3.5 w-3.5 text-accent" />
@@ -223,7 +317,7 @@ export function SettingsTab() {
         </div>
       </section>
 
-      {}
+      {/* Sound */}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           {soundOn ? (
@@ -263,7 +357,52 @@ export function SettingsTab() {
         </div>
       </section>
 
-      {}
+      {/* Haptic feedback (mobile) */}
+      <section className="casino-card p-4" data-testid="section-haptics">
+        <div className="mb-3 flex items-center gap-1.5">
+          <Vibrate className="h-3.5 w-3.5 text-accent" />
+          <SectionLabel>Haptic feedback</SectionLabel>
+        </div>
+        <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-card/50 px-3 py-2">
+          <div>
+            <div className="font-medium text-sm">Haptics on button press</div>
+            <div className="text-xs text-muted-foreground">Android native only</div>
+          </div>
+          <Button
+            variant={hapticsOn ? "default" : "outline"}
+            size="sm"
+            onClick={() => handleHapticsToggle(!hapticsOn)}
+            data-testid="button-haptics-toggle"
+          >
+            {hapticsOn ? t("ui.settings.on") : t("ui.settings.off")}
+          </Button>
+        </div>
+      </section>
+
+      {/* Startup tab */}
+      <section className="casino-card p-4" data-testid="section-startup-tab">
+        <div className="mb-3 flex items-center gap-1.5">
+          <HomeIcon className="h-3.5 w-3.5 text-accent" />
+          <SectionLabel>Startup tab</SectionLabel>
+        </div>
+        <Select value={startupTab} onValueChange={handleStartupTab}>
+          <SelectTrigger className="w-full sm:w-64" data-testid="select-startup-tab">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {STARTUP_TAB_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value} data-testid={`option-startup-${opt.value}`}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Which tab opens when you launch the app.
+        </p>
+      </section>
+
+      {/* Account data */}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <Star className="h-3.5 w-3.5 text-[hsl(45_85%_60%)]" />
@@ -328,7 +467,51 @@ export function SettingsTab() {
         </div>
       </section>
 
-      {}
+      {/* Clear local data */}
+      <section className="casino-card p-4" data-testid="section-clear-data">
+        <div className="mb-3 flex items-center gap-1.5">
+          <RotateCcw className="h-3.5 w-3.5 text-destructive" />
+          <SectionLabel>Clear local data</SectionLabel>
+        </div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Removes all app preferences (scale, haptics, startup tab, etc.) and reloads.
+          Your cloud account and favorites are not affected.
+        </p>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="gap-1.5"
+              data-testid="button-clear-local-data"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Clear local data
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Clear all local data?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will remove all locally persisted preferences (display size, haptics,
+                startup tab, etc.) and reload the app. This cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t("ui.common.cancel")}</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleClearLocalData}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                data-testid="button-clear-local-data-confirm"
+              >
+                Clear & reload
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </section>
+
+      {/* About */}
       <section className="casino-card p-4">
         <div className="mb-3 flex items-center gap-1.5">
           <SectionLabel>{t("ui.settings.about")}</SectionLabel>
@@ -347,15 +530,54 @@ export function SettingsTab() {
               <ExternalLink className="h-3 w-3 opacity-60" />
             </a>
           </li>
+          <li>
+            {/* Open source attributions sheet */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 text-accent hover:underline text-sm"
+                  data-testid="button-oss-attributions"
+                >
+                  <BookOpen className="h-3.5 w-3.5" />
+                  Open source attributions
+                </button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="max-h-[70vh] overflow-y-auto">
+                <SheetHeader className="mb-4">
+                  <SheetTitle className="font-pixel text-accent">Open Source Attributions</SheetTitle>
+                </SheetHeader>
+                <ul className="space-y-3">
+                  {OSS_ATTRIBUTIONS.map((lib) => (
+                    <li key={lib.name} className="flex items-center justify-between gap-3 text-sm">
+                      <a
+                        href={lib.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-accent hover:underline"
+                      >
+                        {lib.name}
+                      </a>
+                      <span className="text-xs text-muted-foreground">{lib.license}</span>
+                    </li>
+                  ))}
+                  <li className="border-t border-border pt-3 text-xs text-muted-foreground">
+                    Sprites courtesy of the Balatro Wiki community.
+                  </li>
+                </ul>
+              </SheetContent>
+            </Sheet>
+          </li>
           <li className="text-xs text-muted-foreground">
             {t("ui.settings.disclaimer")}
           </li>
-          <li className="text-xs text-muted-foreground">
-            v{import.meta.env.VITE_APP_VERSION ?? "0.1"} · Balatropedia
-          </li>
         </ul>
       </section>
+
+      {/* App version + build hash — bottom of settings */}
+      <p className="pb-2 text-center text-xs text-muted-foreground/50" data-testid="text-app-version">
+        Balatropedia v{appVersion}
+      </p>
     </div>
   );
 }
-
