@@ -25,7 +25,8 @@ type EngineClause =
   | { kind: "ante_shop_has_joker"; ante: number; slot: number; joker: string }
   | { kind: "ante_tag_is"; ante: number; position: number; tag: string }
   | { kind: "voucher_is"; ante: number; voucher: string }
-  | { kind: "ante_pack_contains"; ante: number; pack_index: number; card: string };
+  | { kind: "ante_pack_contains"; ante: number; pack_index: number; card: string }
+  | { kind: "any_of"; clauses: EngineClause[] };
 
 interface EngineFilter {
   clauses: EngineClause[];
@@ -36,26 +37,38 @@ interface EngineFilter {
 function buildFilterJson(cfg: FinderConfig): string {
   const clauses: EngineClause[] = [];
 
-  // Jokers — "any slot up to maxAnte" means we emit one clause per (ante).
-  // Slot 0 = "any slot" in engine semantics.
+  // Each user constraint becomes ONE top-level clause: an `any_of` that
+  // matches if the target appears in any ante 1..maxAnte. The previous
+  // version emitted one flat clause per (constraint, ante) and ran in
+  // strict-AND mode, which silently demanded the joker appear in EVERY
+  // ante — hence the zero matches.
   for (const jc of cfg.jokerConstraints) {
+    const subs: EngineClause[] = [];
     for (let ante = 1; ante <= jc.maxAnte; ante++) {
-      clauses.push({ kind: "ante_shop_has_joker", ante, slot: 0, joker: jc.joker });
+      // Slot 0 = first shop slot. Multi-slot modelling lands with the
+      // voucher chain; for now slot 0 is the only one engine-side.
+      subs.push({ kind: "ante_shop_has_joker", ante, slot: 0, joker: jc.joker });
     }
+    if (subs.length === 1) clauses.push(subs[0]);
+    else if (subs.length > 1) clauses.push({ kind: "any_of", clauses: subs });
   }
 
-  // Vouchers (engine already supports VoucherIs).
   for (const vc of cfg.voucherConstraints ?? []) {
+    const subs: EngineClause[] = [];
     for (let ante = 1; ante <= vc.maxAnte; ante++) {
-      clauses.push({ kind: "voucher_is", ante, voucher: vc.voucher });
+      subs.push({ kind: "voucher_is", ante, voucher: vc.voucher });
     }
+    if (subs.length === 1) clauses.push(subs[0]);
+    else if (subs.length > 1) clauses.push({ kind: "any_of", clauses: subs });
   }
 
-  // Tags (engine supports TagIs at positions 1+2).
   for (const tc of cfg.tagConstraints ?? []) {
+    const subs: EngineClause[] = [];
     for (let ante = 1; ante <= tc.maxAnte; ante++) {
-      clauses.push({ kind: "ante_tag_is", ante, position: 0, tag: tc.tag });
+      subs.push({ kind: "ante_tag_is", ante, position: 0, tag: tc.tag });
     }
+    if (subs.length === 1) clauses.push(subs[0]);
+    else if (subs.length > 1) clauses.push({ kind: "any_of", clauses: subs });
   }
 
   return JSON.stringify({ clauses, partial: false, min_score: null });
