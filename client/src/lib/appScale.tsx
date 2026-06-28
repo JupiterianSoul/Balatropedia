@@ -14,23 +14,16 @@ import {
  */
 
 const APP_KEY = "balatropedia.appScale";
-const TXT_KEY = "balatropedia.textScale";
 
-export const APP_SCALE_MIN = 0.8;
+// Min is 100% (user request — going below breaks layout and wastes viewport space)
+export const APP_SCALE_MIN = 1.0;
 export const APP_SCALE_MAX = 1.4;
 export const APP_SCALE_STEP = 0.05;
 const APP_DEFAULT = 1.0;
 
-export const TEXT_SCALE_MIN = 0.85;
-export const TEXT_SCALE_MAX = 1.4;
-export const TEXT_SCALE_STEP = 0.05;
-const TEXT_DEFAULT = 1.0;
-
 interface State {
   appScale: number;
   setAppScale: (n: number) => void;
-  textScale: number;
-  setTextScale: (n: number) => void;
 }
 
 const Ctx = createContext<State | null>(null);
@@ -65,19 +58,9 @@ function applyAppScale(n: number) {
   }
 }
 
-function applyTextScale(n: number) {
-  if (typeof document === "undefined") return;
-  document.documentElement.style.setProperty("--text-scale", String(n));
-  // Anchor: set html font-size proportional to base 16px
-  document.documentElement.style.fontSize = `${16 * n}px`;
-}
-
 export function AppScaleProvider({ children }: { children: ReactNode }) {
   const [appScale, setApp] = useState<number>(() =>
     readNum(APP_KEY, APP_DEFAULT, APP_SCALE_MIN, APP_SCALE_MAX)
-  );
-  const [textScale, setTxt] = useState<number>(() =>
-    readNum(TXT_KEY, TEXT_DEFAULT, TEXT_SCALE_MIN, TEXT_SCALE_MAX)
   );
 
   useEffect(() => {
@@ -85,17 +68,10 @@ export function AppScaleProvider({ children }: { children: ReactNode }) {
     try { window.localStorage?.setItem(APP_KEY, String(appScale)); } catch {  }
   }, [appScale]);
 
-  useEffect(() => {
-    applyTextScale(textScale);
-    try { window.localStorage?.setItem(TXT_KEY, String(textScale)); } catch {  }
-  }, [textScale]);
-
   const value = useMemo<State>(() => ({
     appScale,
     setAppScale: (n) => setApp(clamp(n, APP_SCALE_MIN, APP_SCALE_MAX, APP_DEFAULT)),
-    textScale,
-    setTextScale: (n) => setTxt(clamp(n, TEXT_SCALE_MIN, TEXT_SCALE_MAX, TEXT_DEFAULT)),
-  }), [appScale, textScale]);
+  }), [appScale]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

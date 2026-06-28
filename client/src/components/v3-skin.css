@@ -32,8 +32,8 @@ html.v3-skin .balatro-menu-bg::after {
   mix-blend-mode: screen !important;
 }
 
-/* ---------- Top bar — TRANSPARENT/BLACK like the search bar ---------- */
-html.v3-skin header {
+/* ---------- Top bar (mobile only — only the sticky <header> wrapper) ---------- */
+html.v3-skin header.sticky {
   background: rgba(0, 0, 0, 0.55) !important;
   border-bottom: 3px solid #000 !important;
   box-shadow:
@@ -42,8 +42,7 @@ html.v3-skin header {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
-html.v3-skin header h1 {
-  transform: rotate(-2deg);
+html.v3-skin header.sticky h1 {
   letter-spacing: 1px;
   text-shadow:
     2px 2px 0 #000,
@@ -65,7 +64,7 @@ html.v3-skin h3 {
   letter-spacing: 1px !important;
   text-shadow: 2px 2px 0 #000, 0 3px 0 #a8261e;
 }
-html.v3-skin h2 { transform: rotate(-1deg); display: inline-block; }
+html.v3-skin h2 { display: inline-block; }
 
 /* ---------- Main content fade-up animation ---------- */
 html.v3-skin main,
@@ -148,6 +147,7 @@ html.v3-skin [data-testid^="button-seed-find"],
 html.v3-skin [data-testid^="button-find"],
 html.v3-skin [data-testid^="button-build-"],
 html.v3-skin [data-testid="button-shake-toggle"],
+html.v3-skin [data-testid^="button-close-detail-"],
 html.v3-skin [data-testid="button-crt-toggle"] {
   background: linear-gradient(180deg, #f44b3c 0%, #a8261e 100%) !important;
   color: #fff !important;
@@ -173,11 +173,19 @@ html.v3-skin [data-testid="tab-fav-combos"],
 html.v3-skin [data-testid^="button-tab-"],
 html.v3-skin [data-testid^="button-page-"],
 html.v3-skin [data-testid="button-mobile-search-reset"],
-html.v3-skin [data-testid^="button-stake-"],
-html.v3-skin [data-testid^="button-deck-"],
 html.v3-skin [data-testid^="button-info"] {
   background: linear-gradient(180deg, #4a9eff 0%, #1e6fb5 100%) !important;
   color: #fff !important;
+}
+
+/* Stake/Deck cards must NOT inherit the chunky blue button look — they're
+   list rows with a colored left border, not informational buttons. */
+html.v3-skin [data-testid^="button-stake-detail-"],
+html.v3-skin [data-testid^="button-deck-detail-"] {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
 }
 
 /* ---------- GOLD variant (favorites, saved, reward) ---------- */
