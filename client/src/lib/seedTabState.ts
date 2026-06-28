@@ -6,6 +6,7 @@ import type {
 import type {
   JokerConstraint, SeedMatch, FinderProgress,
 } from "@/lib/seedFinder";
+import { detectDeviceProfile } from "@/lib/deviceProfile";
 
 const LS_KEY = "balatro_seed_tab_state_v1";
 
@@ -54,14 +55,23 @@ interface State {
 }
 
 function defaultFinder(): FinderState {
-  const cores = typeof navigator !== "undefined" ? navigator.hardwareConcurrency : 4;
+  // Pick a sensible default thread count based on what we know about the
+  // device. The user can still override it via the SpeedSelect dropdown,
+  // and any saved override in localStorage wins via loadInitial() below.
+  let recommended = 4;
+  try {
+    recommended = detectDeviceProfile().recommendedThreads;
+  } catch {
+    const cores = typeof navigator !== "undefined" ? (navigator.hardwareConcurrency || 4) : 4;
+    recommended = Math.max(1, Math.min(16, cores));
+  }
   return {
     selected: [],
     deck: "Red Deck",
     stake: "White Stake",
     version: "1.0.1f",
     globalMaxAnte: 8,
-    threads: Math.max(1, Math.min(16, cores || 4)),
+    threads: recommended,
     matches: [],
     progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 },
     error: null,
