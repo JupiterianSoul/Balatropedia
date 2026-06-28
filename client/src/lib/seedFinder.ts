@@ -89,14 +89,72 @@ function versionToInt(v: string): number {
   return VERSION_MAP[v] ?? 10106;
 }
 
+/**
+ * SeedFinder: auto-selects WASM or JS finder.
+ *
+ * VITE_WASM_FINDER=1 (default) → tries WasmSeedFinder first;
+ * if WASM fails to init (e.g. no SIMD, no binary yet) it falls back
+ * to the JS+Immolate worker transparently.
+ *
+ * VITE_WASM_FINDER=0 → always uses JS finder.
+ */
 export class SeedFinder {
   private workers: Worker[] = [];
   private active = false;
+  /** Detected throughput from last run (seeds/sec) */
+  lastThroughput = 0;
 
   async init() {  }
 
   start(cfg: FinderConfig, cb: FinderCallbacks = {}): FinderHandle {
     if (this.active) throw new Error("SeedFinder already running");
+    this.active = true;
+    const self = this;
+
+    // ── WASM path ────────────────────────────────────────────────────────────
+    if (import.meta.env.VITE_WASM_FINDER !== "0") {
+      let wasmHandle: FinderHandle | null = null;
+      import("./seedFinderWasm").then(({ WasmSeedFinder }) => {
+        const wasmFinder = new WasmSeedFinder();
+        const wrappedCb: FinderCallbacks = {
+          ...cb,
+          onProgress: (p) => { self.lastThroughput = p.seedsPerSec; cb.onProgress?.(p); },
+          onError: (msg) => {
+            // WASM unavailable – fall back to JS
+            console.warn("[seedFinder] WASM unavailable, falling back to JS:", msg);
+            self.active = false;
+            const fallbackHandle = self._startJs(cfg, cb);
+            wasmHandle = fallbackHandle;
+          },
+        };
+        const handle = wasmFinder.start(cfg, wrappedCb);
+        wasmHandle = handle;
+      }).catch(() => {
+        // import failed — fall back
+        self.active = false;
+        const fallbackHandle = self._startJs(cfg, cb);
+        wasmHandle = fallbackHandle;
+      });
+
+      return {
+        stop: () => { wasmHandle?.stop(); if (!wasmHandle) { self.active = false; } },
+        promise: new Promise<SeedMatch[]>((resolve) => {
+          // The promise resolves when either wasm or js handle finishes
+          const checkInterval = setInterval(() => {
+            if (wasmHandle) {
+              clearInterval(checkInterval);
+              wasmHandle.promise.then(resolve);
+            }
+          }, 10);
+        }),
+      };
+    }
+
+    // ── JS path (fallback) ───────────────────────────────────────────────────
+    return this._startJs(cfg, cb);
+  }
+
+  private _startJs(cfg: FinderConfig, cb: FinderCallbacks = {}): FinderHandle {
     this.active = true;
 
     const THREADS_CAP = 16;
@@ -113,10 +171,8 @@ export class SeedFinder {
     let progressTimer: number | null = null;
     let stopped = false;
     let resolveOuter: (m: SeedMatch[]) => void = () => {};
-    let rejectOuter: (e: Error) => void = () => {};
-    const promise = new Promise<SeedMatch[]>((res, rej) => {
+    const promise = new Promise<SeedMatch[]>((res) => {
       resolveOuter = res;
-      rejectOuter = rej;
     });
 
     const cleanup = () => {
@@ -137,6 +193,7 @@ export class SeedFinder {
     progressTimer = window.setInterval(() => {
       const elapsedMs = performance.now() - startedAt;
       const seedsPerSec = elapsedMs > 0 ? Math.round((totalTries * 1000) / elapsedMs) : 0;
+      this.lastThroughput = seedsPerSec;
       cb.onProgress?.({ totalTries, elapsedMs, seedsPerSec, matches });
     }, 250) as unknown as number;
 
