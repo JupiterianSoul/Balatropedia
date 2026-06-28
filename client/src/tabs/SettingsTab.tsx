@@ -16,6 +16,7 @@ import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
 } from "@/components/ui/sheet";
 import { isSoundEnabled, setSoundEnabled, getSoundVolume, setSoundVolume } from "@/lib/sound";
+import { getSoundsEnabled as getSynthSoundsEnabled, setSoundsEnabled as setSynthSoundsEnabled, uiTap } from "@/lib/sounds";
 import { useI18n, useT, type Lang } from "@/lib/i18n";
 import { useTheme, THEME_OPTIONS, type Theme } from "@/lib/theme";
 import { useShake, SHAKE_DEFAULTS } from "@/lib/screenshake";
@@ -83,6 +84,16 @@ export function SettingsTab() {
 
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [volume, setVolume] = useState(getSoundVolume());
+  const [velvetOn, setVelvetOn] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try {
+      const v = localStorage.getItem("balatropedia.local.velvet");
+      return v === null ? true : v === "1";
+    } catch {
+      return true;
+    }
+  });
+  const [synthOn, setSynthOn] = useState(() => getSynthSoundsEnabled());
   const { theme, setTheme } = useTheme();
   const { enabled: shakeEnabled, intensity: shakeIntensity, setEnabled: setShakeEnabled, setIntensity: setShakeIntensity } = useShake();
   const { enabled: crtEnabled, intensity: crtIntensity, setEnabled: setCrtEnabled, setIntensity: setCrtIntensity } = useCRT();
@@ -400,6 +411,54 @@ export function SettingsTab() {
         <p className="mt-2 text-xs text-muted-foreground">
           Which tab opens when you launch the app.
         </p>
+      </section>
+
+      {/* Balatro skin (velvet bg + synth sounds) */}
+      <section className="casino-card p-4">
+        <div className="mb-3 flex items-center gap-1.5">
+          <Palette className="h-3.5 w-3.5 text-accent" />
+          <SectionLabel>Balatro Skin</SectionLabel>
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-card/50 px-3 py-2">
+            <div>
+              <div className="font-medium text-sm">Velvet background</div>
+              <div className="text-xs text-muted-foreground">Red-velvet radial with film grain.</div>
+            </div>
+            <Button
+              variant={velvetOn ? "default" : "outline"}
+              size="sm"
+              onClick={() => {
+                const next = !velvetOn;
+                setVelvetOn(next);
+                try { localStorage.setItem("balatropedia.local.velvet", next ? "1" : "0"); } catch {}
+                document.documentElement.setAttribute("data-bg", next ? "velvet" : "");
+              }}
+              data-testid="button-velvet-toggle"
+            >
+              {velvetOn ? t("ui.settings.on") : t("ui.settings.off")}
+            </Button>
+          </div>
+          <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-card/50 px-3 py-2">
+            <div>
+              <div className="font-medium text-sm">Synth sounds</div>
+              <div className="text-xs text-muted-foreground">Chip, card, score & UI blips synthesized via Web Audio.</div>
+            </div>
+            <Button
+              variant={synthOn ? "default" : "outline"}
+              size="sm"
+              onClick={() => {
+                const next = !synthOn;
+                setSynthOn(next);
+                setSynthSoundsEnabled(next);
+                if (next) uiTap();
+              }}
+              data-testid="button-synth-sounds-toggle"
+            >
+              {synthOn ? t("ui.settings.on") : t("ui.settings.off")}
+            </Button>
+          </div>
+        </div>
       </section>
 
       {/* Account data */}
