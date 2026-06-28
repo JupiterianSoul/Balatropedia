@@ -1,5 +1,7 @@
 import { Switch, Route, Router } from "wouter";
+import { useEffect } from "react";
 import { useHashLocation } from "wouter/use-hash-location";
+import "@/components/v3-skin.css";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -25,6 +27,10 @@ function AppRouter() {
 }
 
 function App() {
+  useEffect(() => {
+    document.documentElement.classList.add("v3-skin");
+    return () => document.documentElement.classList.remove("v3-skin");
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={150}>
