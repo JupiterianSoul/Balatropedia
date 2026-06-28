@@ -1,8 +1,11 @@
 /* ============================================================
    Balatropedia v3 SKIN — universal PoC-style overlay
-   Loaded globally from App.tsx.
-   Reuses the PoC's button, card, input, tab, and heading style
-   on top of the existing app — works on EVERY tab.
+   - Default button = dark slate (NOT red)
+   - Only [data-variant=primary] / .bg-primary => red CTA
+   - Specific "info" buttons get blue
+   - Topbar transparent black like the search bar
+   - Joker icon containers: transparent black, no red
+   - Tier list cells: minimal, icon-only + small name pill
    ============================================================ */
 
 /* ---------- Global background tone ---------- */
@@ -12,51 +15,32 @@ html.v3-skin body {
     !important;
 }
 
-/* ---------- Existing red/blue blob menu bg — MORE VIVID ---------- */
+/* ---------- Existing red/blue menu blob bg — more vivid ---------- */
 html.v3-skin .balatro-menu-bg {
-  background: radial-gradient(
-    circle at 50% 50%,
-    #0e0612 0%,
-    #050207 100%
-  ) !important;
+  background: radial-gradient(circle at 50% 50%, #0e0612 0%, #050207 100%) !important;
 }
 html.v3-skin .balatro-menu-bg::before {
-  background: radial-gradient(
-    circle,
-    #ff4757 0%,
-    #c4291d 35%,
-    transparent 70%
-  ) !important;
-  width: 110% !important;
-  height: 110% !important;
-  filter: blur(55px) !important;
-  opacity: 0.95 !important;
+  background: radial-gradient(circle, #ff4757 0%, #c4291d 35%, transparent 70%) !important;
+  width: 110% !important; height: 110% !important;
+  filter: blur(55px) !important; opacity: 0.95 !important;
   mix-blend-mode: screen !important;
 }
 html.v3-skin .balatro-menu-bg::after {
-  background: radial-gradient(
-    circle,
-    #4aa8ff 0%,
-    #1e6fb5 35%,
-    transparent 70%
-  ) !important;
-  width: 110% !important;
-  height: 110% !important;
-  filter: blur(55px) !important;
-  opacity: 0.95 !important;
+  background: radial-gradient(circle, #4aa8ff 0%, #1e6fb5 35%, transparent 70%) !important;
+  width: 110% !important; height: 110% !important;
+  filter: blur(55px) !important; opacity: 0.95 !important;
   mix-blend-mode: screen !important;
 }
 
-/* Joker conveyors — KEEP THEM (user wants the sprite columns) */
-/* (no override; respect existing display) */
-
-/* ---------- Top bar ---------- */
+/* ---------- Top bar — TRANSPARENT/BLACK like the search bar ---------- */
 html.v3-skin header {
-  background: linear-gradient(180deg, #1c262a 0%, #0f1618 100%) !important;
+  background: rgba(0, 0, 0, 0.55) !important;
   border-bottom: 3px solid #000 !important;
   box-shadow:
     0 3px 0 rgba(0, 0, 0, 0.5),
     inset 0 -1px 0 rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 html.v3-skin header h1 {
   transform: rotate(-2deg);
@@ -65,21 +49,23 @@ html.v3-skin header h1 {
     2px 2px 0 #000,
     0 3px 0 #a8261e !important;
 }
+/* Style the topbar logo: rounded, slight shadow, no chunky frame */
+html.v3-skin header img[alt="Balatropedia"],
+html.v3-skin [data-testid="button-logo"] img {
+  border-radius: 10px !important;
+  box-shadow: 0 2px 0 #000, 0 0 0 2px rgba(0, 0, 0, 0.6) !important;
+  filter: drop-shadow(0 0 6px rgba(244, 75, 60, 0.35));
+}
 
-/* ---------- Headings (h1-h3) — PoC section-title look ---------- */
+/* ---------- Headings (h1-h3) ---------- */
 html.v3-skin h1,
 html.v3-skin h2,
 html.v3-skin h3 {
   font-family: "m6x11plus", "Courier New", monospace !important;
   letter-spacing: 1px !important;
-  text-shadow:
-    2px 2px 0 #000,
-    0 3px 0 #a8261e;
+  text-shadow: 2px 2px 0 #000, 0 3px 0 #a8261e;
 }
-html.v3-skin h2 {
-  transform: rotate(-1deg);
-  display: inline-block;
-}
+html.v3-skin h2 { transform: rotate(-1deg); display: inline-block; }
 
 /* ---------- Main content fade-up animation ---------- */
 html.v3-skin main,
@@ -91,13 +77,14 @@ html.v3-skin [role="tabpanel"] {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------- UNIVERSAL BUTTONS — PoC chunky pixel ----------
-   Hits every Shadcn-Button-derived button regardless of variant.
-   We use a base style + per-variant color via bg-* classes. */
+/* ============================================================
+   UNIVERSAL BUTTONS
+   Default = dark slate.
+   Only primary CTAs are red. Specific buttons are blue.
+   ============================================================ */
 
 html.v3-skin button,
 html.v3-skin [role="button"]:not(a),
-html.v3-skin a[data-variant],
 html.v3-skin [data-testid^="button-"] {
   font-family: "m6x11plus", "Courier New", monospace !important;
   letter-spacing: 1px !important;
@@ -111,6 +98,9 @@ html.v3-skin [data-testid^="button-"] {
   transition: transform 0.1s ease, filter 0.15s ease !important;
   position: relative !important;
   overflow: hidden !important;
+  /* Default — DARK SLATE */
+  background: linear-gradient(180deg, #2a3a40 0%, #1c262a 100%) !important;
+  color: #fff !important;
 }
 
 html.v3-skin button:hover:not(:disabled),
@@ -127,13 +117,12 @@ html.v3-skin [data-testid^="button-"]:active:not(:disabled) {
     inset 0 -3px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Shimmer sweep on hover (PoC signature) */
+/* Shimmer sweep on hover */
 html.v3-skin button::after,
 html.v3-skin [role="button"]::after,
 html.v3-skin [data-testid^="button-"]::after {
   content: "";
-  position: absolute;
-  top: 0; left: -100%;
+  position: absolute; top: 0; left: -100%;
   width: 60%; height: 100%;
   background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.4), transparent);
   transform: skewX(-15deg);
@@ -146,21 +135,50 @@ html.v3-skin [data-testid^="button-"]:hover::after {
   left: 130%;
 }
 
-/* Primary (default Shadcn) — red */
+/* ---------- RED variant (primary CTAs only) ---------- */
 html.v3-skin button.bg-primary,
 html.v3-skin button[data-variant="primary"],
-html.v3-skin button:not(.bg-secondary):not([data-variant="outline"]):not([data-variant="ghost"]):not([data-variant="secondary"]):not(.bg-destructive):not(.bg-transparent):not(.bg-card) {
+html.v3-skin [data-testid="button-home-discover"],
+html.v3-skin [data-testid="button-home-whatsnew"],
+html.v3-skin [data-testid="button-mobile-search-apply"],
+html.v3-skin [data-testid="button-toggle-filters"],
+html.v3-skin [data-testid^="button-seed-analyze"],
+html.v3-skin [data-testid="button-analyze"],
+html.v3-skin [data-testid^="button-seed-find"],
+html.v3-skin [data-testid^="button-find"],
+html.v3-skin [data-testid^="button-build-"],
+html.v3-skin [data-testid="button-shake-toggle"],
+html.v3-skin [data-testid="button-crt-toggle"] {
   background: linear-gradient(180deg, #f44b3c 0%, #a8261e 100%) !important;
   color: #fff !important;
 }
 
-/* Outline / secondary / ghost — dark slate */
-html.v3-skin button[data-variant="outline"],
-html.v3-skin button[data-variant="ghost"],
-html.v3-skin button[data-variant="secondary"],
-html.v3-skin button.bg-secondary {
-  background: linear-gradient(180deg, #2a3a40 0%, #1c262a 100%) !important;
+/* ---------- BLUE variant ---------- */
+html.v3-skin button.bg-blue,
+html.v3-skin button[data-variant="blue"],
+html.v3-skin [data-blue],
+html.v3-skin [data-testid="button-sign-in"],
+html.v3-skin [data-testid="button-sign-up"],
+html.v3-skin [data-testid="button-user"],
+html.v3-skin [data-testid="button-language"],
+html.v3-skin [data-testid="button-seed-library"],
+html.v3-skin [data-testid^="tab-"],
+html.v3-skin [data-testid^="button-tab-"],
+html.v3-skin [data-testid^="button-page-"],
+html.v3-skin [data-testid="button-mobile-search-reset"],
+html.v3-skin [data-testid^="button-stake-"],
+html.v3-skin [data-testid^="button-deck-"],
+html.v3-skin [data-testid^="button-info"] {
+  background: linear-gradient(180deg, #4a9eff 0%, #1e6fb5 100%) !important;
   color: #fff !important;
+}
+
+/* ---------- GOLD variant (favorites, saved, reward) ---------- */
+html.v3-skin button[data-variant="gold"],
+html.v3-skin [data-testid^="button-favorite-"][aria-pressed="true"] {
+  background: linear-gradient(180deg, #f7d24e 0%, #b8860b 100%) !important;
+  color: #4a2c00 !important;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3) !important;
 }
 
 /* Destructive — deeper red */
@@ -170,21 +188,31 @@ html.v3-skin button[data-variant="destructive"] {
   color: #fff !important;
 }
 
-/* Icon-only buttons keep the chunky frame but are square-ish */
-html.v3-skin button.h-9.w-9,
-html.v3-skin button[data-size="icon"] {
-  border-radius: 12px !important;
-}
-
-/* Don't apply heavy chunky style to invisible/internal radix buttons
-   like dropdown content close icons */
-html.v3-skin [data-radix-collection-item] button,
-html.v3-skin [data-radix-popper-content-wrapper] button {
+/* ---------- Strip the chunky button look from CommandItems / Popovers /
+   ListBox-rows / aria-listbox option rows. These should be transparent. */
+html.v3-skin [cmdk-item],
+html.v3-skin [role="option"],
+html.v3-skin [role="menuitem"],
+html.v3-skin [role="menuitemradio"],
+html.v3-skin [role="menuitemcheckbox"] {
+  background: transparent !important;
+  border: none !important;
   box-shadow: none !important;
-  border: 2px solid #000 !important;
+  text-shadow: none !important;
+  border-radius: 6px !important;
+}
+html.v3-skin [cmdk-item][data-selected="true"],
+html.v3-skin [role="option"][aria-selected="true"] {
+  background: rgba(244, 75, 60, 0.18) !important;
 }
 
-/* ---------- TABS (top + bottom nav) ---------- */
+/* ---------- Radio buttons / toggle items inside settings ---------- */
+html.v3-skin [data-testid^="button-theme-"] {
+  /* Theme picker rows are dark transparent, not red */
+  background: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* ---------- TABS ---------- */
 html.v3-skin [role="tablist"] {
   background: linear-gradient(0deg, #0b1416 0%, #1c262a 100%) !important;
   border: 3px solid #000 !important;
@@ -198,8 +226,7 @@ html.v3-skin [role="tab"] {
   color: #888 !important;
   border-radius: 8px !important;
   text-shadow: 1px 1px 0 #000 !important;
-  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-  /* override the universal button chunky style for tabs */
+  background: transparent !important;
   box-shadow: none !important;
   border: none !important;
 }
@@ -220,7 +247,6 @@ html.v3-skin .balatro-bottom-nav {
 }
 html.v3-skin nav[data-mobile-bottom-nav] button,
 html.v3-skin .balatro-bottom-nav button {
-  /* Bottom-nav buttons keep the tab look, not the chunky button look */
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
@@ -233,7 +259,7 @@ html.v3-skin .balatro-bottom-nav button[aria-current="page"] {
   filter: drop-shadow(0 0 6px rgba(244, 75, 60, 0.7)) !important;
 }
 
-/* ---------- INPUTS / TEXTAREA / SELECT ---------- */
+/* ---------- INPUTS ---------- */
 html.v3-skin input,
 html.v3-skin textarea,
 html.v3-skin [role="combobox"],
@@ -252,11 +278,9 @@ html.v3-skin textarea:focus {
   box-shadow: 0 3px 0 #000, 0 0 0 2px rgba(244, 75, 60, 0.5) !important;
 }
 
-/* ---------- CARDS (shadcn .Card + any [class*="card"]) ---------- */
+/* ---------- CARDS ---------- */
 html.v3-skin [data-shadcn-card],
-html.v3-skin .rounded-lg.border.bg-card,
-html.v3-skin [data-card-frame="joker"],
-html.v3-skin .joker-card-frame {
+html.v3-skin .rounded-lg.border.bg-card {
   background: linear-gradient(180deg, #1c262a 0%, #0b1416 100%) !important;
   border: 4px solid #000 !important;
   border-radius: 14px !important;
@@ -266,43 +290,107 @@ html.v3-skin .joker-card-frame {
     inset 0 2px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Joker card art frame (white card body like in PoC) */
-html.v3-skin [data-card-frame="joker"],
-html.v3-skin .joker-card-frame {
-  background: linear-gradient(180deg, #fefefe 0%, #d8d8d8 100%) !important;
-  box-shadow:
-    0 0 0 2px #fff inset,
-    0 6px 0 #000,
-    0 8px 14px rgba(0, 0, 0, 0.4) !important;
-  transition:
-    transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.18s ease !important;
-}
-html.v3-skin [data-card-frame="joker"]:hover,
-html.v3-skin .joker-card-frame:hover {
-  transform: translateY(-8px) rotate(-2deg) scale(1.04) !important;
-  box-shadow:
-    0 0 0 2px #fff inset,
-    0 12px 0 #000,
-    0 18px 28px rgba(0, 0, 0, 0.55),
-    0 0 35px rgba(244, 75, 60, 0.5) !important;
+/* ============================================================
+   JOKER ICON CONTAINERS — black/transparent like the search bar
+   (Applies to JokerSprite wrapper everywhere except inside the
+   home-page conveyor bands, which keep the in-game card look.)
+   ============================================================ */
+html.v3-skin :not(.joker-conveyor) > .balatro-card-interactive,
+html.v3-skin :not(.joker-conveyor) [class*="border-accent"] {
+  /* The default JokerSprite wrapper uses border-accent/20 + bg-[hsl(150_16%_6%)] */
 }
 
-/* ---------- Dialogs / Sheets / Popovers ---------- */
-html.v3-skin [role="dialog"],
-html.v3-skin [data-state="open"][role="dialog"],
-html.v3-skin [data-radix-popper-content-wrapper] > * {
+/* Direct attack on JokerSprite container — be specific enough not to hit bands */
+html.v3-skin .balatro-card .flex.shrink-0.items-center.justify-center.overflow-hidden,
+html.v3-skin [data-testid^="card-joker-"] .flex.shrink-0.items-center.justify-center,
+html.v3-skin [data-testid^="tierlist-joker-"] .flex.shrink-0.items-center.justify-center,
+html.v3-skin [data-testid^="option-"] .flex.shrink-0.items-center.justify-center {
+  background: rgba(0, 0, 0, 0.55) !important;
+  border: 2px solid rgba(0, 0, 0, 0.6) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 8px !important;
+}
+
+/* ============================================================
+   TIER LIST cell — minimal: just the joker icon (slightly larger)
+   + a small name pill underneath. No big chunky frames.
+   ============================================================ */
+html.v3-skin [data-testid^="tierlist-joker-"] {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  padding: 4px !important;
+  border-radius: 8px !important;
+}
+html.v3-skin [data-testid^="tierlist-joker-"]:hover {
+  filter: brightness(1.15);
+  transform: translateY(-2px) scale(1.06) !important;
+  box-shadow: none !important;
+}
+/* Remove the inner red/dark container around the icon */
+html.v3-skin [data-testid^="tierlist-joker-"] .flex.shrink-0.items-center.justify-center {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+/* Make the icon itself bigger inside the tier cell */
+html.v3-skin [data-testid^="tierlist-joker-"] img {
+  width: 64px !important;
+  height: 64px !important;
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.5));
+}
+/* Name pill underneath — small black/transparent. Force visible on mobile too. */
+html.v3-skin [data-testid^="tierlist-joker-"] span {
+  display: inline-block !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  border: 1px solid rgba(0, 0, 0, 0.6) !important;
+  border-radius: 6px !important;
+  padding: 1px 5px !important;
+  font-family: "m6x11plus", monospace !important;
+  font-size: 9px !important;
+  line-height: 1.2 !important;
+  color: #fff !important;
+  text-shadow: 1px 1px 0 #000 !important;
+  max-width: 72px !important;
+  margin-top: 3px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* ============================================================
+   Joker list-row in dropdowns / comboboxes ("Square Joker" bar)
+   Already neutralized above via [role=option] / [cmdk-item] —
+   but the small icon stays slightly larger:
+   ============================================================ */
+html.v3-skin [cmdk-item] img,
+html.v3-skin [role="option"] img {
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.5));
+}
+
+/* ---------- Dialogs / popovers ---------- */
+html.v3-skin [role="dialog"] {
   background: linear-gradient(180deg, #1c262a 0%, #0b1416 100%) !important;
   border: 3px solid #000 !important;
   border-radius: 14px !important;
-  box-shadow:
-    0 6px 0 #000,
-    0 12px 28px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 6px 0 #000, 0 12px 28px rgba(0, 0, 0, 0.6) !important;
+}
+html.v3-skin [data-radix-popper-content-wrapper] > * {
+  background: linear-gradient(180deg, #1c262a 0%, #0b1416 100%) !important;
+  border: 3px solid #000 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 0 #000, 0 8px 16px rgba(0, 0, 0, 0.6) !important;
+}
+/* Internal buttons inside popovers shouldn't get the chunky button look */
+html.v3-skin [data-radix-popper-content-wrapper] button {
+  box-shadow: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.5) !important;
 }
 
 /* ---------- Badges ---------- */
-html.v3-skin .inline-flex.items-center.rounded-full,
-html.v3-skin [data-badge] {
+html.v3-skin .inline-flex.items-center.rounded-full {
   font-family: "m6x11plus", monospace !important;
   border: 2px solid #000 !important;
   letter-spacing: 1px !important;
