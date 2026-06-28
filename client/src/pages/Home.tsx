@@ -44,6 +44,7 @@ import { AboutTab } from "@/tabs/AboutTab";
 import { TierListTab } from "@/tabs/TierListTab";
 import { WhatsNewTab } from "@/tabs/WhatsNewTab";
 import { KofiFooterButton } from "@/components/KofiButton";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 const NAV_GROUPS: NavGroup[] = [
   { key: "home", tabs: ["home"] },
@@ -75,6 +76,13 @@ export default function Home() {
     if (st && typeof st.tab === "string" && VALID_TABS.has(st.tab)) {
       return LEGACY_REDIRECTS[st.tab] ?? st.tab;
     }
+    // Apply persisted startup tab preference (if not "last" or unset).
+    try {
+      const startupPref = window.localStorage.getItem("balatropedia.local.startupTab");
+      if (startupPref && startupPref !== "last" && VALID_TABS.has(startupPref)) {
+        return startupPref;
+      }
+    } catch { /* ignore */ }
     return "home";
   })();
   const [tab, setTab] = useState(initialTab);
@@ -178,8 +186,8 @@ export default function Home() {
         { }
         <div className="flex min-w-0 flex-1 flex-col md:h-[100dvh] md:overflow-y-auto">
           {}
-          <header className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden">
-            <div className="flex items-center gap-2 px-3 py-2">
+          <header className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden pt-[env(safe-area-inset-top)]">
+            <div className="flex items-center gap-2 px-3 py-1.5">
               {}
               <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
                 <SheetTrigger asChild>
@@ -224,8 +232,8 @@ export default function Home() {
                 className="flex shrink-0 items-center gap-2 transition-transform hover:scale-[1.02]"
                 aria-label="Balatropedia home"
               >
-                <Logo className="h-8 w-8 shrink-0 drop-shadow-[2px_2px_0_hsl(198_18%_4%)]" />
-                <h1 className="font-pixel text-[18px] font-bold leading-none tracking-tight">
+                <Logo className="h-7 w-7 shrink-0 drop-shadow-[2px_2px_0_hsl(198_18%_4%)]" />
+                <h1 className="font-pixel text-[16px] font-bold leading-none tracking-tight">
                   <span className="mult-text">{t("ui.header.title_a")}</span>
                   <span className="chips-text">{t("ui.header.title_b")}</span>
                 </h1>
@@ -235,11 +243,14 @@ export default function Home() {
 
               {}
               <div className="flex shrink-0 items-center gap-1">
-                <LanguageSwitcher />
-                <UserButton />
+                <LanguageSwitcher compact />
+                <UserButton compact />
               </div>
             </div>
           </header>
+
+          {/* Mobile bottom tab bar — hidden on md+ */}
+          <MobileBottomNav currentTab={tab} onSelect={handleSelect} />
 
           {showEsBanner && (
             <div
@@ -261,11 +272,11 @@ export default function Home() {
 
           {}
           {tab === "home" ? (
-            <div className="mount-fade flex flex-1 min-h-0 min-w-0 w-full" key={tab} data-testid="home-fullbleed">
+            <div className="mount-fade flex flex-1 min-h-0 min-w-0 w-full pb-[calc(56px+env(safe-area-inset-bottom)+8px)] md:pb-0" key={tab} data-testid="home-fullbleed">
               <TabsContent value="home" className="mt-0 flex-1 min-h-0 min-w-0 w-full flex flex-col data-[state=inactive]:hidden"><HomeTab onNavigate={handleSelect} /></TabsContent>
             </div>
           ) : (
-          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
+          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 pb-[calc(56px+env(safe-area-inset-bottom)+8px+24px)] md:pb-6">
             <div className="mount-fade" key={tab}>
               <TabsContent value="jokers" className="mt-0"><JokersTab /></TabsContent>
               <TabsContent value="myrun" className="mt-0"><MyRunTab /></TabsContent>

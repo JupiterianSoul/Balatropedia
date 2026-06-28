@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Generates Android launcher icons, adaptive icon foreground, and splash images
-# from client/public/favicon.png.
+# from client/public/app-icon-source.png (1024x1024).
+# Override source with: SRC=/path/to/icon.png ./scripts/generate-android-icons.sh
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC="$ROOT/client/public/favicon.png"
+SRC="${SRC:-$ROOT/client/public/app-icon-source.png}"
 RES="$ROOT/android/app/src/main/res"
 BG_COLOR="#1c262a"
 

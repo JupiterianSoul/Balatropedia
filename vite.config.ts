@@ -4,6 +4,10 @@ import path from "node:path";
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    // Inject build-time app version; consumed by SettingsTab and vite-env.d.ts.
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version || "dev"),
+  },
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
