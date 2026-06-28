@@ -44,6 +44,7 @@ import { AboutTab } from "@/tabs/AboutTab";
 import { TierListTab } from "@/tabs/TierListTab";
 import { WhatsNewTab } from "@/tabs/WhatsNewTab";
 import { KofiFooterButton } from "@/components/KofiButton";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 const NAV_GROUPS: NavGroup[] = [
   { key: "home", tabs: ["home"] },
@@ -241,6 +242,9 @@ export default function Home() {
             </div>
           </header>
 
+          {/* Mobile bottom tab bar — hidden on md+ */}
+          <MobileBottomNav currentTab={tab} onSelect={handleSelect} />
+
           {showEsBanner && (
             <div
               className="flex items-center justify-between gap-3 border-b border-accent/30 bg-accent/10 px-4 py-2 text-xs text-foreground"
@@ -261,11 +265,11 @@ export default function Home() {
 
           {}
           {tab === "home" ? (
-            <div className="mount-fade flex flex-1 min-h-0 min-w-0 w-full" key={tab} data-testid="home-fullbleed">
+            <div className="mount-fade flex flex-1 min-h-0 min-w-0 w-full pb-[calc(56px+env(safe-area-inset-bottom)+8px)] md:pb-0" key={tab} data-testid="home-fullbleed">
               <TabsContent value="home" className="mt-0 flex-1 min-h-0 min-w-0 w-full flex flex-col data-[state=inactive]:hidden"><HomeTab onNavigate={handleSelect} /></TabsContent>
             </div>
           ) : (
-          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
+          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 pb-[calc(56px+env(safe-area-inset-bottom)+8px+24px)] md:pb-6">
             <div className="mount-fade" key={tab}>
               <TabsContent value="jokers" className="mt-0"><JokersTab /></TabsContent>
               <TabsContent value="myrun" className="mt-0"><MyRunTab /></TabsContent>
