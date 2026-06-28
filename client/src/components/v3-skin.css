@@ -1,10 +1,18 @@
 /* ============================================================
-   Balatropedia v3 skin overrides
-   Loaded globally from App.tsx. Augments existing app styles to
-   match the PoC (balatro-poc/index.html).
+   Balatropedia v3 SKIN — universal PoC-style overlay
+   Loaded globally from App.tsx.
+   Reuses the PoC's button, card, input, tab, and heading style
+   on top of the existing app — works on EVERY tab.
    ============================================================ */
 
-/* ---------- Make the existing red/blue blob bg MORE VIVID ---------- */
+/* ---------- Global background tone ---------- */
+html.v3-skin body {
+  background:
+    radial-gradient(ellipse at 50% 20%, #c4291d 0%, #8c1810 30%, #4a0d08 60%, #1a0604 100%) fixed
+    !important;
+}
+
+/* ---------- Existing red/blue blob menu bg — MORE VIVID ---------- */
 html.v3-skin .balatro-menu-bg {
   background: radial-gradient(
     circle at 50% 50%,
@@ -12,9 +20,7 @@ html.v3-skin .balatro-menu-bg {
     #050207 100%
   ) !important;
 }
-
 html.v3-skin .balatro-menu-bg::before {
-  /* RED blob — bigger, brighter, less blurred for visibility */
   background: radial-gradient(
     circle,
     #ff4757 0%,
@@ -27,9 +33,7 @@ html.v3-skin .balatro-menu-bg::before {
   opacity: 0.95 !important;
   mix-blend-mode: screen !important;
 }
-
 html.v3-skin .balatro-menu-bg::after {
-  /* BLUE blob — same treatment */
   background: radial-gradient(
     circle,
     #4aa8ff 0%,
@@ -43,7 +47,10 @@ html.v3-skin .balatro-menu-bg::after {
   mix-blend-mode: screen !important;
 }
 
-/* ---------- Topbar: PoC dark slate with red logo drop-shadow ---------- */
+/* Joker conveyors — KEEP THEM (user wants the sprite columns) */
+/* (no override; respect existing display) */
+
+/* ---------- Top bar ---------- */
 html.v3-skin header {
   background: linear-gradient(180deg, #1c262a 0%, #0f1618 100%) !important;
   border-bottom: 3px solid #000 !important;
@@ -51,7 +58,6 @@ html.v3-skin header {
     0 3px 0 rgba(0, 0, 0, 0.5),
     inset 0 -1px 0 rgba(255, 255, 255, 0.04) !important;
 }
-
 html.v3-skin header h1 {
   transform: rotate(-2deg);
   letter-spacing: 1px;
@@ -60,37 +66,221 @@ html.v3-skin header h1 {
     0 3px 0 #a8261e !important;
 }
 
-/* ---------- Section titles ---------- */
-html.v3-skin h2.text-2xl,
-html.v3-skin h2.text-xl,
-html.v3-skin h2.text-3xl,
-html.v3-skin .section-title {
+/* ---------- Headings (h1-h3) — PoC section-title look ---------- */
+html.v3-skin h1,
+html.v3-skin h2,
+html.v3-skin h3 {
   font-family: "m6x11plus", "Courier New", monospace !important;
-  letter-spacing: 1px;
+  letter-spacing: 1px !important;
   text-shadow:
     2px 2px 0 #000,
     0 3px 0 #a8261e;
+}
+html.v3-skin h2 {
   transform: rotate(-1deg);
   display: inline-block;
 }
 
-/* ---------- Joker card frames ---------- */
+/* ---------- Main content fade-up animation ---------- */
+html.v3-skin main,
+html.v3-skin [role="tabpanel"] {
+  animation: v3-fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards !important;
+}
+@keyframes v3-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- UNIVERSAL BUTTONS — PoC chunky pixel ----------
+   Hits every Shadcn-Button-derived button regardless of variant.
+   We use a base style + per-variant color via bg-* classes. */
+
+html.v3-skin button,
+html.v3-skin [role="button"]:not(a),
+html.v3-skin a[data-variant],
+html.v3-skin [data-testid^="button-"] {
+  font-family: "m6x11plus", "Courier New", monospace !important;
+  letter-spacing: 1px !important;
+  border: 3px solid #000 !important;
+  border-radius: 12px !important;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5) !important;
+  box-shadow:
+    0 5px 0 #000,
+    inset 0 -3px 0 rgba(0, 0, 0, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.18) !important;
+  transition: transform 0.1s ease, filter 0.15s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+html.v3-skin button:hover:not(:disabled),
+html.v3-skin [role="button"]:hover:not(:disabled),
+html.v3-skin [data-testid^="button-"]:hover:not(:disabled) {
+  filter: brightness(1.12) !important;
+}
+html.v3-skin button:active:not(:disabled),
+html.v3-skin [role="button"]:active:not(:disabled),
+html.v3-skin [data-testid^="button-"]:active:not(:disabled) {
+  transform: translateY(4px) !important;
+  box-shadow:
+    0 1px 0 #000,
+    inset 0 -3px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Shimmer sweep on hover (PoC signature) */
+html.v3-skin button::after,
+html.v3-skin [role="button"]::after,
+html.v3-skin [data-testid^="button-"]::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-15deg);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+html.v3-skin button:hover::after,
+html.v3-skin [role="button"]:hover::after,
+html.v3-skin [data-testid^="button-"]:hover::after {
+  left: 130%;
+}
+
+/* Primary (default Shadcn) — red */
+html.v3-skin button.bg-primary,
+html.v3-skin button[data-variant="primary"],
+html.v3-skin button:not(.bg-secondary):not([data-variant="outline"]):not([data-variant="ghost"]):not([data-variant="secondary"]):not(.bg-destructive):not(.bg-transparent):not(.bg-card) {
+  background: linear-gradient(180deg, #f44b3c 0%, #a8261e 100%) !important;
+  color: #fff !important;
+}
+
+/* Outline / secondary / ghost — dark slate */
+html.v3-skin button[data-variant="outline"],
+html.v3-skin button[data-variant="ghost"],
+html.v3-skin button[data-variant="secondary"],
+html.v3-skin button.bg-secondary {
+  background: linear-gradient(180deg, #2a3a40 0%, #1c262a 100%) !important;
+  color: #fff !important;
+}
+
+/* Destructive — deeper red */
+html.v3-skin button.bg-destructive,
+html.v3-skin button[data-variant="destructive"] {
+  background: linear-gradient(180deg, #c4291d 0%, #6e1410 100%) !important;
+  color: #fff !important;
+}
+
+/* Icon-only buttons keep the chunky frame but are square-ish */
+html.v3-skin button.h-9.w-9,
+html.v3-skin button[data-size="icon"] {
+  border-radius: 12px !important;
+}
+
+/* Don't apply heavy chunky style to invisible/internal radix buttons
+   like dropdown content close icons */
+html.v3-skin [data-radix-collection-item] button,
+html.v3-skin [data-radix-popper-content-wrapper] button {
+  box-shadow: none !important;
+  border: 2px solid #000 !important;
+}
+
+/* ---------- TABS (top + bottom nav) ---------- */
+html.v3-skin [role="tablist"] {
+  background: linear-gradient(0deg, #0b1416 0%, #1c262a 100%) !important;
+  border: 3px solid #000 !important;
+  border-radius: 14px !important;
+  padding: 4px !important;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4) !important;
+}
+html.v3-skin [role="tab"] {
+  font-family: "m6x11plus", monospace !important;
+  letter-spacing: 1px !important;
+  color: #888 !important;
+  border-radius: 8px !important;
+  text-shadow: 1px 1px 0 #000 !important;
+  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  /* override the universal button chunky style for tabs */
+  box-shadow: none !important;
+  border: none !important;
+}
+html.v3-skin [role="tab"][data-state="active"],
+html.v3-skin [role="tab"][aria-selected="true"] {
+  color: #f44b3c !important;
+  background: rgba(244, 75, 60, 0.12) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  filter: drop-shadow(0 0 6px rgba(244, 75, 60, 0.5)) !important;
+}
+
+/* Bottom mobile nav */
+html.v3-skin nav[data-mobile-bottom-nav],
+html.v3-skin .balatro-bottom-nav {
+  background: linear-gradient(0deg, #0b1416 0%, #1c262a 100%) !important;
+  border-top: 3px solid #000 !important;
+  box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.4) !important;
+}
+html.v3-skin nav[data-mobile-bottom-nav] button,
+html.v3-skin .balatro-bottom-nav button {
+  /* Bottom-nav buttons keep the tab look, not the chunky button look */
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  text-shadow: 1px 1px 0 #000 !important;
+}
+html.v3-skin nav[data-mobile-bottom-nav] button[aria-current="page"],
+html.v3-skin .balatro-bottom-nav button[aria-current="page"] {
+  color: #f44b3c !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  filter: drop-shadow(0 0 6px rgba(244, 75, 60, 0.7)) !important;
+}
+
+/* ---------- INPUTS / TEXTAREA / SELECT ---------- */
+html.v3-skin input,
+html.v3-skin textarea,
+html.v3-skin [role="combobox"],
+html.v3-skin [data-testid="home-search"] input {
+  background: rgba(0, 0, 0, 0.55) !important;
+  border: 3px solid #000 !important;
+  border-radius: 12px !important;
+  font-family: "m6x11plus", monospace !important;
+  color: #fff !important;
+  box-shadow: 0 3px 0 #000, inset 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+html.v3-skin input:focus,
+html.v3-skin textarea:focus {
+  outline: none !important;
+  border-color: #f44b3c !important;
+  box-shadow: 0 3px 0 #000, 0 0 0 2px rgba(244, 75, 60, 0.5) !important;
+}
+
+/* ---------- CARDS (shadcn .Card + any [class*="card"]) ---------- */
+html.v3-skin [data-shadcn-card],
+html.v3-skin .rounded-lg.border.bg-card,
+html.v3-skin [data-card-frame="joker"],
+html.v3-skin .joker-card-frame {
+  background: linear-gradient(180deg, #1c262a 0%, #0b1416 100%) !important;
+  border: 4px solid #000 !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 6px 0 #000,
+    0 10px 18px rgba(0, 0, 0, 0.45),
+    inset 0 2px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Joker card art frame (white card body like in PoC) */
 html.v3-skin [data-card-frame="joker"],
 html.v3-skin .joker-card-frame {
   background: linear-gradient(180deg, #fefefe 0%, #d8d8d8 100%) !important;
-  border: 4px solid #000 !important;
-  border-radius: 12px !important;
   box-shadow:
     0 0 0 2px #fff inset,
     0 6px 0 #000,
     0 8px 14px rgba(0, 0, 0, 0.4) !important;
-  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.18s ease;
+  transition:
+    transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.18s ease !important;
 }
-
 html.v3-skin [data-card-frame="joker"]:hover,
 html.v3-skin .joker-card-frame:hover {
-  transform: translateY(-8px) rotate(-2deg) scale(1.04);
+  transform: translateY(-8px) rotate(-2deg) scale(1.04) !important;
   box-shadow:
     0 0 0 2px #fff inset,
     0 12px 0 #000,
@@ -98,82 +288,33 @@ html.v3-skin .joker-card-frame:hover {
     0 0 35px rgba(244, 75, 60, 0.5) !important;
 }
 
-/* ---------- Primary buttons: pixel/chunky red ---------- */
-html.v3-skin button[data-variant="primary"],
-html.v3-skin .btn-balatro-primary {
-  background: linear-gradient(180deg, #f44b3c 0%, #a8261e 100%) !important;
-  color: #fff !important;
+/* ---------- Dialogs / Sheets / Popovers ---------- */
+html.v3-skin [role="dialog"],
+html.v3-skin [data-state="open"][role="dialog"],
+html.v3-skin [data-radix-popper-content-wrapper] > * {
+  background: linear-gradient(180deg, #1c262a 0%, #0b1416 100%) !important;
   border: 3px solid #000 !important;
-  border-radius: 12px !important;
-  font-family: "m6x11plus", monospace !important;
-  letter-spacing: 1px;
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 14px !important;
   box-shadow:
-    0 5px 0 #000,
-    inset 0 -3px 0 rgba(0, 0, 0, 0.3),
-    inset 0 2px 0 rgba(255, 255, 255, 0.25) !important;
-  transition: transform 0.1s ease, filter 0.15s ease;
+    0 6px 0 #000,
+    0 12px 28px rgba(0, 0, 0, 0.6) !important;
 }
 
-html.v3-skin button[data-variant="primary"]:hover,
-html.v3-skin .btn-balatro-primary:hover {
-  filter: brightness(1.1);
-}
-
-html.v3-skin button[data-variant="primary"]:active,
-html.v3-skin .btn-balatro-primary:active {
-  transform: translateY(4px);
-  box-shadow:
-    0 1px 0 #000,
-    inset 0 -3px 0 rgba(0, 0, 0, 0.3) !important;
-}
-
-/* ---------- Generic buttons in Home (Discover / What's New / etc.) ---------- */
-html.v3-skin [data-testid^="button-home"] {
+/* ---------- Badges ---------- */
+html.v3-skin .inline-flex.items-center.rounded-full,
+html.v3-skin [data-badge] {
   font-family: "m6x11plus", monospace !important;
+  border: 2px solid #000 !important;
   letter-spacing: 1px !important;
-  border: 3px solid #000 !important;
-  border-radius: 12px !important;
-  box-shadow:
-    0 5px 0 #000,
-    inset 0 -3px 0 rgba(0, 0, 0, 0.3),
-    inset 0 2px 0 rgba(255, 255, 255, 0.15) !important;
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
-  transition: transform 0.1s ease, filter 0.15s ease !important;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 2px 0 #000 !important;
 }
 
-html.v3-skin [data-testid^="button-home"]:active {
-  transform: translateY(4px);
-}
-
-/* ---------- Search input in Home: white card with thick border ---------- */
-html.v3-skin [data-testid="home-search"] input {
-  background: rgba(0, 0, 0, 0.55) !important;
-  border: 3px solid #000 !important;
-  border-radius: 12px !important;
-  font-family: "m6x11plus", monospace !important;
-  color: #fff !important;
-}
-
-/* ---------- Bottom tab bar ---------- */
-html.v3-skin nav[data-mobile-bottom-nav],
-html.v3-skin .balatro-bottom-nav {
-  background: linear-gradient(0deg, #0b1416 0%, #1c262a 100%) !important;
-  border-top: 3px solid #000 !important;
-  box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.4) !important;
-}
-
-html.v3-skin nav[data-mobile-bottom-nav] button[aria-current="page"],
-html.v3-skin .balatro-bottom-nav button[aria-current="page"] {
-  color: #f44b3c !important;
-  text-shadow: 1px 1px 0 #000;
-  transform: translateY(-3px) scale(1.05);
-  filter: drop-shadow(0 0 6px rgba(244, 75, 60, 0.7));
-}
-
-/* ---------- Hide the joker conveyor columns (PoC doesn't have them) ---------- */
-html.v3-skin .joker-conveyor,
-html.v3-skin [data-joker-conveyor],
-html.v3-skin [class*="JokerConveyor"] {
-  display: none !important;
+/* ---------- Scrollbars ---------- */
+html.v3-skin ::-webkit-scrollbar { width: 10px; height: 10px; }
+html.v3-skin ::-webkit-scrollbar-track { background: #0b1416; }
+html.v3-skin ::-webkit-scrollbar-thumb {
+  background: #f44b3c;
+  border: 2px solid #000;
+  border-radius: 6px;
 }
