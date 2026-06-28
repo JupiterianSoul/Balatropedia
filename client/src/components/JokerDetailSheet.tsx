@@ -38,9 +38,9 @@ export function JokerDetailSheet() {
         className={
           isMobile
             ? "flex w-full flex-col overflow-hidden p-0"
-            : "flex w-full flex-col overflow-hidden p-0 sm:max-w-none md:max-w-[min(640px,50vw)] lg:max-w-[min(720px,50vw)] md:!right-auto md:!left-1/2 md:!-translate-x-1/2 md:!border md:!rounded-lg md:!top-1/2 md:!-translate-y-1/2"
+            : "flex w-full flex-col overflow-hidden p-0 sm:max-w-none md:max-w-[min(640px,50vw)] lg:max-w-[min(720px,50vw)] md:!right-auto md:!left-1/2 md:!-translate-x-1/2 md:!translate-y-0 md:!border md:!rounded-lg md:!top-4"
         }
-        style={isMobile ? { height: "100dvh", maxHeight: "100dvh" } : { height: "min(92dvh, 920px)" }}
+        style={isMobile ? { height: "100dvh", maxHeight: "100dvh" } : { maxHeight: "calc(100vh - 2rem)" }}
         hideClose
         data-testid="sheet-joker-detail"
       >

@@ -47,7 +47,7 @@
       "favorites": "Favoritos",
       "glossary": "Glosario",
       "about": "Acerca de",
-      "tierlist": "Tier List",
+      "tierlist": "Clasificación",
       "whatsnew": "Actualizaciones",
       "group": {
         "home": "Inicio",
@@ -82,7 +82,7 @@
       "card_glossary": "Referencia rápida para cada término de Balatro.",
       "subhero": "El sitio de referencia de Balatro más profundo, con un estilo a juego.",
       "whisper": "Truco: prueba el código Konami en cualquier parte.",
-      "cta_tier": "Tier List",
+      "cta_tier": "Clasificación",
       "cta_synergies": "Sinergias",
       "marquee": "JOKERS • SINERGIAS • COMBOS • ARQUETIPOS • TIER LISTS • PLANIFICADOR • BOSSES • STAKES • DECKS • VOUCHERS • CONSUMIBLES",
       "hero_kicker": "Casino abierto",
@@ -241,7 +241,7 @@
       "difficulty_easy": "Fácil",
       "difficulty_moderate": "Moderada",
       "difficulty_hard": "Difícil",
-      "archetype_bloodstone_lucky": "Bloodstone / Lucky",
+      "archetype_bloodstone_lucky": "Piedra de sangre / Suerte",
       "archetype_canio_destruction": "Destrucción Canio",
       "archetype_low_card_count": "Mazo Reducido",
       "archetype_no_discard": "Sin Descarte",
@@ -408,7 +408,7 @@
         "verified": "Motor verificado contra TheSoul en vivo para la seed 8Q47WV6K (Red, 1.0.1c) - boss, voucher, tags, cola de tienda y contenido de packs coinciden exactamente en antes 1-3."
       },
       "v1_1": {
-        "title": "v1.1 - Tier list + Run Challenge",
+        "title": "v1.1 - Clasificación + Desafío de partida",
         "tierlist": "Pestaña Tier List comunitaria con variantes Stake y Deck (24 variantes en total).",
         "runchallenge": "Generador Run Challenge: arquetipo, combo, jokers base, deck, stake y pista de consumible aleatorios.",
         "searcheffects": "La búsqueda de Library coincide con el texto de efecto, no solo nombres.",
@@ -483,8 +483,8 @@
       }
     },
     "challenge": {
-      "button": "Run Challenge",
-      "title": "Run Challenge",
+      "button": "Desafío de partida",
+      "title": "Desafío de partida",
       "intro": "Un build aleatorio - intenta que funcione.",
       "archetype": "Arquetipo",
       "with_combo": "Con combo",
@@ -1545,22 +1545,22 @@
         "tip": "Combina My Run con la pestaña Seeds una vez cargado un seed: las predicciones de shop y el contenido de packs se mantienen coherentes con tu motor."
       },
       "runchallenge": {
-        "title": "Run Challenge",
+        "title": "Desafío de partida",
         "body": "Un generador de desafíos diarios y bajo demanda. Elige mazo, stake, ante objetivo y un pool de jokers forzado para restringir tu run. Útil para romper hábitos y forzar builds poco habituales.\n\nCada desafío muestra el seed (cuando aplica), las restricciones y una estimación de dificultad basada en la calidad del pool de jokers.",
         "tip": "Re-roll el desafío si pide un pool de jokers alrededor del cual no puedes construir razonablemente; el generador es intencionalmente picante."
       },
       "buildlab": {
-        "title": "Build Lab",
+        "title": "Laboratorio de Builds",
         "body": "El Build Lab es un sandbox para theorycraftear un board de 5 jokers. Elige jokers, ediciones y la mano activa, y el lab calcula contribuciones de chips/mult y el score final para esa mano.\n\nNo es un simulador perfecto (algunas particularidades de scoring están aproximadas), pero es lo suficientemente rápido para comparar dos builds lado a lado.",
         "tip": "Úsalo para decisiones de '¿guardo X o swap por Y?'; la columna delta muestra el impacto en el score directamente."
       },
       "calculator": {
-        "title": "Score Calculator",
+        "title": "Calculadora de Puntuación",
         "body": "Una calculadora enfocada en chips/mult/X-mult. Introduce la mano jugada, el nivel de la mano, chips y mult base, luego apila modificadores de jokers, ediciones y enhancements. La vista breakdown muestra el orden de operaciones que Balatro usa realmente.\n\nBueno para entender por qué una mano 'debería' haber puntuado más, o probar un orden de multiplicadores contra-intuitivo.",
         "tip": "Activa 'X-mult al final' para ver cómo los jokers negativos y el orden de jokers cambian el número final."
       },
       "seeds": {
-        "title": "Seeds (Analyzer · Finder · Library)",
+        "title": "Semillas (Analizador · Buscador · Biblioteca)",
         "body": "La pestaña Seeds tiene tres sub-pestañas.\n\nAnalyzer: pega un seed, configura mazo y stake, y el motor WASM simula los antes por adelantado, mostrando slots de shop, packs, vouchers y resoluciones de Soul por blind.\n\nFinder: busca en todo el espacio de seeds uno que coincida con tus restricciones (joker específico en ante 1, tag Negative garantizado, etc.). Ajusta workers de CPU y tries por batch para equilibrar velocidad y respuesta.\n\nLibrary: seeds notables curados y guardados por usuarios, navegables por etiqueta.",
         "tip": "Si Finder va lento, baja los workers de CPU para liberar tu máquina; si está ocioso, súbelos. El estado persiste entre sesiones."
       },
@@ -1580,7 +1580,7 @@
         "tip": "Cada arquetipo lista notas de 'cuándo comprometerse' para que no pivotes demasiado tarde."
       },
       "tierlist": {
-        "title": "Tier List",
+        "title": "Clasificación",
         "body": "Un ranking interactivo S/A/B/C/D de cada joker. El orden por defecto refleja el consenso comunitario agregado desde Mobalytics, TheGamer y threads de Reddit; no es autoritativo.\n\nPuedes arrastrar jokers entre tiers localmente; cuando estás conectado, tu tier list custom se sincroniza con tu cuenta. El disclaimer al final de la pestaña explica las fuentes.",
         "tip": "Clic derecho en un joker (o pulsación larga en móvil) abre su ficha detalle sin salir de la tier list."
       },
@@ -1605,7 +1605,7 @@
         "tip": "Al subir stakes, el Black Stake (jokers Perishable) es el mayor cambio mental; combina esta pestaña con Tier List filtrada por 'sobrevive Black'."
       },
       "bosses": {
-        "title": "Boss Blinds",
+        "title": "Blinds Jefe",
         "body": "Cada boss blind, su condición de disable, los antes donde puede aparecer y estrategias counter. Las pestañas filtran por rango de ante y tipo de efecto (ban de palo, ban de mano, penalización de scoring, etc.).",
         "tip": "Cuando My Run señala un boss próximo, esta pestaña abre directamente a una ficha counter por boss con jokers recomendados."
       },
@@ -1658,6 +1658,18 @@
       "tagline": "Si esta herramienta te ayuda a optimizar tus partidas, puedes invitarme a un café. Las donaciones sirven para apoyarme y mejorar los servidores para que más gente pueda usar la app sin problemas.",
       "cta": "Invítame a un café en Ko-fi",
       "aria": "Apoya el desarrollo en Ko-fi (abre en una nueva pestaña)"
+    },
+    "seedfinder": {
+      "search_speed": "Velocidad de búsqueda",
+      "search_speed_tooltip": "Cuánta CPU usar para la búsqueda. Mayor = más rápido pero más pesado.",
+      "speed_eco": "Eco (1 trabajador, CPU bajo)",
+      "speed_low": "Bajo (2 trabajadores)",
+      "speed_medium": "Medio (4 trabajadores)",
+      "speed_high": "Alto (auto)",
+      "speed_max": "Máx (sobre-suscripción)",
+      "reproduce_title": "Cómo reproducir esta semilla — paso a paso",
+      "reproduce_setup": "Configuración y prerrequisitos",
+      "reproduce_warnings": "Advertencias importantes"
     }
   }
 }
