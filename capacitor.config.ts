@@ -16,7 +16,8 @@ const config: CapacitorConfig = {
   },
   plugins: {
     SplashScreen: {
-      launchShowDuration: 1200,
+      // Short duration — the React BalatroSplash animation takes over immediately.
+      launchShowDuration: 600,
       launchAutoHide: true,
       backgroundColor: "#1c262a",
       androidScaleType: "CENTER_CROP",
