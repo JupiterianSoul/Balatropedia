@@ -1121,8 +1121,20 @@ export function SeedFinderTab() {
 export function FormatLocation({ j }: { j: SeedMatch["jokerLocations"][number] }): React.ReactElement {
   const t = useT();
   const anteLabel = t("ui.seedfinder.ante_label");
+  const anteByLabel = t("ui.seedfinder.ante_by");
+  const hintLabel = t("ui.seedfinder.exact_slot_hint");
   if (j.source === "shop") {
     const info = describeShopSlot(j.slot, j.ante);
+    if (info.unspecified) {
+      return (
+        <>
+          {anteByLabel} <span className="text-yellow-300 font-mono">{j.ante}</span>
+          {" · "}<span className="text-zinc-300">{t("ui.seedfinder.in_a_shop")}</span>
+          <br />
+          <span className="text-[10px] italic text-zinc-500">{hintLabel}</span>
+        </>
+      );
+    }
     return (
       <>
         {anteLabel} <span className="text-yellow-300 font-mono">{j.ante}</span>
@@ -1133,13 +1145,23 @@ export function FormatLocation({ j }: { j: SeedMatch["jokerLocations"][number] }
   }
   if (j.source === "buffoon-pack") {
     const info = describePackSlot(j.slot, j.ante);
+    if (info.unspecified) {
+      return (
+        <>
+          {anteByLabel} <span className="text-yellow-300 font-mono">{j.ante}</span>
+          {" · "}<span className="text-zinc-300">{t("ui.seedfinder.in_a_buffoon")}</span>
+          <br />
+          <span className="text-[10px] italic text-zinc-500">{hintLabel}</span>
+        </>
+      );
+    }
     return (
       <>
         {anteLabel} <span className="text-yellow-300 font-mono">{j.ante}</span>
         {" · "}<span className="text-zinc-300">{info.blindLabel}</span>
         {", "}<span className="text-yellow-300">{info.positionInShop === 1 ? t("ui.seedfinder.first_booster") : t("ui.seedfinder.second_booster")}</span>
-        {" ("}<span className="text-purple-300">{j.packName}</span>{")"}
-        {", " + t("ui.seedfinder.card") + " "}<span className="text-yellow-300 font-mono">#{j.packPosition}</span>
+        {j.packName ? <>{" ("}<span className="text-purple-300">{j.packName}</span>{")"}</> : null}
+        {j.packPosition > 0 ? <>{", " + t("ui.seedfinder.card") + " "}<span className="text-yellow-300 font-mono">#{j.packPosition}</span></> : null}
       </>
     );
   }
@@ -1148,12 +1170,24 @@ export function FormatLocation({ j }: { j: SeedMatch["jokerLocations"][number] }
     const soulType = j.source === "arcana-soul" ? t("ui.seedfinder.arcana")
       : j.source === "spectral-soul" ? t("ui.seedfinder.spectral")
       : t("ui.seedfinder.spectral_wraith_label");
+    const inAPack = j.source === "arcana-soul" ? t("ui.seedfinder.in_an_arcana") : t("ui.seedfinder.in_a_spectral");
+    if (info.unspecified) {
+      return (
+        <>
+          {anteByLabel} <span className="text-yellow-300 font-mono">{j.ante}</span>
+          {" · "}<span className="text-zinc-300">{inAPack}</span>{" "}
+          <span className="text-purple-300 italic">[{soulType} {t("ui.seedfinder.soul_card_suffix")}]</span>
+          <br />
+          <span className="text-[10px] italic text-zinc-500">{hintLabel}</span>
+        </>
+      );
+    }
     return (
       <>
         {anteLabel} <span className="text-yellow-300 font-mono">{j.ante}</span>
         {" · "}<span className="text-zinc-300">{info.blindLabel}</span>
         {", "}<span className="text-yellow-300">{info.positionInShop === 1 ? t("ui.seedfinder.first_booster") : t("ui.seedfinder.second_booster")}</span>
-        {" ("}<span className="text-purple-300">{j.packName}</span>{") "}
+        {j.packName ? <>{" ("}<span className="text-purple-300">{j.packName}</span>{") "}</> : " "}
         <span className="text-purple-300 italic">[{soulType} {t("ui.seedfinder.soul_card_suffix")}]</span>
       </>
     );
