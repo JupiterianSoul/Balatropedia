@@ -25,3 +25,8 @@ npm-debug.log*
 
 # Temp
 /tmp/
+
+# APK project (hidden from the running site; built locally only)
+# Note: the /apk directory is checked in (source + config) but its
+# build artifacts and synced web assets are gitignored via apk/.gitignore
+# Do NOT add /apk to vite's root or import anything from it in /client.
