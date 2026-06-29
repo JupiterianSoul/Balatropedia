@@ -51,7 +51,8 @@ function JokerFavRow({
 
   return (
     <div
-      className="balatro-card balatro-hover group flex cursor-pointer flex-col p-3.5 transition-transform"
+      className="balatro-card balatro-hover group flex cursor-pointer flex-col p-2 transition-transform sm:p-3.5"
+      data-balatro-card="joker"
       data-testid={`fav-joker-${j.id}`}
       data-sound="card_place"
       onClick={() => onOpen()}
@@ -71,9 +72,9 @@ function JokerFavRow({
         </div>
       )}
       <div className="flex items-start justify-between gap-2">
-        <div className="flex min-w-0 items-start gap-2.5">
-          <JokerSprite jokerId={j.id} name={displayName} size={56} />
-          <h3 className="min-w-0 font-display text-base font-bold leading-tight gold-text">
+        <div className="flex min-w-0 items-start gap-1.5 sm:gap-2.5">
+          <JokerSprite jokerId={j.id} name={displayName} size={44} />
+          <h3 className="min-w-0 font-display text-[13px] font-bold leading-tight gold-text sm:text-base">
             <LName category="jokers" id={j.id} fallback={j.name} />
           </h3>
         </div>
@@ -231,7 +232,7 @@ export function FavoritesTab() {
   const notePlaceholder = isSignedIn ? t("ui.tabs.fav_add_saved_note") : t("ui.tabs.fav_add_session_note");
 
   return (
-    <Tabs defaultValue="jokers" className="space-y-4">
+    <Tabs defaultValue="jokers" className="space-y-4 p-2 md:p-4">
       {!isSignedIn && (
         <div
           className="flex items-center gap-2.5 rounded-md border border-accent/30 bg-accent/[0.06] px-3.5 py-2.5 text-sm text-foreground/85"
@@ -241,7 +242,7 @@ export function FavoritesTab() {
           <span>{t("ui.tabs.fav_sign_in_note")}</span>
         </div>
       )}
-      <TabsList data-testid="tabs-favorites">
+      <TabsList className="sticky top-[60px] z-[5] md:static" data-testid="tabs-favorites">
         <TabsTrigger value="jokers" data-testid="tab-fav-jokers">
           {t("ui.tabs.fav_jokers")} <span className="ml-1.5 tabular text-xs text-muted-foreground">{jokerList.length}</span>
         </TabsTrigger>
@@ -254,7 +255,7 @@ export function FavoritesTab() {
         {jokerList.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
             {jokerList.map((j) => (
               <JokerFavRow
                 key={j.id}

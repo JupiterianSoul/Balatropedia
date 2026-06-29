@@ -561,30 +561,33 @@ export function SeedsTab() {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2 border-b border-yellow-500/30 pb-2">
+      {/* Sub-tab pills — sticky on phones so the user can swap views without
+          scrolling back up. Horizontal scroll fallback if the three buttons
+          overflow on small phones (they shouldn't, but defensive). */}
+      <div className="sticky top-[60px] z-[5] -mx-2 flex gap-2 overflow-x-auto border-b border-yellow-500/30 bg-[hsl(178_14%_13%)]/95 px-2 pb-2 pt-1 backdrop-blur md:static md:mx-0 md:overflow-visible md:bg-transparent md:px-0 md:pt-0 md:backdrop-blur-none">
         <Button
           variant={subTab === "analyzer" ? "default" : "ghost"}
           onClick={() => setSubTab("analyzer")}
-          className={subTab === "analyzer" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950" : ""}
+          className={(subTab === "analyzer" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950 " : "") + "shrink-0"}
           data-testid="tab-analyzer"
         >
-          <Telescope className="mr-2 h-4 w-4" /> Seed Analyzer
+          <Telescope className="mr-2 h-4 w-4" /> <span className="hidden sm:inline">Seed </span>Analyzer
         </Button>
         <Button
           variant={subTab === "finder" ? "default" : "ghost"}
           onClick={() => setSubTab("finder")}
-          className={subTab === "finder" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950" : ""}
+          className={(subTab === "finder" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950 " : "") + "shrink-0"}
           data-testid="tab-finder"
         >
-          <Target className="mr-2 h-4 w-4" /> Seed Finder
+          <Target className="mr-2 h-4 w-4" /> <span className="hidden sm:inline">Seed </span>Finder
         </Button>
         <Button
           variant={subTab === "library" ? "default" : "ghost"}
           onClick={() => setSubTab("library")}
-          className={subTab === "library" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950" : ""}
+          className={(subTab === "library" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950 " : "") + "shrink-0"}
           data-testid="tab-library"
         >
-          <Library className="mr-2 h-4 w-4" /> Seed Library
+          <Library className="mr-2 h-4 w-4" /> <span className="hidden sm:inline">Seed </span>Library
           {librarySize > 0 && <span className="ml-1.5 text-[10px] bg-zinc-800/80 px-1.5 py-0.5 rounded">{librarySize}</span>}
         </Button>
       </div>

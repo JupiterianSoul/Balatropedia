@@ -117,6 +117,55 @@ input[type="radio"],
   font-display: swap;
 }
 
+/* ============================================================
+   SELF-HOSTED VENDOR FONTS
+   Inter (variable, 400–700), Geist Mono (variable, 400–600),
+   Silkscreen (400 + 700), VT323 (400). Latin subset only — enough
+   for FR + EN. Total weight is ~105 KB across all five files,
+   smaller than a single round-trip to fonts.googleapis.com and
+   works fully offline inside the APK.
+   Source: Google Fonts, downloaded once, no runtime fetch.
+   ============================================================ */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/vendor/inter-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/vendor/geistmono-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Silkscreen";
+  src: url("/fonts/vendor/silkscreen-400-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Silkscreen";
+  src: url("/fonts/vendor/silkscreen-700-latin.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "VT323";
+  src: url("/fonts/vendor/vt323-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root,
 .dark {
   --ui-scale: 1;

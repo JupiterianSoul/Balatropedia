@@ -26,21 +26,11 @@
     <meta name="twitter:description" content="150 jokers, synergies, combos, archetypes, community tier lists, and build helpers for Balatro." />
     <meta name="twitter:image" content="https://balatro-explorer-m22k.onrender.com/og-image.png" />
     <!--
-      Web build only: pull Inter + Silkscreen/VT323 fallbacks for our display
-      font + Geist Mono. The APK uses the bundled m6x11plus font (loaded from
-      /fonts/m6x11plus.ttf) for nearly everything, and these external sheets
-      simply fail to load offline — the browser uses the local @font-face and
-      system fallbacks instead, so the APK suffers no visible regression.
-      Trimming from ~25 families saves ~1MB of cold-start network for the web
-      build and a noticeable connect+TLS hit when the WebView accidentally
-      tries to resolve them.
+      Fonts are fully self-hosted now. @font-face declarations live in
+      client/src/index.css and load woff2 files from /fonts/vendor/.
+      No network hit at boot — cold start works fully offline in the APK
+      and the web build no longer waits on fonts.googleapis.com.
     -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <div id="root"></div>

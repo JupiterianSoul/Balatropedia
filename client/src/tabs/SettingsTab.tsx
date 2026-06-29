@@ -76,7 +76,7 @@ export function SettingsTab() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6" data-testid="tab-settings">
+    <div className="mx-auto max-w-3xl space-y-6 p-2 md:p-4" data-testid="tab-settings">
       <header>
         <h2 className="font-pixel text-2xl text-accent">{t("ui.settings.title")}</h2>
         <p className="text-sm text-muted-foreground">{t("ui.settings.subtitle")}</p>
