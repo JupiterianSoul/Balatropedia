@@ -181,8 +181,11 @@ export function JokersTab() {
 
   return (
     <div className="space-y-5">
-      {}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      {/* Search + sort — sticks to the top on phones so it's reachable while
+          scrolling 150 jokers. `top` accounts for the mobile header height
+          (~56px once safe-area is applied). On md+ the sidebar handles nav,
+          so we don't sticky there. */}
+      <div className="sticky top-[60px] z-[5] -mx-4 flex flex-col gap-3 border-b-2 border-black/40 bg-[hsl(178_14%_13%)]/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:flex-row sm:items-center sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none">
         {isMobile ? mobileSearchTrigger : desktopInput}
         <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
           <SelectTrigger className="w-full bg-card sm:w-56" data-testid="select-sort">
@@ -265,7 +268,10 @@ export function JokersTab() {
           <Button variant="outline" size="sm" onClick={clearAll} data-testid="button-empty-clear">{t("ui.btn.clear_all")}</Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        // 2 columns on phones now (was 1) — with contain:content + mobile
+        // shadow-suppression on JokerCard, two columns of 75 cards still
+        // scrolls smoothly on the S25. Bumps to 3/4 cols on tablet/desktop.
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((j) => (
             <JokerCard key={j.id} joker={j} />
           ))}

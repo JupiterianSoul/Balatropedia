@@ -32,6 +32,12 @@ type EngineModule = {
     partial: boolean,
     minScore: number,
   ) => Uint8Array;
+  inspect_seed: (
+    filterJson: string,
+    seed: string,
+    deckIdx: number,
+    stakeIdx: number,
+  ) => string;
 };
 
 // ─── SIMD detection ──────────────────────────────────────────────────────────
@@ -62,10 +68,11 @@ async function getEngine(scalarJs: string, scalarWasm: string, simdJs: string, s
         default: (opts?: { module_or_path?: string }) => Promise<unknown>;
         init: () => void;
         scan_chunk: EngineModule["scan_chunk"];
+        inspect_seed: EngineModule["inspect_seed"];
       };
       await mod.default({ module_or_path: wasmUrl });
       mod.init();
-      return { engine: { init: mod.init, scan_chunk: mod.scan_chunk }, simd };
+      return { engine: { init: mod.init, scan_chunk: mod.scan_chunk, inspect_seed: mod.inspect_seed }, simd };
     })();
   }
   return enginePromise;
@@ -85,6 +92,23 @@ function decodeRecords(buf: Uint8Array): Array<{ score: number; seed: string }> 
     out.push({ score, seed });
   }
   return out;
+}
+
+// Per-match enrichment: call inspect_seed to extract real clause-level
+// ante/slot/pack details. Failures fall back to a bare match (no inspect
+// payload) so the main thread can decide how to render.
+function inspectMatch(
+  engine: EngineModule,
+  filterJson: string,
+  seed: string,
+  deckIdx: number,
+  stakeIdx: number,
+): string | null {
+  try {
+    return engine.inspect_seed(filterJson, seed, deckIdx, stakeIdx);
+  } catch {
+    return null;
+  }
 }
 
 // ─── Deck / stake mapping (matches engine wasm_api::deck_from_idx) ──────────
@@ -171,7 +195,7 @@ async function handleScan(msg: ScanMsg): Promise<void> {
   // would skip emitting progress for the first ~250 ms even with a fast
   // first batch.
   let lastProgress = startedAt - PROGRESS_INTERVAL_MS;
-  let pendingMatches: Array<{ score: number; seed: string }> = [];
+  let pendingMatches: Array<{ score: number; seed: string; inspect: string | null }> = [];
   let lastMatchFlush = startedAt;
 
   while (remaining > 0 && !stopRequested) {
@@ -198,7 +222,14 @@ async function handleScan(msg: ScanMsg): Promise<void> {
 
     const matches = decodeRecords(raw);
     if (matches.length > 0) {
-      pendingMatches.push(...matches);
+      // Enrich each match in-worker with the structured inspect_seed report.
+      // This keeps the heavy per-clause work off the main thread and lets the
+      // UI render real ante / shop slot / pack # info instead of placeholders.
+      const enriched = matches.map((m) => ({
+        ...m,
+        inspect: inspectMatch(engine, msg.filterJson, m.seed, deckIdx, stakeIdx),
+      }));
+      pendingMatches.push(...enriched);
     }
 
     cursor += thisBatch;

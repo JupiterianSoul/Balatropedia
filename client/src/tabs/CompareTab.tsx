@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { X } from "lucide-react";
+import { TabIntro } from "@/components/TabIntro";
+import { GitCompare, X } from "lucide-react";
 import { useApp } from "@/lib/appContext";
 import {
   JOKER_MAP, ARCHETYPE_LABELS,
@@ -60,6 +61,9 @@ export function CompareTab() {
 
   return (
     <div className="space-y-5">
+      <TabIntro Icon={GitCompare} title={t("ui.intro.compare.title")}>
+        {t("ui.intro.compare.desc")}
+      </TabIntro>
       <div className="max-w-sm">
         <JokerMultiCombobox values={ids} onChange={setIds} max={4} testId="combobox-compare" />
         <p className="mt-1.5 text-xs text-muted-foreground">{t("ui.tabs.compare_select_hint")}</p>

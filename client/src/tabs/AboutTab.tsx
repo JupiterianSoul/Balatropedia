@@ -56,7 +56,7 @@ export function AboutTab() {
   const t = useT();
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6" data-testid="tab-about">
+    <div className="mx-auto max-w-3xl space-y-6 p-2 md:p-4" data-testid="tab-about">
       <header>
         <h2 className="font-pixel text-2xl text-accent">{t("ui.about.title")}</h2>
         <p className="text-sm text-muted-foreground">{t("ui.about.subtitle")}</p>

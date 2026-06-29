@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Star, AlertTriangle } from "lucide-react";
+import { Star, AlertTriangle, CheckSquare, Square } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Level, Role, Scaling, Stage, JOKER_MAP, Rarity, Popularity, Difficulty,
@@ -148,6 +148,55 @@ export function StarToggle({
         size={size}
         className={cn(active && "fill-accent text-accent")}
       />
+    </button>
+  );
+}
+
+/**
+ * Flat icon-only on/off toggle matching the favorite (StarToggle) pattern.
+ * Renders a CheckSquare icon that fills with the accent color when active
+ * and stays muted (empty Square) when inactive. Use anywhere a Switch or
+ * raw checkbox would otherwise appear.
+ */
+export function CheckToggle({
+  active,
+  onToggle,
+  testId,
+  ariaLabel,
+  size = 18,
+  disabled = false,
+}: {
+  active: boolean;
+  onToggle: () => void;
+  testId: string;
+  ariaLabel: string;
+  size?: number;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      data-no-sound
+      onClick={(e) => {
+        e.stopPropagation();
+        if (disabled) return;
+        playSound(active ? "toggle_off" : "favorite");
+        onToggle();
+      }}
+      aria-label={ariaLabel}
+      aria-pressed={active}
+      role="switch"
+      aria-checked={active}
+      aria-disabled={disabled}
+      data-testid={testId}
+      disabled={disabled}
+      className="rounded-sm p-1 text-muted-foreground transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-muted-foreground"
+    >
+      {active ? (
+        <CheckSquare size={size} className="fill-accent text-accent" />
+      ) : (
+        <Square size={size} />
+      )}
     </button>
   );
 }

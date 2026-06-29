@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -59,10 +59,24 @@ export function JokerCombobox({
   const [open, setOpen] = useState(false);
   const t = useT();
   const ph = placeholder ?? t("ui.combobox.select_joker");
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  // When the dropdown opens (typically followed by the OS keyboard sliding up
+  // on Android), scroll the trigger near the top of the viewport so neither
+  // the input nor the result list ends up underneath the keyboard.
+  useEffect(() => {
+    if (!open) return;
+    const el = triggerRef.current;
+    if (!el) return;
+    const id = window.setTimeout(() => {
+      try { el.scrollIntoView({ block: "start", behavior: "smooth" }); } catch {}
+    }, 50);
+    return () => window.clearTimeout(id);
+  }, [open]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          ref={triggerRef}
           variant="outline"
           role="combobox"
           aria-expanded={open}
@@ -112,6 +126,16 @@ export function JokerMultiCombobox({
   const [open, setOpen] = useState(false);
   const t = useT();
   const atMax = values.length >= max;
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    if (!open) return;
+    const el = triggerRef.current;
+    if (!el) return;
+    const id = window.setTimeout(() => {
+      try { el.scrollIntoView({ block: "start", behavior: "smooth" }); } catch {}
+    }, 50);
+    return () => window.clearTimeout(id);
+  }, [open]);
 
   function toggle(id: string) {
     if (values.includes(id)) onChange(values.filter((v) => v !== id));
@@ -122,6 +146,7 @@ export function JokerMultiCombobox({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          ref={triggerRef}
           variant="outline"
           role="combobox"
           data-testid={testId}

@@ -1,3 +1,8 @@
+/**
+ * @deprecated V1 seed-finder Web Worker. Kept ONLY for the `?legacy=1` fallback
+ * path in SeedFinderTab. Default users run `seedFinderV2Worker(Threaded).ts`.
+ * Do not extend this file — add new features to V2.
+ */
 
 let Module: any = null;
 let ready = false;

@@ -1,6 +1,4 @@
 import { createContext, useContext, useState, useCallback, useMemo, ReactNode, useEffect } from "react";
-import { useAuth } from "@/lib/auth";
-import { apiRequest, queryClient } from "@/lib/queryClient";
 
 import uiEn from "@/data/i18n/ui_en.json";
 import uiFr from "@/data/i18n/ui_fr.json";
@@ -63,32 +61,25 @@ interface I18nState {
 
 const I18nContext = createContext<I18nState | null>(null);
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const { user, isSignedIn } = useAuth();
-  const [lang, setLangState] = useState<Lang>(detectLang);
+const LANG_STORAGE_KEY = "bp.lang.v1";
 
-  useEffect(() => {
-    const userLang = user?.language as Lang | undefined;
-    if (userLang && (userLang === "en" || userLang === "fr" || userLang === "es")) {
-      setLangState(userLang);
+export function I18nProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>(() => {
+    if (typeof localStorage !== "undefined") {
+      const stored = localStorage.getItem(LANG_STORAGE_KEY);
+      if (stored === "en" || stored === "fr" || stored === "es") return stored;
     }
-  }, [user?.language]);
+    return detectLang();
+  });
 
   const setLang = useCallback(
     (l: Lang) => {
       setLangState(l);
-      if (isSignedIn) {
-
-        apiRequest("PATCH", "/api/auth/language", { language: l })
-          .then(() => {
-            queryClient.setQueryData(["/api/auth/me"], (prev: any) =>
-              prev ? { ...prev, language: l } : prev,
-            );
-          })
-          .catch(() => {});
-      }
+      try {
+        localStorage.setItem(LANG_STORAGE_KEY, l);
+      } catch {}
     },
-    [isSignedIn],
+    [],
   );
 
   const t = useCallback(

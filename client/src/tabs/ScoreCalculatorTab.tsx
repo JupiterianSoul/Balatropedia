@@ -3,7 +3,7 @@ import { Plus, X, ArrowUp, ArrowDown, Trash2, Calculator, Wand2, RefreshCcw } fr
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { CheckToggle } from "@/components/primitives";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -13,7 +13,7 @@ import { JokerSprite } from "@/components/JokerSprite";
 import { JOKER_MAP } from "@/lib/helpers";
 import { computeScore, detectHand, optimizeJokerOrder } from "@/lib/calcEngine";
 import { ALL_HANDS, HAND_LEVELS } from "@/lib/handLevels";
-import { useCuratedText } from "@/lib/i18n";
+import { useT } from "@/lib/i18n";
 import type {
   PlayingCard, JokerInstance, CalcInput, Rank, Suit,
   CardEnhancement, CardEdition, CardSeal, HandKey, JokerEdition,
@@ -104,6 +104,7 @@ function JokerSlotEditor({
   slot: JokerInstance; onChange: (j: JokerInstance) => void;
   onRemove: () => void; onUp: () => void; onDown: () => void; idx: number;
 }) {
+  const t = useT();
   const meta = JOKER_MAP[slot.jokerId];
   const showState = meta && (meta.scaling !== "static");
   return (
@@ -115,11 +116,11 @@ function JokerSlotEditor({
           <JokerCombobox
             value={slot.jokerId}
             onChange={(id) => onChange({ ...slot, jokerId: id })}
-            placeholder="Pick joker..."
+            placeholder={t("ui.calculator.pick_joker")}
           />
         </div>
-        <Button size="icon" variant="ghost" className="h-7 w-7" onClick={onUp} title="Move left"><ArrowUp className="h-3.5 w-3.5" /></Button>
-        <Button size="icon" variant="ghost" className="h-7 w-7" onClick={onDown} title="Move right"><ArrowDown className="h-3.5 w-3.5" /></Button>
+        <Button size="icon" variant="ghost" className="h-7 w-7" onClick={onUp} title={t("ui.calculator.move_left")}><ArrowUp className="h-3.5 w-3.5" /></Button>
+        <Button size="icon" variant="ghost" className="h-7 w-7" onClick={onDown} title={t("ui.calculator.move_right")}><ArrowDown className="h-3.5 w-3.5" /></Button>
         <Button size="icon" variant="ghost" className="h-7 w-7" onClick={onRemove}><X className="h-3.5 w-3.5" /></Button>
       </div>
       <div className="grid grid-cols-2 gap-1.5">
@@ -128,8 +129,13 @@ function JokerSlotEditor({
           <SelectContent>{JOKER_EDS.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}</SelectContent>
         </Select>
         <label className="flex items-center gap-2 text-xs">
-          <Switch checked={slot.disabled} onCheckedChange={(v) => onChange({ ...slot, disabled: v })} />
-          <span className="text-muted-foreground">disabled</span>
+          <CheckToggle
+            active={!!slot.disabled}
+            onToggle={() => onChange({ ...slot, disabled: !slot.disabled })}
+            testId="toggle-slot-disabled"
+            ariaLabel={t("ui.calculator.disabled")}
+          />
+          <span className="text-muted-foreground">{t("ui.calculator.disabled")}</span>
         </label>
       </div>
       {showState && (
@@ -159,7 +165,7 @@ function JokerSlotEditor({
 }
 
 export function ScoreCalculatorTab() {
-  const t = useCuratedText;
+  const t = useT();
   const [hand, setHand] = useState<HandKey>("pair");
   const [handLevel, setHandLevel] = useState(1);
   const [played, setPlayed] = useState<PlayingCard[]>([freshCard(), freshCard()]);
@@ -233,18 +239,18 @@ export function ScoreCalculatorTab() {
       <div className="rounded-lg border border-border/60 bg-card/40 p-4">
         <div className="flex items-center gap-2 mb-3">
           <Calculator className="h-4 w-4 text-accent" />
-          <h2 className="text-lg font-bold">{t("calculator.title", "Score Calculator")}</h2>
+          <h2 className="text-lg font-bold">{t("ui.calculator.title")}</h2>
         </div>
         <p className="text-xs text-muted-foreground">
-          {t("calculator.desc", "Per-card breakdown, joker order, scaling state, deck modifiers, full timeline.")}
+          {t("ui.calculator.desc")}
         </p>
       </div>
 
       <Tabs defaultValue="setup">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="setup">Setup</TabsTrigger>
-          <TabsTrigger value="result">Result</TabsTrigger>
-          <TabsTrigger value="timeline">Timeline ({result.timeline.length})</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 gap-2">
+          <TabsTrigger value="setup" className="balatro-tab">{t("ui.calculator.setup")}</TabsTrigger>
+          <TabsTrigger value="result" className="balatro-tab">{t("ui.calculator.result")}</TabsTrigger>
+          <TabsTrigger value="timeline" className="balatro-tab">{t("ui.calculator.timeline")} ({result.timeline.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="setup" className="space-y-4 mt-4">
@@ -252,7 +258,7 @@ export function ScoreCalculatorTab() {
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs">Deck</Label>
+                <Label className="text-xs">{t("ui.calculator.deck")}</Label>
                 <Select value={deckId} onValueChange={setDeckId}>
                   <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -262,14 +268,19 @@ export function ScoreCalculatorTab() {
               </div>
               <div className="flex items-end">
                 <label className="flex items-center gap-2 text-xs">
-                  <Switch checked={autoDetectHand} onCheckedChange={setAutoDetectHand} />
-                  <span>Auto-detect played hand from cards</span>
+                  <CheckToggle
+                    active={autoDetectHand}
+                    onToggle={() => setAutoDetectHand(!autoDetectHand)}
+                    testId="toggle-auto-detect"
+                    ariaLabel={t("ui.calculator.auto_detect")}
+                  />
+                  <span>{t("ui.calculator.auto_detect")}</span>
                 </label>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div>
-                <Label className="text-xs">{t("calculator.hand", "Hand")}</Label>
+                <Label className="text-xs">{t("ui.calculator.hand")}</Label>
                 <Select value={hand} onValueChange={(v) => { setAutoDetectHand(false); setHand(v as HandKey); }}>
                   <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -278,18 +289,18 @@ export function ScoreCalculatorTab() {
                 </Select>
               </div>
               <div>
-                <Label className="text-xs">{t("calculator.level", "Level")}</Label>
+                <Label className="text-xs">{t("ui.calculator.level")}</Label>
                 <Input type="number" min={1} max={50} value={handLevel} onChange={(e) => setHandLevel(Math.max(1, Math.min(50, Number(e.target.value) || 1)))} className="h-8" />
               </div>
               <div className="text-xs text-muted-foreground self-end">
-                base: <span className="chips-text">{baseChips}</span>
+                {t("ui.calculator.base")}: <span className="chips-text">{baseChips}</span>
                 {" x "}
                 <span className="mult-text">{baseMult}</span>
               </div>
             </div>
             {plasmaDeck && (
               <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-2 text-xs text-amber-200">
-                Plasma deck: final score = floor(((chips + mult) / 2)^2). Chips and mult equalize.
+                {t("ui.calculator.plasma_note")}
               </div>
             )}
           </section>
@@ -297,9 +308,9 @@ export function ScoreCalculatorTab() {
           { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">{t("calculator.played", "Played cards")} ({played.length}/5)</h3>
+              <h3 className="text-sm font-semibold">{t("ui.calculator.played_cards")} ({played.length}/5)</h3>
               <div className="flex gap-1">
-                <Button size="sm" variant="outline" onClick={addPlayed} disabled={played.length >= 5}><Plus className="h-3.5 w-3.5 mr-1" />{t("calculator.addCard", "Add")}</Button>
+                <Button size="sm" variant="outline" onClick={addPlayed} disabled={played.length >= 5}><Plus className="h-3.5 w-3.5 mr-1" />{t("ui.calculator.add")}</Button>
                 <Button size="sm" variant="outline" onClick={() => setPlayed([])} disabled={played.length === 0}><Trash2 className="h-3.5 w-3.5" /></Button>
               </div>
             </div>
@@ -309,20 +320,20 @@ export function ScoreCalculatorTab() {
                   onChange={(nc) => setPlayed(played.map((p, j) => j === i ? nc : p))}
                   onRemove={() => setPlayed(played.filter((_, j) => j !== i))} />
               ))}
-              {played.length === 0 && <p className="text-xs text-muted-foreground italic">No cards. Score = 0.</p>}
+              {played.length === 0 && <p className="text-xs text-muted-foreground italic">{t("ui.calculator.no_cards")}</p>}
             </div>
           </section>
 
           { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">{t("calculator.inHand", "In-hand (not played)")} ({inHand.length}/8)</h3>
+              <h3 className="text-sm font-semibold">{t("ui.calculator.in_hand")} ({inHand.length}/8)</h3>
               <div className="flex gap-1">
-                <Button size="sm" variant="outline" onClick={addInHand} disabled={inHand.length >= 8}><Plus className="h-3.5 w-3.5 mr-1" />Add</Button>
+                <Button size="sm" variant="outline" onClick={addInHand} disabled={inHand.length >= 8}><Plus className="h-3.5 w-3.5 mr-1" />{t("ui.calculator.add")}</Button>
                 <Button size="sm" variant="outline" onClick={() => setInHand([])} disabled={inHand.length === 0}><Trash2 className="h-3.5 w-3.5" /></Button>
               </div>
             </div>
-            <p className="text-[11px] text-muted-foreground">Steel cards here give x1.5 each. Gold cards give $3 (utility). Baron / Shoot the Moon / Raised Fist read Kings, Queens, and lowest rank from here.</p>
+            <p className="text-[11px] text-muted-foreground">{t("ui.calculator.in_hand_note")}</p>
             <div className="flex flex-wrap gap-2">
               {inHand.map((c, i) => (
                 <CardEditor key={c.id} card={c}
@@ -335,12 +346,12 @@ export function ScoreCalculatorTab() {
           { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">{t("calculator.jokers", "Jokers (left to right)")} ({jokers.length}/5)</h3>
+              <h3 className="text-sm font-semibold">{t("ui.calculator.jokers_lr")} ({jokers.length}/5)</h3>
               <div className="flex gap-1">
-                <Button size="sm" variant="outline" onClick={optimize} disabled={jokers.length < 2} title="Try all permutations and pick the order with highest score">
-                  <Wand2 className="h-3.5 w-3.5 mr-1" /> Optimize order
+                <Button size="sm" variant="outline" onClick={optimize} disabled={jokers.length < 2} title={t("ui.calculator.try_permutations")}>
+                  <Wand2 className="h-3.5 w-3.5 mr-1" /> {t("ui.calculator.optimize_order")}
                 </Button>
-                <Button size="sm" variant="outline" onClick={addJoker} disabled={jokers.length >= 5}><Plus className="h-3.5 w-3.5 mr-1" />Add</Button>
+                <Button size="sm" variant="outline" onClick={addJoker} disabled={jokers.length >= 5}><Plus className="h-3.5 w-3.5 mr-1" />{t("ui.calculator.add")}</Button>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -351,21 +362,45 @@ export function ScoreCalculatorTab() {
                   onUp={() => moveJoker(i, -1)} onDown={() => moveJoker(i, 1)} />
               ))}
             </div>
-            {jokers.length === 0 && <p className="text-xs text-muted-foreground italic">No jokers. Add some to see their contribution.</p>}
+            {jokers.length === 0 && <p className="text-xs text-muted-foreground italic">{t("ui.calculator.no_jokers")}</p>}
           </section>
 
           { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-3">
-            <h3 className="text-sm font-semibold">{t("calculator.modifiers", "Modifiers")}</h3>
+            <h3 className="text-sm font-semibold">{t("ui.calculator.modifiers")}</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-              <label className="flex items-center gap-2"><Switch checked={observatory} onCheckedChange={setObservatory} /> Observatory voucher</label>
-              <label className="flex items-center gap-2"><Switch checked={flintBoss} onCheckedChange={setFlintBoss} /> The Flint (boss)</label>
-              <label className="flex items-center gap-2"><Switch checked={eyeBoss} onCheckedChange={setEyeBoss} /> The Eye (boss)</label>
-              <Button size="sm" variant="outline" onClick={reset}><RefreshCcw className="h-3.5 w-3.5 mr-1" /> Reset</Button>
+              <label className="flex items-center gap-2">
+                <CheckToggle
+                  active={observatory}
+                  onToggle={() => setObservatory(!observatory)}
+                  testId="toggle-observatory"
+                  ariaLabel={t("ui.calculator.observatory")}
+                />
+                {t("ui.calculator.observatory")}
+              </label>
+              <label className="flex items-center gap-2">
+                <CheckToggle
+                  active={flintBoss}
+                  onToggle={() => setFlintBoss(!flintBoss)}
+                  testId="toggle-flint-boss"
+                  ariaLabel={t("ui.calculator.flint_boss")}
+                />
+                {t("ui.calculator.flint_boss")}
+              </label>
+              <label className="flex items-center gap-2">
+                <CheckToggle
+                  active={eyeBoss}
+                  onToggle={() => setEyeBoss(!eyeBoss)}
+                  testId="toggle-eye-boss"
+                  ariaLabel={t("ui.calculator.eye_boss")}
+                />
+                {t("ui.calculator.eye_boss")}
+              </label>
+              <Button size="sm" variant="outline" onClick={reset}><RefreshCcw className="h-3.5 w-3.5 mr-1" /> {t("ui.calculator.reset")}</Button>
             </div>
             {observatory && (
               <div>
-                <Label className="text-xs">Planet cards in consumable area (each matching played hand gives x1.5)</Label>
+                <Label className="text-xs">{t("ui.calculator.planet_cards")}</Label>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {ALL_HANDS.map(h => {
                     const has = obsPlanets.includes(h as HandKey);
@@ -388,17 +423,17 @@ export function ScoreCalculatorTab() {
           <section className="rounded-lg border-2 border-accent/40 bg-card/60 p-4 space-y-3">
             <div className="flex items-baseline justify-center gap-4">
               <div className="text-center">
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Chips</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("ui.calculator.chips")}</div>
                 <div className="text-3xl font-bold chips-text">{result.chips.toLocaleString()}</div>
               </div>
               <div className="text-2xl text-muted-foreground">x</div>
               <div className="text-center">
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Mult</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("ui.calculator.mult")}</div>
                 <div className="text-3xl font-bold mult-text">{result.mult.toLocaleString()}</div>
               </div>
               <div className="text-2xl text-muted-foreground">=</div>
               <div className="text-center">
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Score</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("ui.calculator.score")}</div>
                 <div className="text-4xl font-bold text-[hsl(var(--bal-gold))]">{result.score.toLocaleString()}</div>
               </div>
             </div>
@@ -414,7 +449,7 @@ export function ScoreCalculatorTab() {
 
           { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-2">
-            <h3 className="text-sm font-semibold">Contribution summary</h3>
+            <h3 className="text-sm font-semibold">{t("ui.calculator.contribution")}</h3>
             <SummaryTable result={result} />
           </section>
         </TabsContent>
@@ -422,7 +457,7 @@ export function ScoreCalculatorTab() {
         <TabsContent value="timeline" className="mt-4">
           { }
           <section className="rounded-lg border border-border/60 bg-card/40 p-3">
-            <h3 className="text-sm font-semibold mb-2">{t("calculator.timeline", "Score timeline")}</h3>
+            <h3 className="text-sm font-semibold mb-2">{t("ui.calculator.score_timeline")}</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>

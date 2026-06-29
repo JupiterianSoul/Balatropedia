@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor, Maximize2, Expand } from "lucide-react";
+import { Volume2, VolumeX, Trash2, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor, Maximize2, Expand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SectionLabel } from "@/components/primitives";
@@ -13,14 +13,13 @@ import { useI18n, useT, type Lang } from "@/lib/i18n";
 import { useTheme, THEME_OPTIONS, type Theme } from "@/lib/theme";
 import { useShake, SHAKE_DEFAULTS } from "@/lib/screenshake";
 import { useCRT, CRT_DEFAULTS } from "@/lib/crt";
-import { useUIScale, UI_SCALE_MIN, UI_SCALE_MAX, UI_SCALE_STEP } from "@/lib/uiScale";
+import { useUIScale, UI_SCALE_PRESETS } from "@/lib/uiScale";
 import {
   useAppScale,
   APP_SCALE_MIN, APP_SCALE_MAX, APP_SCALE_STEP,
 } from "@/lib/appScale";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useApp } from "@/lib/appContext";
-import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 
 const LANG_OPTIONS: { code: Lang; label: string }[] = [
@@ -34,7 +33,6 @@ export function SettingsTab() {
   const { lang, setLang } = useI18n();
   const { toast } = useToast();
   const { favoriteJokers, favoriteCombos, toggleFavoriteJoker, toggleFavoriteCombo } = useApp();
-  const { isSignedIn, signOut, user } = useAuth();
 
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [volume, setVolume] = useState(getSoundVolume());
@@ -66,17 +64,8 @@ export function SettingsTab() {
     toast({ title: t("ui.settings.reset_done") });
   }
 
-  async function handleSignOut() {
-    try {
-      await signOut();
-      toast({ title: t("ui.settings.signed_out") });
-    } catch (e: any) {
-      toast({ title: t("ui.settings.signout_failed"), description: String(e?.message ?? e), variant: "destructive" });
-    }
-  }
-
   return (
-    <div className="mx-auto max-w-3xl space-y-6" data-testid="tab-settings">
+    <div className="mx-auto max-w-3xl space-y-6 p-2 md:p-4" data-testid="tab-settings">
       <header>
         <h2 className="font-pixel text-2xl text-accent">{t("ui.settings.title")}</h2>
         <p className="text-sm text-muted-foreground">{t("ui.settings.subtitle")}</p>
@@ -143,20 +132,30 @@ export function SettingsTab() {
           <span className="text-xs text-muted-foreground">{t("ui.settings.ui_scale.label")}</span>
           <span className="font-pixel text-xs tabular text-accent">{Math.round(uiScale * 100)}%</span>
         </div>
-        <Slider
-          min={Math.round(UI_SCALE_MIN * 100)}
-          max={Math.round(UI_SCALE_MAX * 100)}
-          step={Math.round(UI_SCALE_STEP * 100)}
-          value={[Math.round(uiScale * 100)]}
-          onValueChange={(v) => { setUIScale((v[0] ?? 100) / 100); }}
-          data-testid="slider-ui-scale"
-        />
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">{t("ui.settings.ui_scale.hint")}</p>
-          <Button variant="outline" size="sm" onClick={() => setUIScale(1)} data-testid="button-ui-scale-reset">
-            {t("ui.settings.ui_scale.reset")}
-          </Button>
+        <div className="grid grid-cols-3 gap-2" data-testid="ui-scale-presets">
+          {UI_SCALE_PRESETS.map((preset, i) => {
+            const labelKey = i === 0 ? "ui.settings.ui_scale.small"
+              : i === 1 ? "ui.settings.ui_scale.medium"
+              : "ui.settings.ui_scale.big";
+            const active = Math.abs(uiScale - preset) < 0.001;
+            return (
+              <Button
+                key={preset}
+                variant={active ? "default" : "outline"}
+                size="sm"
+                onClick={() => setUIScale(preset)}
+                data-testid={`button-ui-scale-${i === 0 ? "small" : i === 1 ? "medium" : "big"}`}
+                aria-pressed={active}
+              >
+                <span className="flex flex-col items-center leading-tight">
+                  <span>{t(labelKey)}</span>
+                  <span className="text-[10px] opacity-70">{Math.round(preset * 100)}%</span>
+                </span>
+              </Button>
+            );
+          })}
         </div>
+        <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.ui_scale.hint")}</p>
       </section>
 
       {/* UI SIZE (desktop only — mobile uses native phone zoom) */}
@@ -164,10 +163,10 @@ export function SettingsTab() {
         <section className="casino-card p-4" data-testid="section-app-scale">
           <div className="mb-3 flex items-center gap-1.5">
             <Expand className="h-3.5 w-3.5 text-accent" />
-            <SectionLabel>UI Size</SectionLabel>
+            <SectionLabel>{t("ui.settings.ui_size.title")}</SectionLabel>
           </div>
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">Overall interface size</span>
+            <span className="text-xs text-muted-foreground">{t("ui.settings.ui_size.label")}</span>
             <span className="font-pixel text-xs tabular text-accent">{Math.round(pendingAppScale * 100)}%</span>
           </div>
           <Slider
@@ -180,9 +179,9 @@ export function SettingsTab() {
             data-testid="slider-app-scale"
           />
           <div className="mt-2 flex items-center justify-between gap-2">
-            <p className="text-xs text-muted-foreground">Scales the whole interface. Applies when you release the slider.</p>
+            <p className="text-xs text-muted-foreground">{t("ui.settings.ui_size.hint")}</p>
             <Button variant="outline" size="sm" onClick={() => { setPendingAppScale(1); setAppScale(1); }} data-testid="button-app-scale-reset">
-              Reset
+              {t("ui.settings.ui_size.reset")}
             </Button>
           </div>
         </section>
@@ -344,26 +343,6 @@ export function SettingsTab() {
             </AlertDialog>
           </div>
 
-          {isSignedIn ? (
-            <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-card/50 px-3 py-2">
-              <div className="min-w-0">
-                <div className="font-medium text-sm">{t("ui.settings.signed_in_as")}</div>
-                <div className="truncate text-xs text-muted-foreground">{user?.email}</div>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5"
-                onClick={handleSignOut}
-                data-testid="button-settings-signout"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                {t("ui.settings.signout")}
-              </Button>
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground">{t("ui.settings.sign_in_to_sync")}</p>
-          )}
         </div>
       </section>
 

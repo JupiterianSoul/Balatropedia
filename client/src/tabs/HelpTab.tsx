@@ -44,7 +44,7 @@ export function HelpTab() {
   const [active, setActive] = useState(SECTIONS[0].key);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-5" data-testid="tab-help">
+    <div className="mx-auto max-w-5xl space-y-5 p-2 md:p-4" data-testid="tab-help">
       <header>
         <h2 className="font-pixel text-2xl text-accent">{t("ui.help.title")}</h2>
         <p className="text-sm text-muted-foreground">{t("ui.help.subtitle")}</p>
