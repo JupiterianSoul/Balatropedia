@@ -2,6 +2,11 @@
 export interface JokerConstraint {
   joker: string;
   edition?: "" | "Negative" | "Polychrome" | "Holographic" | "Foil";
+  // Optional sticker constraint (gold/orange/black-stake territory).
+  sticker?: "" | "eternal" | "perishable" | "rental";
+  // Engine slot constraint. 0..15 picks a specific shop slot; "any" (255)
+  // matches any of the first 16 slots, equivalent to "any reroll up to 12".
+  slot?: number;
   source?: "" | "shop" | "buffoon-pack" | "arcana-soul" | "spectral-soul" | "spectral-wraith";
   maxAnte: number;
 }
@@ -13,6 +18,21 @@ export interface VoucherConstraint {
 
 export interface TagConstraint {
   tag: string;
+  // 0 = small-blind tag (default), 1 = big-blind tag.
+  position?: 0 | 1;
+  maxAnte: number;
+}
+
+export interface BossConstraint {
+  boss: string;
+  maxAnte: number;
+}
+
+export interface StandardCardConstraint {
+  base?: string;           // e.g. "Ace of Spades" — empty = any base
+  enhancement?: string;    // e.g. "Glass Card"
+  edition?: "" | "Foil" | "Holographic" | "Polychrome";
+  seal?: "" | "Red Seal" | "Blue Seal" | "Gold Seal" | "Purple Seal";
   maxAnte: number;
 }
 
@@ -20,6 +40,8 @@ export interface FinderConfig {
   jokerConstraints: JokerConstraint[];
   voucherConstraints?: VoucherConstraint[];
   tagConstraints?: TagConstraint[];
+  bossConstraints?: BossConstraint[];
+  standardCardConstraints?: StandardCardConstraint[];
   maxAnte: number;
   deck: string;
   stake: string;

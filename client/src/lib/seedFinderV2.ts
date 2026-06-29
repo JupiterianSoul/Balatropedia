@@ -6,9 +6,14 @@
 // the base-35 seed space.
 //
 // Honest-disclosure (mirrored in the in-product tooltip):
-//   - Standard pack card-level contents not yet modelled.
-//   - No bit-for-bit Immolate parity sweep yet (only 100k statistical sanity).
-//   - The original Immolate-backed finder remains the verified default.
+//   - Standard pack card-level contents modelled in v2.1 (base/enh/edi/seal).
+//   - Edition + sticker constraints honoured in v2.1.
+//   - Multi-slot shop scan honoured in v2.1 (slot 0..15 + "any reroll").
+//   - Soul → specific legendary AND Wraith → specific Rare resolution.
+//   - Tag big-blind position honoured in v2.1.
+//   - Boss filter honoured in v2.1.
+//   - Statistical sanity verified against analytical priors;
+//     full bit-for-bit Immolate parity sweep is the next milestone.
 
 import type {
   FinderCallbacks,
@@ -35,11 +40,17 @@ function isLegendary(name: string): boolean {
 // Engine filter shape (matches engine/src/filter.rs):
 //   { clauses: [{ kind, ... }, ...], partial: bool, min_score: number|null }
 type EngineClause =
-  | { kind: "ante_shop_has_joker"; ante: number; slot: number; joker: string }
+  | { kind: "ante_shop_has_joker"; ante: number; slot: number; joker: string;
+      edition?: string; sticker?: string }
   | { kind: "ante_tag_is"; ante: number; position: number; tag: string }
+  | { kind: "ante_boss_is"; ante: number; boss: string }
   | { kind: "voucher_is"; ante: number; voucher: string }
   | { kind: "ante_pack_contains"; ante: number; pack_index: number; card: string }
   | { kind: "ante_any_pack_contains"; ante: number; max_packs: number; card: string }
+  | { kind: "ante_soul_is"; ante: number; max_packs: number; joker: string }
+  | { kind: "ante_wraith_is"; ante: number; max_packs: number; joker: string }
+  | { kind: "ante_standard_card_is"; ante: number; max_packs: number; base: string;
+      enhancement?: string; edition?: string; seal?: string }
   | { kind: "any_of"; clauses: EngineClause[] };
 
 interface EngineFilter {
@@ -79,15 +90,31 @@ function buildFilterJson(cfg: FinderConfig): string {
       ? "legendary-soul"
       : (srcRaw && srcRaw !== "" ? srcRaw : "shop");
 
+    // Edition / sticker normalisation — engine expects lowercase keys.
+    const editionKey = jc.edition ? jc.edition.toLowerCase() : undefined;
+    const stickerKey = jc.sticker ? jc.sticker.toLowerCase() : undefined;
+    // 255 = engine sentinel for "any of slots 0..15".
+    const slot = (jc.slot === undefined || jc.slot < 0) ? 255 : jc.slot;
+
     for (let ante = 1; ante <= jc.maxAnte; ante++) {
       if (effectiveSource === "shop") {
-        subs.push({ kind: "ante_shop_has_joker", ante, slot: 0, joker: jc.joker });
+        subs.push({
+          kind: "ante_shop_has_joker",
+          ante, slot, joker: jc.joker,
+          edition: editionKey, sticker: stickerKey,
+        });
       } else if (effectiveSource === "buffoon-pack") {
         subs.push({ kind: "ante_any_pack_contains", ante, max_packs: PACK_SLOTS, card: jc.joker });
       } else if (effectiveSource === "arcana-soul" || effectiveSource === "spectral-soul" || effectiveSource === "legendary-soul") {
-        subs.push({ kind: "ante_any_pack_contains", ante, max_packs: PACK_SLOTS, card: "The Soul" });
+        if (wantsLegendary) {
+          // Resolve "which legendary" — v2.1 feature.
+          subs.push({ kind: "ante_soul_is", ante, max_packs: PACK_SLOTS, joker: jc.joker });
+        } else {
+          subs.push({ kind: "ante_any_pack_contains", ante, max_packs: PACK_SLOTS, card: "The Soul" });
+        }
       } else if (effectiveSource === "spectral-wraith") {
-        subs.push({ kind: "ante_any_pack_contains", ante, max_packs: PACK_SLOTS, card: "Wraith" });
+        // Resolve which Rare joker Wraith forces.
+        subs.push({ kind: "ante_wraith_is", ante, max_packs: PACK_SLOTS, joker: jc.joker });
       }
     }
     if (subs.length === 1) clauses.push(subs[0]);
@@ -105,8 +132,37 @@ function buildFilterJson(cfg: FinderConfig): string {
 
   for (const tc of cfg.tagConstraints ?? []) {
     const subs: EngineClause[] = [];
+    const position = (tc as any).position ?? 0;
     for (let ante = 1; ante <= tc.maxAnte; ante++) {
-      subs.push({ kind: "ante_tag_is", ante, position: 0, tag: tc.tag });
+      subs.push({ kind: "ante_tag_is", ante, position, tag: tc.tag });
+    }
+    if (subs.length === 1) clauses.push(subs[0]);
+    else if (subs.length > 1) clauses.push({ kind: "any_of", clauses: subs });
+  }
+
+  for (const bc of cfg.bossConstraints ?? []) {
+    const subs: EngineClause[] = [];
+    for (let ante = 1; ante <= bc.maxAnte; ante++) {
+      subs.push({ kind: "ante_boss_is", ante, boss: bc.boss });
+    }
+    if (subs.length === 1) clauses.push(subs[0]);
+    else if (subs.length > 1) clauses.push({ kind: "any_of", clauses: subs });
+  }
+
+  for (const sc of cfg.standardCardConstraints ?? []) {
+    const subs: EngineClause[] = [];
+    const edi = sc.edition ? sc.edition.toLowerCase() : undefined;
+    const seal = sc.seal ? sc.seal.toLowerCase() : undefined;
+    for (let ante = 1; ante <= sc.maxAnte; ante++) {
+      subs.push({
+        kind: "ante_standard_card_is",
+        ante,
+        max_packs: PACK_SLOTS,
+        base: sc.base ?? "",
+        enhancement: sc.enhancement || undefined,
+        edition: edi,
+        seal,
+      });
     }
     if (subs.length === 1) clauses.push(subs[0]);
     else if (subs.length > 1) clauses.push({ kind: "any_of", clauses: subs });
