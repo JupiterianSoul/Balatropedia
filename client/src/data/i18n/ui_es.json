@@ -1694,7 +1694,7 @@
       "slot": "Slot",
       "slot4_reroll": "Slot 4 (1er reroll)",
       "blind_tag": "El tag small-blind se activa en el small blind, el big-blind en el big blind. Cada ante tiene ambos.",
-      "small_blind": "Small blind",
+      "small_blind": "Ciega pequeña",
       "big_blind": "Big blind",
       "standard_pack": "Carta de pack estándar",
       "any_suit": "Cualquier palo",
@@ -1815,7 +1815,13 @@
       "verify_btn": "Verificar",
       "verify_match_title": "Ejecuta el motor en esta semilla y muestra todas las ubicaciones coincidentes",
       "save_match_title": "Guardar la semilla y la configuración en la biblioteca",
-      "save_this_seed": "Guardar esta semilla"
+      "save_this_seed": "Guardar esta semilla",
+      "voucher_at": "Cupón",
+      "tag_at": "Etiqueta",
+      "boss_at": "Jefe",
+      "standard_card_at": "Carta estándar",
+      "in_pack_card": "carta",
+      "of_blind": "de"
     },
     "intro": {
       "compare": {

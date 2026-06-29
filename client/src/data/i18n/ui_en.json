@@ -1815,7 +1815,13 @@
       "verify_btn": "Verify",
       "verify_match_title": "Run the engine on this seed and show all matched locations",
       "save_match_title": "Save seed + preset to library",
-      "save_this_seed": "Save this seed"
+      "save_this_seed": "Save this seed",
+      "voucher_at": "Voucher",
+      "tag_at": "Tag",
+      "boss_at": "Boss",
+      "standard_card_at": "Standard card",
+      "in_pack_card": "card",
+      "of_blind": "of"
     },
     "intro": {
       "compare": {
