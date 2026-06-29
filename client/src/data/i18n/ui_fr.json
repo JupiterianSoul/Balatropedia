@@ -1694,7 +1694,7 @@
       "slot": "Slot",
       "slot4_reroll": "Slot 4 (1er reroll)",
       "blind_tag": "Le tag small-blind se déclenche au small blind, le tag big-blind au big blind. Chaque ante a les deux.",
-      "small_blind": "Small blind",
+      "small_blind": "Petite blind",
       "big_blind": "Big blind",
       "standard_pack": "Carte de pack standard",
       "any_suit": "N'importe quelle enseigne",
@@ -1815,7 +1815,13 @@
       "verify_btn": "Vérifier",
       "verify_match_title": "Exécuter le moteur sur cette seed et montrer toutes les positions correspondantes",
       "save_match_title": "Sauvegarder la seed et le préréglage dans la bibliothèque",
-      "save_this_seed": "Sauvegarder cette seed"
+      "save_this_seed": "Sauvegarder cette seed",
+      "voucher_at": "Bon",
+      "tag_at": "Tag",
+      "boss_at": "Boss",
+      "standard_card_at": "Carte standard",
+      "in_pack_card": "carte",
+      "of_blind": "de"
     },
     "intro": {
       "compare": {

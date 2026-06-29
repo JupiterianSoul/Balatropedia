@@ -23,6 +23,8 @@ import type {
   SeedMatch,
   VoucherLocation,
   TagLocation,
+  BossLocation,
+  StandardCardLocation,
 } from "./seedFinder";
 import { LEGENDARY_JOKERS } from "./seedItems";
 import { parseInspectJson, parseClauseDetail, locationFromParsed } from "./seedInspect";
@@ -255,8 +257,13 @@ export function buildMatch(seed: string, inspectJson: string | null, cfg: Finder
     const c = clauses[clauseIdx++];
     let ante = vc.maxAnte ?? 1;
     if (c && c.matched) {
-      const a = parseAnteFromDetail(c.detail);
-      if (a !== null) ante = a;
+      const parsed = parseClauseDetail(c.detail);
+      if (parsed && parsed.kind === "voucher") {
+        ante = parsed.ante;
+      } else {
+        const a = parseAnteFromDetail(c.detail);
+        if (a !== null) ante = a;
+      }
     }
     voucherLocations.push({ voucher: vc.voucher, ante });
   }
@@ -265,22 +272,83 @@ export function buildMatch(seed: string, inspectJson: string | null, cfg: Finder
   for (const tc of cfg.tagConstraints ?? []) {
     const c = clauses[clauseIdx++];
     let ante = tc.maxAnte ?? 1;
-    const position = ((tc as any).position ?? 0) as number;
+    let blind = ((tc as any).position ?? 0) as number;
     if (c && c.matched) {
-      const a = parseAnteFromDetail(c.detail);
-      if (a !== null) ante = a;
+      const parsed = parseClauseDetail(c.detail);
+      if (parsed && parsed.kind === "tag") {
+        ante = parsed.ante;
+        blind = parsed.blind;
+      } else {
+        const a = parseAnteFromDetail(c.detail);
+        if (a !== null) ante = a;
+      }
     }
-    tagLocations.push({ tag: tc.tag, ante, blind: position });
+    tagLocations.push({ tag: tc.tag, ante, blind });
   }
 
-  // 4) Boss constraints — no per-match location struct exists; skip.
-  for (const _bc of cfg.bossConstraints ?? []) { clauseIdx++; }
+  // 4) Boss constraints.
+  const bossLocations: BossLocation[] = [];
+  for (const bc of cfg.bossConstraints ?? []) {
+    const c = clauses[clauseIdx++];
+    let ante = bc.maxAnte ?? 1;
+    let boss = bc.boss;
+    if (c && c.matched) {
+      const parsed = parseClauseDetail(c.detail);
+      if (parsed && parsed.kind === "boss") {
+        ante = parsed.ante;
+        boss = parsed.boss;
+      } else {
+        const a = parseAnteFromDetail(c.detail);
+        if (a !== null) ante = a;
+      }
+    }
+    bossLocations.push({ boss, ante });
+  }
 
-  // 5) Standard card constraints — currently not surfaced as a separate
-  //    location list. Skip the clauses.
-  for (const _sc of cfg.standardCardConstraints ?? []) { clauseIdx++; }
+  // 5) Standard card constraints.
+  const standardCardLocations: StandardCardLocation[] = [];
+  for (const sc of cfg.standardCardConstraints ?? []) {
+    const c = clauses[clauseIdx++];
+    let ante = sc.maxAnte ?? 1;
+    let packIndex = 0;
+    let packName = "";
+    let cardIndex = 0;
+    let base = sc.base ?? (sc.suit && sc.rank ? `${sc.rank} of ${sc.suit}` : "");
+    if (c && c.matched) {
+      const parsed = parseClauseDetail(c.detail);
+      if (parsed && parsed.kind === "standard") {
+        ante = parsed.ante;
+        // Engine emits 0-based pack# and card index; normalize to 1-based for UI
+        // consistency with other SeedMatch locations (shop slot, pack#).
+        packIndex = parsed.packIndex + 1;
+        packName = parsed.packName;
+        cardIndex = parsed.cardIndex + 1;
+        base = parsed.base;
+      } else {
+        const a = parseAnteFromDetail(c.detail);
+        if (a !== null) ante = a;
+      }
+    }
+    standardCardLocations.push({
+      base,
+      enhancement: sc.enhancement,
+      edition: sc.edition,
+      seal: sc.seal,
+      ante,
+      packIndex,
+      packName,
+      cardIndex,
+    });
+  }
 
-  return { seed, jokerLocations, voucherLocations, tagLocations };
+  return {
+    seed,
+    jokerLocations,
+    voucherLocations,
+    tagLocations,
+    bossLocations,
+    standardCardLocations,
+  };
 }
 
 // ─── Worker dispatch ────────────────────────────────────────────────────────

@@ -107,12 +107,34 @@ interface ParsedStandard {
   base: string;
 }
 
-type Parsed =
+interface ParsedBoss {
+  kind: "boss";
+  ante: number;
+  boss: string;
+}
+
+interface ParsedVoucher {
+  kind: "voucher";
+  ante: number;
+  voucher: string;
+}
+
+interface ParsedTag {
+  kind: "tag";
+  ante: number;
+  blind: number; // 0 = small, 1 = big
+  tag: string;
+}
+
+export type Parsed =
   | ParsedShop
   | ParsedPackContains
   | ParsedSoul
   | ParsedWraith
-  | ParsedStandard;
+  | ParsedStandard
+  | ParsedBoss
+  | ParsedVoucher
+  | ParsedTag;
 
 /**
  * Parse a single clause detail string into structured form.
@@ -187,6 +209,37 @@ export function parseClauseDetail(rawDetail: string): Parsed | null {
     };
   }
 
+  // Boss: "ante N boss = NAME"
+  const bossMatch = detail.match(/^ante\s+(\d+)\s+boss\s+=\s+(.+?)\s*$/);
+  if (bossMatch) {
+    return {
+      kind: "boss",
+      ante: parseInt(bossMatch[1], 10),
+      boss: bossMatch[2],
+    };
+  }
+
+  // Voucher: "ante N voucher = NAME"
+  const voucherMatch = detail.match(/^ante\s+(\d+)\s+voucher\s+=\s+(.+?)\s*$/);
+  if (voucherMatch) {
+    return {
+      kind: "voucher",
+      ante: parseInt(voucherMatch[1], 10),
+      voucher: voucherMatch[2],
+    };
+  }
+
+  // Tag: "ante N · small blind tag = NAME" / "ante N · big blind tag = NAME"
+  const tagMatch = detail.match(/^ante\s+(\d+)\s+·\s+(small|big)\s+blind\s+tag\s+=\s+(.+?)\s*$/i);
+  if (tagMatch) {
+    return {
+      kind: "tag",
+      ante: parseInt(tagMatch[1], 10),
+      blind: tagMatch[2].toLowerCase() === "big" ? 1 : 0,
+      tag: tagMatch[3],
+    };
+  }
+
   return null;
 }
 
@@ -242,15 +295,34 @@ export function locationFromParsed(parsed: Parsed, jc: JokerConstraintLite): Jok
   }
   if (parsed.kind === "pack-contains") {
     // The engine resolved a specific pack #. Map back to (blind, packPosition).
-    const { positionInShop } = packIndexToBlindAndPosition(parsed.packIndex);
     // For pack-contains, packPosition refers to the position OF THE CARD inside
     // the pack — we don't know that from `pack-contains` (we only know the pack
     // contains it). Default to 0 and the UI will say "in the pack" without a
     // card #.
+    //
+    // Source resolution: a Buffoon Pack contains jokers directly. Arcana /
+    // Spectral packs containing "The Soul" still come through this branch
+    // because we emit `ante_any_pack_contains` (the Soul *card*, not the
+    // resulting joker) when the user explicitly picks an arcana/spectral-soul
+    // source for a non-legendary target. Use the pack name to pick the right
+    // source enum.
+    const packLower = parsed.packName.toLowerCase();
+    let source: string;
+    if (packLower.includes("arcana")) source = "arcana-soul";
+    else if (packLower.includes("spectral")) source = "spectral-soul";
+    else source = "buffoon-pack";
+    // Honour an explicit user-selected source where it doesn't conflict with
+    // the pack name (e.g. user picked "buffoon-pack" and engine confirmed a
+    // Buffoon pack — keep the user's enum value verbatim).
+    if (jc.source && jc.source !== "") {
+      if (jc.source === "buffoon-pack" && source === "buffoon-pack") source = "buffoon-pack";
+      else if (jc.source === "arcana-soul" && source === "arcana-soul") source = "arcana-soul";
+      else if (jc.source === "spectral-soul" && source === "spectral-soul") source = "spectral-soul";
+    }
     return {
       joker: jc.joker,
       edition: jc.edition ?? "",
-      source: "buffoon-pack",
+      source,
       ante: parsed.ante,
       // We encode the booster pack ORDINAL (1 or 2 for that blind) into slot
       // using the convention packSlot = blindIdx*2 + (positionInShop-1) ... but

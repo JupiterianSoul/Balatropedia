@@ -1,3 +1,17 @@
+/**
+ * Seed Finder — SHARED TYPE DEFINITIONS + DEPRECATED V1 IMPLEMENTATION.
+ *
+ * This module is the single source of truth for FinderConfig, JokerConstraint,
+ * VoucherConstraint, TagConstraint, BossConstraint, StandardCardConstraint,
+ * SeedMatch, BossLocation, StandardCardLocation, FinderProgress — all of which
+ * are imported across the codebase. DO NOT DELETE.
+ *
+ * The `SeedFinder` class at the bottom of this file is the V1 engine and is
+ * kept ONLY as an emergency fallback reachable via `?legacy=1` URL param or
+ * `localStorage["seed-finder-engine"]="legacy"`. Default users never see it.
+ * New work should target `seedFinderV2.ts` (powered by upstream WASM with
+ * inspect_seed for precise locations).
+ */
 
 export interface JokerConstraint {
   joker: string;
@@ -76,7 +90,29 @@ export interface VoucherLocation {
 export interface TagLocation {
   tag: string;
   ante: number;
+  // 0 = Small-blind tag, 1 = Big-blind tag. Stored as number to match engine
+  // convention (next_tag returns the small/big position). Display layer maps
+  // to "Small"/"Big".
   blind: number;
+}
+
+export interface BossLocation {
+  boss: string;
+  ante: number;
+}
+
+export interface StandardCardLocation {
+  // What the user filtered for, plus where it actually fell.
+  base: string;          // e.g. "Ace of Spades" (engine-resolved)
+  enhancement?: string;
+  edition?: string;
+  seal?: string;
+  ante: number;
+  // Pack index 0..5 (Small/Big/Boss x 2). Display layer maps to blind + position.
+  packIndex: number;
+  packName: string;
+  // Card index within the pack (1-based for display; engine emits 1-based).
+  cardIndex: number;
 }
 
 export interface SeedMatch {
@@ -84,6 +120,9 @@ export interface SeedMatch {
   jokerLocations: JokerLocation[];
   voucherLocations: VoucherLocation[];
   tagLocations: TagLocation[];
+  // Both default to [] for back-compat with persisted saved seeds (v2 schema).
+  bossLocations?: BossLocation[];
+  standardCardLocations?: StandardCardLocation[];
 }
 
 export interface FinderProgress {
@@ -115,6 +154,10 @@ function versionToInt(v: string): number {
   return VERSION_MAP[v] ?? 10106;
 }
 
+/**
+ * @deprecated V1 finder. Use `SeedFinderV2` from `./seedFinderV2.ts` instead.
+ * This class is preserved as an emergency fallback toggle (?legacy=1).
+ */
 export class SeedFinder {
   private workers: Worker[] = [];
   private active = false;

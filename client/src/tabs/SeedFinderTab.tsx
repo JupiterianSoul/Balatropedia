@@ -1290,6 +1290,82 @@ export function MatchCard({
             </div>
           );
         })}
+
+        {(match.voucherLocations?.length ?? 0) > 0 && (
+          <div className="pt-1 space-y-0.5">
+            {match.voucherLocations.map((v, i) => (
+              <div key={"v" + i} className="text-xs text-zinc-300">
+                <span className="text-cyan-300 font-semibold">{t("ui.seedfinder.voucher_at")}:</span>{" "}
+                <span className="text-zinc-100">{v.voucher}</span>{" — "}
+                <span className="text-zinc-400">{t("ui.seedfinder.ante_label")} </span>
+                <span className="text-yellow-300 font-mono">{v.ante}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {(match.tagLocations?.length ?? 0) > 0 && (
+          <div className="pt-1 space-y-0.5">
+            {match.tagLocations.map((tg, i) => (
+              <div key={"t" + i} className="text-xs text-zinc-300">
+                <span className="text-pink-300 font-semibold">{t("ui.seedfinder.tag_at")}:</span>{" "}
+                <span className="text-zinc-100">{tg.tag}</span>{" — "}
+                <span className="text-zinc-400">{t("ui.seedfinder.ante_label")} </span>
+                <span className="text-yellow-300 font-mono">{tg.ante}</span>
+                {" · "}
+                <span className="text-zinc-300">{tg.blind === 1 ? t("ui.seedfinder.big_blind") : t("ui.seedfinder.small_blind")}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {(match.bossLocations?.length ?? 0) > 0 && (
+          <div className="pt-1 space-y-0.5">
+            {match.bossLocations!.map((b, i) => (
+              <div key={"b" + i} className="text-xs text-zinc-300">
+                <span className="text-red-300 font-semibold">{t("ui.seedfinder.boss_at")}:</span>{" "}
+                <span className="text-zinc-100">{b.boss}</span>{" — "}
+                <span className="text-zinc-400">{t("ui.seedfinder.ante_label")} </span>
+                <span className="text-yellow-300 font-mono">{b.ante}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {(match.standardCardLocations?.length ?? 0) > 0 && (
+          <div className="pt-1 space-y-0.5">
+            {match.standardCardLocations!.map((sc, i) => {
+              // packIndex is 1-based (1..6)
+              const pIdx0 = Math.max(0, sc.packIndex - 1);
+              const blindIdx = Math.min(2, Math.floor(pIdx0 / 2));
+              const positionInShop = (pIdx0 % 2) + 1;
+              const blindLabel = blindIdx === 0 ? t("ui.seedfinder.small_blind")
+                : blindIdx === 1 ? t("ui.seedfinder.big_blind")
+                : t("ui.seedfinder.boss");
+              const editionTag = sc.edition && sc.edition !== "" ? ` [${sc.edition}]` : "";
+              const sealTag = sc.seal && sc.seal !== "" ? ` (${sc.seal} seal)` : "";
+              const enhTag = sc.enhancement && sc.enhancement !== "" ? ` (${sc.enhancement})` : "";
+              return (
+                <div key={"sc" + i} className="text-xs text-zinc-300">
+                  <span className="text-emerald-300 font-semibold">{t("ui.seedfinder.standard_card_at")}:</span>{" "}
+                  <span className="text-zinc-100">{sc.base || "—"}</span>
+                  {enhTag && <span className="text-emerald-200">{enhTag}</span>}
+                  {editionTag && <span className="text-purple-300 italic">{editionTag}</span>}
+                  {sealTag && <span className="text-amber-200">{sealTag}</span>}
+                  {" — "}
+                  <span className="text-zinc-400">{t("ui.seedfinder.ante_label")} </span>
+                  <span className="text-yellow-300 font-mono">{sc.ante}</span>
+                  {" · "}
+                  <span className="text-zinc-300">{blindLabel}</span>
+                  {", "}
+                  <span className="text-yellow-300">{positionInShop === 1 ? t("ui.seedfinder.first_booster") : t("ui.seedfinder.second_booster")}</span>
+                  {sc.packName && <span className="text-purple-300"> ({sc.packName})</span>}
+                  {sc.cardIndex > 0 && <>{", "}<span className="text-zinc-400">{t("ui.seedfinder.in_pack_card")} </span><span className="text-yellow-300 font-mono">#{sc.cardIndex}</span></>}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

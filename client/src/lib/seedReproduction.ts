@@ -156,19 +156,31 @@ export function buildReproductionPlan(
   }
 
   // ─── Per-ante steps ────────────────────────────────────────
-  // Sort joker locations chronologically (by ante, then by slot/packIdx)
-  const allEvents: Array<{ kind: "joker" | "voucher" | "tag"; payload: any; ante: number; orderKey: number }> = [];
+  // Sort all events chronologically (by ante, then by within-ante order).
+  // Order within an ante: small-blind tag (orderKey 0) -> small-blind shop -> big-blind
+  // tag / big-blind shop / boss-blind shop -> boss fight -> voucher (boss shop).
+  const allEvents: Array<{ kind: "joker" | "voucher" | "tag" | "boss" | "standardCard"; payload: any; ante: number; orderKey: number }> = [];
 
   for (const j of match.jokerLocations) {
     const key = (j.slot ?? 0) * 100 + (j.packPosition ?? 0);
-    allEvents.push({ kind: "joker", payload: j, ante: j.ante, orderKey: key });
+    allEvents.push({ kind: "joker", payload: j, ante: j.ante, orderKey: 100 + key });
   }
   for (const v of match.voucherLocations) {
-    allEvents.push({ kind: "voucher", payload: v, ante: v.ante, orderKey: 0 });
+    // Vouchers fire at the boss-blind shop — push toward end of ante.
+    allEvents.push({ kind: "voucher", payload: v, ante: v.ante, orderKey: 9000 });
   }
-  for (const t of match.tagLocations) {
-    const blindOrder = t.blind === "Small" ? 0 : t.blind === "Big" ? 1 : 2;
-    allEvents.push({ kind: "tag", payload: t, ante: t.ante, orderKey: blindOrder });
+  for (const tg of match.tagLocations) {
+    // tagLocations.blind is 0 (small) or 1 (big).
+    const blindOrder = tg.blind === 1 ? 50 : 10;
+    allEvents.push({ kind: "tag", payload: tg, ante: tg.ante, orderKey: blindOrder });
+  }
+  for (const b of match.bossLocations ?? []) {
+    allEvents.push({ kind: "boss", payload: b, ante: b.ante, orderKey: 8000 });
+  }
+  for (const sc of match.standardCardLocations ?? []) {
+    // packIndex 0..5: same chronological ordering as joker pack positions.
+    // packIndex is 1-based here; subtract 1 so orderKey ordering matches joker packs.
+    allEvents.push({ kind: "standardCard", payload: sc, ante: sc.ante, orderKey: 200 + Math.max(0, sc.packIndex - 1) * 100 });
   }
 
   allEvents.sort((a, b) => a.ante - b.ante || a.orderKey - b.orderKey);
@@ -316,13 +328,59 @@ export function buildReproductionPlan(
     }
 
     if (ev.kind === "tag") {
-      const t = ev.payload as SeedMatch["tagLocations"][number];
+      const tg = ev.payload as SeedMatch["tagLocations"][number];
+      const blindLabel: "Small" | "Big" = tg.blind === 1 ? "Big" : "Small";
       steps.push({
         kind: "skip-warn",
         ante,
-        blind: t.blind,
-        text: `Tag for the ${t.blind} Blind of ante ${ante}: ${t.tag}. Skipping the blind awards this tag.`,
+        blind: blindLabel,
+        text: `Tag for the ${blindLabel} Blind of ante ${ante}: ${tg.tag}. Skipping the blind awards this tag.`,
         hint: "Tags only appear if you SKIP the blind. Beating the blind gives money instead.",
+      });
+    }
+
+    if (ev.kind === "boss") {
+      const b = ev.payload as NonNullable<SeedMatch["bossLocations"]>[number];
+      steps.push({
+        kind: "rule",
+        ante,
+        blind: "Boss",
+        text: `Boss Blind for ante ${ante}: ${b.boss}.`,
+        hint: "Boss blinds are deterministic per seed/version/deck/stake. The exact effect is what you fight.",
+      });
+    }
+
+    if (ev.kind === "standardCard") {
+      const sc = ev.payload as NonNullable<SeedMatch["standardCardLocations"]>[number];
+      // sc.packIndex is 1-based (1..6 across the 3 blinds, 2 packs per blind).
+      const pIdx0 = Math.max(0, sc.packIndex - 1);
+      const blindIdx = Math.min(2, Math.floor(pIdx0 / 2));
+      const positionInShop = (pIdx0 % 2) + 1;
+      const blindLabel: "Small" | "Big" | "Boss" = blindIdx === 0 ? "Small" : blindIdx === 1 ? "Big" : "Boss";
+      const editionLabel = sc.edition && sc.edition !== "" ? ` (${sc.edition})` : "";
+      const sealLabel = sc.seal && sc.seal !== "" ? `, ${sc.seal} seal` : "";
+      const enhLabel = sc.enhancement && sc.enhancement !== "" ? `, ${sc.enhancement}` : "";
+      steps.push({
+        kind: "shop",
+        ante,
+        blind: blindLabel,
+        text: `After defeating the ${blindLabel} Blind of ante ${ante}, open the shop.`,
+      });
+      steps.push({
+        kind: "pack",
+        ante,
+        blind: blindLabel,
+        text: `Buy the ${ordinal(positionInShop)} booster pack offered${sc.packName ? ` (${sc.packName})` : ""} — do NOT skip the other booster or pack order shifts.`,
+        hint: "Standard packs contain playing cards. The target card is engine-resolved at this exact pack position.",
+      });
+      steps.push({
+        kind: "buy",
+        ante,
+        blind: blindLabel,
+        text: sc.cardIndex > 0
+          ? `Within the pack, pick card #${sc.cardIndex}: ${sc.base}${editionLabel}${enhLabel}${sealLabel}.`
+          : `Within the pack, pick ${sc.base}${editionLabel}${enhLabel}${sealLabel}.`,
+        hint: "Cards in a Standard Pack are numbered left to right starting at 1.",
       });
     }
   }
