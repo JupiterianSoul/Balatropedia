@@ -153,10 +153,10 @@ export function SettingsTab() {
         <section className="casino-card p-4" data-testid="section-app-scale">
           <div className="mb-3 flex items-center gap-1.5">
             <Expand className="h-3.5 w-3.5 text-accent" />
-            <SectionLabel>UI Size</SectionLabel>
+            <SectionLabel>{t("ui.settings.ui_size.title")}</SectionLabel>
           </div>
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">Overall interface size</span>
+            <span className="text-xs text-muted-foreground">{t("ui.settings.ui_size.label")}</span>
             <span className="font-pixel text-xs tabular text-accent">{Math.round(pendingAppScale * 100)}%</span>
           </div>
           <Slider
@@ -169,9 +169,9 @@ export function SettingsTab() {
             data-testid="slider-app-scale"
           />
           <div className="mt-2 flex items-center justify-between gap-2">
-            <p className="text-xs text-muted-foreground">Scales the whole interface. Applies when you release the slider.</p>
+            <p className="text-xs text-muted-foreground">{t("ui.settings.ui_size.hint")}</p>
             <Button variant="outline" size="sm" onClick={() => { setPendingAppScale(1); setAppScale(1); }} data-testid="button-app-scale-reset">
-              Reset
+              {t("ui.settings.ui_size.reset")}
             </Button>
           </div>
         </section>

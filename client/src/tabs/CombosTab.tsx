@@ -166,8 +166,8 @@ export function CombosTab() {
 
   return (
     <div className="space-y-5">
-      <TabIntro Icon={Layers} title="Combos">
-        Curated joker combinations grouped by archetype. Pick a filter to focus on the playstyle you are building toward.
+      <TabIntro Icon={Layers} title={t("ui.intro.combos.title")}>
+        {t("ui.intro.combos.desc")}
       </TabIntro>
       <div className="flex items-center justify-center gap-3">
         <Select value={arch} onValueChange={setArch}>

@@ -164,8 +164,8 @@ export function TierListTab() {
 
   return (
     <div className="space-y-5 p-2 md:p-4">
-      <TabIntro Icon={Trophy} title="Tier List">
-        Community-ranked jokers from strongest to weakest. Use the disclaimer for context and tap a sprite for its details.
+      <TabIntro Icon={Trophy} title={t("ui.intro.tierlist.title")}>
+        {t("ui.intro.tierlist.desc")}
       </TabIntro>
       { }
       {!disclaimerHidden && (

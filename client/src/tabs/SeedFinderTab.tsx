@@ -25,6 +25,7 @@ import { useSeedTabState, setFinder, updateFinder, saveSeed, isSeedSaved } from 
 import { SeedReproductionPanel } from "@/components/SeedReproductionPanel";
 import { encodeFinderConfig, decodeFinderConfig } from "@/lib/seedFinderShare";
 import { VerifySeedPanel } from "@/components/VerifySeedPanel";
+import { useT } from "@/lib/i18n";
 
 const ALL_JOKER_NAMES = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
   .filter((j, i, a) => a.indexOf(j) === i)
@@ -68,6 +69,7 @@ function JokerSearchBar({
   onAdd: (name: string) => void;
   selectedNames: string[];
 }) {
+  const t = useT();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -115,7 +117,7 @@ function JokerSearchBar({
           onFocus={() => setFocused(true)}
           onBlur={() => setTimeout(() => setFocused(false), 150)}
           onKeyDown={onKeyDown}
-          placeholder="Search a joker to add (e.g. Perkeo, Blueprint, Brainstorm)..."
+          placeholder={t("ui.seedfinder.search_joker")}
           className="flex-1 bg-transparent text-sm outline-none placeholder:text-zinc-500"
           data-testid="finder-search-input"
         />
@@ -163,9 +165,10 @@ function JokerSearchBar({
 function MaxAnteInput({
   value, onChange,
 }: { value: number; onChange: (n: number) => void }) {
+  const t = useT();
   return (
     <div>
-      <Label className="text-[10px] text-zinc-400">Max ante</Label>
+      <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.max_ante")}</Label>
       <Input
         type="number" min={1} max={39}
         value={value}
@@ -191,6 +194,7 @@ function JokerConstraintRow({
   onChange: (next: JokerConstraint) => void;
   onRemove: () => void;
 }) {
+  const t = useT();
   const id = jokerIdFromName(c.joker);
   const r = rarityOf(c.joker);
   const slotValue = (c.slot === undefined || c.slot < 0 || c.slot === 255) ? "any" : String(c.slot);
@@ -211,11 +215,11 @@ function JokerConstraintRow({
         <div className="text-[10px] text-zinc-500 uppercase">{r}</div>
       </div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Edition</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.edition")}</Label>
         <Select value={c.edition || "any"} onValueChange={v => onChange({ ...c, edition: v === "any" ? "" : v as JokerConstraint["edition"] })}>
           <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any</SelectItem>
+            <SelectItem value="any">{t("ui.seedfinder.any")}</SelectItem>
             <SelectItem value="Negative">Negative</SelectItem>
             <SelectItem value="Polychrome">Polychrome</SelectItem>
             <SelectItem value="Holographic">Holographic</SelectItem>
@@ -223,53 +227,53 @@ function JokerConstraintRow({
           </SelectContent>
         </Select>
       </div>
-      <div title="Eternal/Perishable/Rental sticker filter. Only meaningful from Black Stake upward.">
-        <Label className="text-[10px] text-zinc-400">Sticker</Label>
+      <div title={t("ui.seedfinder.sticker_filter")}>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.sticker")}</Label>
         <Select value={c.sticker || "any"} onValueChange={v => onChange({ ...c, sticker: v === "any" ? "" : v as JokerConstraint["sticker"] })}>
           <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any</SelectItem>
+            <SelectItem value="any">{t("ui.seedfinder.any")}</SelectItem>
             <SelectItem value="eternal">Eternal</SelectItem>
-            <SelectItem value="perishable">Perishable</SelectItem>
+            <SelectItem value="perishable">{t("ui.seedfinder.perishable")}</SelectItem>
             <SelectItem value="rental">Rental</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Source</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.source")}</Label>
         <Select
           value={c.source || "any"}
           onValueChange={v => onChange({ ...c, source: v === "any" ? "" : v as JokerConstraint["source"] })}
         >
           <SelectTrigger className="h-8 w-[170px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
-            {!isLegendary && <SelectItem value="any">Any source</SelectItem>}
-            {!isLegendary && <SelectItem value="shop">Shop only</SelectItem>}
-            {!isLegendary && <SelectItem value="buffoon-pack">Buffoon Pack</SelectItem>}
-            <SelectItem value="arcana-soul">Arcana (Soul card)</SelectItem>
-            <SelectItem value="spectral-soul">Spectral (Soul card)</SelectItem>
-            {(isRare || !isLegendary) && <SelectItem value="spectral-wraith">Spectral (Wraith)</SelectItem>}
+            {!isLegendary && <SelectItem value="any">{t("ui.seedfinder.any_source")}</SelectItem>}
+            {!isLegendary && <SelectItem value="shop">{t("ui.seedfinder.shop_only")}</SelectItem>}
+            {!isLegendary && <SelectItem value="buffoon-pack">{t("ui.seedfinder.buffoon_pack")}</SelectItem>}
+            <SelectItem value="arcana-soul">{t("ui.seedfinder.arcana_soul")}</SelectItem>
+            <SelectItem value="spectral-soul">{t("ui.seedfinder.spectral_soul")}</SelectItem>
+            {(isRare || !isLegendary) && <SelectItem value="spectral-wraith">{t("ui.seedfinder.spectral_wraith")}</SelectItem>}
           </SelectContent>
         </Select>
         {isLegendary && (
-          <div className="text-[10px] text-purple-300/80 mt-0.5">Legendary — forced via Soul</div>
+          <div className="text-[10px] text-purple-300/80 mt-0.5">{t("ui.seedfinder.legendary_forced")}</div>
         )}
       </div>
       {((c.source || "") === "" || c.source === "shop") && !isLegendary && (
-        <div title="Which shop slot to match. Slot 0 = first card shown. 'Any' covers all 16 (default 4 + 12 rerolls).">
-          <Label className="text-[10px] text-zinc-400">Slot</Label>
+        <div>
+          <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.slot_label")}</Label>
           <Select value={slotValue} onValueChange={v => onChange({ ...c, slot: v === "any" ? 255 : Number(v) })}>
             <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="any">Any slot (0–15)</SelectItem>
-              <SelectItem value="0">Slot 0</SelectItem>
-              <SelectItem value="1">Slot 1</SelectItem>
-              <SelectItem value="2">Slot 2</SelectItem>
-              <SelectItem value="3">Slot 3</SelectItem>
-              <SelectItem value="4">Slot 4 (1st reroll)</SelectItem>
-              <SelectItem value="5">Slot 5</SelectItem>
-              <SelectItem value="6">Slot 6</SelectItem>
-              <SelectItem value="7">Slot 7</SelectItem>
+              <SelectItem value="any">{t("ui.seedfinder.any_slot")}</SelectItem>
+              <SelectItem value="0">{t("ui.seedfinder.slot")} 0</SelectItem>
+              <SelectItem value="1">{t("ui.seedfinder.slot")} 1</SelectItem>
+              <SelectItem value="2">{t("ui.seedfinder.slot")} 2</SelectItem>
+              <SelectItem value="3">{t("ui.seedfinder.slot")} 3</SelectItem>
+              <SelectItem value="4">{t("ui.seedfinder.slot4_reroll")}</SelectItem>
+              <SelectItem value="5">{t("ui.seedfinder.slot")} 5</SelectItem>
+              <SelectItem value="6">{t("ui.seedfinder.slot")} 6</SelectItem>
+              <SelectItem value="7">{t("ui.seedfinder.slot")} 7</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -287,11 +291,12 @@ function VoucherConstraintRow({
   onChange: (next: VoucherConstraint) => void;
   onRemove: () => void;
 }) {
+  const t = useT();
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
-      <div className="rounded bg-amber-900/30 border border-amber-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-amber-300">Voucher</div>
+      <div className="rounded bg-amber-900/30 border border-amber-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-amber-300">{t("ui.seedfinder.voucher")}</div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Voucher</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.voucher")}</Label>
         <Select value={c.voucher} onValueChange={v => onChange({ ...c, voucher: v })}>
           <SelectTrigger className="h-8 w-[180px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent className="max-h-72">
@@ -312,11 +317,12 @@ function TagConstraintRow({
   onChange: (next: TagConstraint) => void;
   onRemove: () => void;
 }) {
+  const t = useT();
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
-      <div className="rounded bg-blue-900/30 border border-blue-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-blue-300">Tag</div>
+      <div className="rounded bg-blue-900/30 border border-blue-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-blue-300">{t("ui.seedfinder.tag")}</div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Tag</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.tag")}</Label>
         <Select value={c.tag} onValueChange={v => onChange({ ...c, tag: v })}>
           <SelectTrigger className="h-8 w-[180px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent className="max-h-72">
@@ -324,13 +330,13 @@ function TagConstraintRow({
           </SelectContent>
         </Select>
       </div>
-      <div title="Small-blind tag fires at the small blind, big-blind tag at the big blind. Each ante has both.">
-        <Label className="text-[10px] text-zinc-400">Position</Label>
+      <div title={t("ui.seedfinder.blind_tag")}>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.position")}</Label>
         <Select value={String(c.position ?? 0)} onValueChange={v => onChange({ ...c, position: Number(v) as 0 | 1 })}>
           <SelectTrigger className="h-8 w-[140px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="0">Small blind</SelectItem>
-            <SelectItem value="1">Big blind</SelectItem>
+            <SelectItem value="0">{t("ui.seedfinder.small_blind")}</SelectItem>
+            <SelectItem value="1">{t("ui.seedfinder.big_blind")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -347,11 +353,12 @@ function BossConstraintRow({
   onChange: (next: BossConstraint) => void;
   onRemove: () => void;
 }) {
+  const t = useT();
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
-      <div className="rounded bg-red-900/30 border border-red-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-red-300">Boss</div>
+      <div className="rounded bg-red-900/30 border border-red-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-red-300">{t("ui.seedfinder.boss")}</div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Boss</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.boss")}</Label>
         <Select value={c.boss} onValueChange={v => onChange({ ...c, boss: v })}>
           <SelectTrigger className="h-8 w-[180px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent className="max-h-72">
@@ -372,45 +379,46 @@ function StandardCardConstraintRow({
   onChange: (next: StandardCardConstraint) => void;
   onRemove: () => void;
 }) {
+  const t = useT();
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
-      <div className="rounded bg-cyan-900/30 border border-cyan-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-cyan-300">Standard pack card</div>
+      <div className="rounded bg-cyan-900/30 border border-cyan-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-cyan-300">{t("ui.seedfinder.standard_pack_card")}</div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Suit</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.suit")}</Label>
         <Select value={c.suit || "any"} onValueChange={v => onChange({ ...c, suit: v === "any" ? "" : v as StandardCardConstraint["suit"] })}>
           <SelectTrigger className="h-8 w-[110px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any suit</SelectItem>
+            <SelectItem value="any">{t("ui.seedfinder.any_suit")}</SelectItem>
             {SUITS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Rank</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.rank")}</Label>
         <Select value={c.rank || "any"} onValueChange={v => onChange({ ...c, rank: v === "any" ? "" : v as StandardCardConstraint["rank"] })}>
           <SelectTrigger className="h-8 w-[110px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent className="max-h-72">
-            <SelectItem value="any">Any rank</SelectItem>
+            <SelectItem value="any">{t("ui.seedfinder.any_rank")}</SelectItem>
             {RANKS.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Enhancement</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.enhancement")}</Label>
         <Select value={c.enhancement || "any"} onValueChange={v => onChange({ ...c, enhancement: v === "any" ? "" : v })}>
           <SelectTrigger className="h-8 w-[140px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent className="max-h-72">
-            <SelectItem value="any">Any</SelectItem>
+            <SelectItem value="any">{t("ui.seedfinder.any")}</SelectItem>
             {ENHANCEMENTS_FULL.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Edition</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.edition")}</Label>
         <Select value={c.edition || "any"} onValueChange={v => onChange({ ...c, edition: v === "any" ? "" : v as StandardCardConstraint["edition"] })}>
           <SelectTrigger className="h-8 w-[130px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any</SelectItem>
+            <SelectItem value="any">{t("ui.seedfinder.any")}</SelectItem>
             <SelectItem value="Foil">Foil</SelectItem>
             <SelectItem value="Holographic">Holographic</SelectItem>
             <SelectItem value="Polychrome">Polychrome</SelectItem>
@@ -418,11 +426,11 @@ function StandardCardConstraintRow({
         </Select>
       </div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Seal</Label>
+        <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.seal")}</Label>
         <Select value={c.seal || "any"} onValueChange={v => onChange({ ...c, seal: v === "any" ? "" : v as StandardCardConstraint["seal"] })}>
           <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any</SelectItem>
+            <SelectItem value="any">{t("ui.seedfinder.any")}</SelectItem>
             <SelectItem value="Red">Red</SelectItem>
             <SelectItem value="Blue">Blue</SelectItem>
             <SelectItem value="Gold">Gold</SelectItem>
@@ -448,18 +456,19 @@ function SpeedSelect({
   disabled?: boolean;
   profile: DeviceProfile;
 }) {
+  const tr = useT();
   const cores = profile.cores || 4;
   const highCount = Math.max(4, Math.min(8, cores));
   const maxCount = Math.max(highCount + 2, Math.min(16, cores * 2));
   const extremeCount = Math.max(maxCount + 2, Math.min(32, cores * 3));
 
   const tiersRaw: Array<{ key: string; label: string; n: number }> = [
-    { key: "eco",     label: `Eco — 1 worker (low CPU)`,                       n: 1 },
-    { key: "low",     label: `Low — 2 workers`,                                 n: 2 },
-    { key: "medium",  label: `Medium — 4 workers`,                              n: 4 },
-    { key: "high",    label: `High — ${highCount} workers`,                    n: highCount },
-    { key: "max",     label: `Max — ${maxCount} workers (oversubscribe)`,      n: maxCount },
-    { key: "extreme", label: `Extreme — ${extremeCount} workers (24+ core PCs)`, n: extremeCount },
+    { key: "eco",     label: tr("ui.seedfinder.speed_eco_label"), n: 1 },
+    { key: "low",     label: tr("ui.seedfinder.speed_low_label"), n: 2 },
+    { key: "medium",  label: tr("ui.seedfinder.speed_medium_label"), n: 4 },
+    { key: "high",    label: tr("ui.seedfinder.speed_high_label", { n: String(highCount) }), n: highCount },
+    { key: "max",     label: tr("ui.seedfinder.speed_max_label", { n: String(maxCount) }), n: maxCount },
+    { key: "extreme", label: tr("ui.seedfinder.speed_extreme_label", { n: String(extremeCount) }), n: extremeCount },
   ];
   const seen = new Set<number>();
   const tiers = tiersRaw.filter(t => { if (seen.has(t.n)) return false; seen.add(t.n); return true; });
@@ -473,13 +482,13 @@ function SpeedSelect({
       <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
       <SelectContent>
         <div className="px-2 py-1.5 text-[10px] uppercase tracking-wide text-zinc-500 border-b border-zinc-800 mb-1">
-          Detected: {profile.label}
+          {tr("ui.seedfinder.detected")}: {profile.label}
         </div>
         {tiers.map(t => {
           const isRec = t.key === profile.recommendedTier;
           return (
             <SelectItem key={t.key} value={t.key}>
-              {t.label}{isRec ? "  ★ recommended" : ""}
+              {t.label}{isRec ? `  ★ ${tr("ui.seedfinder.recommended")}` : ""}
             </SelectItem>
           );
         })}
@@ -489,33 +498,29 @@ function SpeedSelect({
 }
 
 function SpeedHelp({ profile }: { profile: DeviceProfile }) {
+  const t = useT();
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button
           type="button"
           className="inline-flex items-center justify-center h-4 w-4 rounded-full text-zinc-500 hover:text-yellow-300 transition-colors"
-          aria-label="What is search speed?"
+          aria-label={t("ui.seedfinder.search_speed_q")}
         >
           <HelpCircle className="h-3.5 w-3.5" />
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-80 text-xs leading-relaxed space-y-2 bg-zinc-950 border-yellow-500/30">
-        <div className="font-semibold text-yellow-300 text-sm">How search speed works</div>
-        <p className="text-zinc-300">
-          Search speed is how many parallel workers crunch seeds on your
-          device at the same time. More workers = more seeds per second,
-          but also more heat and more CPU usage.
-        </p>
+        <div className="font-semibold text-yellow-300 text-sm">{t("ui.seedfinder.search_speed_how")}</div>
+        <p className="text-zinc-300">{t("ui.seedfinder.speed_help_intro")}</p>
         <ul className="text-zinc-300 space-y-1 list-disc pl-4">
-          <li><span className="text-emerald-300">Eco / Low</span> — light, good for phones or background search.</li>
-          <li><span className="text-yellow-200">Medium / High</span> — balanced, your computer stays usable.</li>
-          <li><span className="text-orange-300">Max / Extreme</span> — pushes your CPU hard, fans will spin.</li>
+          <li><span className="text-emerald-300">{t("ui.seedfinder.eco_low")}</span> — {t("ui.seedfinder.eco_low_desc")}</li>
+          <li><span className="text-yellow-200">{t("ui.seedfinder.medium_high")}</span> — {t("ui.seedfinder.medium_high_desc")}</li>
+          <li><span className="text-orange-300">{t("ui.seedfinder.max_extreme")}</span> — {t("ui.seedfinder.max_extreme_desc")}</li>
         </ul>
         <div className="rounded border border-yellow-500/20 bg-yellow-500/5 p-2 text-zinc-300">
-          We detected <span className="text-yellow-200">{profile.label}</span>
-          {" "}and picked <span className="text-yellow-200">{profile.recommendedTier}</span> as the default.
-          You can override it anytime.
+          {t("ui.seedfinder.speed_help_detected")} <span className="text-yellow-200">{profile.label}</span>
+          {" "}{t("ui.seedfinder.speed_help_picked")} <span className="text-yellow-200">{profile.recommendedTier}</span> {t("ui.seedfinder.speed_help_as_default")}
         </div>
       </PopoverContent>
     </Popover>
@@ -533,29 +538,30 @@ function AddFilterMenu({
   disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useT();
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button size="sm" variant="outline" disabled={disabled} className="h-8 border-yellow-500/30 text-yellow-200 hover:text-yellow-100">
-          <Plus className="mr-1 h-3.5 w-3.5" /> Add filter
+          <Plus className="mr-1 h-3.5 w-3.5" /> {t("ui.seedfinder.add_filter")}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-56 p-1 bg-zinc-950 border-yellow-500/30">
         <button onClick={() => { onAddVoucher(); setOpen(false); }} className="w-full text-left px-3 py-2 text-xs rounded hover:bg-amber-500/10 text-amber-200">
-          <div className="font-semibold">Voucher</div>
-          <div className="text-[10px] text-zinc-500">Match a voucher reaching the shop</div>
+          <div className="font-semibold">{t("ui.seedfinder.voucher")}</div>
+          <div className="text-[10px] text-zinc-500">{t("ui.seedfinder.voucher_desc")}</div>
         </button>
         <button onClick={() => { onAddTag(); setOpen(false); }} className="w-full text-left px-3 py-2 text-xs rounded hover:bg-blue-500/10 text-blue-200">
-          <div className="font-semibold">Tag</div>
-          <div className="text-[10px] text-zinc-500">Small or big blind tag for an ante</div>
+          <div className="font-semibold">{t("ui.seedfinder.tag")}</div>
+          <div className="text-[10px] text-zinc-500">{t("ui.seedfinder.tag_desc")}</div>
         </button>
         <button onClick={() => { onAddBoss(); setOpen(false); }} className="w-full text-left px-3 py-2 text-xs rounded hover:bg-red-500/10 text-red-200">
-          <div className="font-semibold">Boss</div>
-          <div className="text-[10px] text-zinc-500">Force a specific boss at an ante</div>
+          <div className="font-semibold">{t("ui.seedfinder.boss")}</div>
+          <div className="text-[10px] text-zinc-500">{t("ui.seedfinder.boss_desc")}</div>
         </button>
         <button onClick={() => { onAddStandard(); setOpen(false); }} className="w-full text-left px-3 py-2 text-xs rounded hover:bg-cyan-500/10 text-cyan-200">
-          <div className="font-semibold">Standard pack card</div>
-          <div className="text-[10px] text-zinc-500">Rank · suit · enh · edition · seal</div>
+          <div className="font-semibold">{t("ui.seedfinder.standard_pack_card")}</div>
+          <div className="text-[10px] text-zinc-500">{t("ui.seedfinder.suit_enh_seal_desc")}</div>
         </button>
       </PopoverContent>
     </Popover>
@@ -563,6 +569,7 @@ function AddFilterMenu({
 }
 
 export function SeedFinderTab() {
+  const t = useT();
   const finder = useSeedTabState(s => s.finder);
   const deviceProfile = useMemo(() => detectDeviceProfile(), []);
 
@@ -881,11 +888,8 @@ export function SeedFinderTab() {
               disabled={running}
             />
             <label htmlFor="legacy-engine-toggle" className="text-xs text-zinc-300 leading-snug">
-              <span className="font-semibold text-zinc-200">Use legacy engine</span>
-              <span className="block text-zinc-500">
-                Falls back to the V1 Immolate WASM finder. Slower; doesn't support
-                editions/stickers/slots/bosses/standard-card-level filters.
-              </span>
+              <span className="font-semibold text-zinc-200">{t("ui.seedfinder.use_legacy_label")}</span>
+              <span className="block text-zinc-500">{t("ui.seedfinder.use_legacy_desc")}</span>
             </label>
           </div>
         )}
@@ -903,12 +907,8 @@ export function SeedFinderTab() {
               disabled={running}
             />
             <label htmlFor="v3-beta-toggle" className="text-xs text-zinc-300 leading-snug">
-              <span className="font-semibold text-cyan-200">V3 engine (WebGPU beta)</span>
-              <span className="block text-zinc-500">
-                Probes your GPU and runs a verified integer benchmark. Seed searches
-                still run on the WASM CPU engine in this build — see V3_DESIGN.md for
-                why GPU search is still blocked on full f64 emulation.
-              </span>
+              <span className="font-semibold text-cyan-200">{t("ui.seedfinder.v3_engine_title")}</span>
+              <span className="block text-zinc-500">{t("ui.seedfinder.v3_engine_desc")}</span>
               {v3Beta && v3Status && (
                 <span className="block mt-1 text-cyan-300 font-mono text-[10px]">
                   {v3Status}
@@ -920,21 +920,21 @@ export function SeedFinderTab() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           <div>
-            <Label className="text-xs text-zinc-400">Deck</Label>
+            <Label className="text-xs text-zinc-400">{t("ui.seedfinder.deck")}</Label>
             <Select value={deck} onValueChange={v => setFinder({ deck: v })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>{DECKS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
             </Select>
           </div>
           <div>
-            <Label className="text-xs text-zinc-400">Stake</Label>
+            <Label className="text-xs text-zinc-400">{t("ui.seedfinder.stake")}</Label>
             <Select value={stake} onValueChange={v => setFinder({ stake: v })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>{STAKES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
             </Select>
           </div>
           <div>
-            <Label className="text-xs text-zinc-400">Version</Label>
+            <Label className="text-xs text-zinc-400">{t("ui.seedfinder.version")}</Label>
             <Select value={version} onValueChange={v => setFinder({ version: v })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -946,7 +946,7 @@ export function SeedFinderTab() {
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <Label className="text-xs text-zinc-400">Search speed</Label>
+              <Label className="text-xs text-zinc-400">{t("ui.seedfinder.search_speed")}</Label>
               <SpeedHelp profile={deviceProfile} />
             </div>
             <SpeedSelect value={threads} onChange={n => setFinder({ threads: n })} disabled={running} profile={deviceProfile} />
@@ -956,7 +956,7 @@ export function SeedFinderTab() {
 
       <div className="space-y-2">
         <Label className="text-xs text-zinc-400">
-          Target jokers {selected.length > 0 && <span className="text-yellow-300">({selected.length})</span>}
+          {t("ui.seedfinder.target_jokers")} {selected.length > 0 && <span className="text-yellow-300">({selected.length})</span>}
         </Label>
         <JokerSearchBar onAdd={addJoker} selectedNames={selectedNames} />
       </div>
@@ -995,29 +995,29 @@ export function SeedFinderTab() {
           disabled={running}
         />
         <span className="text-[11px] text-zinc-500">
-          Add voucher · tag · boss · standard-pack card constraints
+          {t("ui.seedfinder.add_filter_hint")}
         </span>
       </div>
 
       <div className="flex flex-wrap items-center gap-3 rounded-md border border-yellow-500/15 bg-zinc-950/60 p-3">
         {!running ? (
           <Button onClick={start} disabled={totalConstraints === 0} className="bg-yellow-400 hover:bg-yellow-300 text-zinc-950" data-testid="finder-start">
-            <Play className="mr-2 h-4 w-4" /> Start search
+            <Play className="mr-2 h-4 w-4" /> {t("ui.seedfinder.start_search")}
           </Button>
         ) : (
           <Button onClick={stop} variant="destructive" data-testid="finder-stop">
-            <Square className="mr-2 h-4 w-4" /> Stop
+            <Square className="mr-2 h-4 w-4" /> {t("ui.seedfinder.stop")}
           </Button>
         )}
         {matches.length > 0 && !running && (
           <Button onClick={clearMatches} variant="ghost" size="sm" className="text-zinc-400">
-            Clear results
+            {t("ui.seedfinder.clear_results")}
           </Button>
         )}
         {totalConstraints > 0 && (
-          <Button onClick={shareSearch} variant="ghost" size="sm" className="text-zinc-300" title="Copy a link to this exact search">
+          <Button onClick={shareSearch} variant="ghost" size="sm" className="text-zinc-300" title={t("ui.seedfinder.copy_link_title")}>
             {copiedShare ? <Check className="mr-1 h-3.5 w-3.5 text-emerald-300" /> : <Share2 className="mr-1 h-3.5 w-3.5" />}
-            {copiedShare ? "Copied" : "Share search"}
+            {copiedShare ? t("ui.seedfinder.copied") : t("ui.seedfinder.share_search")}
           </Button>
         )}
         <Button
@@ -1025,9 +1025,9 @@ export function SeedFinderTab() {
           variant="ghost"
           size="sm"
           className="text-zinc-300"
-          title="Run the engine on a single seed and show which clauses match where"
+          title={t("ui.seedfinder.verify_seed_title")}
         >
-          Verify a seed
+          {t("ui.seedfinder.verify_seed_btn")}
         </Button>
         <div className="flex flex-wrap gap-4 text-xs font-mono ml-auto">
           {(() => {
@@ -1035,21 +1035,21 @@ export function SeedFinderTab() {
             // During WASM load + first batch, scanned/rate are legitimately
             // unknown. Surface the phase instead of a misleading "0".
             const checkedLabel = phase === "loading"
-              ? "loading WASM…"
+              ? t("ui.seedfinder.loading_wasm")
               : progress.totalTries.toLocaleString();
             const rateLabel = phase === "loading"
               ? "—"
               : phase === "warming"
-                ? "warming up…"
+                ? t("ui.seedfinder.warming_up")
                 : `${progress.seedsPerSec.toLocaleString()}/s`;
             return (
               <>
-                <div><span className="text-zinc-500">checked </span><span className="text-yellow-200">{checkedLabel}</span></div>
-                <div><span className="text-zinc-500">rate </span><span className="text-yellow-200">{rateLabel}</span></div>
-                <div><span className="text-zinc-500">elapsed </span><span className="text-yellow-200">{(progress.elapsedMs / 1000).toFixed(1)}s</span></div>
-                <div><span className="text-zinc-500">matches </span><span className="text-emerald-300">{matches.length}</span></div>
+                <div><span className="text-zinc-500">{t("ui.seedfinder.checked_label")} </span><span className="text-yellow-200">{checkedLabel}</span></div>
+                <div><span className="text-zinc-500">{t("ui.seedfinder.rate_label")} </span><span className="text-yellow-200">{rateLabel}</span></div>
+                <div><span className="text-zinc-500">{t("ui.seedfinder.elapsed_label")} </span><span className="text-yellow-200">{(progress.elapsedMs / 1000).toFixed(1)}s</span></div>
+                <div><span className="text-zinc-500">{t("ui.seedfinder.matches_label")} </span><span className="text-emerald-300">{matches.length}</span></div>
                 {!useLegacyEngine && (progress as any).engine && (
-                  <div><span className="text-zinc-500">engine </span><span className="text-purple-300">{(progress as any).engine}</span></div>
+                  <div><span className="text-zinc-500">{t("ui.seedfinder.engine_label")} </span><span className="text-purple-300">{(progress as any).engine}</span></div>
                 )}
               </>
             );
@@ -1077,7 +1077,7 @@ export function SeedFinderTab() {
         <div className="flex items-start gap-2 rounded-md border border-red-500/40 bg-red-950/30 p-3 text-sm text-red-200">
           <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
           <div>
-            <div className="font-semibold">Search error</div>
+            <div className="font-semibold">{t("ui.seedfinder.search_error_title")}</div>
             <div className="text-xs text-red-300/80 mt-0.5">{error}</div>
           </div>
         </div>
@@ -1086,20 +1086,20 @@ export function SeedFinderTab() {
       {matches.length === 0 && !running && (
         <div className="text-center text-sm text-zinc-500 italic py-8">
           {totalConstraints === 0
-            ? "Add target jokers above or use \"Add filter\" for vouchers, tags, bosses, or standard-pack cards."
-            : "Click Start search to begin brute-forcing seeds."}
+            ? t("ui.seedfinder.empty_no_constraints")
+            : t("ui.seedfinder.empty_ready")}
         </div>
       )}
       {matches.length === 0 && running && (
         <div className="text-center text-sm text-zinc-500 italic py-8">
-          Searching... no match yet. Rare constraints can take seconds to minutes.
+          {t("ui.seedfinder.searching_no_match")}
         </div>
       )}
 
       {matches.length > 0 && (
         <div className="space-y-2">
           <Label className="text-xs text-zinc-400">
-            Matches ({matches.length}{matches.length >= 50 ? ", showing last 50" : ""})
+            {t("ui.seedfinder.matches_header")} ({matches.length}{matches.length >= 50 ? ", " + t("ui.seedfinder.showing_last_50") : ""})
           </Label>
           {matches.slice().reverse().map((m, idx) => (
             <MatchCard
@@ -1115,14 +1115,16 @@ export function SeedFinderTab() {
   );
 }
 
-export function formatLocation(j: SeedMatch["jokerLocations"][number]): React.ReactNode {
+export function FormatLocation({ j }: { j: SeedMatch["jokerLocations"][number] }): React.ReactElement {
+  const t = useT();
+  const anteLabel = t("ui.seedfinder.ante_label");
   if (j.source === "shop") {
     const info = describeShopSlot(j.slot, j.ante);
     return (
       <>
-        Ante <span className="text-yellow-300 font-mono">{j.ante}</span>
+        {anteLabel} <span className="text-yellow-300 font-mono">{j.ante}</span>
         {" · "}<span className="text-zinc-300">{info.blindLabel}</span>
-        {" · shop item "}<span className="text-yellow-300 font-mono">{info.positionInShop}</span>
+        {" · " + t("ui.seedfinder.shop_item") + " "}<span className="text-yellow-300 font-mono">{info.positionInShop}</span>
       </>
     );
   }
@@ -1130,30 +1132,35 @@ export function formatLocation(j: SeedMatch["jokerLocations"][number]): React.Re
     const info = describePackSlot(j.slot, j.ante);
     return (
       <>
-        Ante <span className="text-yellow-300 font-mono">{j.ante}</span>
+        {anteLabel} <span className="text-yellow-300 font-mono">{j.ante}</span>
         {" · "}<span className="text-zinc-300">{info.blindLabel}</span>
-        {", "}<span className="text-yellow-300">{info.positionInShop === 1 ? "1st" : "2nd"} booster</span>
+        {", "}<span className="text-yellow-300">{info.positionInShop === 1 ? t("ui.seedfinder.first_booster") : t("ui.seedfinder.second_booster")}</span>
         {" ("}<span className="text-purple-300">{j.packName}</span>{")"}
-        {", card "}<span className="text-yellow-300 font-mono">#{j.packPosition}</span>
+        {", " + t("ui.seedfinder.card") + " "}<span className="text-yellow-300 font-mono">#{j.packPosition}</span>
       </>
     );
   }
   if (j.source === "arcana-soul" || j.source === "spectral-soul" || j.source === "spectral-wraith") {
     const info = describePackSlot(j.slot, j.ante);
-    const soulType = j.source === "arcana-soul" ? "Arcana"
-      : j.source === "spectral-soul" ? "Spectral"
-      : "Spectral (Wraith)";
+    const soulType = j.source === "arcana-soul" ? t("ui.seedfinder.arcana")
+      : j.source === "spectral-soul" ? t("ui.seedfinder.spectral")
+      : t("ui.seedfinder.spectral_wraith_label");
     return (
       <>
-        Ante <span className="text-yellow-300 font-mono">{j.ante}</span>
+        {anteLabel} <span className="text-yellow-300 font-mono">{j.ante}</span>
         {" · "}<span className="text-zinc-300">{info.blindLabel}</span>
-        {", "}<span className="text-yellow-300">{info.positionInShop === 1 ? "1st" : "2nd"} booster</span>
+        {", "}<span className="text-yellow-300">{info.positionInShop === 1 ? t("ui.seedfinder.first_booster") : t("ui.seedfinder.second_booster")}</span>
         {" ("}<span className="text-purple-300">{j.packName}</span>{") "}
-        <span className="text-purple-300 italic">[{soulType} → Soul card]</span>
+        <span className="text-purple-300 italic">[{soulType} {t("ui.seedfinder.soul_card_suffix")}]</span>
       </>
     );
   }
-  return <>Ante {j.ante}</>;
+  return <>{anteLabel} {j.ante}</>;
+}
+
+// Backwards-compatible wrapper (legacy callers expected a plain function).
+export function formatLocation(j: SeedMatch["jokerLocations"][number]): React.ReactNode {
+  return <FormatLocation j={j} />;
 }
 
 export function MatchCard({
@@ -1169,6 +1176,7 @@ export function MatchCard({
   trailing?: React.ReactNode;
   onVerify?: (seed: string) => void;
 }) {
+  const t = useT();
   const saved = useSeedTabState(s => preset ? isSeedSaved(match.seed, preset.deck, preset.stake, preset.version) : false);
 
   function onSave() {
@@ -1190,17 +1198,17 @@ export function MatchCard({
         <Button
           size="sm" variant="ghost" className="h-7 px-2 text-xs"
           onClick={() => navigator.clipboard?.writeText(match.seed)}
-          title="Copy seed"
+          title={t("ui.seedfinder.copy_seed_title")}
         >
-          Copy
+          {t("ui.seedfinder.copy_btn")}
         </Button>
         {onVerify && (
           <Button
             size="sm" variant="ghost" className="h-7 px-2 text-xs text-purple-300 hover:text-purple-200"
             onClick={() => onVerify(match.seed)}
-            title="Run the engine on this seed and show all matched locations"
+            title={t("ui.seedfinder.verify_match_title")}
           >
-            Verify
+            {t("ui.seedfinder.verify_btn")}
           </Button>
         )}
         {showSave && preset && (
@@ -1210,11 +1218,11 @@ export function MatchCard({
             disabled={saved}
             className={`h-7 px-2 text-xs ${saved ? "text-emerald-300" : "bg-yellow-400 hover:bg-yellow-300 text-zinc-950"}`}
             onClick={onSave}
-            title={saved ? "Already saved" : "Save seed + preset to library"}
+            title={saved ? t("ui.seedfinder.already_saved") : t("ui.seedfinder.save_match_title")}
             data-testid={`save-seed-${match.seed}`}
           >
             {saved ? <BookmarkCheck className="mr-1 h-3.5 w-3.5" /> : <BookmarkPlus className="mr-1 h-3.5 w-3.5" />}
-            {saved ? "Saved" : "Save this seed"}
+            {saved ? t("ui.seedfinder.saved") : t("ui.seedfinder.save_this_seed")}
           </Button>
         )}
         {trailing}
@@ -1236,11 +1244,11 @@ export function MatchCard({
                   )}
                   {(j.eternal || j.perishable || j.rental) && (
                     <span className="text-amber-300/80 ml-2 text-xs">
-                      [{[j.eternal && "Eternal", j.perishable && "Perishable", j.rental && "Rental"].filter(Boolean).join(", ")}]
+                      [{[j.eternal && t("ui.seedfinder.eternal"), j.perishable && t("ui.seedfinder.perishable"), j.rental && t("ui.seedfinder.rental")].filter(Boolean).join(", ")}]
                     </span>
                   )}
                 </div>
-                <div className="text-xs text-zinc-400">{formatLocation(j)}</div>
+                <div className="text-xs text-zinc-400"><FormatLocation j={j} /></div>
               </div>
             </div>
           );
