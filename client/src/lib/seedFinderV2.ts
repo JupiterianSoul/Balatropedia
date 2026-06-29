@@ -59,7 +59,7 @@ interface EngineFilter {
   min_score: number | null;
 }
 
-function buildFilterJson(cfg: FinderConfig): string {
+export function buildFilterJson(cfg: FinderConfig): string {
   const clauses: EngineClause[] = [];
 
   // Each user constraint becomes ONE top-level clause: an `any_of` that
@@ -152,13 +152,20 @@ function buildFilterJson(cfg: FinderConfig): string {
   for (const sc of cfg.standardCardConstraints ?? []) {
     const subs: EngineClause[] = [];
     const edi = sc.edition ? sc.edition.toLowerCase() : undefined;
+    // Engine accepts lowercase short seal keys (red/blue/gold/purple).
     const seal = sc.seal ? sc.seal.toLowerCase() : undefined;
+    // Combine suit+rank into the canonical "Ace of Spades" / "10 of Hearts"
+    // form the engine indexes on. If `base` is explicitly set, prefer it.
+    let base = sc.base ?? "";
+    if (!base && sc.suit && sc.rank) {
+      base = `${sc.rank} of ${sc.suit}`;
+    }
     for (let ante = 1; ante <= sc.maxAnte; ante++) {
       subs.push({
         kind: "ante_standard_card_is",
         ante,
         max_packs: PACK_SLOTS,
-        base: sc.base ?? "",
+        base,
         enhancement: sc.enhancement || undefined,
         edition: edi,
         seal,

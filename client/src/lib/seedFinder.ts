@@ -29,10 +29,14 @@ export interface BossConstraint {
 }
 
 export interface StandardCardConstraint {
+  // Either `base` ("Ace of Spades") or `suit`/`rank` separately. The UI uses
+  // suit+rank, the adapter combines into base before sending to the engine.
   base?: string;           // e.g. "Ace of Spades" — empty = any base
-  enhancement?: string;    // e.g. "Glass Card"
+  suit?: "" | "Spades" | "Hearts" | "Clubs" | "Diamonds";
+  rank?: "" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "Jack" | "Queen" | "King" | "Ace";
+  enhancement?: string;    // e.g. "Glass" (engine canonical key, NOT "Glass Card")
   edition?: "" | "Foil" | "Holographic" | "Polychrome";
-  seal?: "" | "Red Seal" | "Blue Seal" | "Gold Seal" | "Purple Seal";
+  seal?: "" | "Red" | "Blue" | "Gold" | "Purple";
   maxAnte: number;
 }
 
