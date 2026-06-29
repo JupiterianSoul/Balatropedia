@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Star, AlertTriangle } from "lucide-react";
+import { Star, AlertTriangle, Check } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Level, Role, Scaling, Stage, JOKER_MAP, Rarity, Popularity, Difficulty,
@@ -148,6 +148,51 @@ export function StarToggle({
         size={size}
         className={cn(active && "fill-accent text-accent")}
       />
+    </button>
+  );
+}
+
+/**
+ * Compact on/off checkbox toggle. Square pill with a check icon when active,
+ * empty when inactive. Used for boolean settings (sound, CRT, shake) so they
+ * read like check-boxes instead of an On/Off text pill.
+ */
+export function CheckToggle({
+  active,
+  onToggle,
+  testId,
+  ariaLabel,
+  size = 16,
+}: {
+  active: boolean;
+  onToggle: () => void;
+  testId: string;
+  ariaLabel: string;
+  size?: number;
+}) {
+  return (
+    <button
+      type="button"
+      data-no-sound
+      onClick={(e) => {
+        e.stopPropagation();
+        playSound(active ? "toggle_off" : "favorite");
+        onToggle();
+      }}
+      aria-label={ariaLabel}
+      aria-pressed={active}
+      role="switch"
+      aria-checked={active}
+      data-testid={testId}
+      className={cn(
+        "inline-flex h-6 w-6 items-center justify-center rounded-md border-2 transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        active
+          ? "border-[hsl(198_18%_9%)] bg-accent text-[hsl(198_18%_9%)] shadow-[inset_0_1px_0_hsl(0_0%_100%/0.4),0_2px_0_hsl(198_18%_4%)]"
+          : "border-border bg-card text-transparent hover:border-accent",
+      )}
+    >
+      <Check size={size} strokeWidth={3} className={cn(!active && "opacity-0")} />
     </button>
   );
 }
