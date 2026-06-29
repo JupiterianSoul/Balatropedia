@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense, type ComponentType } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { X, Menu } from "lucide-react";
 import {
@@ -18,31 +18,47 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SoundToggle } from "@/components/SoundToggle";
 import { useI18n, useT } from "@/lib/i18n";
 import { burstConfetti } from "@/lib/confetti";
+import { TabLoader } from "@/components/TabLoader";
+import { BottomTabBar } from "@/components/BottomTabBar";
+// Home tab is eager — it is the first paint and the most common landing tab,
+// so we want zero chunk-load delay there. Every other tab gets code-split into
+// its own JS chunk so the app shell can paint before any of them downloads.
 import { HomeTab } from "@/tabs/HomeTab";
-import { JokersTab } from "@/tabs/JokersTab";
-import { MyRunTab } from "@/tabs/MyRunTab";
-import { RunChallengeTab } from "@/tabs/RunChallengeTab";
-import { BuildLabTab } from "@/tabs/BuildLabTab";
-import { ScoreCalculatorTab } from "@/tabs/ScoreCalculatorTab";
-import { SeedsTab } from "@/tabs/SeedsTab";
-import { SynergyTab } from "@/tabs/SynergyTab";
-import { CombosTab } from "@/tabs/CombosTab";
-import { ArchetypesTab } from "@/tabs/ArchetypesTab";
-import { BossBlindsTab } from "@/tabs/BossBlindsTab";
-import { DecksTab } from "@/tabs/DecksTab";
-import { StakesTab } from "@/tabs/StakesTab";
-import { ConsumablesTab } from "@/tabs/ConsumablesTab";
-import { VouchersTab } from "@/tabs/VouchersTab";
-import { ModifiersTab } from "@/tabs/ModifiersTab";
-import { CompareTab } from "@/tabs/CompareTab";
-import { SkeletonTab } from "@/tabs/SkeletonTab";
-import { FavoritesTab } from "@/tabs/FavoritesTab";
-import { GlossaryTab } from "@/tabs/GlossaryTab";
-import { SettingsTab } from "@/tabs/SettingsTab";
-import { HelpTab } from "@/tabs/HelpTab";
-import { AboutTab } from "@/tabs/AboutTab";
-import { TierListTab } from "@/tabs/TierListTab";
-import { WhatsNewTab } from "@/tabs/WhatsNewTab";
+
+// Vite's dynamic-import code-splitting requires default exports, but our tabs
+// are named exports. lazyNamed() bridges the gap by adapting the module on
+// the fly so we don't have to touch 25 tab files.
+function lazyNamed<T extends string>(
+  loader: () => Promise<Record<T, ComponentType<any>>>,
+  exportName: T,
+) {
+  return lazy(() => loader().then((m) => ({ default: m[exportName] })));
+}
+
+const JokersTab = lazyNamed(() => import("@/tabs/JokersTab"), "JokersTab");
+const MyRunTab = lazyNamed(() => import("@/tabs/MyRunTab"), "MyRunTab");
+const RunChallengeTab = lazyNamed(() => import("@/tabs/RunChallengeTab"), "RunChallengeTab");
+const BuildLabTab = lazyNamed(() => import("@/tabs/BuildLabTab"), "BuildLabTab");
+const ScoreCalculatorTab = lazyNamed(() => import("@/tabs/ScoreCalculatorTab"), "ScoreCalculatorTab");
+const SeedsTab = lazyNamed(() => import("@/tabs/SeedsTab"), "SeedsTab");
+const SynergyTab = lazyNamed(() => import("@/tabs/SynergyTab"), "SynergyTab");
+const CombosTab = lazyNamed(() => import("@/tabs/CombosTab"), "CombosTab");
+const ArchetypesTab = lazyNamed(() => import("@/tabs/ArchetypesTab"), "ArchetypesTab");
+const BossBlindsTab = lazyNamed(() => import("@/tabs/BossBlindsTab"), "BossBlindsTab");
+const DecksTab = lazyNamed(() => import("@/tabs/DecksTab"), "DecksTab");
+const StakesTab = lazyNamed(() => import("@/tabs/StakesTab"), "StakesTab");
+const ConsumablesTab = lazyNamed(() => import("@/tabs/ConsumablesTab"), "ConsumablesTab");
+const VouchersTab = lazyNamed(() => import("@/tabs/VouchersTab"), "VouchersTab");
+const ModifiersTab = lazyNamed(() => import("@/tabs/ModifiersTab"), "ModifiersTab");
+const CompareTab = lazyNamed(() => import("@/tabs/CompareTab"), "CompareTab");
+const SkeletonTab = lazyNamed(() => import("@/tabs/SkeletonTab"), "SkeletonTab");
+const FavoritesTab = lazyNamed(() => import("@/tabs/FavoritesTab"), "FavoritesTab");
+const GlossaryTab = lazyNamed(() => import("@/tabs/GlossaryTab"), "GlossaryTab");
+const SettingsTab = lazyNamed(() => import("@/tabs/SettingsTab"), "SettingsTab");
+const HelpTab = lazyNamed(() => import("@/tabs/HelpTab"), "HelpTab");
+const AboutTab = lazyNamed(() => import("@/tabs/AboutTab"), "AboutTab");
+const TierListTab = lazyNamed(() => import("@/tabs/TierListTab"), "TierListTab");
+const WhatsNewTab = lazyNamed(() => import("@/tabs/WhatsNewTab"), "WhatsNewTab");
 import { KofiFooterButton } from "@/components/KofiButton";
 
 const NAV_GROUPS: NavGroup[] = [
@@ -203,19 +219,22 @@ export default function Home() {
         { }
         <div className="flex min-w-0 flex-1 flex-col md:h-[100dvh] md:overflow-y-auto">
           {}
-          <header className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden">
-            <div className="grid grid-cols-[auto_auto_1fr_auto] items-center gap-2 px-3 py-2">
+          <header
+            className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden"
+            style={{ paddingTop: "env(safe-area-inset-top)" }}
+          >
+            <div className="grid grid-cols-[auto_auto_1fr_auto] items-center gap-2 px-3 py-3">
               {}
               <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
                 <SheetTrigger asChild>
                   <button
                     type="button"
-                    className="balatro-tab flex shrink-0 items-center justify-center !px-2 !py-2"
+                    className="balatro-tab flex h-11 w-11 shrink-0 items-center justify-center !px-2 !py-2"
                     aria-label="Open menu"
                     data-testid="button-mobile-menu"
 
                   >
-                    <Menu className="h-5 w-5" strokeWidth={2.5} />
+                    <Menu className="h-6 w-6" strokeWidth={2.5} />
                   </button>
                 </SheetTrigger>
                 <SheetContent
@@ -245,7 +264,7 @@ export default function Home() {
 
               {}
               <h1
-                className="min-w-0 truncate text-center font-pixel text-[16px] font-bold leading-none tracking-tight"
+                className="min-w-0 truncate text-center font-pixel text-[20px] font-bold leading-none tracking-tight"
                 data-testid="mobile-topbar-title"
               >
                 {tab === "home" ? (
@@ -291,43 +310,53 @@ export default function Home() {
               <TabsContent value="home" className="mt-0 flex-1 min-h-0 min-w-0 w-full flex flex-col data-[state=inactive]:hidden"><HomeTab onNavigate={handleSelect} /></TabsContent>
             </div>
           ) : (
-          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
+          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 pb-24 md:pb-6">
             <div className="mount-fade" key={tab}>
-              <TabsContent value="jokers" className="mt-0"><JokersTab /></TabsContent>
-              <TabsContent value="myrun" className="mt-0"><MyRunTab /></TabsContent>
-              <TabsContent value="runchallenge" className="mt-0"><RunChallengeTab /></TabsContent>
-              <TabsContent value="buildlab" className="mt-0"><BuildLabTab /></TabsContent>
-              <TabsContent value="calculator" className="mt-0"><ScoreCalculatorTab /></TabsContent>
-              <TabsContent value="seeds" className="mt-0"><SeedsTab /></TabsContent>
-              <TabsContent value="synergies" className="mt-0"><SynergyTab /></TabsContent>
-              <TabsContent value="combos" className="mt-0"><CombosTab /></TabsContent>
-              <TabsContent value="archetypes" className="mt-0"><ArchetypesTab /></TabsContent>
-              <TabsContent value="tierlist" className="mt-0"><TierListTab /></TabsContent>
-              <TabsContent value="decks" className="mt-0"><DecksTab /></TabsContent>
-              <TabsContent value="stakes" className="mt-0"><StakesTab /></TabsContent>
-              <TabsContent value="consumables" className="mt-0"><ConsumablesTab /></TabsContent>
-              <TabsContent value="vouchers" className="mt-0"><VouchersTab /></TabsContent>
-              <TabsContent value="modifiers" className="mt-0"><ModifiersTab /></TabsContent>
-              <TabsContent value="bosses" className="mt-0"><BossBlindsTab /></TabsContent>
-              <TabsContent value="compare" className="mt-0"><CompareTab /></TabsContent>
-              <TabsContent value="skeleton" className="mt-0"><SkeletonTab /></TabsContent>
-              <TabsContent value="favorites" className="mt-0"><FavoritesTab /></TabsContent>
-              <TabsContent value="glossary" className="mt-0"><GlossaryTab /></TabsContent>
-              <TabsContent value="help" className="mt-0"><HelpTab /></TabsContent>
-              <TabsContent value="about" className="mt-0"><AboutTab /></TabsContent>
-              <TabsContent value="whatsnew" className="mt-0"><WhatsNewTab /></TabsContent>
-              <TabsContent value="settings" className="mt-0"><SettingsTab /></TabsContent>
+              <Suspense fallback={<TabLoader />}>
+                <TabsContent value="jokers" className="mt-0"><JokersTab /></TabsContent>
+                <TabsContent value="myrun" className="mt-0"><MyRunTab /></TabsContent>
+                <TabsContent value="runchallenge" className="mt-0"><RunChallengeTab /></TabsContent>
+                <TabsContent value="buildlab" className="mt-0"><BuildLabTab /></TabsContent>
+                <TabsContent value="calculator" className="mt-0"><ScoreCalculatorTab /></TabsContent>
+                <TabsContent value="seeds" className="mt-0"><SeedsTab /></TabsContent>
+                <TabsContent value="synergies" className="mt-0"><SynergyTab /></TabsContent>
+                <TabsContent value="combos" className="mt-0"><CombosTab /></TabsContent>
+                <TabsContent value="archetypes" className="mt-0"><ArchetypesTab /></TabsContent>
+                <TabsContent value="tierlist" className="mt-0"><TierListTab /></TabsContent>
+                <TabsContent value="decks" className="mt-0"><DecksTab /></TabsContent>
+                <TabsContent value="stakes" className="mt-0"><StakesTab /></TabsContent>
+                <TabsContent value="consumables" className="mt-0"><ConsumablesTab /></TabsContent>
+                <TabsContent value="vouchers" className="mt-0"><VouchersTab /></TabsContent>
+                <TabsContent value="modifiers" className="mt-0"><ModifiersTab /></TabsContent>
+                <TabsContent value="bosses" className="mt-0"><BossBlindsTab /></TabsContent>
+                <TabsContent value="compare" className="mt-0"><CompareTab /></TabsContent>
+                <TabsContent value="skeleton" className="mt-0"><SkeletonTab /></TabsContent>
+                <TabsContent value="favorites" className="mt-0"><FavoritesTab /></TabsContent>
+                <TabsContent value="glossary" className="mt-0"><GlossaryTab /></TabsContent>
+                <TabsContent value="help" className="mt-0"><HelpTab /></TabsContent>
+                <TabsContent value="about" className="mt-0"><AboutTab /></TabsContent>
+                <TabsContent value="whatsnew" className="mt-0"><WhatsNewTab /></TabsContent>
+                <TabsContent value="settings" className="mt-0"><SettingsTab /></TabsContent>
+              </Suspense>
               <KofiFooterButton />
             </div>
           </main>
           )}
 
           {tab !== "home" && (
-            <footer className="border-t border-border py-5 text-center text-xs text-muted-foreground">
+            <footer className="border-t border-border py-5 pb-24 text-center text-xs text-muted-foreground md:pb-5">
               {t("ui.header.footer")}
             </footer>
           )}
         </div>
+
+        {/* Mobile-only native-style bottom navigation. Hidden on md+ by the
+            component itself; the desktop sidebar above already covers nav. */}
+        <BottomTabBar
+          currentTab={tab}
+          onSelect={handleSelect}
+          resolveLabel={t}
+        />
       </Tabs>
 
       <JokerDetailSheet />
