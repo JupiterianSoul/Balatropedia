@@ -70,15 +70,57 @@ function substitutePlaceholders(s: string, id?: string, lang?: TokenLang): strin
   return out;
 }
 
-type Token = { type: "text" | "mult" | "chips" | "money" | "chance" | "tag"; text: string; tag?: string };
+type Token = { type: "text" | "mult" | "chips" | "money" | "chance" | "tag" | "reroll" | "hand"; text: string; tag?: string };
 
 const COLORS: Record<Exclude<Token["type"], "text">, string> = {
+  // Julie's semantic-color spec:
+  //   $ = gold, +/X Mult = red, Chips = blue, Reroll = green, hand types = yellow.
+  // bal-money is the same warm gold the game uses for $ values.
   mult: "hsl(var(--bal-mult))",
   chips: "hsl(var(--bal-chip))",
-  money: "hsl(var(--bal-money))",
+  money: "hsl(var(--bal-gold))",
   chance: "hsl(var(--bal-green))",
+  reroll: "hsl(var(--bal-green))",
+  hand: "hsl(var(--bal-gold))",
   tag: "hsl(var(--bal-purple))",
 };
+
+// Localized hand-type strings. We treat ALL of these as yellow.
+const HAND_TYPE_PATTERNS: RegExp[] = [
+  /\bFlush Five\b/g,
+  /\bFlush House\b/g,
+  /\bFive of a Kind\b/g,
+  /\bRoyal Flush\b/g,
+  /\bStraight Flush\b/g,
+  /\bFour of a Kind\b/g,
+  /\bFull House\b/g,
+  /\bThree of a Kind\b/g,
+  /\bTwo Pair\b/g,
+  /\bHigh Card\b/g,
+  /\bStraight\b/g,
+  /\bFlush\b/g,
+  /\bPair\b/g,
+  // French equivalents from NAMED_TOKENS above.
+  /\bQuinte Flush Royale\b/gi,
+  /\bQuinte Flush\b/gi,
+  /\bCarr\u00e9\b/g,
+  /\bDouble Paire\b/gi,
+  /\bBrelan\b/gi,
+  /\bPaire\b/gi,
+  /\bCouleur\b/gi,
+  /\bSuite\b/gi,
+  /\bCarte Haute\b/gi,
+  // Spanish equivalents.
+  /\bEscalera de Color Real\b/gi,
+  /\bEscalera de Color\b/gi,
+  /\bDoble Pareja\b/gi,
+  /\bPareja\b/gi,
+  /\bTrio\b/gi,
+  /\bP\u00f3ker\b/gi,
+  /\bColor\b/g,
+  /\bEscalera\b/gi,
+  /\bCarta Alta\b/gi,
+];
 
 const TAG_COLORS: Record<string, string> = {
   Joker: "hsl(var(--bal-mult))",
@@ -120,6 +162,11 @@ export function tokenizeBalatroText(raw: string, id?: string, lang?: TokenLang):
     { re: /-?\$\s*\d*(?:\.\d+)?/g, type: "money" },
 
     { re: /\b\d*\s*in\s*\d*\s*chance\b/gi, type: "chance" },
+
+    // Reroll / re-roll, plus FR "relance(r)" and ES "relanzar/reroll" — Julie's spec: green.
+    { re: /\b(?:re-?rolls?|rerolling|relances?|relancer|relanzar|reanudar)\b/gi, type: "reroll" },
+
+    ...HAND_TYPE_PATTERNS.map((re) => ({ re, type: "hand" as const })),
 
     {
       re: /\b(Jokers?|Tarots?|Spectrals?|Planets?|Hearts?|Diamonds?|Spades?|Clubs?|Gold|Steel|Glass|Stone)\b/g,

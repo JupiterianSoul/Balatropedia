@@ -26,8 +26,8 @@
     },
     "nav": {
       "home": "Inicio",
-      "jokers": "Jokers",
-      "library": "Jokers",
+      "jokers": "Comodines",
+      "library": "Biblioteca",
       "myrun": "Mi Partida",
       "runchallenge": "Reto de Partida",
       "buildlab": "Laboratorio de Build",
@@ -353,7 +353,7 @@
     "tierlist": {
       "disclaimer_title": "Las tier lists son orientativas, no absolutas",
       "disclaimer_body": "Las tier lists no son verdades absolutas - dependen del stake, mazo, habilidad, RNG y estilo de juego. Úsalas como punto de partida, no como regla.",
-      "filter_stake": "Stake",
+      "filter_stake": "Apuesta",
       "filter_deck": "Mazo",
       "stake_any": "Cualquier stake - General",
       "deck_any": "Cualquier mazo - General",
@@ -491,7 +491,7 @@
       "core_jokers": "Jokers clave",
       "no_core": "Sin núcleo obligatorio - improvisa.",
       "deck": "Mazo",
-      "stake": "Stake",
+      "stake": "Apuesta",
       "consumables": "Consumibles a buscar",
       "watch_out": "Cuidado con",
       "reroll": "Rehacer",
@@ -1498,7 +1498,7 @@
       "volume_hint": "Volumen maestro de todos los efectos de sonido.",
       "account_data": "Cuenta y datos",
       "favorites_count": "Favoritos guardados",
-      "jokers": "jokers",
+      "jokers": "comodines",
       "combos": "combos",
       "reset": "Limpiar",
       "reset_done": "Favoritos limpiados.",
@@ -1540,7 +1540,7 @@
         "tip": "Usa la barra de búsqueda con palabras de efecto ('retrigger', 'mult', 'descarte') para encontrar todos los jokers que tocan un mecanismo."
       },
       "myrun": {
-        "title": "My Run",
+        "title": "Mi partida",
         "body": "My Run es tu cuaderno en vivo para una sesión activa de Balatro. Pega tu seed, elige mazo, stake, ante y jokers actuales, y la pestaña saca synergies relevantes, blinds counter y prioridades de shop para tu build.\n\nEl estado persiste localmente y se sincroniza con tu cuenta de Google cuando estás conectado, así que cerrar la pestaña no borra tu run.",
         "tip": "Combina My Run con la pestaña Seeds una vez cargado un seed: las predicciones de shop y el contenido de packs se mantienen coherentes con tu motor."
       },
@@ -1565,7 +1565,7 @@
         "tip": "Si Finder va lento, baja los workers de CPU para liberar tu máquina; si está ocioso, súbelos. El estado persiste entre sesiones."
       },
       "synergies": {
-        "title": "Synergies",
+        "title": "Sinergias",
         "body": "Un grafo dirigido de pairings de jokers extraído de guías comunitarias (dood.gg, Balatro HQ, Mobalytics, threads de Reddit validados). Cada enlace está anotado con por qué funciona, el tipo de motor (stack XMult, manipulación de mazo, escalado, consistencia), popularidad y dificultad.\n\nCambia entre los lados A y B para ver qué jokers se emparejan con un objetivo dado.",
         "tip": "Ordena por tipo de motor para ver todos los stackers XMult o todos los enablers de retrigger de un vistazo."
       },
@@ -1585,12 +1585,12 @@
         "tip": "Clic derecho en un joker (o pulsación larga en móvil) abre su ficha detalle sin salir de la tier list."
       },
       "compare": {
-        "title": "Compare",
+        "title": "Comparar",
         "body": "Comparación lado a lado de dos jokers, mazos, vouchers o bosses. Efectos, escalado, fuentes, popularidad y synergies aparecen en columnas paralelas. Útil cuando el shop te impone una elección forzada entre dos cartas.",
         "tip": "La fila 'delta' resalta solo las diferencias; ignora las filas iguales para decidir rápido."
       },
       "skeleton": {
-        "title": "Skeleton",
+        "title": "Esqueleto",
         "body": "Skeleton es un planificador de run de 5 slots: elige mazo, stake y build objetivo, luego compromete jokers ante por ante para probar si el plan sobrevive las restricciones de boss blind.\n\nNo simula scoring; es un check estructural contra efectos de blind, particularidades de mazo y prerrequisitos de joker.",
         "tip": "Usa Skeleton antes de gastar dinero de shop en ante 1; un check de 30 segundos a menudo salva toda la run."
       },
@@ -1600,7 +1600,7 @@
         "tip": "Plasma y Abandoned tienen las mayores diferencias en curva de score; la pestaña de mazo lo detalla."
       },
       "stakes": {
-        "title": "Stakes",
+        "title": "Apuestas",
         "body": "Todos los stakes de Blanco a Oro, con el modificador acumulado que cada uno añade. Incluye una referencia rápida de qué jokers están nerfeados (probabilidad Eternal/Perishable/Rented) y qué condiciones de run se aprietan en stakes altos.",
         "tip": "Al subir stakes, el Black Stake (jokers Perishable) es el mayor cambio mental; combina esta pestaña con Tier List filtrada por 'sobrevive Black'."
       },
@@ -1610,7 +1610,7 @@
         "tip": "Cuando My Run señala un boss próximo, esta pestaña abre directamente a una ficha counter por boss con jokers recomendados."
       },
       "vouchers": {
-        "title": "Vouchers",
+        "title": "Vales",
         "body": "Cada voucher y su upgrade tier 2, con precio en shop, prerrequisitos y estimaciones de impacto. Los vouchers son decisiones que definen la run; esta pestaña ayuda a pesarlas.",
         "tip": "Ordena por 'impacto económico' para hacer subir los vouchers que imprimen dinero (Overstock, Reroll Surplus); ordena por 'escalado' para los enablers de build."
       },
