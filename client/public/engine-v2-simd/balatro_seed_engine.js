@@ -5,6 +5,33 @@ export function init() {
 }
 
 /**
+ * Inspect a single seed: run each filter clause and return a JSON report
+ * describing which clauses matched and where. Used by the "Verify a seed"
+ * UI panel.
+ * @param {string} filter_json
+ * @param {string} seed
+ * @param {number} deck_idx
+ * @param {number} stake_idx
+ * @returns {string}
+ */
+export function inspect_seed(filter_json, seed, deck_idx, stake_idx) {
+    let deferred3_0;
+    let deferred3_1;
+    try {
+        const ptr0 = passStringToWasm0(filter_json, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ptr1 = passStringToWasm0(seed, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        const ret = wasm.inspect_seed(ptr0, len0, ptr1, len1, deck_idx, stake_idx);
+        deferred3_0 = ret[0];
+        deferred3_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
+    }
+}
+
+/**
  * Scan a chunk and return packed match records.
  * Each record: 8 bytes rank LE + 1 byte score + 8 bytes seed (right-padded).
  * = 17 bytes per match.

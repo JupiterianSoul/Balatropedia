@@ -1,6 +1,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus, BookmarkPlus, BookmarkCheck, HelpCircle } from "lucide-react";
+import { Search, Loader2, Play, Square, Sparkles, AlertCircle, X, Plus, BookmarkPlus, BookmarkCheck, HelpCircle, Share2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -11,18 +11,31 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { detectDeviceProfile, type DeviceProfile } from "@/lib/deviceProfile";
 import { JokerSprite } from "@/components/JokerSprite";
 import { jokerIdFromName } from "@/lib/helpers";
-import { DECKS, STAKES, COMMON_JOKERS, UNCOMMON_JOKERS, RARE_JOKERS, LEGENDARY_JOKERS } from "@/lib/seedItems";
 import {
-  SeedFinder, type JokerConstraint, type SeedMatch, type FinderHandle,
+  DECKS, STAKES, COMMON_JOKERS, UNCOMMON_JOKERS, RARE_JOKERS, LEGENDARY_JOKERS,
+  VOUCHERS, TAGS, BOSSES, SUITS, RANKS,
+} from "@/lib/seedItems";
+import {
+  SeedFinder, type JokerConstraint, type VoucherConstraint, type TagConstraint,
+  type BossConstraint, type StandardCardConstraint, type SeedMatch, type FinderHandle,
 } from "@/lib/seedFinder";
 import { SeedFinderV2 } from "@/lib/seedFinderV2";
 import { describeShopSlot, describePackSlot } from "@/lib/seedFinderLocation";
 import { useSeedTabState, setFinder, updateFinder, saveSeed, isSeedSaved } from "@/lib/seedTabState";
 import { SeedReproductionPanel } from "@/components/SeedReproductionPanel";
+import { encodeFinderConfig, decodeFinderConfig } from "@/lib/seedFinderShare";
+import { VerifySeedPanel } from "@/components/VerifySeedPanel";
 
 const ALL_JOKER_NAMES = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
   .filter((j, i, a) => a.indexOf(j) === i)
   .sort();
+
+// Engine-canonical enhancement names. Engine matches the literal "Glass Card"
+// etc.; UI shows them verbatim so the user knows what's selected.
+const ENHANCEMENTS_FULL = [
+  "Bonus Card", "Mult Card", "Wild Card", "Glass Card",
+  "Steel Card", "Stone Card", "Gold Card", "Lucky Card",
+];
 
 function rarityOf(name: string): "common" | "uncommon" | "rare" | "legendary" | "unknown" {
   if (LEGENDARY_JOKERS.includes(name)) return "legendary";
@@ -147,17 +160,45 @@ function JokerSearchBar({
   );
 }
 
-function ConstraintRow({
-  c, onChange, onRemove, showV2Fields,
+function MaxAnteInput({
+  value, onChange,
+}: { value: number; onChange: (n: number) => void }) {
+  return (
+    <div>
+      <Label className="text-[10px] text-zinc-400">Max ante</Label>
+      <Input
+        type="number" min={1} max={39}
+        value={value}
+        onChange={e => onChange(Math.max(1, Math.min(39, Number(e.target.value) || 1)))}
+        className="h-8 w-[70px] text-xs"
+      />
+    </div>
+  );
+}
+
+function RemoveBtn({ onClick }: { onClick: () => void }) {
+  return (
+    <Button size="sm" variant="ghost" onClick={onClick} className="text-red-400 hover:text-red-300 h-8 px-2 ml-auto">
+      <X className="h-4 w-4" />
+    </Button>
+  );
+}
+
+function JokerConstraintRow({
+  c, onChange, onRemove,
 }: {
   c: JokerConstraint;
   onChange: (next: JokerConstraint) => void;
   onRemove: () => void;
-  showV2Fields: boolean;
 }) {
   const id = jokerIdFromName(c.joker);
   const r = rarityOf(c.joker);
   const slotValue = (c.slot === undefined || c.slot < 0 || c.slot === 255) ? "any" : String(c.slot);
+  const isLegendary = r === "legendary";
+  const isRare = r === "rare";
+  // For Legendaries, the only meaningful source is Soul → Legendary. Force
+  // that and hide the picker.
+  // For Rare jokers, Wraith source is also legal.
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
       {id ? (
@@ -182,36 +223,40 @@ function ConstraintRow({
           </SelectContent>
         </Select>
       </div>
-      {showV2Fields && (
-        <div title="Eternal/Perishable/Rental sticker filter. V2 only. Only meaningful from Black Stake upward.">
-          <Label className="text-[10px] text-zinc-400">Sticker</Label>
-          <Select value={c.sticker || "any"} onValueChange={v => onChange({ ...c, sticker: v === "any" ? "" : v as JokerConstraint["sticker"] })}>
-            <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="any">Any</SelectItem>
-              <SelectItem value="eternal">Eternal</SelectItem>
-              <SelectItem value="perishable">Perishable</SelectItem>
-              <SelectItem value="rental">Rental</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      )}
-      <div>
-        <Label className="text-[10px] text-zinc-400">Source</Label>
-        <Select value={c.source || "any"} onValueChange={v => onChange({ ...c, source: v === "any" ? "" : v as JokerConstraint["source"] })}>
-          <SelectTrigger className="h-8 w-[160px] text-xs"><SelectValue /></SelectTrigger>
+      <div title="Eternal/Perishable/Rental sticker filter. Only meaningful from Black Stake upward.">
+        <Label className="text-[10px] text-zinc-400">Sticker</Label>
+        <Select value={c.sticker || "any"} onValueChange={v => onChange({ ...c, sticker: v === "any" ? "" : v as JokerConstraint["sticker"] })}>
+          <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any source</SelectItem>
-            <SelectItem value="shop">Shop only</SelectItem>
-            <SelectItem value="buffoon-pack">Buffoon Pack</SelectItem>
-            <SelectItem value="arcana-soul">Arcana (Soul card)</SelectItem>
-            <SelectItem value="spectral-soul">Spectral (Soul card)</SelectItem>
-            <SelectItem value="spectral-wraith">Spectral (Wraith)</SelectItem>
+            <SelectItem value="any">Any</SelectItem>
+            <SelectItem value="eternal">Eternal</SelectItem>
+            <SelectItem value="perishable">Perishable</SelectItem>
+            <SelectItem value="rental">Rental</SelectItem>
           </SelectContent>
         </Select>
       </div>
-      {showV2Fields && ((c.source || "") === "" || c.source === "shop") && (
-        <div title="Which shop slot to match. Slot 0 = first card shown. 'Any' covers all 16 (default 4 + 12 rerolls). V2 only.">
+      <div>
+        <Label className="text-[10px] text-zinc-400">Source</Label>
+        <Select
+          value={c.source || "any"}
+          onValueChange={v => onChange({ ...c, source: v === "any" ? "" : v as JokerConstraint["source"] })}
+        >
+          <SelectTrigger className="h-8 w-[170px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {!isLegendary && <SelectItem value="any">Any source</SelectItem>}
+            {!isLegendary && <SelectItem value="shop">Shop only</SelectItem>}
+            {!isLegendary && <SelectItem value="buffoon-pack">Buffoon Pack</SelectItem>}
+            <SelectItem value="arcana-soul">Arcana (Soul card)</SelectItem>
+            <SelectItem value="spectral-soul">Spectral (Soul card)</SelectItem>
+            {(isRare || !isLegendary) && <SelectItem value="spectral-wraith">Spectral (Wraith)</SelectItem>}
+          </SelectContent>
+        </Select>
+        {isLegendary && (
+          <div className="text-[10px] text-purple-300/80 mt-0.5">Legendary — forced via Soul</div>
+        )}
+      </div>
+      {((c.source || "") === "" || c.source === "shop") && !isLegendary && (
+        <div title="Which shop slot to match. Slot 0 = first card shown. 'Any' covers all 16 (default 4 + 12 rerolls).">
           <Label className="text-[10px] text-zinc-400">Slot</Label>
           <Select value={slotValue} onValueChange={v => onChange({ ...c, slot: v === "any" ? 255 : Number(v) })}>
             <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
@@ -229,26 +274,171 @@ function ConstraintRow({
           </Select>
         </div>
       )}
+      <MaxAnteInput value={c.maxAnte} onChange={n => onChange({ ...c, maxAnte: n })} />
+      <RemoveBtn onClick={onRemove} />
+    </div>
+  );
+}
+
+function VoucherConstraintRow({
+  c, onChange, onRemove,
+}: {
+  c: VoucherConstraint;
+  onChange: (next: VoucherConstraint) => void;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
+      <div className="rounded bg-amber-900/30 border border-amber-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-amber-300">Voucher</div>
       <div>
-        <Label className="text-[10px] text-zinc-400">Max ante</Label>
-        <Input
-          type="number" min={1} max={39}
-          value={c.maxAnte}
-          onChange={e => onChange({ ...c, maxAnte: Math.max(1, Math.min(39, Number(e.target.value) || 1)) })}
-          className="h-8 w-[70px] text-xs"
-        />
+        <Label className="text-[10px] text-zinc-400">Voucher</Label>
+        <Select value={c.voucher} onValueChange={v => onChange({ ...c, voucher: v })}>
+          <SelectTrigger className="h-8 w-[180px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent className="max-h-72">
+            {VOUCHERS.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+          </SelectContent>
+        </Select>
       </div>
-      <Button size="sm" variant="ghost" onClick={onRemove} className="text-red-400 hover:text-red-300 h-8 px-2 ml-auto">
-        <X className="h-4 w-4" />
-      </Button>
+      <MaxAnteInput value={c.maxAnte} onChange={n => onChange({ ...c, maxAnte: n })} />
+      <RemoveBtn onClick={onRemove} />
+    </div>
+  );
+}
+
+function TagConstraintRow({
+  c, onChange, onRemove,
+}: {
+  c: TagConstraint;
+  onChange: (next: TagConstraint) => void;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
+      <div className="rounded bg-blue-900/30 border border-blue-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-blue-300">Tag</div>
+      <div>
+        <Label className="text-[10px] text-zinc-400">Tag</Label>
+        <Select value={c.tag} onValueChange={v => onChange({ ...c, tag: v })}>
+          <SelectTrigger className="h-8 w-[180px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent className="max-h-72">
+            {TAGS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
+      <div title="Small-blind tag fires at the small blind, big-blind tag at the big blind. Each ante has both.">
+        <Label className="text-[10px] text-zinc-400">Position</Label>
+        <Select value={String(c.position ?? 0)} onValueChange={v => onChange({ ...c, position: Number(v) as 0 | 1 })}>
+          <SelectTrigger className="h-8 w-[140px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="0">Small blind</SelectItem>
+            <SelectItem value="1">Big blind</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <MaxAnteInput value={c.maxAnte} onChange={n => onChange({ ...c, maxAnte: n })} />
+      <RemoveBtn onClick={onRemove} />
+    </div>
+  );
+}
+
+function BossConstraintRow({
+  c, onChange, onRemove,
+}: {
+  c: BossConstraint;
+  onChange: (next: BossConstraint) => void;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
+      <div className="rounded bg-red-900/30 border border-red-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-red-300">Boss</div>
+      <div>
+        <Label className="text-[10px] text-zinc-400">Boss</Label>
+        <Select value={c.boss} onValueChange={v => onChange({ ...c, boss: v })}>
+          <SelectTrigger className="h-8 w-[180px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent className="max-h-72">
+            {BOSSES.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
+      <MaxAnteInput value={c.maxAnte} onChange={n => onChange({ ...c, maxAnte: n })} />
+      <RemoveBtn onClick={onRemove} />
+    </div>
+  );
+}
+
+function StandardCardConstraintRow({
+  c, onChange, onRemove,
+}: {
+  c: StandardCardConstraint;
+  onChange: (next: StandardCardConstraint) => void;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
+      <div className="rounded bg-cyan-900/30 border border-cyan-500/30 px-2 py-1 text-[10px] uppercase tracking-wider text-cyan-300">Standard pack card</div>
+      <div>
+        <Label className="text-[10px] text-zinc-400">Suit</Label>
+        <Select value={c.suit || "any"} onValueChange={v => onChange({ ...c, suit: v === "any" ? "" : v as StandardCardConstraint["suit"] })}>
+          <SelectTrigger className="h-8 w-[110px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="any">Any suit</SelectItem>
+            {SUITS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label className="text-[10px] text-zinc-400">Rank</Label>
+        <Select value={c.rank || "any"} onValueChange={v => onChange({ ...c, rank: v === "any" ? "" : v as StandardCardConstraint["rank"] })}>
+          <SelectTrigger className="h-8 w-[110px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent className="max-h-72">
+            <SelectItem value="any">Any rank</SelectItem>
+            {RANKS.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label className="text-[10px] text-zinc-400">Enhancement</Label>
+        <Select value={c.enhancement || "any"} onValueChange={v => onChange({ ...c, enhancement: v === "any" ? "" : v })}>
+          <SelectTrigger className="h-8 w-[140px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent className="max-h-72">
+            <SelectItem value="any">Any</SelectItem>
+            {ENHANCEMENTS_FULL.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label className="text-[10px] text-zinc-400">Edition</Label>
+        <Select value={c.edition || "any"} onValueChange={v => onChange({ ...c, edition: v === "any" ? "" : v as StandardCardConstraint["edition"] })}>
+          <SelectTrigger className="h-8 w-[130px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="any">Any</SelectItem>
+            <SelectItem value="Foil">Foil</SelectItem>
+            <SelectItem value="Holographic">Holographic</SelectItem>
+            <SelectItem value="Polychrome">Polychrome</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label className="text-[10px] text-zinc-400">Seal</Label>
+        <Select value={c.seal || "any"} onValueChange={v => onChange({ ...c, seal: v === "any" ? "" : v as StandardCardConstraint["seal"] })}>
+          <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="any">Any</SelectItem>
+            <SelectItem value="Red">Red</SelectItem>
+            <SelectItem value="Blue">Blue</SelectItem>
+            <SelectItem value="Gold">Gold</SelectItem>
+            <SelectItem value="Purple">Purple</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <MaxAnteInput value={c.maxAnte} onChange={n => onChange({ ...c, maxAnte: n })} />
+      <RemoveBtn onClick={onRemove} />
     </div>
   );
 }
 
 /**
  * Friendly Search Speed selector. Maps an opaque thread count to a tier
- * label that any user can understand. The dropdown always shows ONE current
- * tier label regardless of how many cores the device has.
+ * label that any user can understand.
  */
 function SpeedSelect({
   value, onChange, disabled, profile,
@@ -263,7 +453,6 @@ function SpeedSelect({
   const maxCount = Math.max(highCount + 2, Math.min(16, cores * 2));
   const extremeCount = Math.max(maxCount + 2, Math.min(32, cores * 3));
 
-  // Distinct tier values (deduplicated for low-core devices)
   const tiersRaw: Array<{ key: string; label: string; n: number }> = [
     { key: "eco",     label: `Eco — 1 worker (low CPU)`,                       n: 1 },
     { key: "low",     label: `Low — 2 workers`,                                 n: 2 },
@@ -272,11 +461,8 @@ function SpeedSelect({
     { key: "max",     label: `Max — ${maxCount} workers (oversubscribe)`,      n: maxCount },
     { key: "extreme", label: `Extreme — ${extremeCount} workers (24+ core PCs)`, n: extremeCount },
   ];
-  // De-duplicate by n while keeping the most descriptive label
   const seen = new Set<number>();
   const tiers = tiersRaw.filter(t => { if (seen.has(t.n)) return false; seen.add(t.n); return true; });
-
-  // Snap incoming value to the closest tier
   const current = tiers.reduce((best, t) => Math.abs(t.n - value) < Math.abs(best.n - value) ? t : best, tiers[0]);
 
   return (
@@ -302,11 +488,6 @@ function SpeedSelect({
   );
 }
 
-/**
- * Plain-English explainer for "Search speed". Opens from a small ? button
- * next to the label. We keep this short and avoid jargon — most users just
- * want to know whether bumping it up will help or melt their phone.
- */
 function SpeedHelp({ profile }: { profile: DeviceProfile }) {
   return (
     <Popover>
@@ -336,11 +517,46 @@ function SpeedHelp({ profile }: { profile: DeviceProfile }) {
           {" "}and picked <span className="text-yellow-200">{profile.recommendedTier}</span> as the default.
           You can override it anytime.
         </div>
-        <p className="text-zinc-500">
-          Going past the recommendation usually gives diminishing returns —
-          your cores are already busy. On phones it can also cause stutter
-          or heat throttling, which actually slows the search down.
-        </p>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+// "Add filter" menu — surfaces all V2 clause types.
+function AddFilterMenu({
+  onAddVoucher, onAddTag, onAddBoss, onAddStandard, disabled,
+}: {
+  onAddVoucher: () => void;
+  onAddTag: () => void;
+  onAddBoss: () => void;
+  onAddStandard: () => void;
+  disabled?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button size="sm" variant="outline" disabled={disabled} className="h-8 border-yellow-500/30 text-yellow-200 hover:text-yellow-100">
+          <Plus className="mr-1 h-3.5 w-3.5" /> Add filter
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-56 p-1 bg-zinc-950 border-yellow-500/30">
+        <button onClick={() => { onAddVoucher(); setOpen(false); }} className="w-full text-left px-3 py-2 text-xs rounded hover:bg-amber-500/10 text-amber-200">
+          <div className="font-semibold">Voucher</div>
+          <div className="text-[10px] text-zinc-500">Match a voucher reaching the shop</div>
+        </button>
+        <button onClick={() => { onAddTag(); setOpen(false); }} className="w-full text-left px-3 py-2 text-xs rounded hover:bg-blue-500/10 text-blue-200">
+          <div className="font-semibold">Tag</div>
+          <div className="text-[10px] text-zinc-500">Small or big blind tag for an ante</div>
+        </button>
+        <button onClick={() => { onAddBoss(); setOpen(false); }} className="w-full text-left px-3 py-2 text-xs rounded hover:bg-red-500/10 text-red-200">
+          <div className="font-semibold">Boss</div>
+          <div className="text-[10px] text-zinc-500">Force a specific boss at an ante</div>
+        </button>
+        <button onClick={() => { onAddStandard(); setOpen(false); }} className="w-full text-left px-3 py-2 text-xs rounded hover:bg-cyan-500/10 text-cyan-200">
+          <div className="font-semibold">Standard pack card</div>
+          <div className="text-[10px] text-zinc-500">Rank · suit · enh · edition · seal</div>
+        </button>
       </PopoverContent>
     </Popover>
   );
@@ -354,55 +570,63 @@ export function SeedFinderTab() {
   const finderRef = useRef<SeedFinder | null>(null);
   const finderV2Ref = useRef<SeedFinderV2 | null>(null);
 
-  // Beta toggle for the new Rust+WASM engine. Persisted to localStorage.
-  const [useV2Engine, setUseV2Engine] = useState<boolean>(() => {
-    try { return localStorage.getItem("seed-finder-v2-beta") === "1"; }
+  // V2 is now the default engine. The legacy V1 path is still wired up for
+  // emergency fallback only (no UI toggle by default; ?legacy=1 unhides it).
+  const showLegacyToggle = useMemo(() => {
+    try { return new URLSearchParams(location.search).get("legacy") === "1"; }
+    catch { return false; }
+  }, []);
+  const [useLegacyEngine, setUseLegacyEngine] = useState<boolean>(() => {
+    try { return localStorage.getItem("seed-finder-engine") === "legacy"; }
     catch { return false; }
   });
   useEffect(() => {
-    try { localStorage.setItem("seed-finder-v2-beta", useV2Engine ? "1" : "0"); } catch {}
-  }, [useV2Engine]);
+    try { localStorage.setItem("seed-finder-engine", useLegacyEngine ? "legacy" : "v2"); } catch {}
+  }, [useLegacyEngine]);
 
-  // V2-only advanced filters expressed as raw JSON.
-  // Schema (all keys optional, all arrays may be empty):
-  // {
-  //   "tagConstraints":   [{ "tag": "Negative Tag", "position": 1, "maxAnte": 8 }],
-  //   "bossConstraints":  [{ "boss": "The Wall",     "maxAnte": 8 }],
-  //   "standardCardConstraints": [{
-  //       "base": "Ace of Spades", "enhancement": "Glass Card",
-  //       "edition": "Polychrome", "seal": "Gold Seal", "maxAnte": 4
-  //   }]
-  // }
-  // `position` is 0 = small-blind tag (default), 1 = big-blind tag.
-  const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [advancedJson, setAdvancedJson] = useState<string>(() => {
-    try { return localStorage.getItem("seed-finder-v2-advanced") || ""; }
-    catch { return ""; }
-  });
-  const [advancedError, setAdvancedError] = useState<string | null>(null);
+  // Share-link import on first mount.
   useEffect(() => {
-    try { localStorage.setItem("seed-finder-v2-advanced", advancedJson); } catch {}
-  }, [advancedJson]);
-  function parseAdvanced(): { ok: true; value: any } | { ok: false; error: string } {
-    const s = advancedJson.trim();
-    if (!s) return { ok: true, value: {} };
     try {
-      const v = JSON.parse(s);
-      if (typeof v !== "object" || v === null || Array.isArray(v)) {
-        return { ok: false, error: "Top-level must be an object" };
-      }
-      return { ok: true, value: v };
-    } catch (e: any) {
-      return { ok: false, error: e?.message || "Invalid JSON" };
-    }
-  }
+      const params = new URLSearchParams(location.search);
+      const share = params.get("seedfinder");
+      if (!share) return;
+      const decoded = decodeFinderConfig(share);
+      if (!decoded) return;
+      updateFinder(f => ({
+        ...f,
+        selected: decoded.jokerConstraints ?? [],
+        vouchers: decoded.voucherConstraints ?? [],
+        tags: decoded.tagConstraints ?? [],
+        bosses: decoded.bossConstraints ?? [],
+        standardCards: decoded.standardCardConstraints ?? [],
+        deck: decoded.deck ?? f.deck,
+        stake: decoded.stake ?? f.stake,
+        version: decoded.version ?? f.version,
+      }));
+      // Clear the param so a refresh doesn't re-import.
+      params.delete("seedfinder");
+      const q = params.toString();
+      history.replaceState(null, "", location.pathname + (q ? "?" + q : "") + location.hash);
+    } catch {}
+  }, []);
 
   useEffect(() => () => { handleRef.current?.stop(); }, []);
 
+  // Verify-seed inspector state.
+  const [verifySeed, setVerifySeed] = useState<string>("");
+  const [verifyOpen, setVerifyOpen] = useState(false);
+
   const effectiveMaxAnte = useMemo(() => {
-    if (finder.selected.length === 0) return 8;
-    return Math.max(...finder.selected.map(s => s.maxAnte));
-  }, [finder.selected]);
+    const all = [
+      ...finder.selected.map(s => s.maxAnte),
+      ...finder.vouchers.map(s => s.maxAnte),
+      ...finder.tags.map(s => s.maxAnte),
+      ...finder.bosses.map(s => s.maxAnte),
+      ...finder.standardCards.map(s => s.maxAnte),
+    ];
+    if (all.length === 0) return 8;
+    return Math.max(...all);
+  }, [finder.selected, finder.vouchers, finder.tags, finder.bosses, finder.standardCards]);
 
   function addJoker(name: string) {
     updateFinder(f => {
@@ -410,61 +634,85 @@ export function SeedFinderTab() {
       const defaultMax = f.selected.length > 0
         ? Math.max(...f.selected.map(s => s.maxAnte))
         : 8;
-      return { ...f, selected: [...f.selected, { joker: name, edition: "", source: "", maxAnte: defaultMax }] };
+      const r = rarityOf(name);
+      // Default to "any" except legendaries — legendaries must be sourced via
+      // Soul, so default to arcana-soul which the engine resolves precisely.
+      const source: JokerConstraint["source"] = r === "legendary" ? "arcana-soul" : "";
+      return { ...f, selected: [...f.selected, { joker: name, edition: "", source, maxAnte: defaultMax }] };
     });
   }
 
   function updateConstraint(i: number, next: JokerConstraint) {
     updateFinder(f => ({ ...f, selected: f.selected.map((c, idx) => idx === i ? next : c) }));
   }
-
   function removeConstraint(i: number) {
     updateFinder(f => ({ ...f, selected: f.selected.filter((_, idx) => idx !== i) }));
   }
 
-  function start() {
-    if (finder.selected.length === 0 && !advancedJson.trim()) return;
-    if (finder.running) return;
+  function addVoucher() {
+    updateFinder(f => ({ ...f, vouchers: [...f.vouchers, { voucher: VOUCHERS[0], maxAnte: effectiveMaxAnte }] }));
+  }
+  function updateVoucher(i: number, next: VoucherConstraint) {
+    updateFinder(f => ({ ...f, vouchers: f.vouchers.map((c, idx) => idx === i ? next : c) }));
+  }
+  function removeVoucher(i: number) {
+    updateFinder(f => ({ ...f, vouchers: f.vouchers.filter((_, idx) => idx !== i) }));
+  }
 
-    // Parse the V2 advanced JSON if present. Anything malformed = surface
-    // an inline error and refuse to start (we don't want to silently drop
-    // user constraints).
-    let advanced: any = {};
-    if (useV2Engine) {
-      const p = parseAdvanced();
-      if (!p.ok) {
-        setAdvancedError(p.error);
-        return;
-      }
-      setAdvancedError(null);
-      advanced = p.value;
-    }
+  function addTag() {
+    updateFinder(f => ({ ...f, tags: [...f.tags, { tag: TAGS[0], position: 0, maxAnte: effectiveMaxAnte }] }));
+  }
+  function updateTag(i: number, next: TagConstraint) {
+    updateFinder(f => ({ ...f, tags: f.tags.map((c, idx) => idx === i ? next : c) }));
+  }
+  function removeTag(i: number) {
+    updateFinder(f => ({ ...f, tags: f.tags.filter((_, idx) => idx !== i) }));
+  }
+
+  function addBoss() {
+    updateFinder(f => ({ ...f, bosses: [...f.bosses, { boss: BOSSES[0], maxAnte: effectiveMaxAnte }] }));
+  }
+  function updateBoss(i: number, next: BossConstraint) {
+    updateFinder(f => ({ ...f, bosses: f.bosses.map((c, idx) => idx === i ? next : c) }));
+  }
+  function removeBoss(i: number) {
+    updateFinder(f => ({ ...f, bosses: f.bosses.filter((_, idx) => idx !== i) }));
+  }
+
+  function addStandard() {
+    updateFinder(f => ({
+      ...f,
+      standardCards: [...f.standardCards, { suit: "", rank: "", enhancement: "", edition: "", seal: "", maxAnte: effectiveMaxAnte }],
+    }));
+  }
+  function updateStandard(i: number, next: StandardCardConstraint) {
+    updateFinder(f => ({ ...f, standardCards: f.standardCards.map((c, idx) => idx === i ? next : c) }));
+  }
+  function removeStandard(i: number) {
+    updateFinder(f => ({ ...f, standardCards: f.standardCards.filter((_, idx) => idx !== i) }));
+  }
+
+  const totalConstraints =
+    finder.selected.length + finder.vouchers.length + finder.tags.length +
+    finder.bosses.length + finder.standardCards.length;
+
+  function start() {
+    if (totalConstraints === 0) return;
+    if (finder.running) return;
 
     setFinder({ error: null, matches: [], progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 }, running: true });
 
-    // Effective max ante also has to consider advanced clauses so we don't
-    // truncate the engine's scan window below what the user asked for.
-    const advAntes: number[] = [];
-    for (const arr of [advanced.tagConstraints, advanced.bossConstraints, advanced.standardCardConstraints]) {
-      if (Array.isArray(arr)) for (const c of arr) if (typeof c?.maxAnte === "number") advAntes.push(c.maxAnte);
-    }
-    const totalMaxAnte = Math.max(
-      effectiveMaxAnte,
-      advAntes.length > 0 ? Math.max(...advAntes) : 0,
-    );
-
     const cfg = {
       jokerConstraints: finder.selected,
-      maxAnte: totalMaxAnte,
+      voucherConstraints: finder.vouchers,
+      tagConstraints: finder.tags,
+      bossConstraints: finder.bosses,
+      standardCardConstraints: finder.standardCards,
+      maxAnte: effectiveMaxAnte,
       deck: finder.deck,
       stake: finder.stake,
       version: finder.version,
       threads: finder.threads,
-      // Pass advanced clauses straight through; the V2 adapter knows how to
-      // turn each one into an engine clause. The V1 path ignores them.
-      tagConstraints:           Array.isArray(advanced.tagConstraints)           ? advanced.tagConstraints           : [],
-      bossConstraints:          Array.isArray(advanced.bossConstraints)          ? advanced.bossConstraints          : [],
-      standardCardConstraints:  Array.isArray(advanced.standardCardConstraints)  ? advanced.standardCardConstraints  : [],
     };
     const cbs = {
       onProgress: (p: any) => setFinder({ progress: p }),
@@ -473,12 +721,12 @@ export function SeedFinderTab() {
       onError: (msg: string) => setFinder({ error: msg, running: false }),
     };
     let handle: FinderHandle;
-    if (useV2Engine) {
-      if (!finderV2Ref.current) finderV2Ref.current = new SeedFinderV2();
-      handle = finderV2Ref.current.start(cfg, cbs);
-    } else {
+    if (useLegacyEngine) {
       if (!finderRef.current) finderRef.current = new SeedFinder();
       handle = finderRef.current.start(cfg, cbs);
+    } else {
+      if (!finderV2Ref.current) finderV2Ref.current = new SeedFinderV2();
+      handle = finderV2Ref.current.start(cfg, cbs);
     }
     handleRef.current = handle;
   }
@@ -493,46 +741,54 @@ export function SeedFinderTab() {
     setFinder({ matches: [], progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 } });
   }
 
+  // Share search — encodes full config (jokers + vouchers + tags + bosses +
+  // standard cards + deck/stake/version) to ?seedfinder=... URL.
+  const [copiedShare, setCopiedShare] = useState(false);
+  async function shareSearch() {
+    try {
+      const enc = encodeFinderConfig({
+        jokerConstraints: finder.selected,
+        voucherConstraints: finder.vouchers,
+        tagConstraints: finder.tags,
+        bossConstraints: finder.bosses,
+        standardCardConstraints: finder.standardCards,
+        deck: finder.deck,
+        stake: finder.stake,
+        version: finder.version,
+      });
+      const url = `${location.origin}${location.pathname}?seedfinder=${enc}${location.hash}`;
+      await navigator.clipboard?.writeText(url);
+      setCopiedShare(true);
+      setTimeout(() => setCopiedShare(false), 1800);
+    } catch {}
+  }
+
   const selectedNames = finder.selected.map(c => c.joker);
-  const { selected, deck, stake, version, threads, matches, progress, error, running } = finder;
+  const { selected, vouchers, tags, bosses, standardCards, deck, stake, version, threads, matches, progress, error, running } = finder;
 
   return (
     <div className="space-y-4">
-      { }
       <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/70 p-3 space-y-3">
-        {/* Beta engine toggle — runs the new Rust+WASM finder when on. */}
-        <div className="flex items-start gap-2 rounded border border-purple-500/30 bg-purple-950/20 p-2">
-          <input
-            id="v2-engine-toggle"
-            type="checkbox"
-            className="mt-1 h-4 w-4 accent-purple-400"
-            checked={useV2Engine}
-            onChange={(e) => setUseV2Engine(e.target.checked)}
-            disabled={running}
-          />
-          <label htmlFor="v2-engine-toggle" className="text-xs text-zinc-300 leading-snug">
-            <span className="font-semibold text-purple-300">Try the new engine (v2.1 beta)</span>
-            <span className="ml-1 rounded bg-purple-500/30 px-1 py-0.5 text-[10px] uppercase tracking-wide text-purple-200">v2.1</span>
-            <span className="block text-zinc-400">
-              Rust + WASM rewrite, SIMD-accelerated when your browser supports it.
-              <span className="block mt-1">
-                What v2.1 supports: shop jokers across all 16 slots (default 4 + 12 rerolls),
-                edition match (Foil/Holo/Polychrome/Negative), sticker match
-                (Eternal/Perishable/Rental), Soul → specific Legendary resolution,
-                Wraith → specific Rare resolution, tag big-blind position, boss
-                filtering, standard-pack card-level matching (rank+suit+enhancement
-                +edition+seal), vouchers, buffoon/arcana/spectral/celestial pack contents.
+        {/* Legacy engine toggle is hidden by default; ?legacy=1 reveals it. */}
+        {showLegacyToggle && (
+          <div className="flex items-start gap-2 rounded border border-zinc-700 bg-zinc-900/30 p-2">
+            <input
+              id="legacy-engine-toggle"
+              type="checkbox"
+              className="mt-1 h-4 w-4 accent-zinc-400"
+              checked={useLegacyEngine}
+              onChange={(e) => setUseLegacyEngine(e.target.checked)}
+              disabled={running}
+            />
+            <label htmlFor="legacy-engine-toggle" className="text-xs text-zinc-300 leading-snug">
+              <span className="font-semibold text-zinc-200">Use legacy engine</span>
+              <span className="block text-zinc-500">
+                Falls back to the V1 Immolate WASM finder. Slower; doesn't support
+                editions/stickers/slots/bosses/standard-card-level filters.
               </span>
-              <span className="block mt-1">
-                Honest gap: statistical sanity verified against analytical priors
-                (Negative ≈0.03%, big-blind Negative Tag ≈4.3%, Soul→Perkeo ≈7%, etc.
-                across 100k-seed sweeps); a full bit-for-bit Immolate parity sweep
-                is the next milestone. Click "Verify with Immolate" on any match
-                to cross-check against the reference implementation.
-              </span>
-            </span>
-          </label>
-        </div>
+            </label>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           <div>
@@ -570,7 +826,6 @@ export function SeedFinderTab() {
         </div>
       </div>
 
-      { }
       <div className="space-y-2">
         <Label className="text-xs text-zinc-400">
           Target jokers {selected.length > 0 && <span className="text-yellow-300">({selected.length})</span>}
@@ -578,71 +833,47 @@ export function SeedFinderTab() {
         <JokerSearchBar onAdd={addJoker} selectedNames={selectedNames} />
       </div>
 
-      { }
       {selected.length > 0 && (
         <div className="space-y-1.5">
           {selected.map((c, i) => (
-            <ConstraintRow key={c.joker} c={c} onChange={n => updateConstraint(i, n)} onRemove={() => removeConstraint(i)} showV2Fields={useV2Engine} />
+            <JokerConstraintRow key={c.joker} c={c} onChange={n => updateConstraint(i, n)} onRemove={() => removeConstraint(i)} />
           ))}
         </div>
       )}
 
-      { }
-      {useV2Engine && (
-        <div className="rounded-md border border-purple-500/20 bg-purple-950/10">
-          <button
-            type="button"
-            className="w-full flex items-center justify-between px-3 py-2 text-xs text-purple-200 hover:bg-purple-500/10"
-            onClick={() => setAdvancedOpen(o => !o)}
-          >
-            <span>
-              <span className="font-semibold">Advanced V2 filters</span>
-              <span className="ml-2 text-zinc-500">tag-position · boss · standard-pack card-level</span>
-            </span>
-            <span className="text-zinc-500">{advancedOpen ? "−" : "+"}</span>
-          </button>
-          {advancedOpen && (
-            <div className="px-3 pb-3 space-y-2">
-              <p className="text-[11px] text-zinc-400 leading-relaxed">
-                Power-user JSON — the dedicated UI for these is on the roadmap.
-                All keys optional. Tag position: 0 = small-blind tag, 1 = big-blind tag.
-                <span className="block mt-1 text-zinc-500">Example shown is editable; leave empty to skip.</span>
-              </p>
-              <textarea
-                spellCheck={false}
-                value={advancedJson}
-                onChange={e => { setAdvancedJson(e.target.value); setAdvancedError(null); }}
-                placeholder={`{
-  "tagConstraints": [
-    { "tag": "Negative Tag", "position": 1, "maxAnte": 8 }
-  ],
-  "bossConstraints": [
-    { "boss": "The Wall", "maxAnte": 8 }
-  ],
-  "standardCardConstraints": [
-    {
-      "base": "Ace of Spades",
-      "enhancement": "Glass Card",
-      "edition": "Polychrome",
-      "seal": "Gold Seal",
-      "maxAnte": 4
-    }
-  ]
-}`}
-                className="w-full h-44 rounded border border-zinc-700 bg-zinc-950 px-2 py-1.5 font-mono text-[11px] text-zinc-200 placeholder:text-zinc-600 focus:border-purple-400/60 focus:outline-none"
-              />
-              {advancedError && (
-                <div className="text-[11px] text-red-300">Parse error: {advancedError}</div>
-              )}
-            </div>
-          )}
+      {(vouchers.length > 0 || tags.length > 0 || bosses.length > 0 || standardCards.length > 0) && (
+        <div className="space-y-1.5">
+          {vouchers.map((c, i) => (
+            <VoucherConstraintRow key={"v" + i} c={c} onChange={n => updateVoucher(i, n)} onRemove={() => removeVoucher(i)} />
+          ))}
+          {tags.map((c, i) => (
+            <TagConstraintRow key={"t" + i} c={c} onChange={n => updateTag(i, n)} onRemove={() => removeTag(i)} />
+          ))}
+          {bosses.map((c, i) => (
+            <BossConstraintRow key={"b" + i} c={c} onChange={n => updateBoss(i, n)} onRemove={() => removeBoss(i)} />
+          ))}
+          {standardCards.map((c, i) => (
+            <StandardCardConstraintRow key={"s" + i} c={c} onChange={n => updateStandard(i, n)} onRemove={() => removeStandard(i)} />
+          ))}
         </div>
       )}
 
-      { }
+      <div className="flex items-center gap-2">
+        <AddFilterMenu
+          onAddVoucher={addVoucher}
+          onAddTag={addTag}
+          onAddBoss={addBoss}
+          onAddStandard={addStandard}
+          disabled={running}
+        />
+        <span className="text-[11px] text-zinc-500">
+          Add voucher · tag · boss · standard-pack card constraints
+        </span>
+      </div>
+
       <div className="flex flex-wrap items-center gap-3 rounded-md border border-yellow-500/15 bg-zinc-950/60 p-3">
         {!running ? (
-          <Button onClick={start} disabled={selected.length === 0 && !advancedJson.trim()} className="bg-yellow-400 hover:bg-yellow-300 text-zinc-950" data-testid="finder-start">
+          <Button onClick={start} disabled={totalConstraints === 0} className="bg-yellow-400 hover:bg-yellow-300 text-zinc-950" data-testid="finder-start">
             <Play className="mr-2 h-4 w-4" /> Start search
           </Button>
         ) : (
@@ -655,17 +886,47 @@ export function SeedFinderTab() {
             Clear results
           </Button>
         )}
-        <div className="flex flex-wrap gap-4 text-xs font-mono">
+        {totalConstraints > 0 && (
+          <Button onClick={shareSearch} variant="ghost" size="sm" className="text-zinc-300" title="Copy a link to this exact search">
+            {copiedShare ? <Check className="mr-1 h-3.5 w-3.5 text-emerald-300" /> : <Share2 className="mr-1 h-3.5 w-3.5" />}
+            {copiedShare ? "Copied" : "Share search"}
+          </Button>
+        )}
+        <Button
+          onClick={() => setVerifyOpen(o => !o)}
+          variant="ghost"
+          size="sm"
+          className="text-zinc-300"
+          title="Run the engine on a single seed and show which clauses match where"
+        >
+          Verify a seed
+        </Button>
+        <div className="flex flex-wrap gap-4 text-xs font-mono ml-auto">
           <div><span className="text-zinc-500">checked </span><span className="text-yellow-200">{progress.totalTries.toLocaleString()}</span></div>
           <div><span className="text-zinc-500">rate </span><span className="text-yellow-200">{progress.seedsPerSec.toLocaleString()}/s</span></div>
           <div><span className="text-zinc-500">elapsed </span><span className="text-yellow-200">{(progress.elapsedMs / 1000).toFixed(1)}s</span></div>
           <div><span className="text-zinc-500">matches </span><span className="text-emerald-300">{matches.length}</span></div>
-          {useV2Engine && (progress as any).engine && (
-            <div><span className="text-zinc-500">engine </span><span className="text-purple-300">v2 {(progress as any).engine}</span></div>
+          {!useLegacyEngine && (progress as any).engine && (
+            <div><span className="text-zinc-500">engine </span><span className="text-purple-300">{(progress as any).engine}</span></div>
           )}
         </div>
-        {running && <Loader2 className="h-4 w-4 animate-spin text-yellow-300 ml-auto" />}
+        {running && <Loader2 className="h-4 w-4 animate-spin text-yellow-300" />}
       </div>
+
+      {verifyOpen && (
+        <VerifySeedPanel
+          seed={verifySeed}
+          onSeedChange={setVerifySeed}
+          deck={deck}
+          stake={stake}
+          version={version}
+          jokerConstraints={selected}
+          voucherConstraints={vouchers}
+          tagConstraints={tags}
+          bossConstraints={bosses}
+          standardCardConstraints={standardCards}
+        />
+      )}
 
       {error && (
         <div className="flex items-start gap-2 rounded-md border border-red-500/40 bg-red-950/30 p-3 text-sm text-red-200">
@@ -679,8 +940,8 @@ export function SeedFinderTab() {
 
       {matches.length === 0 && !running && (
         <div className="text-center text-sm text-zinc-500 italic py-8">
-          {selected.length === 0
-            ? "Search and add jokers above, then click Start search."
+          {totalConstraints === 0
+            ? "Add target jokers above or use \"Add filter\" for vouchers, tags, bosses, or standard-pack cards."
             : "Click Start search to begin brute-forcing seeds."}
         </div>
       )}
@@ -700,6 +961,7 @@ export function SeedFinderTab() {
               key={m.seed + idx}
               match={m}
               preset={{ deck, stake, version, globalMaxAnte: effectiveMaxAnte, jokerConstraints: selected }}
+              onVerify={(seed) => { setVerifySeed(seed); setVerifyOpen(true); }}
             />
           ))}
         </div>
@@ -754,11 +1016,13 @@ export function MatchCard({
   preset,
   showSave = true,
   trailing,
+  onVerify,
 }: {
   match: SeedMatch;
   preset?: { deck: string; stake: string; version: string; globalMaxAnte: number; jokerConstraints: JokerConstraint[] };
   showSave?: boolean;
   trailing?: React.ReactNode;
+  onVerify?: (seed: string) => void;
 }) {
   const saved = useSeedTabState(s => preset ? isSeedSaved(match.seed, preset.deck, preset.stake, preset.version) : false);
 
@@ -785,6 +1049,15 @@ export function MatchCard({
         >
           Copy
         </Button>
+        {onVerify && (
+          <Button
+            size="sm" variant="ghost" className="h-7 px-2 text-xs text-purple-300 hover:text-purple-200"
+            onClick={() => onVerify(match.seed)}
+            title="Run the engine on this seed and show all matched locations"
+          >
+            Verify
+          </Button>
+        )}
         {showSave && preset && (
           <Button
             size="sm"
