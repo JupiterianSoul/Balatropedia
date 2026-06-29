@@ -167,13 +167,44 @@ function MaxAnteInput({
   value, onChange,
 }: { value: number; onChange: (n: number) => void }) {
   const t = useT();
+  // Local string state so the user can clear the field, type freely, and
+  // briefly hold values like "" or "0" while reaching the intended number.
+  // We only push to the parent when the input parses to a sane number; we
+  // clamp to [1, 39] on blur or Enter so partial typing is never punished.
+  const [draft, setDraft] = useState<string>(String(value));
+
+  // Keep local draft in sync if the parent value changes externally.
+  useEffect(() => { setDraft(String(value)); }, [value]);
+
+  const commit = () => {
+    const n = Number(draft);
+    if (!Number.isFinite(n)) { setDraft(String(value)); return; }
+    const clamped = Math.max(1, Math.min(39, Math.round(n)));
+    setDraft(String(clamped));
+    if (clamped !== value) onChange(clamped);
+  };
+
   return (
     <div>
       <Label className="text-[10px] text-zinc-400">{t("ui.seedfinder.max_ante")}</Label>
       <Input
-        type="number" min={1} max={39}
-        value={value}
-        onChange={e => onChange(Math.max(1, Math.min(39, Number(e.target.value) || 1)))}
+        type="number"
+        inputMode="numeric"
+        min={1}
+        max={39}
+        value={draft}
+        onChange={e => {
+          const raw = e.target.value;
+          setDraft(raw);
+          // Push to parent only when the input is a finite number in range.
+          // Partial states (empty, "0", "4" on the way to "40") stay local.
+          const n = Number(raw);
+          if (raw !== "" && Number.isFinite(n) && n >= 1 && n <= 39) {
+            onChange(Math.round(n));
+          }
+        }}
+        onBlur={commit}
+        onKeyDown={e => { if (e.key === "Enter") commit(); }}
         className="h-8 w-[70px] text-xs"
       />
     </div>
