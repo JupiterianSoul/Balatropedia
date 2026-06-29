@@ -29,6 +29,12 @@ type ThreadedEngineModule = {
     partial: boolean,
     minScore: number,
   ) => Uint8Array;
+  inspect_seed: (
+    filterJson: string,
+    seed: string,
+    deckIdx: number,
+    stakeIdx: number,
+  ) => string;
 };
 
 let enginePromise: Promise<ThreadedEngineModule> | null = null;
@@ -130,7 +136,7 @@ async function handleScan(msg: ScanMsg): Promise<void> {
   const startedAt = performance.now();
   let totalScanned = 0;
   let lastProgress = startedAt - PROGRESS_INTERVAL_MS;
-  let pendingMatches: Array<{ score: number; seed: string }> = [];
+  let pendingMatches: Array<{ score: number; seed: string; inspect: string | null }> = [];
   let lastMatchFlush = startedAt;
 
   while (remaining > 0 && !stopRequested) {
@@ -156,7 +162,16 @@ async function handleScan(msg: ScanMsg): Promise<void> {
     const dt = performance.now() - t0;
 
     const matches = decodeRecords(raw);
-    if (matches.length > 0) pendingMatches.push(...matches);
+    if (matches.length > 0) {
+      // Enrich each match with the structured inspect_seed report so the
+      // main thread can render real ante/slot/pack data instead of placeholders.
+      const enriched = matches.map((m) => {
+        let inspect: string | null = null;
+        try { inspect = engine.inspect_seed(msg.filterJson, m.seed, deckIdx, stakeIdx); } catch {}
+        return { ...m, inspect };
+      });
+      pendingMatches.push(...enriched);
+    }
 
     cursor += thisBatch;
     remaining -= thisBatch;
