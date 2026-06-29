@@ -38,11 +38,11 @@ export function ModifiersTab() {
         <p className="text-sm text-muted-foreground">{t("ui.mods.subtitle")}</p>
       </div>
       <Tabs defaultValue="enhancements">
-        <TabsList className="bg-card/60" data-testid="tabs-modifiers">
-          <TabsTrigger value="enhancements" data-testid="subtab-enhancements">{t("ui.mods.tab_enhancements")} <span className="ml-1 tabular text-muted-foreground">8</span></TabsTrigger>
-          <TabsTrigger value="editions" data-testid="subtab-editions">{t("ui.mods.tab_editions")} <span className="ml-1 tabular text-muted-foreground">4</span></TabsTrigger>
-          <TabsTrigger value="seals" data-testid="subtab-seals">{t("ui.mods.tab_seals")} <span className="ml-1 tabular text-muted-foreground">4</span></TabsTrigger>
-          <TabsTrigger value="tags" data-testid="subtab-tags">{t("ui.mods.tab_tags")} <span className="ml-1 tabular text-muted-foreground">24</span></TabsTrigger>
+        <TabsList data-testid="tabs-modifiers" className="flex-wrap gap-2">
+          <TabsTrigger value="enhancements" data-testid="subtab-enhancements" className="balatro-tab">{t("ui.mods.tab_enhancements")} <span className="ml-1 tabular text-muted-foreground">8</span></TabsTrigger>
+          <TabsTrigger value="editions" data-testid="subtab-editions" className="balatro-tab">{t("ui.mods.tab_editions")} <span className="ml-1 tabular text-muted-foreground">4</span></TabsTrigger>
+          <TabsTrigger value="seals" data-testid="subtab-seals" className="balatro-tab">{t("ui.mods.tab_seals")} <span className="ml-1 tabular text-muted-foreground">4</span></TabsTrigger>
+          <TabsTrigger value="tags" data-testid="subtab-tags" className="balatro-tab">{t("ui.mods.tab_tags")} <span className="ml-1 tabular text-muted-foreground">24</span></TabsTrigger>
         </TabsList>
         <TabsContent value="enhancements" className="mt-4"><MiniGrid category="enhancements" items={ENHANCEMENTS} /></TabsContent>
         <TabsContent value="editions" className="mt-4"><MiniGrid category="editions" items={EDITIONS} /></TabsContent>
