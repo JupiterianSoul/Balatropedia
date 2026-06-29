@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import { Layers } from "lucide-react";
+import { TabIntro } from "@/components/TabIntro";
 import { readHandoff } from "@/lib/tabHandoff";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -164,8 +166,10 @@ export function CombosTab() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-muted-foreground tabular">{t("ui.combos.count", { n: filtered.length })}</p>
+      <TabIntro Icon={Layers} title="Combos">
+        Curated joker combinations grouped by archetype. Pick a filter to focus on the playstyle you are building toward.
+      </TabIntro>
+      <div className="flex items-center justify-center gap-3">
         <Select value={arch} onValueChange={setArch}>
           <SelectTrigger className="w-56 bg-card" data-testid="select-combo-archetype">
             <SelectValue />

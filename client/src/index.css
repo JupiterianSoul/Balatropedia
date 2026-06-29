@@ -372,53 +372,40 @@ input[type="radio"],
   --input: 220 22% 14%;
 }
 
-/* Parchment; light vintage card-table theme. Dark text on cream surfaces. */
+/* Parchment; warm dark brown leather variant. Saddle / espresso surfaces
+   with cream foreground text. Sits between felt and midnight in mood. */
 :root[data-theme="parchment"] {
-  --background: 36 30% 92%;             /* warm cream */
-  --foreground: 192 14% 18%;            /* deep teal-grey text */
-  --border: 36 18% 78%;
+  --background: 25 28% 14%;            /* deep saddle brown */
+  --foreground: 36 35% 92%;            /* warm cream text */
+  --border: 25 22% 28%;
 
-  --card: 36 35% 96%;
-  --card-foreground: 192 14% 18%;
-  --card-border: 36 22% 80%;
+  --card: 25 24% 18%;
+  --card-foreground: 36 35% 92%;
+  --card-border: 25 22% 30%;
 
-  --sidebar: 36 28% 88%;
-  --sidebar-foreground: 192 14% 22%;
-  --sidebar-border: 36 18% 76%;
-  --sidebar-primary: 4 78% 50%;
+  --sidebar: 25 26% 12%;
+  --sidebar-foreground: 36 35% 90%;
+  --sidebar-border: 25 22% 26%;
+  --sidebar-primary: 25 60% 45%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 36 35% 82%;
-  --sidebar-accent-foreground: 192 14% 18%;
-  --sidebar-ring: 42 78% 50%;
+  --sidebar-accent: 25 24% 22%;
+  --sidebar-accent-foreground: 36 35% 92%;
+  --sidebar-ring: 32 70% 55%;
 
-  --popover: 36 38% 95%;
-  --popover-foreground: 192 14% 18%;
-  --popover-border: 36 22% 80%;
+  --popover: 25 26% 20%;
+  --popover-foreground: 36 35% 92%;
+  --popover-border: 25 22% 30%;
 
   --primary-foreground: 0 0% 100%;
   --secondary-foreground: 0 0% 100%;
 
-  --muted: 36 22% 82%;
-  --muted-foreground: 192 10% 35%;
+  --muted: 25 20% 24%;
+  --muted-foreground: 32 22% 72%;
 
-  --accent-foreground: 192 14% 12%;
+  --accent-foreground: 0 0% 100%;
 
-  --input: 36 25% 86%;
-  --ring: 42 78% 50%;
-}
-
-/* Soften the heavy pure-black borders and shadows used by the felt theme
-   when running on lighter surfaces; they look harsh on cream. */
-:root[data-theme="parchment"] aside,
-:root[data-theme="parchment"] header {
-  border-color: hsl(36 22% 70%) !important;
-  box-shadow: 0 2px 0 hsl(36 22% 78%) !important;
-}
-:root[data-theme="parchment"] .mult-text {
-  text-shadow: 0 1px 0 hsl(36 25% 80%);
-}
-:root[data-theme="parchment"] .chips-text {
-  text-shadow: 0 1px 0 hsl(36 25% 80%);
+  --input: 25 22% 20%;
+  --ring: 32 70% 55%;
 }
 
 @layer base {

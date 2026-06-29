@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { TabIntro } from "@/components/TabIntro";
 import {
   Dices, Search, Play, Loader2, Target, Telescope, Skull, Sparkles, ListTree,
   Library, ChevronDown, ChevronRight,
@@ -552,14 +553,9 @@ export function SeedsTab() {
 
   return (
     <div className="space-y-4 p-2 md:p-4">
-      <div className="flex flex-wrap items-baseline gap-3">
-        <h1 className="text-2xl font-bold text-yellow-200 flex items-center gap-2">
-          <Dices className="h-7 w-7" /> Seeds
-        </h1>
-        <p className="text-sm text-zinc-400">
-          Analyze a seed, search for one matching your wants, or revisit your saved seeds.
-        </p>
-      </div>
+      <TabIntro Icon={Dices} title="Seeds">
+        Analyze a seed, search for one matching your wants, or revisit your saved seeds.
+      </TabIntro>
 
       {/* Sub-tab pills — sticky on phones so the user can swap views without
           scrolling back up. Horizontal scroll fallback if the three buttons

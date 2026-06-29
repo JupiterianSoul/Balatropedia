@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { TabIntro } from "@/components/TabIntro";
 import { readHandoff } from "@/lib/tabHandoff";
 import { ChevronDown, Sparkles, TrendingUp, Ban, AlertCircle } from "lucide-react";
 import { useApp } from "@/lib/appContext";
@@ -203,6 +204,9 @@ export function ArchetypesTab() {
 
   return (
     <div className="grid gap-3 md:grid-cols-2">
+      <TabIntro Icon={Sparkles} title="Archetypes">
+        Joker archetypes group cards by their core gameplan. Expand each tile to see which jokers anchor that style.
+      </TabIntro>
       {ARCHETYPES.map((a) => (
         <ArchetypeCard
           key={a.id}

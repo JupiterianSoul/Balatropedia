@@ -21,7 +21,7 @@ import { IS_LOCAL } from "@/lib/localAdapter";
 
 // Bump this string on every APK build that should ship a clean slate.
 // Format: vMAJOR.MINOR.PATCH-LABEL  (no semantic meaning beyond comparison).
-export const APP_BUILD_VERSION = "v0.2.0-mobile-sprint-ab";
+export const APP_BUILD_VERSION = "v0.3.0-sign-in-removed";
 
 const VERSION_KEY = "balatropedia.app_build_version";
 

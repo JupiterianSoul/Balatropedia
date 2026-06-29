@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TabIntro } from "@/components/TabIntro";
 import { X, Save, FolderOpen, Trash2, Layers, AlertTriangle, Sparkles, Tags } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,6 @@ import {
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { JokerCombobox } from "@/components/JokerCombobox";
 import { JokerSprite } from "@/components/JokerSprite";
 import { SectionLabel } from "@/components/primitives";
@@ -18,7 +18,6 @@ import { LName } from "@/components/Localized";
 import { RunMetaSelectors } from "@/components/RunMetaSelectors";
 import { useRun } from "@/lib/runContext";
 import type { SavedRun } from "@/lib/useRuns";
-import { useAuth } from "@/lib/auth";
 import { useRuns } from "@/lib/useRuns";
 import { useApp } from "@/lib/appContext";
 import { useToast } from "@/hooks/use-toast";
@@ -113,7 +112,6 @@ export function MyRunTab() {
     slots, slotCap, setSlotCap, addToRun, removeFromRun, clearRun, replaceRun, isInRun, isFull,
     deckId, stakeId, voucherIds, applyMeta,
   } = useRun();
-  const { isSignedIn } = useAuth();
   const { runs, saveRun, deleteRun } = useRuns();
   const { openJokerDetail } = useApp();
   const { toast } = useToast();
@@ -169,64 +167,73 @@ export function MyRunTab() {
     <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
       {}
       <div className="space-y-4">
-        <div className="flex flex-wrap items-end justify-between gap-3">
+        <TabIntro Icon={Layers} title={t("ui.tabs.myrun_title")}>
+          {t("ui.tabs.myrun_subtitle")}
+        </TabIntro>
+        <div className="flex items-end gap-2">
           <div>
-            <h2 className="font-pixel text-xl text-accent">{t("ui.tabs.myrun_title")}</h2>
-            <p className="text-sm text-muted-foreground">{t("ui.tabs.myrun_subtitle")}</p>
-          </div>
-          <div className="flex items-end gap-2">
-            <div>
-              <Label htmlFor="slot-cap" className="text-[11px] uppercase tracking-wide text-muted-foreground">{t("ui.tabs.myrun_slots")}</Label>
-              <Input
-                id="slot-cap"
-                type="number"
-                min={1}
-                max={10}
-                value={slotCap}
-                onChange={(e) => setSlotCap(Number(e.target.value))}
-                className="mt-1 h-9 w-20 bg-card"
-                data-testid="input-slot-cap"
-              />
-            </div>
+            <Label htmlFor="slot-cap" className="text-[11px] uppercase tracking-wide text-muted-foreground">{t("ui.tabs.myrun_slots")}</Label>
+            <Input
+              id="slot-cap"
+              type="number"
+              min={1}
+              max={10}
+              value={slotCap}
+              onChange={(e) => setSlotCap(Number(e.target.value))}
+              className="mt-1 h-9 w-20 bg-card"
+              data-testid="input-slot-cap"
+            />
           </div>
         </div>
 
         {}
         <RunMetaSelectors />
 
-        {}
+        {/* Action buttons: Clear / Load / Add / Save. Single-word labels so the
+            text never crops on narrow phones. The Add slot is fulfilled by the
+            JokerCombobox below; the four-button row above is action control. */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="min-w-0 flex-1 sm:min-w-[220px]">
+          <Button
+            size="sm"
+            variant="outline"
+            className="min-w-[72px] gap-1.5"
+            onClick={clearRun}
+            disabled={slots.length === 0}
+            data-testid="button-clear-run"
+          >
+            <Trash2 className="h-4 w-4" /> {t("ui.btn.clear")}
+          </Button>
+          <RunLoadMenu
+            runs={runs}
+            onLoad={(r) => {
+              replaceRun(r.jokerIds);
+              applyMeta(r.meta);
+              toast({ title: t("ui.tabs.myrun_run_loaded"), description: r.name });
+            }}
+            onDelete={(id) => deleteRun.mutate(id)}
+          />
+          <Button
+            size="sm"
+            variant="outline"
+            className="min-w-[72px] gap-1.5"
+            onClick={() => setSaveOpen(true)}
+            disabled={slots.length === 0}
+            data-testid="button-save-run"
+          >
+            <Save className="h-4 w-4" /> {t("ui.btn.save")}
+          </Button>
+        </div>
+        <div className="min-w-0">
+          <Label className="text-[11px] uppercase tracking-wide text-muted-foreground">
+            {t("ui.btn.add")}
+          </Label>
+          <div className="mt-1">
             <JokerCombobox
               value={picker}
               onChange={handleAdd}
               placeholder={isFull ? t("ui.tabs.myrun_full_ph") : t("ui.tabs.myrun_add_ph")}
               testId="combobox-add-run"
             />
-          </div>
-          <div className="flex gap-2">
-            {isSignedIn ? (
-              <RunLoadMenu runs={runs} onLoad={(r) => { replaceRun(r.jokerIds); applyMeta(r.meta); toast({ title: t("ui.tabs.myrun_run_loaded"), description: r.name }); }} onDelete={(id) => deleteRun.mutate(id)} />
-            ) : null}
-            {isSignedIn ? (
-              <Button size="sm" variant="outline" className="gap-1.5" onClick={() => setSaveOpen(true)} disabled={slots.length === 0} data-testid="button-save-run">
-                <Save className="h-4 w-4" /> {t("ui.btn.save_run")}
-              </Button>
-            ) : (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span tabIndex={0}>
-                    <Button size="sm" variant="outline" className="gap-1.5" disabled data-testid="button-save-run-disabled">
-                      <Save className="h-4 w-4" /> {t("ui.btn.save_run")}
-                    </Button>
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>{t("ui.tabs.myrun_sign_in_save")}</TooltipContent>
-              </Tooltip>
-            )}
-            <Button size="sm" variant="ghost" className="gap-1.5 text-muted-foreground" onClick={clearRun} disabled={slots.length === 0} data-testid="button-clear-run">
-              {t("ui.btn.clear")}
-            </Button>
           </div>
         </div>
 
