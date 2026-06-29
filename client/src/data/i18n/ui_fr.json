@@ -246,7 +246,7 @@
       "archetype_low_card_count": "Deck Réduit",
       "archetype_no_discard": "Sans Défausse",
       "archetype_tarot_engine": "Moteur Tarot",
-      "archetype_two_pair_scaling": "Two Pair Scaling",
+      "archetype_two_pair_scaling": "Mise à l'échelle Deux Paires",
       "archetype_vampire_enhancement": "Vampire Améliorations"
     },
     "filters": {
@@ -255,7 +255,7 @@
       "archetype": "Archétype",
       "hand_type": "Type de main",
       "scaling": "Évolution",
-      "build_stage": "Phase de build",
+      "build_stage": "Phase de construction",
       "risk_level": "Niveau de risque",
       "filters": "Filtres",
       "all_tiers": "Tous les paliers"
@@ -372,40 +372,40 @@
       "v1_7_4": {
         "title": "v1.7.4 - Finder encore plus rapide + fix connecté",
         "signed_in": "Correction du bouton utilisateur connecté qui débordait de la sidebar avec les longues adresses email. Affiche maintenant 'Connecté' ; l'email complet est au survol et dans le menu déroulant.",
-        "faster": "Seed Finder encore ~20-40% plus rapide : les vecteurs de contraintes sont maintenant mis en cache par worker au lieu d'être réalloués a chaque batch (plus de churn heap embind), le marshaling de résultats est sauté sur les batches sans match, et la taille de batch est passée de 20k a 50k pour moins de round-trips."
+        "faster": "Seed Finder encore ~20-40% plus rapide : les vecteurs de contraintes sont maintenant mis en cache par worker au lieu d'être réalloués à chaque batch (plus de churn heap embind), le marshaling de résultats est sauté sur les batches sans match, et la taille de batch est passée de 20k à 50k pour moins de round-trips."
       },
       "v1_7_3": {
         "title": "v1.7.3 - Finder plus rapide + polish Home",
-        "faster": "Le Seed Finder est ~2-4x plus rapide : la limite de threads workers a double (8 a 16) pour utiliser tous tes coeurs CPU, et le nombre d'essais par batch a quadruple (5k a 20k) pour reduire le cout des postMessage.",
-        "maxante": "Suppression du champ Max ante global redondant. Chaque contrainte de joker a deja son propre max ante ; le moteur calcule maintenant la borne globale automatiquement.",
-        "workers": "Renomme Threads en CPU workers avec un tooltip plus clair qui explique ce que c'est et que plus = plus rapide.",
-        "home": "Correction de l'ecran d'accueil coupe en deux sur desktop. Le fond anime et les bandes de jokers remplissent maintenant tout le viewport."
+        "faster": "Le Seed Finder est ~2-4x plus rapide : la limite de threads workers a doublé (8 à 16) pour utiliser tous tes cœurs CPU, et le nombre d'essais par batch a quadruplé (5k à 20k) pour réduire le coût des postMessage.",
+        "maxante": "Suppression du champ Max ante global redondant. Chaque contrainte de joker a déjà son propre max ante ; le moteur calcule maintenant la borne globale automatiquement.",
+        "workers": "Renommé Threads en CPU workers avec un tooltip plus clair qui explique ce que c'est et que plus = plus rapide.",
+        "home": "Correction de l'écran d'accueil coupé en deux sur desktop. Le fond animé et les bandes de jokers remplissent maintenant tout le viewport."
       },
       "v1_7_2": {
         "title": "v1.7.2 - Polish UX + Seed Library",
-        "persist": "L'onglet Seeds memorise maintenant son etat entre les navigations : progression du Seed Finder, vue de l'Analyzer, seed et resultats survivent aux changements d'onglet.",
-        "library": "Nouveau sous-onglet Seed Library. Sauvegarde n'importe quelle seed depuis le Finder en un clic ; le preset complet (deck, stake, version, contraintes) est enregistre avec la seed pour pouvoir la recharger plus tard.",
-        "soul": "Resolution du Soul : quand The Soul apparait dans une seed analysee, le joker Legendaire resolu et son edition sont affiches directement, a la fois dans le Full Spoiler et dans la vue Soul.",
-        "spoiler": "Le Full Spoiler est maintenant une liste pliable par Ante. Cartes d'ante plus claires et moins surchargees ; clique sur une ante pour deplier tout son detail.",
-        "wikilinks": "Liens internes type Wikipedia dans toute l'app : cliquer sur n'importe quelle icone ou nom de joker ouvre sa fiche detaillee. Marche dans les synergies, combos, files de boutique, contenus de packs, resultats de recherche et matches du Seed Finder.",
-        "click_sfx": "Fix mobile : les effets sonores de clic ne se declenchent plus que sur de vrais appuis de boutons, plus jamais sur les gestes de swipe ou de scroll."
+        "persist": "L'onglet Seeds mémorise maintenant son état entre les navigations : progression du Seed Finder, vue de l'Analyzer, seed et résultats survivent aux changements d'onglet.",
+        "library": "Nouveau sous-onglet Seed Library. Sauvegarde n'importe quelle seed depuis le Finder en un clic ; le preset complet (deck, stake, version, contraintes) est enregistré avec la seed pour pouvoir la recharger plus tard.",
+        "soul": "Résolution du Soul : quand The Soul apparaît dans une seed analysée, le joker Légendaire résolu et son édition sont affichés directement, à la fois dans le Full Spoiler et dans la vue Soul.",
+        "spoiler": "Le Full Spoiler est maintenant une liste pliable par Ante. Cartes d'ante plus claires et moins surchargées ; clique sur une ante pour déplier tout son détail.",
+        "wikilinks": "Liens internes type Wikipedia dans toute l'app : cliquer sur n'importe quelle icône ou nom de joker ouvre sa fiche détaillée. Marche dans les synergies, combos, files de boutique, contenus de packs, résultats de recherche et matches du Seed Finder.",
+        "click_sfx": "Fix mobile : les effets sonores de clic ne se déclenchent plus que sur de vrais appuis de boutons, plus jamais sur les gestes de swipe ou de scroll."
       },
       "v1_7": {
         "title": "v1.7 - Chercheur de seeds natif",
-        "rework": "Onglet Seeds entierement repense. Deux sous-onglets clairs : Seed Analyzer (entre une seed, vois tout ce qu'elle contient) et Seed Finder (entre ce que tu veux, trouve une seed). Joker Hunter et Soul Finder sont devenus des vues dans l'Analyzer.",
-        "finder": "Le Seed Finder utilise une barre de recherche avec autocompletion (fini le mur d'icones) : tape un nom de joker, ajoute-le comme contrainte, repete pour autant de jokers que tu veux.",
-        "wasm": "Moteur WebAssembly compile depuis le meme C++ que TheSoul/Immolate, execute dans des Web Workers paralleles sur tous tes coeurs CPU. Dizaines de milliers de seeds par seconde par coeur.",
-        "constraints": "Contraintes multi-jokers avec edition et source : exiger un Perkeo Negatif depuis la carte Soul d'un pack Spectral, ou un Blueprint Polychrome depuis n'importe quelle boutique, ou les deux a la fois.",
-        "location": "Les localisations sont maintenant lisibles : 'Apres Big Blind, item de boutique 3' ou 'Apres Small Blind, 2eme booster (Mega Buffoon Pack), carte #4'. Memes labels dans le spoiler de l'Analyzer et le Joker Finder.",
-        "icons": "Icones de jokers partout dans l'onglet Seeds : file de boutique, contenu des boosters, resultats de recherche, correspondances du Finder."
+        "rework": "Onglet Seeds entièrement repensé. Deux sous-onglets clairs : Seed Analyzer (entre une seed, vois tout ce qu'elle contient) et Seed Finder (entre ce que tu veux, trouve une seed). Joker Hunter et Soul Finder sont devenus des vues dans l'Analyzer.",
+        "finder": "Le Seed Finder utilise une barre de recherche avec autocomplétion (fini le mur d'icônes) : tape un nom de joker, ajoute-le comme contrainte, répète pour autant de jokers que tu veux.",
+        "wasm": "Moteur WebAssembly compilé depuis le même C++ que TheSoul/Immolate, exécuté dans des Web Workers parallèles sur tous tes cœurs CPU. Dizaines de milliers de seeds par seconde par cœur.",
+        "constraints": "Contraintes multi-jokers avec édition et source : exiger un Perkeo Négatif depuis la carte Soul d'un pack Spectral, ou un Blueprint Polychrome depuis n'importe quelle boutique, ou les deux à la fois.",
+        "location": "Les localisations sont maintenant lisibles : « Après Big Blind, item de boutique 3 » ou « Après Small Blind, 2e booster (Mega Buffoon Pack), carte #4 ». Mêmes labels dans le spoiler de l'Analyzer et le Joker Finder.",
+        "icons": "Icônes de jokers partout dans l'onglet Seeds : file de boutique, contenu des boosters, résultats de recherche, correspondances du Finder."
       },
       "v1_6": {
         "title": "v1.6 - Moteur de seeds natif",
-        "native_engine": "Onglet Seeds reconstruit. Portage natif d'Immolate / TheSoul : file de boutique, packs, vouchers, boss, tags et contenu des packs deterministes par ante, calcules dans le navigateur depuis une seed. Aucun lien externe.",
-        "spoiler": "Sous-onglet Spoiler : detail par ante avec boss, voucher, les deux tags, file de boutique de 15 items, et chaque pack avec son contenu (jokers, tarots, planetes, spectraux, cartes standard avec ameliorations/editions/sceaux).",
-        "hunter": "Sous-onglet Joker Hunter : cherche un joker par nom (Perkeo, Blueprint, Brainstorm, etc.) et affiche chaque ante, source (boutique ou pack Buffoon), rarete, edition et stickers ou il apparait.",
+        "native_engine": "Onglet Seeds reconstruit. Portage natif d'Immolate / TheSoul : file de boutique, packs, vouchers, boss, tags et contenu des packs déterministes par ante, calculés dans le navigateur depuis une seed. Aucun lien externe.",
+        "spoiler": "Sous-onglet Spoiler : détail par ante avec boss, voucher, les deux tags, file de boutique de 15 items, et chaque pack avec son contenu (jokers, tarots, planètes, spectraux, cartes standard avec améliorations/éditions/sceaux).",
+        "hunter": "Sous-onglet Joker Hunter : cherche un joker par nom (Perkeo, Blueprint, Brainstorm, etc.) et affiche chaque ante, source (boutique ou pack Buffoon), rareté, édition et stickers où il apparaît.",
         "soul_finder": "Sous-onglet Soul Finder : liste chaque apparition de The Soul + Black Hole sur toutes les antes, avec le nom du pack et la source (pack Tarot, Spectral ou Celestial).",
-        "verified": "Moteur verifie contre TheSoul en direct pour la seed 8Q47WV6K (Red, 1.0.1c) - boss, voucher, tags, file de boutique et contenu des packs correspondent exactement sur les antes 1 a 3."
+        "verified": "Moteur vérifié contre TheSoul en direct pour la seed 8Q47WV6K (Red, 1.0.1c) - boss, voucher, tags, file de boutique et contenu des packs correspondent exactement sur les antes 1 à 3."
       },
       "v1_1": {
         "title": "v1.1 - Classement + Défi de partie",
@@ -975,7 +975,7 @@
         "pivotOut": "Si la densité de figures est insuffisante pour Photograph, remplace-le par The Tribe et bascule vers un hybride Couleur-Paire avec Four Fingers."
       },
       "three_of_a_kind_specialist": {
-        "title": "Moteur The Trio",
+        "title": "Le Moteur du Trio",
         "conditions": [
           "Utilise DNA pour empiler un seul rang à 8+ copies pour un Brelan garanti",
           "Le rang cible de L'Idole doit chevaucher le rang dupliqué pour X2 par carte correspondante",
@@ -1519,10 +1519,10 @@
         "hint": "Coins arrondis, scanlines, ligne qui défile, vignette. 0 désactive, 60 par défaut."
       },
       "ui_scale": {
-        "title": "Echelle de l'interface",
-        "label": "Taille des icones joker",
-        "hint": "Met a l'echelle les icones de jokers dans toute l'app. La mise en page et le texte restent inchanges.",
-        "reset": "Reinitialiser"
+        "title": "Échelle de l'interface",
+        "label": "Taille des icônes joker",
+        "hint": "Met à l'échelle les icônes de jokers dans toute l'app. La mise en page et le texte restent inchangés.",
+        "reset": "Réinitialiser"
       }
     },
     "help": {

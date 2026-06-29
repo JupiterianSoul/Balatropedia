@@ -246,7 +246,7 @@
       "archetype_low_card_count": "Mazo Reducido",
       "archetype_no_discard": "Sin Descarte",
       "archetype_tarot_engine": "Motor de Tarots",
-      "archetype_two_pair_scaling": "Two Pair Escalado",
+      "archetype_two_pair_scaling": "Escalado de Dos Pares",
       "archetype_vampire_enhancement": "Vampire Mejoras"
     },
     "filters": {
@@ -370,41 +370,41 @@
       "subtitle": "Cambios recientes, organizados por versión.",
       "footer": "¿Comentarios? El repo está en GitHub. Issues y PRs bienvenidos.",
       "v1_7_4": {
-        "title": "v1.7.4 - Finder aun mas rapido + fix conectado",
-        "signed_in": "Corregido el boton de usuario conectado que desbordaba la sidebar con direcciones de email largas. Ahora muestra 'Conectado'; el email completo se ve al pasar el cursor y en el menu desplegable.",
-        "faster": "Seed Finder otro ~20-40% mas rapido: los vectores de restricciones ahora se cachean por worker en vez de reasignarse en cada batch (se acabo el heap churn de embind), el marshaling de resultados se omite en batches sin match, y el tamano de batch paso de 20k a 50k para menos round-trips."
+        "title": "v1.7.4 - Finder aún más rápido + fix conectado",
+        "signed_in": "Corregido el botón de usuario conectado que desbordaba la sidebar con direcciones de email largas. Ahora muestra 'Conectado'; el email completo se ve al pasar el cursor y en el menú desplegable.",
+        "faster": "Seed Finder otro ~20-40% más rápido: los vectores de restricciones ahora se cachean por worker en vez de reasignarse en cada batch (se acabó el heap churn de embind), el marshaling de resultados se omite en batches sin match, y el tamaño de batch pasó de 20k a 50k para menos round-trips."
       },
       "v1_7_3": {
-        "title": "v1.7.3 - Finder mas rapido + pulido del Home",
-        "faster": "El Seed Finder es ~2-4x mas rapido: se duplico el limite de threads workers (8 a 16) para usar todos tus nucleos de CPU, y se cuadruplicaron los intentos por batch (5k a 20k) para reducir el coste de los postMessage.",
-        "maxante": "Eliminado el campo Max ante global redundante. Cada restriccion de joker ya tiene su propio max ante; el motor ahora calcula la cota global automaticamente.",
-        "workers": "Renombrado Threads a CPU workers con un tooltip mas claro que explica que son y que mas = mas rapido.",
+        "title": "v1.7.3 - Finder más rápido + pulido del Home",
+        "faster": "El Seed Finder es ~2-4x más rápido: se duplicó el límite de threads workers (8 a 16) para usar todos tus núcleos de CPU, y se cuadruplicaron los intentos por batch (5k a 20k) para reducir el coste de los postMessage.",
+        "maxante": "Eliminado el campo Max ante global redundante. Cada restricción de joker ya tiene su propio max ante; el motor ahora calcula la cota global automáticamente.",
+        "workers": "Renombrado Threads a CPU workers con un tooltip más claro que explica qué son y que más = más rápido.",
         "home": "Corregida la pantalla de inicio cortada por la mitad en desktop. El fondo animado y las bandas de jokers ahora rellenan todo el viewport."
       },
       "v1_7_2": {
         "title": "v1.7.2 - Pulido de UX + Seed Library",
-        "persist": "La pestana Seeds ahora recuerda su estado entre navegaciones: progreso del Seed Finder, vista del Analyzer, seed y resultados sobreviven a los cambios de pestana.",
-        "library": "Nueva subpestana Seed Library. Guarda cualquier seed desde el Finder con un clic; el preset completo (deck, stake, version, restricciones) se guarda junto con la seed para poder recargarla mas tarde.",
-        "soul": "Resolucion de Soul: cuando The Soul aparece en una seed analizada, el joker Legendario resuelto y su edicion se muestran directamente, tanto en el Full Spoiler como en la vista Soul.",
-        "spoiler": "El Full Spoiler ahora es una lista plegable por Ante. Tarjetas de ante mas limpias y menos saturadas; haz clic en una ante para expandir todo su detalle.",
-        "wikilinks": "Enlaces internos tipo Wikipedia en toda la app: hacer clic en cualquier icono o nombre de joker abre su ficha detallada. Funciona en sinergias, combos, colas de tienda, contenidos de packs, resultados de busqueda y coincidencias del Seed Finder.",
-        "click_sfx": "Fix movil: los efectos de sonido de clic solo se disparan al pulsar botones reales, ya no se disparan al hacer swipe o scroll."
+        "persist": "La pestaña Seeds ahora recuerda su estado entre navegaciones: progreso del Seed Finder, vista del Analyzer, seed y resultados sobreviven a los cambios de pestaña.",
+        "library": "Nueva subpestaña Seed Library. Guarda cualquier seed desde el Finder con un clic; el preset completo (deck, stake, versión, restricciones) se guarda junto con la seed para poder recargarla más tarde.",
+        "soul": "Resolución de Soul: cuando The Soul aparece en una seed analizada, el joker Legendario resuelto y su edición se muestran directamente, tanto en el Full Spoiler como en la vista Soul.",
+        "spoiler": "El Full Spoiler ahora es una lista plegable por Ante. Tarjetas de ante más limpias y menos saturadas; haz clic en una ante para expandir todo su detalle.",
+        "wikilinks": "Enlaces internos tipo Wikipedia en toda la app: hacer clic en cualquier icono o nombre de joker abre su ficha detallada. Funciona en sinergias, combos, colas de tienda, contenidos de packs, resultados de búsqueda y coincidencias del Seed Finder.",
+        "click_sfx": "Fix móvil: los efectos de sonido de clic solo se disparan al pulsar botones reales, ya no se disparan al hacer swipe o scroll."
       },
       "v1_7": {
         "title": "v1.7 - Buscador de seeds nativo",
-        "rework": "Pestana Seeds rediseñada por completo. Solo dos subpestanas claras: Seed Analyzer (introduce una seed, ve todo lo que contiene) y Seed Finder (introduce lo que quieres, encuentra una seed). Joker Hunter y Soul Finder ahora son vistas dentro del Analyzer.",
-        "finder": "Seed Finder usa una barra de busqueda con autocompletado (se acabo el muro de iconos): escribe el nombre de un joker, agregalo como restriccion, repite para cuantos jokers quieras.",
-        "wasm": "Motor WebAssembly compilado del mismo C++ que TheSoul/Immolate, ejecutado en Web Workers paralelos en todos tus nucleos. Decenas de miles de seeds por segundo por nucleo.",
-        "constraints": "Restricciones multi-joker con edicion y origen: exigir un Perkeo Negativo desde la carta Soul de un pack Spectral, o un Blueprint Policromo de cualquier tienda, o ambos a la vez.",
-        "location": "Las ubicaciones ahora son legibles: 'Tras Big Blind, articulo de tienda 3' o 'Tras Small Blind, 2do booster (Mega Buffoon Pack), carta #4'. Mismos labels en el spoiler del Analyzer y en el Joker Finder.",
-        "icons": "Iconos de jokers por toda la pestana Seeds: cola de tienda, contenido de boosters, resultados de busqueda, coincidencias del Finder."
+        "rework": "Pestaña Seeds rediseñada por completo. Solo dos subpestañas claras: Seed Analyzer (introduce una seed, ve todo lo que contiene) y Seed Finder (introduce lo que quieres, encuentra una seed). Joker Hunter y Soul Finder ahora son vistas dentro del Analyzer.",
+        "finder": "Seed Finder usa una barra de búsqueda con autocompletado (se acabó el muro de iconos): escribe el nombre de un joker, agrégalo como restricción, repite para cuantos jokers quieras.",
+        "wasm": "Motor WebAssembly compilado del mismo C++ que TheSoul/Immolate, ejecutado en Web Workers paralelos en todos tus núcleos. Decenas de miles de seeds por segundo por núcleo.",
+        "constraints": "Restricciones multi-joker con edición y origen: exigir un Perkeo Negativo desde la carta Soul de un pack Spectral, o un Blueprint Policromo de cualquier tienda, o ambos a la vez.",
+        "location": "Las ubicaciones ahora son legibles: «Tras Big Blind, artículo de tienda 3» o «Tras Small Blind, 2do booster (Mega Buffoon Pack), carta #4». Mismos labels en el spoiler del Analyzer y en el Joker Finder.",
+        "icons": "Iconos de jokers por toda la pestaña Seeds: cola de tienda, contenido de boosters, resultados de búsqueda, coincidencias del Finder."
       },
       "v1_6": {
         "title": "v1.6 - Motor de seeds nativo",
-        "native_engine": "Pestana Seeds reconstruida. Portado nativo de Immolate / TheSoul: cola de tienda, packs, vouchers, bosses, tags y contenido de packs deterministas por ante, calculados en el navegador desde una seed. Sin enlaces externos.",
-        "spoiler": "Subpestana Spoiler: desglose por ante con boss, voucher, ambos tags, cola de tienda de 15 items y cada pack con su contenido (jokers, tarots, planetas, espectrales, cartas estandar con mejoras/ediciones/sellos).",
-        "hunter": "Subpestana Joker Hunter: busca un joker por nombre (Perkeo, Blueprint, Brainstorm, etc.) y ve cada ante, fuente (tienda o pack Buffoon), rareza, edicion y stickers donde aparece.",
-        "soul_finder": "Subpestana Soul Finder: lista cada aparicion de The Soul + Black Hole en todas las antes, con el nombre del pack y la fuente (pack de Tarot, Spectral o Celestial).",
+        "native_engine": "Pestaña Seeds reconstruida. Portado nativo de Immolate / TheSoul: cola de tienda, packs, vouchers, bosses, tags y contenido de packs deterministas por ante, calculados en el navegador desde una seed. Sin enlaces externos.",
+        "spoiler": "Subpestaña Spoiler: desglose por ante con boss, voucher, ambos tags, cola de tienda de 15 items y cada pack con su contenido (jokers, tarots, planetas, espectrales, cartas estándar con mejoras/ediciones/sellos).",
+        "hunter": "Subpestaña Joker Hunter: busca un joker por nombre (Perkeo, Blueprint, Brainstorm, etc.) y ve cada ante, fuente (tienda o pack Buffoon), rareza, edición y stickers donde aparece.",
+        "soul_finder": "Subpestaña Soul Finder: lista cada aparición de The Soul + Black Hole en todas las antes, con el nombre del pack y la fuente (pack de Tarot, Spectral o Celestial).",
         "verified": "Motor verificado contra TheSoul en vivo para la seed 8Q47WV6K (Red, 1.0.1c) - boss, voucher, tags, cola de tienda y contenido de packs coinciden exactamente en antes 1-3."
       },
       "v1_1": {
@@ -470,7 +470,7 @@
         "conveyors": "Cintas verticales de jokers deslizándose por los bordes del Inicio.",
         "search_first": "Búsqueda unificada en Inicio: jokers, sinergias, combos, arquetipos.",
         "discover": "Botón Descubrir Algo Nuevo que nunca te lleva dos veces a la misma pestaña.",
-        "updates_rename": "Barra lateral: 'What's New' renombrado a 'Actualizaciones'."
+        "updates_rename": "Barra lateral: «What's New» renombrado a «Actualizaciones»."
       },
       "v1_8": {
         "title": "v1.8 — Pase de polish",
@@ -975,7 +975,7 @@
         "pivotOut": "Si la densidad de figuras es insuficiente para Photograph, reemplázalo con The Tribe y transiciona a un híbrido Color-Pareja usando Four Fingers."
       },
       "three_of_a_kind_specialist": {
-        "title": "Motor The Trio",
+        "title": "El Motor del Trío",
         "conditions": [
           "Usa DNA para apilar un único rango a 8+ copias para un Trío garantizado",
           "El rango objetivo de El Ídolo debe solaparse con el rango duplicado para X2 por carta coincidente",
@@ -1520,7 +1520,7 @@
       },
       "ui_scale": {
         "title": "Escala de la interfaz",
-        "label": "Tamano de iconos de joker",
+        "label": "Tamaño de iconos de joker",
         "hint": "Escala los iconos de joker en toda la app. El layout y el texto no cambian.",
         "reset": "Reiniciar"
       }
