@@ -122,7 +122,12 @@ self.addEventListener("message", (ev: MessageEvent) => {
 
 // Adaptive batch tuning constants.
 const TARGET_BATCH_MS = 250;
-const INITIAL_BATCH = 200_000;
+// Initial batch is intentionally tiny so the very first `progress` message
+// fires within ~100 ms of the worker starting its scan loop. The adaptive
+// sizer ramps up to MAX_BATCH within 2-3 iterations once steady-state
+// throughput is known. Trades a few hundred microseconds of overhead for
+// a much snappier UI "checked" / "rate" first-update latency.
+const INITIAL_BATCH = 5_000;
 const MIN_BATCH = 5_000;
 const MAX_BATCH = 2_000_000;
 const PROGRESS_INTERVAL_MS = 250;
@@ -135,6 +140,11 @@ async function handleScan(msg: ScanMsg): Promise<void> {
     engineInfo = await getEngine(msg.scalarJs, msg.scalarWasm, msg.simdJs, msg.simdWasm);
     // Tell main thread which engine is active (once per worker, on first scan).
     (self as any).postMessage({ type: "ready", simd: engineInfo.simd });
+    // Immediate "alive" ping with scanned=0. The orchestrator's progress
+    // emitter already runs at 100 ms cadence so the elapsed timer ticks
+    // even before this fires, but this confirms the worker reached the
+    // scan loop (vs still loading WASM).
+    (self as any).postMessage({ type: "progress", scanned: 0, elapsedMs: 0 });
   } catch (e: any) {
     (self as any).postMessage({ type: "error", message: e?.message ?? String(e) });
     return;
@@ -152,7 +162,12 @@ async function handleScan(msg: ScanMsg): Promise<void> {
   let batch = INITIAL_BATCH;
   const startedAt = performance.now();
   let totalScanned = 0;
-  let lastProgress = startedAt;
+  // Subtract PROGRESS_INTERVAL_MS so the FIRST iteration's progress message
+  // fires immediately after the first scan_chunk completes (which with the
+  // tiny INITIAL_BATCH is in the low milliseconds). Without this the worker
+  // would skip emitting progress for the first ~250 ms even with a fast
+  // first batch.
+  let lastProgress = startedAt - PROGRESS_INTERVAL_MS;
   let pendingMatches: Array<{ score: number; seed: string }> = [];
   let lastMatchFlush = startedAt;
 
