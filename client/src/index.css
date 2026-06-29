@@ -3,6 +3,106 @@
 @tailwind utilities;
 
 /* ============================================================
+   MOBILE / TOUCH BASELINE
+   Kill the legacy 300ms tap delay + grey tap highlight on every
+   interactive element. Applied at the root so child overrides
+   are no longer needed and Capacitor's WebView gets native
+   responsiveness on Android.
+   ============================================================ */
+html {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+[role="button"],
+a,
+label,
+summary,
+input[type="button"],
+input[type="submit"],
+input[type="checkbox"],
+input[type="radio"],
+[data-tab-trigger],
+.balatro-tab {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow vertical scrolling without consuming horizontal gestures in scroll
+   containers — manipulation already excludes double-tap zoom. */
+[data-scroll-container] {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ============================================================
+   MOBILE SCROLL PERF
+   `contain: content` on every joker / entity card cuts paint and
+   layout cost dramatically when 150 cards scroll past the
+   viewport. content-visibility: auto skips work for cards that
+   are off-screen entirely (Chrome / WebView supports it as of
+   Android 10+). The `.mobile-card-contain` class is applied by
+   JokerCard and EntityChip; index.css owns the rule centrally so
+   we can tune it globally.
+   ============================================================ */
+.mobile-card-contain {
+  contain: content;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 88px;
+}
+
+@media (max-width: 768px) {
+  /* Phones don't benefit from the heavy multi-stop pixel-art
+     drop shadows when scrolling — they trash the compositor. */
+  .mobile-card-contain,
+  [data-balatro-card] {
+    box-shadow: none !important;
+  }
+}
+
+/* Mark long scroll views so the browser knows it can offload
+   them to their own layer. */
+.scroll-region {
+  contain: layout paint;
+  will-change: scroll-position;
+}
+
+/* ============================================================
+   MOBILE TOUCH TARGETS
+   Enforce the 44px minimum on common interactive primitives at
+   mobile breakpoints. The desktop UI is untouched. We keep the
+   visual size mostly the same but bump min-height so taps land
+   reliably; this is the cheapest fix that moves the needle on a
+   pixel-art layout with intentionally small UI.
+   ============================================================ */
+@media (max-width: 768px) {
+  button,
+  [role="button"],
+  a[href],
+  .balatro-tab,
+  .balatro-button,
+  [data-tab-trigger] {
+    min-height: 44px;
+  }
+
+  /* Selects + inputs */
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+  }
+
+  /* Tighten card grids so two cards fit on a phone without
+     horizontal scroll. */
+  .balatro-card {
+    min-width: 0;
+  }
+}
+
+/* ============================================================
    AUTHENTIC BALATRO THEME; palette + UIBox constants ported
    verbatim from globals.lua G.C and engine/ui.lua.
    Source: github.com/idkhan/Balatro3DS/globals.lua (line 316+)

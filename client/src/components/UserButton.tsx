@@ -13,8 +13,14 @@ import { useAuth } from "@/lib/auth";
 import { AuthDialog } from "./AuthDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useT } from "@/lib/i18n";
+import { IS_LOCAL } from "@/lib/localAdapter";
 
 export function UserButton() {
+  // Single-user / offline APK build: never show sign-in chrome. The local
+  // adapter still returns a stub user under the hood so favorites and
+  // tier-list state continue to persist; we just don't expose any auth UI.
+  if (IS_LOCAL) return null;
+
   const { user, isSignedIn, signOut } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();

@@ -28,7 +28,8 @@ export function JokerCard({ joker }: { joker: Joker }) {
         }
       }}
       data-testid={`card-joker-${joker.id}`}
-      className="balatro-card balatro-hover group flex cursor-pointer flex-col p-3.5 focus-visible:ring-2 focus-visible:ring-ring"
+      data-balatro-card="joker"
+      className="balatro-card balatro-hover mobile-card-contain group flex cursor-pointer flex-col p-3.5 focus-visible:ring-2 focus-visible:ring-ring"
       style={{ contentVisibility: "auto", containIntrinsicSize: "auto 180px" } as React.CSSProperties}
     >
       {joker.rarity && (
