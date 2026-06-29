@@ -54,7 +54,7 @@ export function JokerDetailSheet() {
               <SheetHeader className="space-y-2 pr-2 text-left">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex min-w-0 flex-1 items-start gap-3">
-                    <JokerSprite jokerId={j.id} name={displayName} size={104} />
+                    <JokerSprite jokerId={j.id} name={displayName} size={104} clickable={false} className="!border-0 !bg-transparent !shadow-none" />
                     <div className="min-w-0 flex-1">
                       <SheetTitle className="font-pixel text-2xl leading-tight text-accent md:whitespace-nowrap md:overflow-hidden md:text-ellipsis">
                         {displayName}
