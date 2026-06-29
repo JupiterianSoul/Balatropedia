@@ -13,7 +13,7 @@ import { useI18n, useT, type Lang } from "@/lib/i18n";
 import { useTheme, THEME_OPTIONS, type Theme } from "@/lib/theme";
 import { useShake, SHAKE_DEFAULTS } from "@/lib/screenshake";
 import { useCRT, CRT_DEFAULTS } from "@/lib/crt";
-import { useUIScale, UI_SCALE_MIN, UI_SCALE_MAX, UI_SCALE_STEP } from "@/lib/uiScale";
+import { useUIScale, UI_SCALE_PRESETS } from "@/lib/uiScale";
 import {
   useAppScale,
   APP_SCALE_MIN, APP_SCALE_MAX, APP_SCALE_STEP,
@@ -132,20 +132,30 @@ export function SettingsTab() {
           <span className="text-xs text-muted-foreground">{t("ui.settings.ui_scale.label")}</span>
           <span className="font-pixel text-xs tabular text-accent">{Math.round(uiScale * 100)}%</span>
         </div>
-        <Slider
-          min={Math.round(UI_SCALE_MIN * 100)}
-          max={Math.round(UI_SCALE_MAX * 100)}
-          step={Math.round(UI_SCALE_STEP * 100)}
-          value={[Math.round(uiScale * 100)]}
-          onValueChange={(v) => { setUIScale((v[0] ?? 100) / 100); }}
-          data-testid="slider-ui-scale"
-        />
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">{t("ui.settings.ui_scale.hint")}</p>
-          <Button variant="outline" size="sm" onClick={() => setUIScale(1)} data-testid="button-ui-scale-reset">
-            {t("ui.settings.ui_scale.reset")}
-          </Button>
+        <div className="grid grid-cols-3 gap-2" data-testid="ui-scale-presets">
+          {UI_SCALE_PRESETS.map((preset, i) => {
+            const labelKey = i === 0 ? "ui.settings.ui_scale.small"
+              : i === 1 ? "ui.settings.ui_scale.medium"
+              : "ui.settings.ui_scale.big";
+            const active = Math.abs(uiScale - preset) < 0.001;
+            return (
+              <Button
+                key={preset}
+                variant={active ? "default" : "outline"}
+                size="sm"
+                onClick={() => setUIScale(preset)}
+                data-testid={`button-ui-scale-${i === 0 ? "small" : i === 1 ? "medium" : "big"}`}
+                aria-pressed={active}
+              >
+                <span className="flex flex-col items-center leading-tight">
+                  <span>{t(labelKey)}</span>
+                  <span className="text-[10px] opacity-70">{Math.round(preset * 100)}%</span>
+                </span>
+              </Button>
+            );
+          })}
         </div>
+        <p className="mt-2 text-xs text-muted-foreground">{t("ui.settings.ui_scale.hint")}</p>
       </section>
 
       {/* UI SIZE (desktop only — mobile uses native phone zoom) */}

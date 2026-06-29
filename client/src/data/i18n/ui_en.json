@@ -1522,7 +1522,10 @@
         "title": "Interface scale",
         "label": "Joker icon size",
         "hint": "Scales joker icons across the app. Layout and text remain unchanged.",
-        "reset": "Reset"
+        "reset": "Reset",
+        "small": "Small",
+        "medium": "Medium",
+        "big": "Big"
       },
       "ui_size": {
         "title": "UI Size",
