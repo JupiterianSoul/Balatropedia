@@ -3,7 +3,7 @@ import { Plus, X, ArrowUp, ArrowDown, Trash2, Calculator, Wand2, RefreshCcw } fr
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { CheckToggle } from "@/components/primitives";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -129,8 +129,13 @@ function JokerSlotEditor({
           <SelectContent>{JOKER_EDS.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}</SelectContent>
         </Select>
         <label className="flex items-center gap-2 text-xs">
-          <Switch checked={slot.disabled} onCheckedChange={(v) => onChange({ ...slot, disabled: v })} />
-          <span className="text-muted-foreground">disabled</span>
+          <CheckToggle
+            active={!!slot.disabled}
+            onToggle={() => onChange({ ...slot, disabled: !slot.disabled })}
+            testId="toggle-slot-disabled"
+            ariaLabel={t("ui.calculator.disabled")}
+          />
+          <span className="text-muted-foreground">{t("ui.calculator.disabled")}</span>
         </label>
       </div>
       {showState && (
@@ -263,7 +268,12 @@ export function ScoreCalculatorTab() {
               </div>
               <div className="flex items-end">
                 <label className="flex items-center gap-2 text-xs">
-                  <Switch checked={autoDetectHand} onCheckedChange={setAutoDetectHand} />
+                  <CheckToggle
+                    active={autoDetectHand}
+                    onToggle={() => setAutoDetectHand(!autoDetectHand)}
+                    testId="toggle-auto-detect"
+                    ariaLabel={t("ui.calculator.auto_detect")}
+                  />
                   <span>{t("ui.calculator.auto_detect")}</span>
                 </label>
               </div>
@@ -359,9 +369,33 @@ export function ScoreCalculatorTab() {
           <section className="rounded-lg border border-border/60 bg-card/40 p-3 space-y-3">
             <h3 className="text-sm font-semibold">{t("ui.calculator.modifiers")}</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-              <label className="flex items-center gap-2"><Switch checked={observatory} onCheckedChange={setObservatory} /> {t("ui.calculator.observatory")}</label>
-              <label className="flex items-center gap-2"><Switch checked={flintBoss} onCheckedChange={setFlintBoss} /> {t("ui.calculator.flint_boss")}</label>
-              <label className="flex items-center gap-2"><Switch checked={eyeBoss} onCheckedChange={setEyeBoss} /> {t("ui.calculator.eye_boss")}</label>
+              <label className="flex items-center gap-2">
+                <CheckToggle
+                  active={observatory}
+                  onToggle={() => setObservatory(!observatory)}
+                  testId="toggle-observatory"
+                  ariaLabel={t("ui.calculator.observatory")}
+                />
+                {t("ui.calculator.observatory")}
+              </label>
+              <label className="flex items-center gap-2">
+                <CheckToggle
+                  active={flintBoss}
+                  onToggle={() => setFlintBoss(!flintBoss)}
+                  testId="toggle-flint-boss"
+                  ariaLabel={t("ui.calculator.flint_boss")}
+                />
+                {t("ui.calculator.flint_boss")}
+              </label>
+              <label className="flex items-center gap-2">
+                <CheckToggle
+                  active={eyeBoss}
+                  onToggle={() => setEyeBoss(!eyeBoss)}
+                  testId="toggle-eye-boss"
+                  ariaLabel={t("ui.calculator.eye_boss")}
+                />
+                {t("ui.calculator.eye_boss")}
+              </label>
               <Button size="sm" variant="outline" onClick={reset}><RefreshCcw className="h-3.5 w-3.5 mr-1" /> {t("ui.calculator.reset")}</Button>
             </div>
             {observatory && (

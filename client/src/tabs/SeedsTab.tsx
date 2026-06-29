@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { TabIntro } from "@/components/TabIntro";
+import { CheckToggle } from "@/components/primitives";
 import {
   Dices, Search, Play, Loader2, Target, Telescope, Skull, Sparkles, ListTree,
   Library, ChevronDown, ChevronRight,
@@ -322,9 +323,33 @@ function InputsPanel({
             />
           </div>
           <div className="flex flex-col gap-1 pt-3 text-zinc-300">
-            <label className="flex items-center gap-2"><input type="checkbox" checked={input.showman} onChange={e => setInput({ ...input, showman: e.target.checked })} /> {t("ui.seeds.showman")}</label>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={input.freshProfile} onChange={e => setInput({ ...input, freshProfile: e.target.checked })} /> {t("ui.seeds.fresh_profile")}</label>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={input.freshRun} onChange={e => setInput({ ...input, freshRun: e.target.checked })} /> {t("ui.seeds.fresh_run")}</label>
+            <label className="flex items-center gap-2">
+              <CheckToggle
+                active={input.showman}
+                onToggle={() => setInput({ ...input, showman: !input.showman })}
+                testId="toggle-seeds-showman"
+                ariaLabel={t("ui.seeds.showman")}
+              />
+              {t("ui.seeds.showman")}
+            </label>
+            <label className="flex items-center gap-2">
+              <CheckToggle
+                active={input.freshProfile}
+                onToggle={() => setInput({ ...input, freshProfile: !input.freshProfile })}
+                testId="toggle-seeds-fresh-profile"
+                ariaLabel={t("ui.seeds.fresh_profile")}
+              />
+              {t("ui.seeds.fresh_profile")}
+            </label>
+            <label className="flex items-center gap-2">
+              <CheckToggle
+                active={input.freshRun}
+                onToggle={() => setInput({ ...input, freshRun: !input.freshRun })}
+                testId="toggle-seeds-fresh-run"
+                ariaLabel={t("ui.seeds.fresh_run")}
+              />
+              {t("ui.seeds.fresh_run")}
+            </label>
           </div>
         </div>
       </details>

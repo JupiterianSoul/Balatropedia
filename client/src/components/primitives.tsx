@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Star, AlertTriangle, Check } from "lucide-react";
+import { Star, AlertTriangle, CheckSquare, Square } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Level, Role, Scaling, Stage, JOKER_MAP, Rarity, Popularity, Difficulty,
@@ -153,22 +153,25 @@ export function StarToggle({
 }
 
 /**
- * Compact on/off checkbox toggle. Square pill with a check icon when active,
- * empty when inactive. Used for boolean settings (sound, CRT, shake) so they
- * read like check-boxes instead of an On/Off text pill.
+ * Flat icon-only on/off toggle matching the favorite (StarToggle) pattern.
+ * Renders a CheckSquare icon that fills with the accent color when active
+ * and stays muted (empty Square) when inactive. Use anywhere a Switch or
+ * raw checkbox would otherwise appear.
  */
 export function CheckToggle({
   active,
   onToggle,
   testId,
   ariaLabel,
-  size = 16,
+  size = 18,
+  disabled = false,
 }: {
   active: boolean;
   onToggle: () => void;
   testId: string;
   ariaLabel: string;
   size?: number;
+  disabled?: boolean;
 }) {
   return (
     <button
@@ -176,6 +179,7 @@ export function CheckToggle({
       data-no-sound
       onClick={(e) => {
         e.stopPropagation();
+        if (disabled) return;
         playSound(active ? "toggle_off" : "favorite");
         onToggle();
       }}
@@ -183,16 +187,16 @@ export function CheckToggle({
       aria-pressed={active}
       role="switch"
       aria-checked={active}
+      aria-disabled={disabled}
       data-testid={testId}
-      className={cn(
-        "inline-flex h-6 w-6 items-center justify-center rounded-md border-2 transition-colors",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-        active
-          ? "border-[hsl(198_18%_9%)] bg-accent text-[hsl(198_18%_9%)] shadow-[inset_0_1px_0_hsl(0_0%_100%/0.4),0_2px_0_hsl(198_18%_4%)]"
-          : "border-border bg-card text-transparent hover:border-accent",
-      )}
+      disabled={disabled}
+      className="rounded-sm p-1 text-muted-foreground transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-muted-foreground"
     >
-      <Check size={size} strokeWidth={3} className={cn(!active && "opacity-0")} />
+      {active ? (
+        <CheckSquare size={size} className="fill-accent text-accent" />
+      ) : (
+        <Square size={size} />
+      )}
     </button>
   );
 }

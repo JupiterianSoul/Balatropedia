@@ -1875,7 +1875,8 @@
       "flint_boss": "The Flint (boss)",
       "eye_boss": "The Eye (boss)",
       "reset": "Réinitialiser",
-      "score_timeline": "Chronologie du score"
+      "score_timeline": "Chronologie du score",
+      "disabled": "désactivé"
     },
     "buildlab": {
       "title": "Labo de Build",

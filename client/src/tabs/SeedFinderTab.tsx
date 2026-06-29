@@ -26,6 +26,7 @@ import { SeedReproductionPanel } from "@/components/SeedReproductionPanel";
 import { encodeFinderConfig, decodeFinderConfig } from "@/lib/seedFinderShare";
 import { VerifySeedPanel } from "@/components/VerifySeedPanel";
 import { useT } from "@/lib/i18n";
+import { CheckToggle } from "@/components/primitives";
 
 const ALL_JOKER_NAMES = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
   .filter((j, i, a) => a.indexOf(j) === i)
@@ -879,15 +880,16 @@ export function SeedFinderTab() {
         {/* Legacy engine toggle is hidden by default; ?legacy=1 reveals it. */}
         {showLegacyToggle && (
           <div className="flex items-start gap-2 rounded border border-zinc-700 bg-zinc-900/30 p-2">
-            <input
-              id="legacy-engine-toggle"
-              type="checkbox"
-              className="mt-1 h-4 w-4 accent-zinc-400"
-              checked={useLegacyEngine}
-              onChange={(e) => setUseLegacyEngine(e.target.checked)}
-              disabled={running}
-            />
-            <label htmlFor="legacy-engine-toggle" className="text-xs text-zinc-300 leading-snug">
+            <div className="mt-0.5">
+              <CheckToggle
+                active={useLegacyEngine}
+                onToggle={() => setUseLegacyEngine(!useLegacyEngine)}
+                testId="toggle-legacy-engine"
+                ariaLabel={t("ui.seedfinder.use_legacy_label")}
+                disabled={running}
+              />
+            </div>
+            <label className="text-xs text-zinc-300 leading-snug">
               <span className="font-semibold text-zinc-200">{t("ui.seedfinder.use_legacy_label")}</span>
               <span className="block text-zinc-500">{t("ui.seedfinder.use_legacy_desc")}</span>
             </label>
@@ -898,15 +900,16 @@ export function SeedFinderTab() {
             Search backend stays on WASM for now; see docs/V3_DESIGN.md. */}
         {showV3Toggle && (
           <div className="flex items-start gap-2 rounded border border-cyan-700/40 bg-cyan-950/10 p-2">
-            <input
-              id="v3-beta-toggle"
-              type="checkbox"
-              className="mt-1 h-4 w-4 accent-cyan-400"
-              checked={v3Beta}
-              onChange={(e) => setV3Beta(e.target.checked)}
-              disabled={running}
-            />
-            <label htmlFor="v3-beta-toggle" className="text-xs text-zinc-300 leading-snug">
+            <div className="mt-0.5">
+              <CheckToggle
+                active={v3Beta}
+                onToggle={() => setV3Beta(!v3Beta)}
+                testId="toggle-v3-beta"
+                ariaLabel={t("ui.seedfinder.v3_engine_title")}
+                disabled={running}
+              />
+            </div>
+            <label className="text-xs text-zinc-300 leading-snug">
               <span className="font-semibold text-cyan-200">{t("ui.seedfinder.v3_engine_title")}</span>
               <span className="block text-zinc-500">{t("ui.seedfinder.v3_engine_desc")}</span>
               {v3Beta && v3Status && (

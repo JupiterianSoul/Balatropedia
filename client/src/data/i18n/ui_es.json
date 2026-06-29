@@ -1875,7 +1875,8 @@
       "flint_boss": "The Flint (jefe)",
       "eye_boss": "The Eye (jefe)",
       "reset": "Reiniciar",
-      "score_timeline": "Cronología de puntuación"
+      "score_timeline": "Cronología de puntuación",
+      "disabled": "deshabilitado"
     },
     "buildlab": {
       "title": "Laboratorio de Build",

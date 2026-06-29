@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Volume2, VolumeX, Trash2, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor, Maximize2, Expand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SectionLabel, CheckToggle } from "@/components/primitives";
+import { SectionLabel } from "@/components/primitives";
 import { Slider } from "@/components/ui/slider";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -186,12 +186,14 @@ export function SettingsTab() {
 
         <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-card/50 px-3 py-2">
           <div className="font-medium text-sm">{t("ui.settings.screenshake.enabled")}</div>
-          <CheckToggle
-            active={shakeEnabled}
-            onToggle={() => setShakeEnabled(!shakeEnabled)}
-            testId="button-shake-toggle"
-            ariaLabel={t("ui.settings.screenshake.enabled")}
-          />
+          <Button
+            variant={shakeEnabled ? "default" : "outline"}
+            size="sm"
+            onClick={() => setShakeEnabled(!shakeEnabled)}
+            data-testid="button-shake-toggle"
+          >
+            {shakeEnabled ? t("ui.settings.on") : t("ui.settings.off")}
+          </Button>
         </div>
 
         <div className="mt-4">
@@ -221,12 +223,14 @@ export function SettingsTab() {
 
         <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-card/50 px-3 py-2">
           <div className="font-medium text-sm">{t("ui.settings.crt.enabled")}</div>
-          <CheckToggle
-            active={crtEnabled}
-            onToggle={() => setCrtEnabled(!crtEnabled)}
-            testId="button-crt-toggle"
-            ariaLabel={t("ui.settings.crt.enabled")}
-          />
+          <Button
+            variant={crtEnabled ? "default" : "outline"}
+            size="sm"
+            onClick={() => setCrtEnabled(!crtEnabled)}
+            data-testid="button-crt-toggle"
+          >
+            {crtEnabled ? t("ui.settings.on") : t("ui.settings.off")}
+          </Button>
         </div>
 
         <div className="mt-4">
@@ -260,12 +264,14 @@ export function SettingsTab() {
 
         <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-card/50 px-3 py-2">
           <div className="font-medium text-sm">{t("ui.settings.sound_enabled")}</div>
-          <CheckToggle
-            active={soundOn}
-            onToggle={() => handleSoundToggle(!soundOn)}
-            testId="button-settings-sound-toggle"
-            ariaLabel={t("ui.settings.sound_enabled")}
-          />
+          <Button
+            variant={soundOn ? "default" : "outline"}
+            size="sm"
+            onClick={() => handleSoundToggle(!soundOn)}
+            data-testid="button-settings-sound-toggle"
+          >
+            {soundOn ? t("ui.settings.on") : t("ui.settings.off")}
+          </Button>
         </div>
 
         <div className="mt-4">
