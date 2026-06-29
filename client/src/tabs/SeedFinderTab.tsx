@@ -902,13 +902,30 @@ export function SeedFinderTab() {
           Verify a seed
         </Button>
         <div className="flex flex-wrap gap-4 text-xs font-mono ml-auto">
-          <div><span className="text-zinc-500">checked </span><span className="text-yellow-200">{progress.totalTries.toLocaleString()}</span></div>
-          <div><span className="text-zinc-500">rate </span><span className="text-yellow-200">{progress.seedsPerSec.toLocaleString()}/s</span></div>
-          <div><span className="text-zinc-500">elapsed </span><span className="text-yellow-200">{(progress.elapsedMs / 1000).toFixed(1)}s</span></div>
-          <div><span className="text-zinc-500">matches </span><span className="text-emerald-300">{matches.length}</span></div>
-          {!useLegacyEngine && (progress as any).engine && (
-            <div><span className="text-zinc-500">engine </span><span className="text-purple-300">{(progress as any).engine}</span></div>
-          )}
+          {(() => {
+            const phase = (progress as any).phase as "loading" | "warming" | "running" | undefined;
+            // During WASM load + first batch, scanned/rate are legitimately
+            // unknown. Surface the phase instead of a misleading "0".
+            const checkedLabel = phase === "loading"
+              ? "loading WASM…"
+              : progress.totalTries.toLocaleString();
+            const rateLabel = phase === "loading"
+              ? "—"
+              : phase === "warming"
+                ? "warming up…"
+                : `${progress.seedsPerSec.toLocaleString()}/s`;
+            return (
+              <>
+                <div><span className="text-zinc-500">checked </span><span className="text-yellow-200">{checkedLabel}</span></div>
+                <div><span className="text-zinc-500">rate </span><span className="text-yellow-200">{rateLabel}</span></div>
+                <div><span className="text-zinc-500">elapsed </span><span className="text-yellow-200">{(progress.elapsedMs / 1000).toFixed(1)}s</span></div>
+                <div><span className="text-zinc-500">matches </span><span className="text-emerald-300">{matches.length}</span></div>
+                {!useLegacyEngine && (progress as any).engine && (
+                  <div><span className="text-zinc-500">engine </span><span className="text-purple-300">{(progress as any).engine}</span></div>
+                )}
+              </>
+            );
+          })()}
         </div>
         {running && <Loader2 className="h-4 w-4 animate-spin text-yellow-300" />}
       </div>

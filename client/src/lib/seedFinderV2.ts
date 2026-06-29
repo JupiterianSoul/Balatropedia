@@ -223,20 +223,33 @@ export class SeedFinderV2 {
       : simdWorkers === 0 ? "scalar"
       : "mixed";
 
-    const progressTimer: number | null = window.setInterval(() => {
+    const emitProgress = () => {
       const total = perWorkerScanned.reduce((a, b) => a + b, 0);
       const elapsedMs = performance.now() - startedAt;
       const seedsPerSec = elapsedMs > 0 ? Math.round((total * 1000) / elapsedMs) : 0;
+      const label = engineLabel();
       cb.onProgress?.({
         totalTries: total,
         elapsedMs,
         seedsPerSec,
         matches: matchesCount,
-        // Extra hint for the UI; existing typing in seedFinder.ts allows any extra
-        // fields because the consumer treats progress as `any` (see SeedFinderTab).
-        engine: engineLabel(),
+        engine: label,
+        // `phase` tells the UI whether the engine is still warming up so it can
+        // render "loading WASM…" / "warming up…" instead of a misleading 0/s.
+        phase: label === "loading" ? "loading"
+             : total === 0 ? "warming"
+             : "running",
       } as any);
-    }, 250);
+    };
+
+    // Fire one progress event synchronously at start so the UI shows
+    // elapsed/checked/rate fields immediately (the user-visible click →
+    // first-update lag was previously ~250 ms of nothing followed by
+    // another ~2 s of zeros while WASM loaded).
+    emitProgress();
+    // Tight 100 ms cadence during warmup so the elapsed counter ticks
+    // visibly even before the first worker reports any scanned seeds.
+    const progressTimer: number | null = window.setInterval(emitProgress, 100);
 
     const cleanup = () => {
       if (progressTimer != null) clearInterval(progressTimer);
