@@ -1,141 +1,86 @@
 # Balatropedia
 
-[![Live Site](https://img.shields.io/badge/Live%20Site-balatro--explorer--m22k.onrender.com-blue)](https://balatro-explorer-m22k.onrender.com)
-[![Version](https://img.shields.io/badge/version-1.8.0-red)](https://github.com/JupiterianSoul/Balatropedia/releases)
-[![React](https://img.shields.io/badge/React-TypeScript-61DAFB?logo=react)](https://react.dev)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?logo=tailwindcss)](https://tailwindcss.com)
-[![Express](https://img.shields.io/badge/Backend-Express-000000?logo=express)](https://expressjs.com)
+Balatropedia is a fan-made reference and companion app for Balatro, the deckbuilder by LocalThunk and Playstack. It catalogs every joker, deck, stake, voucher, boss blind, consumable, edition, enhancement and seal in the game, then layers planning and analysis tools on top. The app runs in the browser and on Android as a Capacitor build with no account, no ads, no analytics and no online dependency.
 
-**Balatropedia** is a fan-made reference and companion for [Balatro](https://www.playbalatro.com/), the indie deckbuilder by LocalThunk and Playstack. It indexes every joker, deck, stake, voucher, boss blind, consumable, edition, and enhancement, then layers planning, analysis, and seed-engine tools on top, with full English, Français, and Español localization.
+## What it covers
 
-**Live:** https://balatro-explorer-m22k.onrender.com
+Reference data:
 
-> The site runs on Render's free tier (Frankfurt region). After idle periods the first request may take up to 30 seconds while the server cold-starts; subsequent requests are fast.
+* 150 jokers with full effect text, scaling notes, rarity, cost, archetype tags, sticker rules and source citations
+* All 15 decks
+* All 8 stakes with inherited modifiers laid out per row
+* 32 vouchers across the two tiers
+* All 28 boss blinds
+* Tarots, planets, spectrals and Soul/Wraith resolutions
+* All editions (foil, holographic, polychrome, negative) and enhancements (bonus, mult, wild, glass, steel, stone, gold, lucky)
+* All seals (gold, red, blue, purple)
+* Archetypes that group jokers by the role they fill in a build
+* Glossary covering every gameplay term used in the app
 
----
+Planning tools:
 
-## Features
+* My Run notebook for an active session with deck, stake, ante, current jokers and free-form notes, all saved locally
+* Build Lab sandbox for theorycrafting a five joker board with chip, mult and X-mult breakdown
+* Score Calculator showing the exact scoring order used by the game
+* Skeleton run planner for ante by ante checks against boss blind effects
+* Compare view for side by side reads on jokers, decks, vouchers and bosses
+* Synergies graph drawn from community guides with engine type, popularity and difficulty
+* Combos page for three plus joker setups with notes on what wins runs
 
-### Reference
+Seed tools:
 
-- **150 Jokers** with full effect text, scaling formulas, archetypes, tags, source citations
-- **Decks, Stakes, Vouchers, Boss Blinds, Consumables, Editions, Enhancements** indexed end to end
-- **Archetypes** grouping jokers by the role they fill in a build
-- **Glossary** of every gameplay term used in the app
+* Analyzer for pasting a seed and walking shops, packs, vouchers and Soul resolutions ante by ante
+* Finder driven by the in-house Balatro Seed Searcher engine (Rust compiled to WebAssembly with SIMD when the browser supports it). Filter rows for jokers (with edition and sticker), vouchers, tags with small or big blind position, bosses and standard pack cards. Soul resolves to a specific legendary; Wraith resolves to a specific Rare.
+* Verify Seed inspector that shows clause by clause matches for any seed
+* Shareable filter URLs through a single `seedfinder` query parameter
+* Device aware worker count from Eco on low end phones to Extreme on multi core desktops
+* Library of curated and locally saved notable seeds
 
-### Planning Tools
+Tier list:
 
-- **My Run** notebook for an active session: deck, stake, ante, current jokers, live synergy and counter notes
-- **Build Lab** sandbox for theorycrafting a 5-joker board with chip/mult/X-mult breakdown
-- **Score Calculator** showing Balatro's exact scoring order of operations
-- **Skeleton** run planner: ante-by-ante structural check against boss blind effects
-- **Compare** view: side-by-side for jokers, decks, vouchers, bosses
-- **Synergies** graph drawn from community guides with engine type, popularity, difficulty
-- **Combos** for three-plus joker setups with win-rate notes where known
+* Interactive S, A, B, C, D ranking that defaults to community consensus
+* Free drag of any joker between tiers
+* Persistent local order with a one click reset to the default
 
-### Seed Engine
+Interface:
 
-- **Analyzer**: paste a seed, simulate antes ahead with the WASM engine, see shops, packs, vouchers, Soul resolutions
-- **Finder (V2, default)**: the in-house
-  [Balatro Seed Searcher](https://github.com/JupiterianSoul/Balatro-Seed-Searcher)
-  Rust+WASM engine — SIMD when the browser supports it, scalar otherwise.
-  First-class filter rows for jokers (with edition + sticker + source),
-  vouchers, tags (small-blind / big-blind position), bosses, and standard
-  pack cards (suit + rank + enhancement + edition + seal). Soul → specific
-  legendary and Wraith → specific Rare are resolved by the engine. The
-  Verify Seed inspector reports clause-by-clause matches for any seed.
-  Filters serialise into a shareable `?seedfinder=...` URL. Bit-for-bit
-  internal parity harness passes 100k seeds with zero divergences (see
-  `scripts/PARITY.md` in the engine repo).
-- **Finder (V1, legacy)**: Immolate-based, fully verified. Available via
-  the `?legacy=1` URL flag for diagnostics or A/B comparison against V2.
-- **Device-aware Search Speed**: auto-detects core count, mobile vs PC,
-  and reported RAM, then picks a sensible default worker count (Eco on
-  low-end phones, Extreme on 24+ core workstations). A `?` popover next to
-  the dropdown explains the tiers in plain English.
-- **Library**: curated and user-saved notable seeds
-
-### Tier List & Community
-
-- Interactive S/A/B/C/D ranking, defaulting to community consensus from cited third-party guides
-- Drag jokers freely; signed-in users sync custom orderings to their account
-- Persistent dismissable disclaimer plus a short reminder at the bottom of the tab
-
-### Account & UX
-
-- Google sign-in: syncs favorites, saved runs, Build Lab state, custom tier list
-- Three themes: Felt, Midnight, Parchment
-- UI scale slider (80% to 160%) for high-DPI desktops and large mobile screens
-- In-browser synthesized sound effects, no external audio assets
-- Full keyboard navigation, mobile responsive
-
----
-
-## Sources & Attribution
-
-Joker data and synergy notes are cross-referenced against:
-
-- [Balatro Fandom Wiki](https://balatrogame.fandom.com/wiki/Jokers) (CC-BY-SA)
-- [dood.gg](https://dood.gg/en/balatro/) joker synergy, deck strategies and poker hand guides
-- [Balatro HQ](https://www.balatrohq.com/guides/advanced-strategies/) advanced strategies
-- [Mobalytics Balatro Joker Tier List](https://mobalytics.gg/blog/tier-lists/best-balatro-jokers/)
-- [Two Average Gamers Strategy Guide](https://www.twoaveragegamers.com/balatro-strategy-guide-the-joker-combos-that-actually-win-runs/)
-- [TheGamer Joker Tier List](https://www.thegamer.com/balatro-joker-tier-list/)
-- Validated discussion threads on r/balatro
-
-Per-joker source links are listed in each detail sheet. Tier list ordering reflects aggregated community opinion, not authoritative ranking.
-
----
-
-## Disclaimer
-
-Balatropedia is an unofficial, non-commercial fan project. It is not affiliated with, endorsed by, or sponsored by LocalThunk, Playstack, or any joker tier-list author. All Balatro names, art references, and gameplay mechanics belong to their respective owners and are used here under fair-use for reference and educational purposes. Joker sprites are reduced-scale identifiers; rights holders may request removal of any asset via the issue tracker and it will be removed promptly. No ads, no analytics beyond what Google sign-in carries server-side, no third-party trackers, no monetization.
-
----
+* English, French and Spanish throughout the whole app
+* Three themes: Felt (red and blue casino), Midnight (deep blue) and Parchment (warm brown leather)
+* UI scale slider for high density displays and large phones
+* In browser synthesized sound effects, no audio files shipped
+* Full keyboard navigation
+* Mobile bottom tab bar, side drawer with tab descriptions, side conveyor of joker sprites on the home screen
 
 ## Stack
 
-- **Frontend**: React + TypeScript, Vite, Tailwind CSS, shadcn/ui, Wouter routing
-- **Backend**: Express, Drizzle ORM, Neon Postgres
-- **Seed Engine**: in-house Rust→WASM engine (V2, default) with SIMD detection. Immolate WASM remains as legacy fallback (`?legacy=1`). Both run in a Web Worker pool sized by an on-device profiler.
-- **Auth**: Google OAuth via Passport
-- **i18n**: in-tree JSON dictionaries (English, Français, Español)
-- **Hosting**: Render (Frankfurt)
-- **Font**: m6x11plus by Daniel Linssen
+* React with TypeScript and Vite
+* Tailwind CSS with a small set of custom Balatro inspired primitives
+* Wouter for routing
+* shadcn/ui for the base components
+* Express server for the website build
+* Capacitor for the Android wrapper
+* Rust compiled to WebAssembly for the seed search engine
 
----
-
-## Development
+## Run it
 
 ```bash
-git clone https://github.com/JupiterianSoul/Balatropedia.git
-cd Balatropedia
 npm install
-cp .env.example .env  # fill DATABASE_URL with a Neon Postgres connection string
-npm run dev           # runs Express + Vite on the same port
+npm run dev
 ```
 
-Build for production:
+Build the static bundle that ships in the Android APK:
 
 ```bash
-npm run build    # outputs dist/public (client) and dist/index.cjs (server)
-npm start        # serves the production build
+npm run build:app
+npx cap sync android
 ```
 
----
+Open `android/` in Android Studio and run on a connected device.
 
-## Contributing
+## Sources
 
-Spotted a wrong number, a missing joker, or a broken synergy? Open an issue: https://github.com/JupiterianSoul/Balatropedia/issues/new
+Joker data and synergy notes are cross referenced against the Balatro Fandom Wiki, dood.gg, Balatro HQ, Mobalytics, TheGamer, Two Average Gamers and validated discussion threads on r/balatro. Each joker detail sheet lists its own sources. Tier list ordering reflects aggregated community opinion, not authoritative ranking.
 
-The project welcomes PRs against `main`. Keep changes focused; avoid sweeping refactors.
+## Disclaimer
 
----
-
-## License
-
-MIT. See [LICENSE](./LICENSE) if present, or assume MIT for source contributions. All Balatro IP belongs to LocalThunk and Playstack.
-
----
-
-Made by [JupiterianSoul](https://github.com/JupiterianSoul). If Balatropedia is useful to you, a Ko-fi tip helps keep the Render dyno warm: links live in the in-app About tab.
+Balatropedia is an unofficial, non-commercial fan project. It is not affiliated with, endorsed by or sponsored by LocalThunk or Playstack. All Balatro names, art references and gameplay mechanics belong to their respective owners and are used here under fair use for reference and educational purposes. Joker sprites are reduced scale identifiers; rights holders may request removal of any asset via the issue tracker and it will be removed promptly. No ads, no analytics, no third party trackers, no monetization.

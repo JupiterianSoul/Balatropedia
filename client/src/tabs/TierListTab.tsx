@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Info, ExternalLink, X } from "lucide-react";
+import { TabIntro } from "@/components/TabIntro";
+import { Trophy, Info, ExternalLink, X } from "lucide-react";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -163,6 +164,9 @@ export function TierListTab() {
 
   return (
     <div className="space-y-5 p-2 md:p-4">
+      <TabIntro Icon={Trophy} title="Tier List">
+        Community-ranked jokers from strongest to weakest. Use the disclaimer for context and tap a sprite for its details.
+      </TabIntro>
       { }
       {!disclaimerHidden && (
         <div

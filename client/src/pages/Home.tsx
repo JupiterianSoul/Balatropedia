@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense, type ComponentType } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { X, Menu } from "lucide-react";
+import { X, Menu, Settings as SettingsIcon } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -13,7 +13,6 @@ import { NavList, type NavGroup } from "@/components/NavList";
 import { useApp } from "@/lib/appContext";
 import { JokerDetailSheet } from "@/components/JokerDetailSheet";
 import { EntityDetailSheet } from "@/components/EntityDetailSheet";
-import { UserButton } from "@/components/UserButton";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SoundToggle } from "@/components/SoundToggle";
 import { useI18n, useT } from "@/lib/i18n";
@@ -59,7 +58,8 @@ const HelpTab = lazyNamed(() => import("@/tabs/HelpTab"), "HelpTab");
 const AboutTab = lazyNamed(() => import("@/tabs/AboutTab"), "AboutTab");
 const TierListTab = lazyNamed(() => import("@/tabs/TierListTab"), "TierListTab");
 const WhatsNewTab = lazyNamed(() => import("@/tabs/WhatsNewTab"), "WhatsNewTab");
-import { KofiFooterButton } from "@/components/KofiButton";
+// KofiFooterButton intentionally removed sitewide; the only Ko-fi entry point
+// is the boxed KofiSupportCard rendered inside the About tab.
 
 const NAV_GROUPS: NavGroup[] = [
   { key: "home", tabs: ["home"] },
@@ -211,7 +211,6 @@ export default function Home() {
             <div className="flex items-center justify-between gap-2">
               <LanguageSwitcher />
               <SoundToggle />
-              <UserButton />
             </div>
           </div>
         </aside>
@@ -223,46 +222,53 @@ export default function Home() {
             className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden"
             style={{ paddingTop: "env(safe-area-inset-top)" }}
           >
-            <div className="grid grid-cols-[auto_auto_1fr_auto] items-center gap-2 px-3 py-3">
-              {}
-              <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
-                <SheetTrigger asChild>
-                  <button
-                    type="button"
-                    className="balatro-tab flex h-11 w-11 shrink-0 items-center justify-center !px-2 !py-2"
-                    aria-label="Open menu"
-                    data-testid="button-mobile-menu"
-
+            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 px-3 py-3">
+              {/* LEFT: hamburger + settings, same size */}
+              <div className="flex items-center gap-2">
+                <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+                  <SheetTrigger asChild>
+                    <button
+                      type="button"
+                      className="balatro-tab flex h-11 w-11 shrink-0 items-center justify-center !px-2 !py-2"
+                      aria-label="Open menu"
+                      data-testid="button-mobile-menu"
+                    >
+                      <Menu className="h-6 w-6" strokeWidth={2.5} />
+                    </button>
+                  </SheetTrigger>
+                  <SheetContent
+                    side="left"
+                    className="w-[280px] border-r-4 border-black bg-[hsl(178_14%_13%)] p-0 font-pixel text-[hsl(45_15%_85%)]"
                   >
-                    <Menu className="h-6 w-6" strokeWidth={2.5} />
-                  </button>
-                </SheetTrigger>
-                <SheetContent
-                  side="left"
-                  className="w-[280px] border-r-4 border-black bg-[hsl(178_14%_13%)] p-0 font-pixel text-[hsl(45_15%_85%)]"
+                    <SheetHeader className="flex flex-row items-center gap-2.5 border-b-2 border-black bg-[hsl(150_16%_10%)] px-4 py-2 text-left">
+                      <Logo className="h-10 w-10 shrink-0 rounded-md border-2 border-black bg-[hsl(150_16%_10%)] p-1 drop-shadow-[2px_2px_0_hsl(198_18%_4%)]" />
+                      <SheetTitle className="flex items-center font-pixel text-xl leading-none">
+                        <span className="mult-text">{t("ui.header.title_a")}</span>
+                        <span className="chips-text">{t("ui.header.title_b")}</span>
+                      </SheetTitle>
+                    </SheetHeader>
+                    <div className="max-h-[calc(100dvh-56px)] overflow-y-auto">
+                      <NavList
+                        groups={NAV_GROUPS}
+                        currentTab={tab}
+                        onSelect={handleSelect}
+                        favCount={favCount}
+                      />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+                <button
+                  type="button"
+                  onClick={() => handleSelect("settings")}
+                  className="balatro-tab flex h-11 w-11 shrink-0 items-center justify-center !px-2 !py-2"
+                  aria-label={t("ui.nav.settings")}
+                  data-testid="button-mobile-settings"
                 >
-                  <SheetHeader className="flex flex-row items-center gap-2.5 border-b-2 border-black bg-[hsl(150_16%_10%)] px-4 py-2 text-left">
-                    <Logo className="h-10 w-10 shrink-0 rounded-md border-2 border-black bg-[hsl(150_16%_10%)] p-1 drop-shadow-[2px_2px_0_hsl(198_18%_4%)]" />
-                    <SheetTitle className="flex items-center font-pixel text-xl leading-none">
-                      <span className="mult-text">{t("ui.header.title_a")}</span>
-                      <span className="chips-text">{t("ui.header.title_b")}</span>
-                    </SheetTitle>
-                  </SheetHeader>
-                  <div className="max-h-[calc(100dvh-56px)] overflow-y-auto">
-                    <NavList
-                      groups={NAV_GROUPS}
-                      currentTab={tab}
-                      onSelect={handleSelect}
-                      favCount={favCount}
-                    />
-                  </div>
-                </SheetContent>
-              </Sheet>
+                  <SettingsIcon className="h-6 w-6" strokeWidth={2.5} />
+                </button>
+              </div>
 
-              {}
-              <LanguageSwitcher />
-
-              {}
+              {/* CENTER: title */}
               <h1
                 className="min-w-0 truncate text-center font-pixel text-[20px] font-bold leading-none tracking-tight"
                 data-testid="mobile-topbar-title"
@@ -279,9 +285,10 @@ export default function Home() {
                 )}
               </h1>
 
-              {}
-              <div className="flex shrink-0 items-center gap-1">
-                <UserButton />
+              {/* RIGHT: language + sound */}
+              <div className="flex items-center gap-2">
+                <LanguageSwitcher />
+                <SoundToggle />
               </div>
             </div>
           </header>
@@ -338,7 +345,6 @@ export default function Home() {
                 <TabsContent value="whatsnew" className="mt-0"><WhatsNewTab /></TabsContent>
                 <TabsContent value="settings" className="mt-0"><SettingsTab /></TabsContent>
               </Suspense>
-              <KofiFooterButton />
             </div>
           </main>
           )}

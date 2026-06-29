@@ -1,7 +1,6 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { useApp } from "@/lib/appContext";
-import { useAuth } from "@/lib/auth";
 import {
   JOKER_MAP, ROLE_LABELS, groupedPartners, PARTNER_CATEGORY_ORDER,
   exampleUseCaseRules, antiSynergyReason, whyPlayThisRules, synergyKey,
@@ -22,7 +21,7 @@ export function JokerDetailSheet() {
     isFavoriteJoker, toggleFavoriteJoker, notes, setNote,
     favoriteNote, setFavoriteNote,
   } = useApp();
-  const { isSignedIn } = useAuth();
+
   const isMobile = useIsMobile();
   const t = useT();
   const labels = useLabels();
@@ -46,13 +45,13 @@ export function JokerDetailSheet() {
       >
         {j && (
           <div className="flex h-full flex-col overflow-hidden">
-            <div className="flex-1 overflow-y-auto overscroll-contain p-5 md:p-8">
-              <SheetHeader className="space-y-2 pr-8 text-left">
+            <div className="flex-1 overflow-y-auto overscroll-contain px-5 pb-5 pt-8 md:px-8 md:pb-8 md:pt-10">
+              <SheetHeader className="space-y-2 pr-2 text-left">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="flex min-w-0 items-start gap-3">
+                  <div className="flex min-w-0 flex-1 items-start gap-3">
                     <JokerSprite jokerId={j.id} name={displayName} size={104} />
-                    <div className="min-w-0">
-                      <SheetTitle className="font-pixel text-2xl leading-tight text-accent">
+                    <div className="min-w-0 flex-1">
+                      <SheetTitle className="font-pixel text-2xl leading-tight text-accent md:whitespace-nowrap md:overflow-hidden md:text-ellipsis">
                         {displayName}
                       </SheetTitle>
                       {j.rarity && (
@@ -62,7 +61,7 @@ export function JokerDetailSheet() {
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex shrink-0 items-center gap-2 pr-1">
                     <StarToggle
                       active={isFavoriteJoker(j.id)}
                       onToggle={() => toggleFavoriteJoker(j.id)}
@@ -181,7 +180,7 @@ export function JokerDetailSheet() {
                 </section>
 
                 {}
-                {isSignedIn && isFavoriteJoker(j.id) ? (
+                {isFavoriteJoker(j.id) ? (
                   <section>
                     <SectionLabel>{t("ui.sheet.your_note_fav")}</SectionLabel>
                     <Textarea
@@ -194,24 +193,19 @@ export function JokerDetailSheet() {
                       className="resize-none bg-background text-sm"
                     />
                   </section>
-                ) : isSignedIn ? (
-                  <section>
-                    <SectionLabel>{t("ui.sheet.your_note")}</SectionLabel>
-                    <p className="text-sm text-muted-foreground">{t("ui.sheet.star_to_note")}</p>
-                  </section>
                 ) : (
-                <section>
-                  <SectionLabel>{t("ui.sheet.your_note_session")}</SectionLabel>
-                  <Textarea
-                    value={notes[`joker:${j.id}`] ?? ""}
-                    onChange={(e) => setNote(`joker:${j.id}`, e.target.value)}
-                    placeholder={t("ui.sheet.your_note_session_ph")}
-                    rows={3}
-                    data-testid={`input-note-${j.id}`}
-                    className="resize-none bg-background text-sm"
-                  />
-                  <p className="mt-1.5 text-[11px] text-muted-foreground">{t("ui.sheet.sign_in_save_notes")}</p>
-                </section>
+                  <section>
+                    <SectionLabel>{t("ui.sheet.your_note_session")}</SectionLabel>
+                    <Textarea
+                      value={notes[`joker:${j.id}`] ?? ""}
+                      onChange={(e) => setNote(`joker:${j.id}`, e.target.value)}
+                      placeholder={t("ui.sheet.your_note_session_ph")}
+                      rows={3}
+                      data-testid={`input-note-${j.id}`}
+                      className="resize-none bg-background text-sm"
+                    />
+                    <p className="mt-1.5 text-[11px] text-muted-foreground">{t("ui.sheet.star_to_note")}</p>
+                  </section>
                 )}
               </div>
             </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Volume2, VolumeX, Trash2, LogOut, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor, Maximize2, Expand } from "lucide-react";
+import { Volume2, VolumeX, Trash2, Languages, Github, ExternalLink, Star, Music, Palette, Zap, Monitor, Maximize2, Expand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SectionLabel } from "@/components/primitives";
@@ -20,7 +20,6 @@ import {
 } from "@/lib/appScale";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useApp } from "@/lib/appContext";
-import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 
 const LANG_OPTIONS: { code: Lang; label: string }[] = [
@@ -34,7 +33,6 @@ export function SettingsTab() {
   const { lang, setLang } = useI18n();
   const { toast } = useToast();
   const { favoriteJokers, favoriteCombos, toggleFavoriteJoker, toggleFavoriteCombo } = useApp();
-  const { isSignedIn, signOut, user } = useAuth();
 
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [volume, setVolume] = useState(getSoundVolume());
@@ -64,15 +62,6 @@ export function SettingsTab() {
     Array.from(favoriteJokers).forEach((id) => toggleFavoriteJoker(id));
     Array.from(favoriteCombos).forEach((id) => toggleFavoriteCombo(id));
     toast({ title: t("ui.settings.reset_done") });
-  }
-
-  async function handleSignOut() {
-    try {
-      await signOut();
-      toast({ title: t("ui.settings.signed_out") });
-    } catch (e: any) {
-      toast({ title: t("ui.settings.signout_failed"), description: String(e?.message ?? e), variant: "destructive" });
-    }
   }
 
   return (
@@ -344,26 +333,6 @@ export function SettingsTab() {
             </AlertDialog>
           </div>
 
-          {isSignedIn ? (
-            <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-card/50 px-3 py-2">
-              <div className="min-w-0">
-                <div className="font-medium text-sm">{t("ui.settings.signed_in_as")}</div>
-                <div className="truncate text-xs text-muted-foreground">{user?.email}</div>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5"
-                onClick={handleSignOut}
-                data-testid="button-settings-signout"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                {t("ui.settings.signout")}
-              </Button>
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground">{t("ui.settings.sign_in_to_sync")}</p>
-          )}
         </div>
       </section>
 

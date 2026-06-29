@@ -172,8 +172,15 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
 
   const descKey = useMemo(() => DESC_KEYS[Math.floor(Math.random() * DESC_KEYS.length)], []);
 
-  const leftIds = useMemo(() => pickRandom(JOKERS.map((j) => j.id), 20), []);
-  const rightIds = useMemo(() => pickRandom(JOKERS.map((j) => j.id), 20), []);
+  // Only pick jokers that resolve to a real sprite — guards against archetype /
+  // combo IDs that live in JOKERS but lack an entry in local_sprites.json,
+  // which would otherwise render as a broken-image red rectangle on Android.
+  const spriteIds = useMemo(
+    () => JOKERS.map((j) => j.id).filter((id) => Boolean(getSpriteUrl(id))),
+    [],
+  );
+  const leftIds = useMemo(() => pickRandom(spriteIds, 20), [spriteIds]);
+  const rightIds = useMemo(() => pickRandom(spriteIds, 20), [spriteIds]);
 
   const index = useMemo(buildSearchIndex, []);
   const [query, setQuery] = useState("");
@@ -287,7 +294,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => setFocused(true)}
               onBlur={() => window.setTimeout(() => setFocused(false), 150)}
-              placeholder={t("ui.home.search_placeholder")}
+              placeholder=""
               className="w-full rounded-md border-2 border-accent/40 bg-background/80 py-3 pl-10 pr-4 font-display text-sm text-foreground shadow-lg backdrop-blur-md placeholder:text-muted-foreground/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40 [&::-webkit-search-cancel-button]:hidden"
               data-testid="input-home-search"
               autoComplete="off"

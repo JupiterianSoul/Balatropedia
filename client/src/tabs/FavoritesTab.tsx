@@ -1,8 +1,7 @@
-import { Star, Lock, StickyNote } from "lucide-react";
+import { Star, StickyNote } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useApp } from "@/lib/appContext";
-import { useAuth } from "@/lib/auth";
 import { JOKER_MAP, COMBOS, ARCHETYPE_LABELS, type Joker } from "@/lib/helpers";
 import { RarityBadge, StarToggle, RiskBadge, StageBadge } from "@/components/primitives";
 import { JokerSprite } from "@/components/JokerSprite";
@@ -26,11 +25,8 @@ function EmptyState() {
 
 interface JokerFavRowProps {
   j: Joker;
-  isSignedIn: boolean;
   initialNote: string;
-  noteValue: string;
-  onSignedNoteCommit: (v: string) => void;
-  onUnsignedNoteChange: (v: string) => void;
+  onNoteCommit: (v: string) => void;
   onUnfavorite: () => void;
   onOpen: () => void;
   notePlaceholder: string;
@@ -39,14 +35,14 @@ interface JokerFavRowProps {
 }
 
 function JokerFavRow({
-  j, isSignedIn, initialNote, noteValue,
-  onSignedNoteCommit, onUnsignedNoteChange, onUnfavorite, onOpen,
+  j, initialNote,
+  onNoteCommit, onUnfavorite, onOpen,
   notePlaceholder, expandLabel, collapseLabel,
 }: JokerFavRowProps) {
   const localized = useGameText("jokers", j.id);
   const { lang } = useI18n();
   const displayName = localized.name || j.name;
-  const hasNote = isSignedIn ? Boolean(initialNote) : Boolean(noteValue);
+  const hasNote = Boolean(initialNote);
   const [noteOpen, setNoteOpen] = useState(hasNote);
 
   return (
@@ -110,26 +106,15 @@ function JokerFavRow({
 
       {noteOpen && (
         <div onClick={(e) => e.stopPropagation()}>
-          {isSignedIn ? (
-            <Textarea
-              key={`favnote-${j.id}`}
-              defaultValue={initialNote}
-              onBlur={(e) => onSignedNoteCommit(e.target.value)}
-              placeholder={notePlaceholder}
-              rows={2}
-              className="mt-3 resize-none bg-background text-sm"
-              data-testid={`fav-note-joker-${j.id}`}
-            />
-          ) : (
-            <Textarea
-              value={noteValue}
-              onChange={(e) => onUnsignedNoteChange(e.target.value)}
-              placeholder={notePlaceholder}
-              rows={2}
-              className="mt-3 resize-none bg-background text-sm"
-              data-testid={`fav-note-joker-${j.id}`}
-            />
-          )}
+          <Textarea
+            key={`favnote-${j.id}`}
+            defaultValue={initialNote}
+            onBlur={(e) => onNoteCommit(e.target.value)}
+            placeholder={notePlaceholder}
+            rows={2}
+            className="mt-3 resize-none bg-background text-sm"
+            data-testid={`fav-note-joker-${j.id}`}
+          />
         </div>
       )}
     </div>
@@ -220,7 +205,6 @@ export function FavoritesTab() {
     toggleFavoriteJoker, toggleFavoriteCombo, openJokerDetail,
     favoriteNote, setFavoriteNote,
   } = useApp();
-  const { isSignedIn } = useAuth();
   const t = useT();
   const labels = useLabels();
 
@@ -229,19 +213,10 @@ export function FavoritesTab() {
 
   const expandLabel = t("ui.tabs.fav_show_note");
   const collapseLabel = t("ui.tabs.fav_hide_note");
-  const notePlaceholder = isSignedIn ? t("ui.tabs.fav_add_saved_note") : t("ui.tabs.fav_add_session_note");
+  const notePlaceholder = t("ui.tabs.fav_add_saved_note");
 
   return (
     <Tabs defaultValue="jokers" className="space-y-4 p-2 md:p-4">
-      {!isSignedIn && (
-        <div
-          className="flex items-center gap-2.5 rounded-md border border-accent/30 bg-accent/[0.06] px-3.5 py-2.5 text-sm text-foreground/85"
-          data-testid="banner-signin-favorites"
-        >
-          <Lock className="h-4 w-4 shrink-0 text-accent" />
-          <span>{t("ui.tabs.fav_sign_in_note")}</span>
-        </div>
-      )}
       <TabsList className="sticky top-[60px] z-[5] md:static" data-testid="tabs-favorites">
         <TabsTrigger value="jokers" data-testid="tab-fav-jokers">
           {t("ui.tabs.fav_jokers")} <span className="ml-1.5 tabular text-xs text-muted-foreground">{jokerList.length}</span>
@@ -260,11 +235,8 @@ export function FavoritesTab() {
               <JokerFavRow
                 key={j.id}
                 j={j}
-                isSignedIn={isSignedIn}
                 initialNote={favoriteNote(j.id) ?? ""}
-                noteValue={notes[`joker:${j.id}`] ?? ""}
-                onSignedNoteCommit={(v) => setFavoriteNote(j.id, v)}
-                onUnsignedNoteChange={(v) => setNote(`joker:${j.id}`, v)}
+                onNoteCommit={(v) => setFavoriteNote(j.id, v)}
                 onUnfavorite={() => toggleFavoriteJoker(j.id)}
                 onOpen={() => openJokerDetail(j.id)}
                 notePlaceholder={notePlaceholder}

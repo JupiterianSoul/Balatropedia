@@ -1,40 +1,31 @@
 /**
  * Native-feel bottom tab bar for the APK / mobile web view.
  *
- * Visible on mobile breakpoints only. Five primary destinations, picked from
- * Julie's spec: Jokers, Synergies, Seeds, Tier Lists, Favorites. The full
- * tab catalog still lives behind the hamburger in the top bar; this just
- * surfaces the high-traffic five so phone navigation feels like a real app.
+ * Five primary destinations: Jokers, Seeds, Home (center), Tier List, Favorites.
+ * Synergies moved off the bottom bar; Home now anchors the middle slot.
  *
- * Layout: fixed to bottom, full width, safe-area-aware padding so the bar
- * sits above the gesture nav pill on modern Android. Each button is a 56px
- * tall target (icon + label) \u2014 well above the 44px iOS / 48dp Android touch
- * minimum.
+ * The "Jokers" slot uses an actual sprite of the base Joker (j_joker) instead
+ * of a generic icon so it reads instantly as "the jokers tab".
  */
-import {
-  Cherry,
-  Sparkles,
-  Sprout,
-  Trophy,
-  Heart,
-} from "lucide-react";
+import { Sprout, Trophy, Heart, Home as HomeIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getSpriteUrl } from "@/lib/sprites";
 
-type TabKey = "jokers" | "synergies" | "seeds" | "tierlist" | "favorites";
+type TabKey = "jokers" | "seeds" | "home" | "tierlist" | "favorites";
 
 interface BottomTabItem {
   key: TabKey;
-  labelKey: string;          // i18n key (resolved by parent via useT)
-  Icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  labelKey: string;
+  // When set, render a lucide-react icon. When null, render the joker sprite.
+  Icon: React.ComponentType<{ className?: string; strokeWidth?: number }> | null;
 }
 
-// Static spec \u2014 order matches the user's stated priority.
 const ITEMS: ReadonlyArray<BottomTabItem> = [
-  { key: "jokers",     labelKey: "ui.nav.jokers",     Icon: Cherry   },
-  { key: "synergies",  labelKey: "ui.nav.synergies",  Icon: Sparkles },
-  { key: "seeds",      labelKey: "ui.nav.seeds",      Icon: Sprout   },
-  { key: "tierlist",   labelKey: "ui.nav.tierlist",   Icon: Trophy   },
-  { key: "favorites",  labelKey: "ui.nav.group.favorites", Icon: Heart },
+  { key: "jokers",    labelKey: "ui.nav.jokers",          Icon: null     },
+  { key: "seeds",     labelKey: "ui.nav.seeds",           Icon: Sprout   },
+  { key: "home",      labelKey: "ui.nav.home",            Icon: HomeIcon },
+  { key: "tierlist",  labelKey: "ui.nav.tierlist",        Icon: Trophy   },
+  { key: "favorites", labelKey: "ui.nav.group.favorites", Icon: Heart    },
 ];
 
 export function BottomTabBar({
@@ -44,21 +35,18 @@ export function BottomTabBar({
 }: {
   currentTab: string;
   onSelect: (tab: string) => void;
-  /** Receives the i18n key and returns the localized string. Inverted so the
-   *  parent owns the i18n context (we don't reach into useT() from a leaf). */
   resolveLabel: (key: string) => string;
 }) {
+  const jokerSpriteUrl = getSpriteUrl("j_joker");
+
   return (
     <nav
-      // role=tablist is technically what Radix Tabs uses; we use role=navigation
-      // because these are top-level destinations, not a tablist within a single
-      // pane \u2014 Android Talkback announces "Navigation, 5 items" which is right.
       role="navigation"
       aria-label="Primary"
       data-testid="bottom-tab-bar"
       className={cn(
-        "fixed inset-x-0 bottom-0 z-30 border-t-4 border-black bg-[hsl(178_14%_13%)]/97 backdrop-blur md:hidden",
-        // Heavy black drop-shadow line matches Balatro's top bar treatment.
+        // Solid black background, no transparency. Matches the heavy outline.
+        "fixed inset-x-0 bottom-0 z-30 border-t-4 border-black bg-black md:hidden",
         "shadow-[0_-4px_0_hsl(198_18%_4%)]",
       )}
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
@@ -76,17 +64,40 @@ export function BottomTabBar({
                 data-testid={`bottom-tab-${key}`}
                 className={cn(
                   "flex h-14 w-full flex-col items-center justify-center gap-0.5",
-                  // 44dp+ touch target met by h-14 (56px) and full-width columns.
                   "transition-colors active:bg-[hsl(150_16%_8%)]",
                   active
                     ? "text-[hsl(var(--bal-mult))]"
                     : "text-[hsl(45_15%_75%)]",
                 )}
               >
-                <Icon
-                  className={cn("h-5 w-5", active && "drop-shadow-[0_0_4px_hsl(var(--bal-mult))]")}
-                  strokeWidth={active ? 2.5 : 2}
-                />
+                {Icon ? (
+                  <Icon
+                    className={cn(
+                      "h-5 w-5",
+                      active && "drop-shadow-[0_0_4px_hsl(var(--bal-mult))]",
+                    )}
+                    strokeWidth={active ? 2.5 : 2}
+                  />
+                ) : jokerSpriteUrl ? (
+                  <img
+                    src={jokerSpriteUrl}
+                    alt=""
+                    aria-hidden="true"
+                    className={cn(
+                      "h-6 w-5 object-contain",
+                      active && "drop-shadow-[0_0_4px_hsl(var(--bal-mult))]",
+                    )}
+                    style={{
+                      imageRendering: "pixelated",
+                      // @ts-expect-error vendor fallback
+                      WebkitImageRendering: "crisp-edges",
+                    }}
+                    draggable={false}
+                  />
+                ) : (
+                  // Fallback if sprite asset is missing
+                  <span className="font-pixel text-[14px] leading-none">J</span>
+                )}
                 <span className="font-pixel text-[10px] leading-none tracking-tight">
                   {resolveLabel(labelKey)}
                 </span>

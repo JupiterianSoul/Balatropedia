@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { X, CheckCircle2, AlertCircle, Info } from "lucide-react";
+import { TabIntro } from "@/components/TabIntro";
+import { LayoutGrid, X, CheckCircle2, AlertCircle, Info } from "lucide-react";
 import { useApp } from "@/lib/appContext";
 import {
   JOKERS, JOKER_MAP, ENGINE_CATEGORIES, ROLE_LABELS, jokerName, Joker,
@@ -65,6 +66,9 @@ export function SkeletonTab() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+      <TabIntro Icon={LayoutGrid} title="Skeleton">
+        Build a skeleton from up to six jokers and see how the slots align around your core picks.
+      </TabIntro>
       {}
       <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
         <div>
