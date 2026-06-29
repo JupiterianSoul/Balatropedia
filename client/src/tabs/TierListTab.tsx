@@ -113,13 +113,11 @@ function JokerCell({ id, onClick }: { id: string; onClick: (id: string) => void 
     <button
       onClick={() => onClick(id)}
       title={displayName}
-      className="group flex flex-col items-center gap-0.5 rounded-md p-1 transition-transform hover:scale-110 hover:bg-white/5"
+      aria-label={displayName}
+      className="transition-transform hover:scale-110"
       data-testid={`tierlist-joker-${id}`}
     >
-      <JokerSprite jokerId={id} name={displayName} size={44} />
-      <span className="hidden truncate text-[10px] text-foreground/70 group-hover:block lg:block lg:max-w-[80px]">
-        {displayName}
-      </span>
+      <JokerSprite jokerId={id} name={displayName} size={44} clickable={false} />
     </button>
   );
 }
