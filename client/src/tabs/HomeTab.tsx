@@ -251,7 +251,7 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
 
       { }
       <div
-        className="relative z-10 mx-auto flex h-full w-full min-w-0 flex-col items-center justify-start gap-5 px-[72px] pt-[4vh] pb-6 sm:gap-6 sm:px-20 sm:pt-[6vh] sm:pb-10"
+        className="relative z-10 mx-auto flex h-full w-full min-w-0 flex-col items-center justify-start gap-5 px-[72px] pt-[7vh] pb-6 sm:gap-6 sm:px-20 sm:pt-[6vh] sm:pb-10"
         style={{ maxWidth: "min(64rem, 100%)" }}
       >
         { }
