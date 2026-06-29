@@ -61,8 +61,8 @@ export function CompareTab() {
 
   return (
     <div className="space-y-5">
-      <TabIntro Icon={GitCompare} title="Compare">
-        Pick two to four jokers and see their stats and effects lined up side by side.
+      <TabIntro Icon={GitCompare} title={t("ui.intro.compare.title")}>
+        {t("ui.intro.compare.desc")}
       </TabIntro>
       <div className="max-w-sm">
         <JokerMultiCombobox values={ids} onChange={setIds} max={4} testId="combobox-compare" />

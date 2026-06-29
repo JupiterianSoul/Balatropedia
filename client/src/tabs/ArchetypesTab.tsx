@@ -204,8 +204,8 @@ export function ArchetypesTab() {
 
   return (
     <div className="grid gap-3 md:grid-cols-2">
-      <TabIntro Icon={Sparkles} title="Archetypes">
-        Joker archetypes group cards by their core gameplan. Expand each tile to see which jokers anchor that style.
+      <TabIntro Icon={Sparkles} title={t("ui.intro.archetypes.title")}>
+        {t("ui.intro.archetypes.desc")}
       </TabIntro>
       {ARCHETYPES.map((a) => (
         <ArchetypeCard

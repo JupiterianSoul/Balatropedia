@@ -66,8 +66,8 @@ export function SkeletonTab() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
-      <TabIntro Icon={LayoutGrid} title="Skeleton">
-        Build a skeleton from up to six jokers and see how the slots align around your core picks.
+      <TabIntro Icon={LayoutGrid} title={t("ui.intro.skeleton.title")}>
+        {t("ui.intro.skeleton.desc")}
       </TabIntro>
       {}
       <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
