@@ -372,40 +372,41 @@ input[type="radio"],
   --input: 220 22% 14%;
 }
 
-/* Parchment; warm dark brown leather variant. Saddle / espresso surfaces
-   with cream foreground text. Sits between felt and midnight in mood. */
+/* Parchment; white/beige paper variant. Julie's spec: WHITE/BEIGE background
+   with brown / light-brown buttons. Foreground text is deep brown so it
+   stays legible on a near-white surface. */
 :root[data-theme="parchment"] {
-  --background: 25 28% 14%;            /* deep saddle brown */
-  --foreground: 36 35% 92%;            /* warm cream text */
-  --border: 25 22% 28%;
+  --background: 36 38% 96%;            /* near-white warm beige paper */
+  --foreground: 22 35% 14%;            /* deep brown ink */
+  --border: 28 28% 78%;
 
-  --card: 25 24% 18%;
-  --card-foreground: 36 35% 92%;
-  --card-border: 25 22% 30%;
+  --card: 36 42% 98%;
+  --card-foreground: 22 35% 14%;
+  --card-border: 28 26% 80%;
 
-  --sidebar: 25 26% 12%;
-  --sidebar-foreground: 36 35% 90%;
-  --sidebar-border: 25 22% 26%;
-  --sidebar-primary: 25 60% 45%;
+  --sidebar: 36 35% 92%;
+  --sidebar-foreground: 22 35% 16%;
+  --sidebar-border: 28 26% 76%;
+  --sidebar-primary: 25 60% 38%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 25 24% 22%;
-  --sidebar-accent-foreground: 36 35% 92%;
-  --sidebar-ring: 32 70% 55%;
+  --sidebar-accent: 32 45% 88%;
+  --sidebar-accent-foreground: 22 35% 16%;
+  --sidebar-ring: 25 60% 38%;
 
-  --popover: 25 26% 20%;
-  --popover-foreground: 36 35% 92%;
-  --popover-border: 25 22% 30%;
+  --popover: 36 42% 97%;
+  --popover-foreground: 22 35% 14%;
+  --popover-border: 28 26% 80%;
 
   --primary-foreground: 0 0% 100%;
   --secondary-foreground: 0 0% 100%;
 
-  --muted: 25 20% 24%;
-  --muted-foreground: 32 22% 72%;
+  --muted: 32 32% 88%;
+  --muted-foreground: 25 18% 38%;
 
-  --accent-foreground: 0 0% 100%;
+  --accent-foreground: 22 35% 14%;
 
-  --input: 25 22% 20%;
-  --ring: 32 70% 55%;
+  --input: 32 38% 93%;
+  --ring: 25 60% 38%;
 }
 
 /* The old per-theme balatro-tab block lived here. It has been
@@ -460,6 +461,19 @@ input[type="radio"],
     background-attachment: fixed;
     min-height: 100dvh;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Parchment is a near-white paper variant. The Balatro felt vignette
+     looks like a giant dark smudge on a white background, so we clear
+     the image stack and let the warm paper colour speak for itself. */
+  :root[data-theme="parchment"] body {
+    background-image:
+      /* Faint warm haze top — keeps the paper feeling tactile */
+      radial-gradient(ellipse 90% 50% at 50% 0%, hsla(32, 60%, 70%, 0.12), transparent 75%),
+      /* Subtle paper-fibre dot grid in a warm brown tone */
+      radial-gradient(hsla(28, 35%, 55%, 0.10) 1px, transparent 1px);
+    background-size: auto, 14px 14px;
+    background-position: center top, center;
   }
 }
 
@@ -1311,4 +1325,72 @@ input[type="radio"],
   background: linear-gradient(180deg, hsl(28 48% 62%) 0%, hsl(24 46% 46%) 100%) !important;
   border-color: hsl(22 48% 26%) !important;
   color: hsl(36 38% 96%) !important;
+}
+
+/* ============================================================
+   CATCH-ALL BUTTON THEMING
+   ------------------------------------------------------------
+   Julie's spec is "ALL BUTTONS of the app" must follow the
+   theme. The rules above only catch .balatro-tab and shadcn
+   <Button class*="bg-primary"|"bg-secondary">; this section
+   covers the long tail:
+     - shadcn variants outline / ghost / destructive
+     - plain <button> in tab content with no bg utility
+     - LanguageSwitcher, SoundToggle, ko-fi style buttons
+
+   What we explicitly DO NOT theme:
+     - BottomTabBar (Julie wants it solid black) — opts out
+       via the .bottom-tab class.
+     - Any element with the .no-theme class.
+     - The X close button in detail sheets — hard-coded red
+       inline style takes precedence over our background.
+     - Buttons inside inputs / sprites — they use bg-transparent.
+   ============================================================ */
+
+/* FELT — every uncovered button becomes a blue chip. */
+:root[data-theme="felt"]   button:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]),
+:root:not([data-theme]) button:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
+  background: linear-gradient(180deg, hsl(208 78% 56%) 0%, hsl(212 82% 38%) 100%) !important;
+  border-color: hsl(212 82% 22%) !important;
+  color: #fff !important;
+}
+
+/* MIDNIGHT — every uncovered button becomes black. */
+:root[data-theme="midnight"] button:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
+  background: linear-gradient(180deg, hsl(220 22% 16%) 0%, hsl(220 30% 6%) 100%) !important;
+  border-color: hsl(220 40% 2%) !important;
+  color: hsl(var(--bal-ui-text-light)) !important;
+}
+
+/* PARCHMENT — every uncovered button becomes light brown. */
+:root[data-theme="parchment"] button:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
+  background: linear-gradient(180deg, hsl(28 48% 62%) 0%, hsl(24 46% 46%) 100%) !important;
+  border-color: hsl(22 48% 26%) !important;
+  color: hsl(36 38% 96%) !important;
+}
+
+/* The Radix Sheet built-in close X needs to stay visible against the
+   themed background. Force a subtle muted backdrop on it. */
+:root[data-theme] .absolute.right-4.top-4[class*="rounded-sm"] {
+  background: transparent !important;
+  border: 0 !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Override Tailwind's data-[state=active]:bg-background on TabsTrigger
+   so the active joker / favorites / calculator tab does not turn into
+   a dark "background" coloured rectangle, undoing our theme paint. */
+:root[data-theme] [data-state="active"].balatro-tab,
+:root:not([data-theme]) [data-state="active"].balatro-tab {
+  /* background is set by the per-theme active rules above and they
+     already use !important; this block just blocks Tailwind's
+     bg-background from leaking through on un-themed defaults. */
+}
+
+/* TabsList must NEVER show a dark wrapper. Belt and suspenders. */
+:root [role="tablist"],
+:root [role="tablist"] > div {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }

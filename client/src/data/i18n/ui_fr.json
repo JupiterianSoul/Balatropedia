@@ -27,7 +27,7 @@
     "nav": {
       "home": "Accueil",
       "jokers": "Jokers",
-      "library": "Jokers",
+      "library": "Bibliothèque",
       "myrun": "Ma Partie",
       "runchallenge": "Défi de Partie",
       "buildlab": "Labo de Build",
@@ -318,7 +318,7 @@
       "fav_sign_in_note": "Connectez-vous pour sauvegarder vos favoris durablement. Pour l'instant, ils ne durent que cette session.",
       "fav_add_saved_note": "Ajouter une note enregistrée…",
       "fav_add_session_note": "Ajouter une note (session uniquement)…",
-      "decks_title": "Decks",
+      "decks_title": "Paquets",
       "decks_set": "Deck défini dans Ma partie",
       "decks_sort_by": "Trier par",
       "decks_sort_name": "Nom",
@@ -353,8 +353,8 @@
     "tierlist": {
       "disclaimer_title": "Les tier lists sont indicatives, pas absolues",
       "disclaimer_body": "Les tier lists ne sont pas des vérités absolues - elles dépendent du stake, du deck, de votre skill, de la RNG et de votre style de jeu. À utiliser comme point de départ, pas comme règle.",
-      "filter_stake": "Stake",
-      "filter_deck": "Deck",
+      "filter_stake": "Mise",
+      "filter_deck": "Paquet",
       "stake_any": "Tout stake - Général",
       "deck_any": "Tout deck - Général",
       "variant_default": "Général (la plupart des cas)",
@@ -486,12 +486,12 @@
       "button": "Défi de partie",
       "title": "Défi de partie",
       "intro": "Une consigne de build aléatoire - essaie de la faire marcher.",
-      "archetype": "Archetype",
+      "archetype": "Archétype",
       "with_combo": "Avec combo",
       "core_jokers": "Jokers clés",
       "no_core": "Pas de noyau requis - improvise.",
-      "deck": "Deck",
-      "stake": "Stake",
+      "deck": "Paquet",
+      "stake": "Mise",
       "consumables": "Consommables à chercher",
       "watch_out": "Attention à",
       "reroll": "Relancer",
@@ -1540,7 +1540,7 @@
         "tip": "Utilise la barre de recherche avec des mots-clés d'effet ('retrigger', 'mult', 'défausse') pour trouver tous les jokers qui touchent à un mécanisme."
       },
       "myrun": {
-        "title": "My Run",
+        "title": "Ma manche",
         "body": "My Run est ton carnet en direct pour une session Balatro active. Colle ton seed, choisis deck, stake, ante et jokers actuels, et l'onglet remonte les synergies pertinentes, blinds counter et priorités de shop pour ton build.\n\nL'état persiste localement et se synchronise avec ton compte Google quand tu es connecté, donc fermer l'onglet n'efface pas ta run.",
         "tip": "Associe My Run à l'onglet Seeds une fois un seed chargé : les prédictions de shop et le contenu des packs restent cohérents avec ton moteur."
       },
@@ -1585,22 +1585,22 @@
         "tip": "Clic-droit sur un joker (ou appui long sur mobile) ouvre sa fiche détail sans quitter la tier list."
       },
       "compare": {
-        "title": "Compare",
+        "title": "Comparer",
         "body": "Comparaison côte à côte de deux jokers, decks, vouchers ou boss. Effets, scaling, sources, popularité et synergies apparaissent en colonnes parallèles. Utile quand le shop t'impose un choix forcé entre deux cartes.",
         "tip": "La ligne 'delta' ne surligne que les différences ; ignore les lignes identiques pour décider vite."
       },
       "skeleton": {
-        "title": "Skeleton",
+        "title": "Squelette",
         "body": "Skeleton est un planificateur de run à 5 slots : choisis deck, stake et build cible, puis engage les jokers ante par ante pour tester si le plan survit aux contraintes de boss blind.\n\nIl ne simule pas le scoring ; c'est un check structurel contre les effets de blind, particularités de deck et prérequis de joker.",
         "tip": "Utilise Skeleton avant de claquer ton argent shop en ante 1 ; un check de 30 secondes sauve souvent toute la run."
       },
       "decks": {
-        "title": "Decks",
+        "title": "Paquets",
         "body": "Chaque deck avec son modificateur de départ, notes de compatibilité de stake et hooks stratégiques tirés des guides de deck dood.gg. Clique sur un deck pour les archétypes de build qui marchent particulièrement bien avec lui.",
         "tip": "Plasma et Abandoned ont les plus grandes différences de courbe de score ; l'onglet deck en détaille les implications."
       },
       "stakes": {
-        "title": "Stakes",
+        "title": "Mises",
         "body": "Tous les stakes de Blanc à Gold, avec le modificateur cumulé que chacun ajoute. Inclut une référence rapide sur quels jokers sont nerfés (chance Eternal/Perishable/Rented) et quelles conditions de run se durcissent aux stakes élevés.",
         "tip": "Quand tu montes les stakes, le Black Stake (jokers Perishable) est le plus gros shift mental ; associe cet onglet avec Tier List filtrée par 'survit au Black'."
       },
@@ -1610,7 +1610,7 @@
         "tip": "Quand My Run signale un boss à venir, cet onglet ouvre directement sur une fiche counter par boss avec les jokers recommandés."
       },
       "vouchers": {
-        "title": "Vouchers",
+        "title": "Bons",
         "body": "Chaque voucher et son upgrade tier 2, avec prix en shop, prérequis et estimations d'impact. Les vouchers sont des choix qui définissent la run ; cet onglet aide à les peser.",
         "tip": "Trie par 'impact économique' pour faire remonter les vouchers qui impriment de l'argent (Overstock, Reroll Surplus) ; trie par 'scaling' pour les enablers de build."
       },

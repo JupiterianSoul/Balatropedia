@@ -63,6 +63,10 @@ export function BottomTabBar({
                 aria-label={resolveLabel(labelKey)}
                 data-testid={`bottom-tab-${key}`}
                 className={cn(
+                  // The `bottom-tab` class flags this button as opted-out of
+                  // the theme catch-all selector in index.css. The bottom
+                  // navigation must stay solid black per Julie's spec.
+                  "bottom-tab",
                   "flex h-14 w-full flex-col items-center justify-center gap-0.5",
                   "transition-colors active:bg-[hsl(150_16%_8%)]",
                   active

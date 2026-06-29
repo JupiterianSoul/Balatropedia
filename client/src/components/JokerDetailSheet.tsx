@@ -14,6 +14,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useGameText, useT, useLabels, useCuratedText, useI18n } from "@/lib/i18n";
 import type { WhyRule, UseCaseRule } from "@/lib/helpers";
 import { FormattedBalatroText } from "@/lib/balatroText";
+import { useSheetBackButton } from "@/lib/useSheetBackButton";
 
 export function JokerDetailSheet() {
   const {
@@ -29,6 +30,10 @@ export function JokerDetailSheet() {
   const localized = useGameText("jokers", selectedJokerId ?? "");
   const { lang } = useI18n();
   const displayName = (j && localized.name) || j?.name || "";
+
+  // Android hardware back / browser back closes the sheet instead of
+  // navigating tabs underneath.
+  useSheetBackButton(!!j, closeJokerDetail, "joker-detail");
 
   return (
     <Sheet open={!!j} onOpenChange={(o) => !o && closeJokerDetail()}>

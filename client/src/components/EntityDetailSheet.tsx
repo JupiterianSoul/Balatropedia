@@ -17,7 +17,10 @@ import { Phase3Sprite } from "@/components/Phase3Sprite";
 import { EntityChip } from "@/components/EntityChip";
 import { SectionLabel } from "@/components/primitives";
 import type { Phase3Category } from "@/lib/phase3Sprites";
-import { Sparkles, Clock, AlertTriangle, Lightbulb } from "lucide-react";
+import { Sparkles, Clock, AlertTriangle, Lightbulb, X } from "lucide-react";
+import { FormattedBalatroText } from "@/lib/balatroText";
+import { useI18n } from "@/lib/i18n";
+import { useSheetBackButton } from "@/lib/useSheetBackButton";
 
 const SORTED_JOKER_IDS = [...KNOWN_JOKER_IDS].sort((a, b) => b.length - a.length);
 
@@ -70,15 +73,19 @@ export function EntityDetailSheet() {
   const t = useT();
   const open = !!target;
 
+  // Android hardware back / browser back closes the sheet first.
+  useSheetBackButton(open, closeDetail, "entity-detail");
+
   return (
     <Sheet open={open} onOpenChange={(o) => !o && closeDetail()}>
       <SheetContent
         side={isMobile ? "bottom" : "right"}
         className="flex w-full flex-col overflow-hidden p-0 sm:max-w-md"
         style={isMobile ? { height: "100dvh", maxHeight: "100dvh" } : { height: "100dvh" }}
+        hideClose
         data-testid="sheet-entity-detail"
       >
-        {target && <EntityDetailBody kind={target.kind} id={target.id} t={t} />}
+        {target && <EntityDetailBody kind={target.kind} id={target.id} t={t} closeDetail={closeDetail} />}
       </SheetContent>
     </Sheet>
   );
@@ -88,13 +95,16 @@ function EntityDetailBody({
   kind,
   id,
   t,
+  closeDetail,
 }: {
   kind: EntityKind;
   id: string;
   t: (k: string) => string;
+  closeDetail: () => void;
 }) {
   const entity = resolveEntity(kind, id);
   const { name, text } = useGameText(KIND_TO_I18N_CATEGORY[kind], id);
+  const { lang } = useI18n();
 
   if (!entity) {
     return (
@@ -108,9 +118,10 @@ function EntityDetailBody({
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <div className="flex-1 overflow-y-auto overscroll-contain p-5">
-        <SheetHeader className="space-y-2 pr-8 text-left">
-          <div className="flex min-w-0 items-start gap-3">
+      <div className="flex-1 overflow-y-auto overscroll-contain px-5 pb-5 pt-8 md:px-8 md:pb-8 md:pt-10">
+        <SheetHeader className="space-y-2 pr-2 text-left">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex min-w-0 flex-1 items-start gap-3">
             <Phase3Sprite
               category={KIND_TO_SPRITE_CATEGORY[kind as Exclude<EntityKind, "joker">] as Phase3Category}
               id={id}
@@ -139,6 +150,17 @@ function EntityDetailBody({
                 </div>
               )}
             </div>
+            </div>
+            <button
+              type="button"
+              onClick={closeDetail}
+              data-testid={`button-close-entity-${id}`}
+              aria-label="Close"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2"
+              style={{ backgroundColor: '#dc2626', border: '1px solid #991b1b' }}
+            >
+              <X className="h-5 w-5" strokeWidth={2.5} />
+            </button>
           </div>
         </SheetHeader>
 
@@ -146,7 +168,9 @@ function EntityDetailBody({
           {}
           <section data-testid="section-effect">
             <SectionLabel>{t("ui.section.effect")}</SectionLabel>
-            <p className="text-sm leading-relaxed text-foreground/90">{text || entity.effect}</p>
+            <p className="text-sm leading-relaxed text-foreground/90">
+              <FormattedBalatroText text={text || entity.effect} lang={lang} />
+            </p>
           </section>
 
           {}
