@@ -408,6 +408,91 @@ input[type="radio"],
   --ring: 32 70% 55%;
 }
 
+/* ============================================================
+   THEME-SCOPED BUTTON COLORS
+   The .balatro-tab class (used by drawer nav buttons, top-bar
+   icon buttons, Home action buttons, etc.) inherits its base
+   look from the chunky UIBox base, then each theme tints it.
+   ------------------------------------------------------------
+   FELT     : red mult / blue chip combo (Balatro defaults).
+              Base button is dark; active state is mult-red.
+              This stays mostly inherited from the base style.
+   MIDNIGHT : keep current dark blue look (no override).
+   PARCHMENT: brown leather body, gold accent on hover.
+   ============================================================ */
+
+/* Felt: give the *base* tab button a subtle red→blue split so it
+   reads as the casino combo. Active state stays full red. */
+:root[data-theme="felt"] .balatro-tab:not([data-state="active"]) {
+  background: linear-gradient(
+    180deg,
+    hsl(206 60% 22%) 0%,
+    hsl(4 55% 22%) 100%
+  );
+  border-color: hsl(195 32% 6%);
+  color: hsl(0 0% 100%);
+}
+:root[data-theme="felt"] .balatro-tab:not([data-state="active"]):hover {
+  background: linear-gradient(
+    180deg,
+    hsl(206 70% 28%) 0%,
+    hsl(4 65% 30%) 100%
+  );
+  color: hsl(var(--bal-gold));
+}
+
+/* Parchment: warm brown leather body with cream text. */
+:root[data-theme="parchment"] .balatro-tab:not([data-state="active"]) {
+  background: linear-gradient(
+    180deg,
+    hsl(25 35% 32%) 0%,
+    hsl(25 40% 20%) 100%
+  );
+  border-color: hsl(25 50% 10%);
+  color: hsl(36 45% 90%);
+  box-shadow:
+    inset 0 1px 0 hsl(36 45% 90% / 0.15),
+    0 var(--bal-emboss) 0 hsl(25 50% 8%),
+    0 calc(var(--bal-emboss) + 2px) 4px rgba(0, 0, 0, 0.5);
+}
+:root[data-theme="parchment"] .balatro-tab:not([data-state="active"]):hover {
+  background: linear-gradient(
+    180deg,
+    hsl(25 45% 40%) 0%,
+    hsl(25 50% 28%) 100%
+  );
+  color: hsl(42 78% 70%);
+}
+:root[data-theme="parchment"] .balatro-tab[data-state="active"] {
+  background: linear-gradient(
+    180deg,
+    hsl(32 80% 55%) 0%,
+    hsl(25 70% 38%) 100%
+  );
+  border-color: hsl(25 60% 18%);
+  color: hsl(0 0% 100%);
+}
+
+/* Midnight: light tint on the existing dark base so buttons read
+   as part of the blue palette rather than near-black. */
+:root[data-theme="midnight"] .balatro-tab:not([data-state="active"]) {
+  background: linear-gradient(
+    180deg,
+    hsl(220 35% 22%) 0%,
+    hsl(220 40% 14%) 100%
+  );
+  border-color: hsl(220 35% 6%);
+  color: hsl(206 30% 88%);
+}
+:root[data-theme="midnight"] .balatro-tab:not([data-state="active"]):hover {
+  background: linear-gradient(
+    180deg,
+    hsl(220 50% 28%) 0%,
+    hsl(220 55% 20%) 100%
+  );
+  color: hsl(206 80% 70%);
+}
+
 @layer base {
   * { @apply border-border; }
 

@@ -220,7 +220,12 @@ export default function Home() {
           {}
           <header
             className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden"
-            style={{ paddingTop: "env(safe-area-inset-top)" }}
+            style={{
+              // Use max() so devices that report 0 still get a guaranteed
+              // gap from the very top of the screen. 24px covers stock
+              // Android nav bars when the WebView is rendering edge-to-edge.
+              paddingTop: "max(env(safe-area-inset-top), 24px)",
+            }}
           >
             <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 px-3 py-3">
               {/* LEFT: hamburger + settings, same size */}
