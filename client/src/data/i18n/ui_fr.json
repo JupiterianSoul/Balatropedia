@@ -1471,15 +1471,15 @@
         "hint": "Affecte uniquement les surfaces; les couleurs d’identité Balatro (mult rouge, chip bleu, money or) restent verrouillées.",
         "felt": {
           "label": "Feutre",
-          "desc": "Table de casino grise par défaut."
+          "desc": "Table grise, boutons rouges et bleus."
         },
         "midnight": {
           "label": "Minuit",
-          "desc": "Bleu-noir profond, peu fatigant."
+          "desc": "Table bleu profond, boutons noirs."
         },
         "parchment": {
           "label": "Parchemin",
-          "desc": "Cuir brun chaud et profond."
+          "desc": "Table crème, boutons bruns."
         }
       },
       "screenshake": {

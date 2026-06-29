@@ -1471,15 +1471,15 @@
         "hint": "Affects surfaces and chrome only; Balatro identity colors (mult red, chip blue, money gold) stay locked.",
         "felt": {
           "label": "Felt",
-          "desc": "Default grey casino table."
+          "desc": "Grey table, red and blue buttons."
         },
         "midnight": {
           "label": "Midnight",
-          "desc": "Deep blue-black, low fatigue."
+          "desc": "Deep blue table, black buttons."
         },
         "parchment": {
           "label": "Parchment",
-          "desc": "Warm dark brown leather."
+          "desc": "Cream table, brown buttons."
         }
       },
       "screenshake": {
