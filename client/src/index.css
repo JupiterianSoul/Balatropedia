@@ -1347,23 +1347,23 @@ input[type="radio"],
      - Buttons inside inputs / sprites — they use bg-transparent.
    ============================================================ */
 
-/* FELT — every uncovered button becomes a blue chip. */
-:root[data-theme="felt"]   button:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]),
-:root:not([data-theme]) button:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
+/* FELT — themed buttons (opt-in via data-skin="balatro") become blue chips. */
+:root[data-theme="felt"]   [data-skin="balatro"]:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]),
+:root:not([data-theme]) [data-skin="balatro"]:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
   background: linear-gradient(180deg, hsl(208 78% 56%) 0%, hsl(212 82% 38%) 100%) !important;
   border-color: hsl(212 82% 22%) !important;
   color: #fff !important;
 }
 
-/* MIDNIGHT — every uncovered button becomes black. */
-:root[data-theme="midnight"] button:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
+/* MIDNIGHT — themed buttons (opt-in via data-skin="balatro") become black. */
+:root[data-theme="midnight"] [data-skin="balatro"]:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
   background: linear-gradient(180deg, hsl(220 22% 16%) 0%, hsl(220 30% 6%) 100%) !important;
   border-color: hsl(220 40% 2%) !important;
   color: hsl(var(--bal-ui-text-light)) !important;
 }
 
-/* PARCHMENT — every uncovered button becomes light brown. */
-:root[data-theme="parchment"] button:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
+/* PARCHMENT — themed buttons (opt-in via data-skin="balatro") become light brown. */
+:root[data-theme="parchment"] [data-skin="balatro"]:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
   background: linear-gradient(180deg, hsl(28 48% 62%) 0%, hsl(24 46% 46%) 100%) !important;
   border-color: hsl(22 48% 26%) !important;
   color: hsl(36 38% 96%) !important;
