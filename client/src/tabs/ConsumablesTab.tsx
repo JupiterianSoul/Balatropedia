@@ -154,10 +154,10 @@ export function ConsumablesTab() {
         <p className="text-sm text-muted-foreground">{t("ui.cons.subtitle")}</p>
       </div>
       <Tabs defaultValue="tarots">
-        <TabsList className="bg-card/60" data-testid="tabs-consumables">
-          <TabsTrigger value="tarots" data-testid="subtab-tarots">{t("ui.cons.tab_tarots")} <span className="ml-1 tabular text-muted-foreground">22</span></TabsTrigger>
-          <TabsTrigger value="planets" data-testid="subtab-planets">{t("ui.cons.tab_planets")} <span className="ml-1 tabular text-muted-foreground">12</span></TabsTrigger>
-          <TabsTrigger value="spectrals" data-testid="subtab-spectrals">{t("ui.cons.tab_spectrals")} <span className="ml-1 tabular text-muted-foreground">18</span></TabsTrigger>
+        <TabsList data-testid="tabs-consumables" className="gap-2">
+          <TabsTrigger value="tarots" data-testid="subtab-tarots" className="balatro-tab">{t("ui.cons.tab_tarots")} <span className="ml-1 tabular text-muted-foreground">22</span></TabsTrigger>
+          <TabsTrigger value="planets" data-testid="subtab-planets" className="balatro-tab">{t("ui.cons.tab_planets")} <span className="ml-1 tabular text-muted-foreground">12</span></TabsTrigger>
+          <TabsTrigger value="spectrals" data-testid="subtab-spectrals" className="balatro-tab">{t("ui.cons.tab_spectrals")} <span className="ml-1 tabular text-muted-foreground">18</span></TabsTrigger>
         </TabsList>
         <TabsContent value="tarots" className="mt-4"><TarotsGrid /></TabsContent>
         <TabsContent value="planets" className="mt-4"><PlanetsGrid /></TabsContent>

@@ -241,10 +241,10 @@ export function ScoreCalculatorTab() {
       </div>
 
       <Tabs defaultValue="setup">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="setup">Setup</TabsTrigger>
-          <TabsTrigger value="result">Result</TabsTrigger>
-          <TabsTrigger value="timeline">Timeline ({result.timeline.length})</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 gap-2">
+          <TabsTrigger value="setup" className="balatro-tab">Setup</TabsTrigger>
+          <TabsTrigger value="result" className="balatro-tab">Result</TabsTrigger>
+          <TabsTrigger value="timeline" className="balatro-tab">Timeline ({result.timeline.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="setup" className="space-y-4 mt-4">

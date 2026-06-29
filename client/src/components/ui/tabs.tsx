@@ -12,7 +12,11 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      // No bg-muted / no rounded wrapper / no p-1 — the chunky balatro-tab
+      // buttons already supply their own background and emboss. The legacy
+      // wrapper was producing a dark rounded "container under the buttons"
+      // that bled past their edges on phones.
+      "inline-flex items-center justify-center gap-2 text-muted-foreground",
       className
     )}
     {...props}

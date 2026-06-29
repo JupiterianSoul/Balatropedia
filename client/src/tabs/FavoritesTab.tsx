@@ -217,11 +217,11 @@ export function FavoritesTab() {
 
   return (
     <Tabs defaultValue="jokers" className="space-y-4 p-2 md:p-4">
-      <TabsList className="sticky top-[60px] z-[5] md:static" data-testid="tabs-favorites">
-        <TabsTrigger value="jokers" data-testid="tab-fav-jokers">
+      <TabsList className="sticky top-[60px] z-[5] md:static gap-2" data-testid="tabs-favorites">
+        <TabsTrigger value="jokers" data-testid="tab-fav-jokers" className="balatro-tab">
           {t("ui.tabs.fav_jokers")} <span className="ml-1.5 tabular text-xs text-muted-foreground">{jokerList.length}</span>
         </TabsTrigger>
-        <TabsTrigger value="combos" data-testid="tab-fav-combos">
+        <TabsTrigger value="combos" data-testid="tab-fav-combos" className="balatro-tab">
           {t("ui.tabs.fav_combos")} <span className="ml-1.5 tabular text-xs text-muted-foreground">{comboList.length}</span>
         </TabsTrigger>
       </TabsList>
