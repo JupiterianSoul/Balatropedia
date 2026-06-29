@@ -29,7 +29,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
       }}
       data-testid={`card-joker-${joker.id}`}
       data-balatro-card="joker"
-      className="balatro-card balatro-hover mobile-card-contain group flex cursor-pointer flex-col p-3.5 focus-visible:ring-2 focus-visible:ring-ring"
+      className="balatro-card balatro-hover mobile-card-contain group flex cursor-pointer flex-col p-2 focus-visible:ring-2 focus-visible:ring-ring sm:p-3.5"
       style={{ contentVisibility: "auto", containIntrinsicSize: "auto 180px" } as React.CSSProperties}
     >
       {joker.rarity && (
@@ -37,10 +37,10 @@ export function JokerCard({ joker }: { joker: Joker }) {
           <RarityBadge rarity={joker.rarity} />
         </div>
       )}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex min-w-0 items-start gap-2.5">
-          <JokerSprite jokerId={joker.id} name={displayName} size={56} />
-          <h3 className="min-w-0 font-display text-base font-bold leading-tight gold-text">
+      <div className="flex items-start justify-between gap-1.5 sm:gap-2">
+        <div className="flex min-w-0 items-start gap-1.5 sm:gap-2.5">
+          <JokerSprite jokerId={joker.id} name={displayName} size={48} />
+          <h3 className="min-w-0 font-display text-[13px] font-bold leading-tight gold-text sm:text-base">
             {displayName}
           </h3>
         </div>

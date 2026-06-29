@@ -43,7 +43,7 @@ function SynergyRow({ c, kind, selected, onSelect, engineLabel }: SynergyRowProp
   const bName = useGameText("jokers", c.b);
   return (
     <div
-      className={cn("casino-card border-l-2 p-3.5", KIND_ACCENT[kind])}
+      className={cn("casino-card border-l-2 p-2.5 sm:p-3.5", KIND_ACCENT[kind])}
       data-testid={`synergy-${selected}-${c.partnerId}`}
     >
       <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
@@ -101,10 +101,10 @@ export function SynergyTab() {
   const j = selected ? JOKER_MAP[selected] : null;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+    <div className="grid gap-6 p-2 md:p-4 lg:grid-cols-[320px_1fr]">
       {}
       <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
-        <div>
+        <div className="sticky top-[60px] z-[5] -mx-2 border-b border-border/40 bg-background/95 px-2 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/75 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-0">
           <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             {t("ui.syn.select_joker")}
           </div>
@@ -165,7 +165,7 @@ export function SynergyTab() {
                 )}>
                   {labels.synergyKind[kind] ?? SYNERGY_KIND_LABELS[kind]}
                 </h3>
-                <div className="grid gap-2.5 md:grid-cols-2">
+                <div className="grid gap-2 sm:gap-2.5 md:grid-cols-2">
                   {list.map((c) => (
                     <SynergyRow
                       key={c.partnerId}
