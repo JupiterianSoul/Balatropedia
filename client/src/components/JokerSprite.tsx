@@ -10,6 +10,7 @@ export function JokerSprite({
   className,
   clickable = true,
   onClick,
+  frame = false,
 }: {
   jokerId: string;
   name: string;
@@ -17,6 +18,9 @@ export function JokerSprite({
   className?: string;
   clickable?: boolean;
   onClick?: (jokerId: string) => void;
+  /** When true, render the legacy dark rounded container around the sprite.
+   *  Default false — sprites render "naked" like the tier-list icons. */
+  frame?: boolean;
 }) {
   const url = getSpriteUrl(jokerId);
   const [failed, setFailed] = useState(false);
@@ -33,7 +37,7 @@ export function JokerSprite({
           loading="lazy"
           decoding="async"
           onError={() => setFailed(true)}
-          className="h-full w-full object-contain p-1"
+          className={cn("h-full w-full object-contain", frame && "p-1")}
           style={{
             imageRendering: "pixelated",
             // @ts-expect-error vendor fallback
@@ -53,7 +57,8 @@ export function JokerSprite({
   );
 
   const baseCls = cn(
-    "flex shrink-0 items-center justify-center overflow-hidden rounded-md border border-accent/20 bg-[hsl(150_16%_6%)] shadow-inner",
+    "flex shrink-0 items-center justify-center overflow-hidden",
+    frame && "rounded-md border border-accent/20 bg-[hsl(150_16%_6%)] shadow-inner",
     className,
   );
 
@@ -88,6 +93,7 @@ export function JokerSprite({
       title={name}
       aria-label={name}
       data-sound="click"
+      data-sprite="joker"
     >
       {inner}
     </button>

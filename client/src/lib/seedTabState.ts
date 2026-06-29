@@ -4,10 +4,14 @@ import type {
   AnalysisInput, AnteResult,
 } from "@/lib/seedEngine";
 import type {
-  JokerConstraint, SeedMatch, FinderProgress,
+  JokerConstraint, VoucherConstraint, TagConstraint, BossConstraint, StandardCardConstraint,
+  SeedMatch, FinderProgress,
 } from "@/lib/seedFinder";
+import { detectDeviceProfile } from "@/lib/deviceProfile";
 
-const LS_KEY = "balatro_seed_tab_state_v1";
+// Bumped key when we added first-class voucher/tag/boss/standard-card
+// constraint arrays so old persisted state doesn't drop them silently.
+const LS_KEY = "balatro_seed_tab_state_v2";
 
 export type AnalyzerView = "spoiler" | "joker" | "soul";
 
@@ -28,6 +32,10 @@ export interface SavedSeed {
 
 export interface FinderState {
   selected: JokerConstraint[];
+  vouchers: VoucherConstraint[];
+  tags: TagConstraint[];
+  bosses: BossConstraint[];
+  standardCards: StandardCardConstraint[];
   deck: string;
   stake: string;
   version: string;
@@ -54,14 +62,27 @@ interface State {
 }
 
 function defaultFinder(): FinderState {
-  const cores = typeof navigator !== "undefined" ? navigator.hardwareConcurrency : 4;
+  // Pick a sensible default thread count based on what we know about the
+  // device. The user can still override it via the SpeedSelect dropdown,
+  // and any saved override in localStorage wins via loadInitial() below.
+  let recommended = 4;
+  try {
+    recommended = detectDeviceProfile().recommendedThreads;
+  } catch {
+    const cores = typeof navigator !== "undefined" ? (navigator.hardwareConcurrency || 4) : 4;
+    recommended = Math.max(1, Math.min(16, cores));
+  }
   return {
     selected: [],
+    vouchers: [],
+    tags: [],
+    bosses: [],
+    standardCards: [],
     deck: "Red Deck",
     stake: "White Stake",
     version: "1.0.1f",
     globalMaxAnte: 8,
-    threads: Math.max(1, Math.min(16, cores || 4)),
+    threads: recommended,
     matches: [],
     progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 },
     error: null,
@@ -103,6 +124,10 @@ function loadInitial(): State {
     const parsed = JSON.parse(raw);
     if (parsed.finder) {
       base.finder.selected = parsed.finder.selected ?? base.finder.selected;
+      base.finder.vouchers = parsed.finder.vouchers ?? base.finder.vouchers;
+      base.finder.tags = parsed.finder.tags ?? base.finder.tags;
+      base.finder.bosses = parsed.finder.bosses ?? base.finder.bosses;
+      base.finder.standardCards = parsed.finder.standardCards ?? base.finder.standardCards;
       base.finder.deck = parsed.finder.deck ?? base.finder.deck;
       base.finder.stake = parsed.finder.stake ?? base.finder.stake;
       base.finder.version = parsed.finder.version ?? base.finder.version;
@@ -145,6 +170,10 @@ function scheduleSave() {
       const persisted = {
         finder: {
           selected: state.finder.selected,
+          vouchers: state.finder.vouchers,
+          tags: state.finder.tags,
+          bosses: state.finder.bosses,
+          standardCards: state.finder.standardCards,
           deck: state.finder.deck,
           stake: state.finder.stake,
           version: state.finder.version,

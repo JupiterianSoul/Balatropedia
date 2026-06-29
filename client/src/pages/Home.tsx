@@ -75,6 +75,10 @@ export default function Home() {
     if (st && typeof st.tab === "string" && VALID_TABS.has(st.tab)) {
       return LEGACY_REDIRECTS[st.tab] ?? st.tab;
     }
+    const hash = window.location.hash.replace(/^#\/?/, "");
+    if (hash && VALID_TABS.has(hash)) {
+      return LEGACY_REDIRECTS[hash] ?? hash;
+    }
     return "home";
   })();
   const [tab, setTab] = useState(initialTab);
@@ -85,21 +89,40 @@ export default function Home() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const showEsBanner = lang === "es" && !esBannerDismissed;
 
+  // Use refs so popstate handler always reads current tab.
+  const tabRef = useRef(initialTab);
+  useEffect(() => { tabRef.current = tab; }, [tab]);
+
+  // Read tab from history.state OR from URL hash. URL hash is the canonical
+  // back-button source — when the OS/browser fires popstate, state may be
+  // null (cross-document) but the hash is reliable.
+  function readTabFromLocation(): string {
+    const st = typeof window !== "undefined" ? window.history.state : null;
+    if (st && typeof st.tab === "string" && VALID_TABS.has(st.tab)) {
+      return LEGACY_REDIRECTS[st.tab] ?? st.tab;
+    }
+    const hash = typeof window !== "undefined" ? window.location.hash.replace(/^#\/?/, "") : "";
+    if (hash && VALID_TABS.has(hash)) {
+      return LEGACY_REDIRECTS[hash] ?? hash;
+    }
+    return "home";
+  }
+
   useEffect(() => {
-    function onPop(e: PopStateEvent) {
-      let next = (e.state && typeof e.state.tab === "string" && VALID_TABS.has(e.state.tab))
-        ? e.state.tab
-        : "home";
-      next = LEGACY_REDIRECTS[next] ?? next;
+    function onPop() {
+      const next = readTabFromLocation();
       setTab(next);
       setMobileNavOpen(false);
     }
     window.addEventListener("popstate", onPop);
-    if (!window.history.state || typeof window.history.state.tab !== "string") {
-      try {
-        window.history.replaceState({ tab: initialTab }, "");
-      } catch {  }
-    }
+    // Seed initial state so the first back press has somewhere to land.
+    try {
+      if (!window.history.state || typeof window.history.state.tab !== "string") {
+        const seedTab = readTabFromLocation();
+        window.history.replaceState({ tab: seedTab }, "", `#/${seedTab}`);
+        if (seedTab !== tabRef.current) setTab(seedTab);
+      }
+    } catch {  }
     return () => window.removeEventListener("popstate", onPop);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -107,7 +130,9 @@ export default function Home() {
   function handleSelect(v: string) {
     if (v !== tab) {
       try {
-        window.history.pushState({ tab: v }, "");
+        // Push BOTH state AND a hash — the hash is what survives APK / native
+        // back gestures on Android when the WebView replays only the URL.
+        window.history.pushState({ tab: v }, "", `#/${v}`);
       } catch {  }
     }
     setTab(v);
@@ -179,7 +204,7 @@ export default function Home() {
         <div className="flex min-w-0 flex-1 flex-col md:h-[100dvh] md:overflow-y-auto">
           {}
           <header className="sticky top-0 z-10 border-b-4 border-black bg-[hsl(178_14%_13%)]/95 shadow-[0_4px_0_hsl(198_18%_4%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(178_14%_13%)]/90 md:hidden">
-            <div className="flex items-center gap-2 px-3 py-2">
+            <div className="grid grid-cols-[auto_auto_1fr_auto] items-center gap-2 px-3 py-2">
               {}
               <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
                 <SheetTrigger asChild>
@@ -197,16 +222,14 @@ export default function Home() {
                   side="left"
                   className="w-[280px] border-r-4 border-black bg-[hsl(178_14%_13%)] p-0 font-pixel text-[hsl(45_15%_85%)]"
                 >
-                  <SheetHeader className="border-b-2 border-black bg-[hsl(150_16%_10%)] px-4 py-3 text-left">
-                    <SheetTitle className="flex items-center gap-2 font-pixel text-xl leading-none">
-                      <Logo className="h-7 w-7" />
-                      <span>
-                        <span className="mult-text">{t("ui.header.title_a")}</span>
-                        <span className="chips-text">{t("ui.header.title_b")}</span>
-                      </span>
+                  <SheetHeader className="flex flex-row items-center gap-2.5 border-b-2 border-black bg-[hsl(150_16%_10%)] px-4 py-2 text-left">
+                    <Logo className="h-10 w-10 shrink-0 rounded-md border-2 border-black bg-[hsl(150_16%_10%)] p-1 drop-shadow-[2px_2px_0_hsl(198_18%_4%)]" />
+                    <SheetTitle className="flex items-center font-pixel text-xl leading-none">
+                      <span className="mult-text">{t("ui.header.title_a")}</span>
+                      <span className="chips-text">{t("ui.header.title_b")}</span>
                     </SheetTitle>
                   </SheetHeader>
-                  <div className="max-h-[calc(100dvh-64px)] overflow-y-auto">
+                  <div className="max-h-[calc(100dvh-56px)] overflow-y-auto">
                     <NavList
                       groups={NAV_GROUPS}
                       currentTab={tab}
@@ -218,24 +241,27 @@ export default function Home() {
               </Sheet>
 
               {}
-              <button
-                type="button"
-                onClick={() => handleSelect("home")}
-                className="flex shrink-0 items-center gap-2 transition-transform hover:scale-[1.02]"
-                aria-label="Balatropedia home"
-              >
-                <Logo className="h-8 w-8 shrink-0 drop-shadow-[2px_2px_0_hsl(198_18%_4%)]" />
-                <h1 className="font-pixel text-[18px] font-bold leading-none tracking-tight">
-                  <span className="mult-text">{t("ui.header.title_a")}</span>
-                  <span className="chips-text">{t("ui.header.title_b")}</span>
-                </h1>
-              </button>
+              <LanguageSwitcher />
 
-              <div className="flex-1" />
+              {}
+              <h1
+                className="min-w-0 truncate text-center font-pixel text-[16px] font-bold leading-none tracking-tight"
+                data-testid="mobile-topbar-title"
+              >
+                {tab === "home" ? (
+                  <>
+                    <span className="mult-text">{t("ui.header.title_a")}</span>
+                    <span className="chips-text">{t("ui.header.title_b")}</span>
+                  </>
+                ) : tab === "favorites" ? (
+                  t("ui.nav.group.favorites")
+                ) : (
+                  t(`ui.nav.${tab}`)
+                )}
+              </h1>
 
               {}
               <div className="flex shrink-0 items-center gap-1">
-                <LanguageSwitcher />
                 <UserButton />
               </div>
             </div>

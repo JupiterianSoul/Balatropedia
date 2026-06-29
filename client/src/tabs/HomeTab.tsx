@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
-import { Search, Compass, Sparkles, ArrowRight, X } from "lucide-react";
+import { Search, Compass, Sparkles, ArrowRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { JOKERS, SYNERGIES, COMBOS, ARCHETYPES, JOKER_MAP } from "@/lib/helpers";
 import { TAROTS } from "@/data/phase3/tarots";
@@ -288,22 +288,11 @@ export function HomeTab({ onNavigate }: HomeTabProps) {
               onFocus={() => setFocused(true)}
               onBlur={() => window.setTimeout(() => setFocused(false), 150)}
               placeholder={t("ui.home.search_placeholder")}
-              className="w-full rounded-md border-2 border-accent/40 bg-background/80 py-3 pl-10 pr-9 font-display text-sm text-foreground shadow-lg backdrop-blur-md placeholder:text-muted-foreground/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
+              className="w-full rounded-md border-2 border-accent/40 bg-background/80 py-3 pl-10 pr-4 font-display text-sm text-foreground shadow-lg backdrop-blur-md placeholder:text-muted-foreground/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40 [&::-webkit-search-cancel-button]:hidden"
               data-testid="input-home-search"
               autoComplete="off"
               spellCheck={false}
             />
-            {query && (
-              <button
-                type="button"
-                onClick={() => { setQuery(""); inputRef.current?.focus(); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:text-foreground"
-                data-testid="button-home-search-clear"
-                aria-label="Clear"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
           </div>
 
           { }

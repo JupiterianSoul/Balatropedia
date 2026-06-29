@@ -21,10 +21,14 @@ const LOCAL = localManifest as {
 };
 
 export function getPhase3Sprite(category: Phase3Category, id: string): string | undefined {
-  if (IS_LOCAL) {
-    const file = LOCAL.phase3?.[category]?.[id];
-    return file ? `./sprites/${file}` : undefined;
+  // Prefer LOCAL sprites first (cleaner; Decks/Stakes wiki PNGs have wide blue
+  // Balatro deck-select backgrounds we don't want). Fall back to remote only
+  // when no local copy exists.
+  const localFile = LOCAL.phase3?.[category]?.[id];
+  if (localFile) {
+    return IS_LOCAL ? `./sprites/${localFile}` : `/sprites/${localFile}`;
   }
+  if (IS_LOCAL) return undefined;
   const raw = SPRITES[category]?.[id];
   if (!raw) return undefined;
   return `${API_BASE}/api/sprite?url=${encodeURIComponent(raw)}`;

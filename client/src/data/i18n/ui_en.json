@@ -1471,7 +1471,7 @@
         "hint": "Affects surfaces and chrome only; Balatro identity colors (mult red, chip blue, money gold) stay locked.",
         "felt": {
           "label": "Felt",
-          "desc": "Default green casino table."
+          "desc": "Default grey casino table."
         },
         "midnight": {
           "label": "Midnight",
@@ -1658,6 +1658,18 @@
       "tagline": "If this tool helps you cook your runs, you can tip the dev a coffee. Donations go toward supporting me and upgrading the servers so more people can use the app without hiccups.",
       "cta": "Buy me a coffee on Ko-fi",
       "aria": "Support development on Ko-fi (opens in a new tab)"
+    },
+    "seedfinder": {
+      "search_speed": "Search speed",
+      "search_speed_tooltip": "How much of your device's CPU to use for the search. Higher = faster but heavier.",
+      "speed_eco": "Eco (1 worker, low CPU)",
+      "speed_low": "Low (2 workers)",
+      "speed_medium": "Medium (4 workers)",
+      "speed_high": "High (auto)",
+      "speed_max": "Max (oversubscribe)",
+      "reproduce_title": "How to reproduce this seed — step by step",
+      "reproduce_setup": "Setup & preconditions",
+      "reproduce_warnings": "Important caveats"
     }
   }
 }
