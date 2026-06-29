@@ -1522,7 +1522,10 @@
         "title": "Escala de la interfaz",
         "label": "Tamaño de iconos de joker",
         "hint": "Escala los iconos de joker en toda la app. El layout y el texto no cambian.",
-        "reset": "Reiniciar"
+        "reset": "Reiniciar",
+        "small": "Pequeño",
+        "medium": "Mediano",
+        "big": "Grande"
       },
       "ui_size": {
         "title": "Tamaño de la interfaz",

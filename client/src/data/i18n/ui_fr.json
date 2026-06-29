@@ -1522,7 +1522,10 @@
         "title": "Échelle de l'interface",
         "label": "Taille des icônes joker",
         "hint": "Met à l'échelle les icônes de jokers dans toute l'app. La mise en page et le texte restent inchangés.",
-        "reset": "Réinitialiser"
+        "reset": "Réinitialiser",
+        "small": "Petit",
+        "medium": "Moyen",
+        "big": "Grand"
       },
       "ui_size": {
         "title": "Taille de l'interface",

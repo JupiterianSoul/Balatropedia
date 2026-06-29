@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useApp } from "@/lib/appContext";
 import { Joker } from "@/lib/helpers";
 import { useGameText, useI18n } from "@/lib/i18n";
@@ -6,7 +7,12 @@ import { JokerSprite } from "./JokerSprite";
 import { playSound } from "@/lib/sound";
 import { FormattedBalatroText } from "@/lib/balatroText";
 
-export function JokerCard({ joker }: { joker: Joker }) {
+// Cached at module init — runs once per app lifetime, not per card.
+const HAS_HOVER = typeof window !== "undefined"
+  && typeof window.matchMedia === "function"
+  && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+function JokerCardBase({ joker }: { joker: Joker }) {
   const { openJokerDetail, isFavoriteJoker, toggleFavoriteJoker } = useApp();
   const localized = useGameText("jokers", joker.id);
   const { lang } = useI18n();
@@ -20,7 +26,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
       tabIndex={0}
       data-sound="card_place"
       onClick={() => openJokerDetail(joker.id)}
-      onMouseEnter={() => playSound("hover")}
+      onMouseEnter={HAS_HOVER ? () => playSound("hover") : undefined}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -75,4 +81,9 @@ export function JokerCard({ joker }: { joker: Joker }) {
     </div>
   );
 }
+
+/** Memoized: joker objects come from the static JOKERS array (stable references),
+ *  so default shallow-compare correctly skips re-renders when filters/sort change
+ *  but the card itself is still visible. Saves ~150 reconciliations per filter tap. */
+export const JokerCard = memo(JokerCardBase);
 
