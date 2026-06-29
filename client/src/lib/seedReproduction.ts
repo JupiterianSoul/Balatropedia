@@ -188,68 +188,115 @@ export function buildReproductionPlan(
       const j = ev.payload as SeedMatch["jokerLocations"][number];
       if (j.source === "shop") {
         const info = describeShopSlot(j.slot, j.ante);
-        steps.push({
-          kind: "shop",
-          ante,
-          blind: info.blind,
-          text: `After defeating the ${info.blind} Blind of ante ${ante}, open the shop.`,
-        });
-        steps.push({
-          kind: "reroll-warn",
-          ante,
-          text: `Do NOT reroll the shop before purchasing — rerolling consumes RNG and shifts every subsequent slot.`,
-          hint: "If a Reroll Tag pre-rolled the shop automatically, that is fine; only manual rerolls break the seed.",
-        });
-        steps.push({
-          kind: "buy",
-          ante,
-          blind: info.blind,
-          text: `Buy ${j.joker}${j.edition && j.edition !== "No Edition" ? ` (${j.edition})` : ""} at shop slot ${info.positionInShop}.`,
-          hint: `Slot count starts at 1 from the leftmost item. ${j.eternal ? "This joker is Eternal — cannot be sold or destroyed. " : ""}${j.perishable ? "Perishable — expires after 5 rounds. " : ""}${j.rental ? "Rental — costs $3 per round. " : ""}`,
-        });
+        if (info.unspecified) {
+          steps.push({
+            kind: "shop",
+            ante,
+            text: `During ante ${ante}, visit all three shops (after Small, Big, and Boss Blind) and check every slot for ${j.joker}${j.edition && j.edition !== "No Edition" ? ` (${j.edition})` : ""}.`,
+            hint: "The engine confirmed this joker spawns in this ante's shop but did not pin the exact blind or slot. Do NOT reroll any shop manually — manual rerolls consume RNG and break the seed. If a Reroll Tag pre-rolls automatically, that is fine.",
+          });
+          steps.push({
+            kind: "buy",
+            ante,
+            text: `Buy ${j.joker}${j.edition && j.edition !== "No Edition" ? ` (${j.edition})` : ""} as soon as it appears.`,
+            hint: `${j.eternal ? "Eternal — cannot be sold or destroyed. " : ""}${j.perishable ? "Perishable — expires after 5 rounds. " : ""}${j.rental ? "Rental — costs $3 per round. " : ""}Click Verify on the match card for engine-level confirmation.`,
+          });
+        } else {
+          steps.push({
+            kind: "shop",
+            ante,
+            blind: info.blind,
+            text: `After defeating the ${info.blind} Blind of ante ${ante}, open the shop.`,
+          });
+          steps.push({
+            kind: "reroll-warn",
+            ante,
+            text: `Do NOT reroll the shop before purchasing — rerolling consumes RNG and shifts every subsequent slot.`,
+            hint: "If a Reroll Tag pre-rolled the shop automatically, that is fine; only manual rerolls break the seed.",
+          });
+          steps.push({
+            kind: "buy",
+            ante,
+            blind: info.blind,
+            text: `Buy ${j.joker}${j.edition && j.edition !== "No Edition" ? ` (${j.edition})` : ""} at shop slot ${info.positionInShop}.`,
+            hint: `Slot count starts at 1 from the leftmost item. ${j.eternal ? "This joker is Eternal — cannot be sold or destroyed. " : ""}${j.perishable ? "Perishable — expires after 5 rounds. " : ""}${j.rental ? "Rental — costs $3 per round. " : ""}`,
+          });
+        }
       } else if (j.source === "buffoon-pack") {
         const info = describePackSlot(j.slot, j.ante);
-        steps.push({
-          kind: "shop",
-          ante,
-          blind: info.blind,
-          text: `After defeating the ${info.blind} Blind of ante ${ante}, open the shop.`,
-        });
-        steps.push({
-          kind: "pack",
-          ante,
-          blind: info.blind,
-          text: `Buy the ${ordinal(info.positionInShop)} booster pack offered (${j.packName}) — DO NOT skip the other booster or it may shift order.`,
-          hint: "Buffoon Packs contain jokers exclusively. The pack must be the exact one named here.",
-        });
-        steps.push({
-          kind: "buy",
-          ante,
-          blind: info.blind,
-          text: `From the pack, pick card #${j.packPosition}: ${j.joker}${j.edition && j.edition !== "No Edition" ? ` (${j.edition})` : ""}.`,
-        });
+        if (info.unspecified) {
+          steps.push({
+            kind: "shop",
+            ante,
+            text: `During ante ${ante}, open every Buffoon Pack you find in any of the three shops (Small, Big, Boss).`,
+            hint: "The engine confirmed a Buffoon Pack in this ante contains the target joker but did not pin the exact blind or pack position. Do NOT manually reroll any shop — rerolling shifts the booster offerings.",
+          });
+          steps.push({
+            kind: "buy",
+            ante,
+            text: `From the Buffoon Pack, pick ${j.joker}${j.edition && j.edition !== "No Edition" ? ` (${j.edition})` : ""}.`,
+            hint: "Buffoon Packs contain jokers exclusively. Click Verify on the match card for engine-level confirmation.",
+          });
+        } else {
+          steps.push({
+            kind: "shop",
+            ante,
+            blind: info.blind,
+            text: `After defeating the ${info.blind} Blind of ante ${ante}, open the shop.`,
+          });
+          steps.push({
+            kind: "pack",
+            ante,
+            blind: info.blind,
+            text: `Buy the ${ordinal(info.positionInShop)} booster pack offered${j.packName ? ` (${j.packName})` : ""} — DO NOT skip the other booster or it may shift order.`,
+            hint: "Buffoon Packs contain jokers exclusively.",
+          });
+          steps.push({
+            kind: "buy",
+            ante,
+            blind: info.blind,
+            text: j.packPosition > 0
+              ? `From the pack, pick card #${j.packPosition}: ${j.joker}${j.edition && j.edition !== "No Edition" ? ` (${j.edition})` : ""}.`
+              : `From the pack, pick ${j.joker}${j.edition && j.edition !== "No Edition" ? ` (${j.edition})` : ""}.`,
+          });
+        }
       } else if (j.source === "arcana-soul" || j.source === "spectral-soul" || j.source === "spectral-wraith") {
         const info = describePackSlot(j.slot, j.ante);
         const packKind = j.source === "arcana-soul" ? "Arcana" : "Spectral";
-        steps.push({
-          kind: "shop",
-          ante,
-          blind: info.blind,
-          text: `After defeating the ${info.blind} Blind of ante ${ante}, open the shop.`,
-        });
-        steps.push({
-          kind: "pack",
-          ante,
-          blind: info.blind,
-          text: `Buy the ${ordinal(info.positionInShop)} booster (${j.packName}, a ${packKind} pack).`,
-          hint: `You must have a free joker slot when picking The Soul, otherwise the legendary will be lost.`,
-        });
-        steps.push({
-          kind: "consumable",
-          ante,
-          text: `Within the ${packKind} pack, select The Soul card to spawn ${j.joker} (legendary).`,
-          hint: "The Soul / The Hex / Talisman effects can produce legendaries or apply Negative — these are the only routes for legendaries.",
-        });
+        if (info.unspecified) {
+          steps.push({
+            kind: "shop",
+            ante,
+            text: `During ante ${ante}, open every ${packKind} Pack you find across all three shops (Small, Big, Boss).`,
+            hint: "The engine confirmed The Soul spawns in this ante's pack pool but did not pin the exact blind or pack position. Keep at least one joker slot free before opening any pack.",
+          });
+          steps.push({
+            kind: "consumable",
+            ante,
+            text: `Inside the ${packKind} pack, pick The Soul to spawn ${j.joker} (legendary).`,
+            hint: "The Soul / The Hex routes are the only ways to roll a legendary joker. Click Verify on the match card for engine-level confirmation.",
+          });
+        } else {
+          steps.push({
+            kind: "shop",
+            ante,
+            blind: info.blind,
+            text: `After defeating the ${info.blind} Blind of ante ${ante}, open the shop.`,
+          });
+          steps.push({
+            kind: "pack",
+            ante,
+            blind: info.blind,
+            text: `Buy the ${ordinal(info.positionInShop)} booster${j.packName ? ` (${j.packName}, a ${packKind} pack)` : ` (a ${packKind} pack)`}.`,
+            hint: `You must have a free joker slot when picking The Soul, otherwise the legendary will be lost.`,
+          });
+          steps.push({
+            kind: "consumable",
+            ante,
+            text: `Within the ${packKind} pack, select The Soul card to spawn ${j.joker} (legendary).`,
+            hint: "The Soul / The Hex / Talisman effects can produce legendaries or apply Negative — these are the only routes for legendaries.",
+          });
+        }
       }
 
       const editionNote = editionConstraintNote(j.edition || "");

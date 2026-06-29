@@ -311,21 +311,40 @@ export class SeedFinderV2 {
         const msg = ev.data;
         if (msg.type === "matches") {
           for (const m of msg.matches as Array<{ score: number; seed: string }>) {
-            // No per-joker locations yet from the engine. Surface the seed
-            // with placeholder locations so the MatchCard UI renders;
-            // users can click "Verify with Immolate" to get the breakdown.
-            const dummyLocations: JokerLocation[] = cfg.jokerConstraints.map((jc) => ({
-              joker: jc.joker,
-              edition: jc.edition ?? "",
-              source: "shop",
-              ante: 1,
-              slot: 0,
-              packName: "",
-              packPosition: 0,
-              eternal: false,
-              perishable: false,
-              rental: false,
-            }));
+            // The engine reports MATCHED seeds but not the per-clause
+            // slot/ante it actually fired on. We surface a location that
+            // accurately reflects the *constraint the user searched for*
+            // (source, edition, sticker, max ante) instead of a hard-coded
+            // "shop slot 0" stub. Users wanting the exact slot click
+            // "Verify with Immolate" which runs inspect_seed.
+            const dummyLocations: JokerLocation[] = cfg.jokerConstraints.map((jc) => {
+              const wantsLegendary = isLegendary(jc.joker);
+              const srcRaw = (jc as any).source as string | undefined;
+              const effectiveSource = wantsLegendary
+                ? "spectral-soul"
+                : (srcRaw && srcRaw !== "" ? srcRaw : "shop");
+              // slot=0 means "any/unspecified". Carry the user's slot if
+              // they pinned one (jc.slot is 0..15 or undefined).
+              const carriedSlot = (jc.slot !== undefined && jc.slot >= 0 && jc.slot <= 15) ? (jc.slot + 1) : 0;
+              return {
+                joker: jc.joker,
+                edition: jc.edition ?? "",
+                source: effectiveSource,
+                // Best-effort ante: the engine matched somewhere in 1..maxAnte
+                // but didn't say which. Surface the upper bound so the UI
+                // says "appears by ante N" rather than lying about ante 1.
+                ante: jc.maxAnte ?? 1,
+                slot: carriedSlot,
+                packName: effectiveSource === "buffoon-pack" ? "Buffoon Pack"
+                  : effectiveSource === "arcana-soul" ? "Arcana Pack"
+                  : effectiveSource === "spectral-soul" || effectiveSource === "spectral-wraith" ? "Spectral Pack"
+                  : "",
+                packPosition: 0,
+                eternal: jc.sticker === "eternal",
+                perishable: jc.sticker === "perishable",
+                rental: jc.sticker === "rental",
+              };
+            });
             const match: SeedMatch = {
               seed: m.seed,
               jokerLocations: dummyLocations,
