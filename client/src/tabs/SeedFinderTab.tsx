@@ -584,6 +584,58 @@ export function SeedFinderTab() {
     try { localStorage.setItem("seed-finder-engine", useLegacyEngine ? "legacy" : "v2"); } catch {}
   }, [useLegacyEngine]);
 
+  // V3 (WebGPU) BETA. Off by default. ?v3=1 reveals the toggle for everyone;
+  // otherwise the user must opt in via the toggle once it's surfaced. When on,
+  // we probe WebGPU and verify the diagnostic shader. Actual seed searches
+  // still run on WASM — see docs/V3_DESIGN.md.
+  const showV3Toggle = useMemo(() => {
+    try {
+      const p = new URLSearchParams(location.search);
+      return p.get("v3") === "1" || localStorage.getItem("seed-finder-v3-beta") === "on";
+    } catch { return false; }
+  }, []);
+  const [v3Beta, setV3Beta] = useState<boolean>(() => {
+    try { return localStorage.getItem("seed-finder-v3-beta") === "on"; }
+    catch { return false; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem("seed-finder-v3-beta", v3Beta ? "on" : "off"); } catch {}
+  }, [v3Beta]);
+  const [v3Status, setV3Status] = useState<string>("");
+  useEffect(() => {
+    let cancelled = false;
+    if (!v3Beta) { setV3Status(""); return; }
+    (async () => {
+      try {
+        const { selectEngine } = await import("@/lib/v3/engineSelector");
+        // The WASM module is loaded lazily inside the worker; for the main-
+        // thread probe we load a fresh copy of the JS glue. This is one-time
+        // and small (~250KB gzipped). Use runtime URL construction so Vite
+        // doesn't try to bundle the public asset.
+        const origin = window.location.origin;
+        const jsUrl = new URL("/engine-v2/balatro_seed_engine.js", origin).toString();
+        const wasmUrl = new URL("/engine-v2/balatro_seed_engine_bg.wasm", origin).toString();
+        const wasmJs = await import(/* @vite-ignore */ jsUrl);
+        await wasmJs.default({ module_or_path: wasmUrl });
+        const desc = await selectEngine({ v3Beta: true, wasm: wasmJs });
+        if (cancelled) return;
+        if (desc.webgpu?.kind === "ready") {
+          const mb = (desc.webgpu.throughputSeedsPerSec / 1e6).toFixed(1);
+          setV3Status(`WebGPU verified · ${desc.webgpu.adapterInfo} · ~${mb}M ops/s diagnostic`);
+        } else if (desc.webgpu?.kind === "unsupported") {
+          setV3Status(`WebGPU unavailable: ${desc.webgpu.reason}`);
+        } else if (desc.webgpu?.kind === "verification-failed") {
+          setV3Status(`WebGPU verification failed: ${desc.webgpu.reason}`);
+        } else {
+          setV3Status("probing…");
+        }
+      } catch (e) {
+        if (!cancelled) setV3Status(`V3 probe error: ${String(e)}`);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [v3Beta]);
+
   // Share-link import on first mount.
   useEffect(() => {
     try {
@@ -786,6 +838,34 @@ export function SeedFinderTab() {
                 Falls back to the V1 Immolate WASM finder. Slower; doesn't support
                 editions/stickers/slots/bosses/standard-card-level filters.
               </span>
+            </label>
+          </div>
+        )}
+
+        {/* V3 (WebGPU) beta toggle. Hidden by default; ?v3=1 reveals it.
+            Search backend stays on WASM for now; see docs/V3_DESIGN.md. */}
+        {showV3Toggle && (
+          <div className="flex items-start gap-2 rounded border border-cyan-700/40 bg-cyan-950/10 p-2">
+            <input
+              id="v3-beta-toggle"
+              type="checkbox"
+              className="mt-1 h-4 w-4 accent-cyan-400"
+              checked={v3Beta}
+              onChange={(e) => setV3Beta(e.target.checked)}
+              disabled={running}
+            />
+            <label htmlFor="v3-beta-toggle" className="text-xs text-zinc-300 leading-snug">
+              <span className="font-semibold text-cyan-200">V3 engine (WebGPU beta)</span>
+              <span className="block text-zinc-500">
+                Probes your GPU and runs a verified integer benchmark. Seed searches
+                still run on the WASM CPU engine in this build — see V3_DESIGN.md for
+                why GPU search is still blocked on full f64 emulation.
+              </span>
+              {v3Beta && v3Status && (
+                <span className="block mt-1 text-cyan-300 font-mono text-[10px]">
+                  {v3Status}
+                </span>
+              )}
             </label>
           </div>
         )}
