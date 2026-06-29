@@ -148,14 +148,16 @@ function JokerSearchBar({
 }
 
 function ConstraintRow({
-  c, onChange, onRemove,
+  c, onChange, onRemove, showV2Fields,
 }: {
   c: JokerConstraint;
   onChange: (next: JokerConstraint) => void;
   onRemove: () => void;
+  showV2Fields: boolean;
 }) {
   const id = jokerIdFromName(c.joker);
   const r = rarityOf(c.joker);
+  const slotValue = (c.slot === undefined || c.slot < 0 || c.slot === 255) ? "any" : String(c.slot);
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-yellow-500/15 bg-zinc-900/40 p-2">
       {id ? (
@@ -180,6 +182,20 @@ function ConstraintRow({
           </SelectContent>
         </Select>
       </div>
+      {showV2Fields && (
+        <div title="Eternal/Perishable/Rental sticker filter. V2 only. Only meaningful from Black Stake upward.">
+          <Label className="text-[10px] text-zinc-400">Sticker</Label>
+          <Select value={c.sticker || "any"} onValueChange={v => onChange({ ...c, sticker: v === "any" ? "" : v as JokerConstraint["sticker"] })}>
+            <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="any">Any</SelectItem>
+              <SelectItem value="eternal">Eternal</SelectItem>
+              <SelectItem value="perishable">Perishable</SelectItem>
+              <SelectItem value="rental">Rental</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       <div>
         <Label className="text-[10px] text-zinc-400">Source</Label>
         <Select value={c.source || "any"} onValueChange={v => onChange({ ...c, source: v === "any" ? "" : v as JokerConstraint["source"] })}>
@@ -194,6 +210,25 @@ function ConstraintRow({
           </SelectContent>
         </Select>
       </div>
+      {showV2Fields && ((c.source || "") === "" || c.source === "shop") && (
+        <div title="Which shop slot to match. Slot 0 = first card shown. 'Any' covers all 16 (default 4 + 12 rerolls). V2 only.">
+          <Label className="text-[10px] text-zinc-400">Slot</Label>
+          <Select value={slotValue} onValueChange={v => onChange({ ...c, slot: v === "any" ? 255 : Number(v) })}>
+            <SelectTrigger className="h-8 w-[120px] text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="any">Any slot (0–15)</SelectItem>
+              <SelectItem value="0">Slot 0</SelectItem>
+              <SelectItem value="1">Slot 1</SelectItem>
+              <SelectItem value="2">Slot 2</SelectItem>
+              <SelectItem value="3">Slot 3</SelectItem>
+              <SelectItem value="4">Slot 4 (1st reroll)</SelectItem>
+              <SelectItem value="5">Slot 5</SelectItem>
+              <SelectItem value="6">Slot 6</SelectItem>
+              <SelectItem value="7">Slot 7</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       <div>
         <Label className="text-[10px] text-zinc-400">Max ante</Label>
         <Input
@@ -328,6 +363,40 @@ export function SeedFinderTab() {
     try { localStorage.setItem("seed-finder-v2-beta", useV2Engine ? "1" : "0"); } catch {}
   }, [useV2Engine]);
 
+  // V2-only advanced filters expressed as raw JSON.
+  // Schema (all keys optional, all arrays may be empty):
+  // {
+  //   "tagConstraints":   [{ "tag": "Negative Tag", "position": 1, "maxAnte": 8 }],
+  //   "bossConstraints":  [{ "boss": "The Wall",     "maxAnte": 8 }],
+  //   "standardCardConstraints": [{
+  //       "base": "Ace of Spades", "enhancement": "Glass Card",
+  //       "edition": "Polychrome", "seal": "Gold Seal", "maxAnte": 4
+  //   }]
+  // }
+  // `position` is 0 = small-blind tag (default), 1 = big-blind tag.
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [advancedJson, setAdvancedJson] = useState<string>(() => {
+    try { return localStorage.getItem("seed-finder-v2-advanced") || ""; }
+    catch { return ""; }
+  });
+  const [advancedError, setAdvancedError] = useState<string | null>(null);
+  useEffect(() => {
+    try { localStorage.setItem("seed-finder-v2-advanced", advancedJson); } catch {}
+  }, [advancedJson]);
+  function parseAdvanced(): { ok: true; value: any } | { ok: false; error: string } {
+    const s = advancedJson.trim();
+    if (!s) return { ok: true, value: {} };
+    try {
+      const v = JSON.parse(s);
+      if (typeof v !== "object" || v === null || Array.isArray(v)) {
+        return { ok: false, error: "Top-level must be an object" };
+      }
+      return { ok: true, value: v };
+    } catch (e: any) {
+      return { ok: false, error: e?.message || "Invalid JSON" };
+    }
+  }
+
   useEffect(() => () => { handleRef.current?.stop(); }, []);
 
   const effectiveMaxAnte = useMemo(() => {
@@ -354,16 +423,48 @@ export function SeedFinderTab() {
   }
 
   function start() {
-    if (finder.selected.length === 0 || finder.running) return;
+    if (finder.selected.length === 0 && !advancedJson.trim()) return;
+    if (finder.running) return;
+
+    // Parse the V2 advanced JSON if present. Anything malformed = surface
+    // an inline error and refuse to start (we don't want to silently drop
+    // user constraints).
+    let advanced: any = {};
+    if (useV2Engine) {
+      const p = parseAdvanced();
+      if (!p.ok) {
+        setAdvancedError(p.error);
+        return;
+      }
+      setAdvancedError(null);
+      advanced = p.value;
+    }
+
     setFinder({ error: null, matches: [], progress: { totalTries: 0, elapsedMs: 0, seedsPerSec: 0, matches: 0 }, running: true });
+
+    // Effective max ante also has to consider advanced clauses so we don't
+    // truncate the engine's scan window below what the user asked for.
+    const advAntes: number[] = [];
+    for (const arr of [advanced.tagConstraints, advanced.bossConstraints, advanced.standardCardConstraints]) {
+      if (Array.isArray(arr)) for (const c of arr) if (typeof c?.maxAnte === "number") advAntes.push(c.maxAnte);
+    }
+    const totalMaxAnte = Math.max(
+      effectiveMaxAnte,
+      advAntes.length > 0 ? Math.max(...advAntes) : 0,
+    );
 
     const cfg = {
       jokerConstraints: finder.selected,
-      maxAnte: effectiveMaxAnte,
+      maxAnte: totalMaxAnte,
       deck: finder.deck,
       stake: finder.stake,
       version: finder.version,
       threads: finder.threads,
+      // Pass advanced clauses straight through; the V2 adapter knows how to
+      // turn each one into an engine clause. The V1 path ignores them.
+      tagConstraints:           Array.isArray(advanced.tagConstraints)           ? advanced.tagConstraints           : [],
+      bossConstraints:          Array.isArray(advanced.bossConstraints)          ? advanced.bossConstraints          : [],
+      standardCardConstraints:  Array.isArray(advanced.standardCardConstraints)  ? advanced.standardCardConstraints  : [],
     };
     const cbs = {
       onProgress: (p: any) => setFinder({ progress: p }),
@@ -410,24 +511,24 @@ export function SeedFinderTab() {
             disabled={running}
           />
           <label htmlFor="v2-engine-toggle" className="text-xs text-zinc-300 leading-snug">
-            <span className="font-semibold text-purple-300">Try the new engine (beta)</span>
-            <span className="ml-1 rounded bg-purple-500/30 px-1 py-0.5 text-[10px] uppercase tracking-wide text-purple-200">v2</span>
+            <span className="font-semibold text-purple-300">Try the new engine (v2.1 beta)</span>
+            <span className="ml-1 rounded bg-purple-500/30 px-1 py-0.5 text-[10px] uppercase tracking-wide text-purple-200">v2.1</span>
             <span className="block text-zinc-400">
-              Rust + WASM rewrite — lock-aware draws, pack contents, sticker rolls,
-              SIMD-accelerated when your browser supports it.
+              Rust + WASM rewrite, SIMD-accelerated when your browser supports it.
               <span className="block mt-1">
-                What works on V2 today: shop slot 0 jokers (Common/Uncommon/Rare),
-                vouchers, tags (first position), and pack-contents "any of the
-                first 6 packs contains X" for arcana/spectral/celestial/buffoon.
-                Legendaries are matched via the Soul gate (seed has The Soul in
-                any arcana/spectral pack 1..maxAnte); V2 doesn't yet resolve
-                which Legendary that Soul will roll into.
+                What v2.1 supports: shop jokers across all 16 slots (default 4 + 12 rerolls),
+                edition match (Foil/Holo/Polychrome/Negative), sticker match
+                (Eternal/Perishable/Rental), Soul → specific Legendary resolution,
+                Wraith → specific Rare resolution, tag big-blind position, boss
+                filtering, standard-pack card-level matching (rank+suit+enhancement
+                +edition+seal), vouchers, buffoon/arcana/spectral/celestial pack contents.
               </span>
               <span className="block mt-1">
-                Honest gaps: multi-slot shop scan (slot 0 only), standard pack
-                card-level modelling, edition matching, and a bit-for-bit
-                Immolate parity sweep. Default (Immolate) stays the verified
-                path; click "Verify with Immolate" on a match to confirm.
+                Honest gap: statistical sanity verified against analytical priors
+                (Negative ≈0.03%, big-blind Negative Tag ≈4.3%, Soul→Perkeo ≈7%, etc.
+                across 100k-seed sweeps); a full bit-for-bit Immolate parity sweep
+                is the next milestone. Click "Verify with Immolate" on any match
+                to cross-check against the reference implementation.
               </span>
             </span>
           </label>
@@ -481,15 +582,67 @@ export function SeedFinderTab() {
       {selected.length > 0 && (
         <div className="space-y-1.5">
           {selected.map((c, i) => (
-            <ConstraintRow key={c.joker} c={c} onChange={n => updateConstraint(i, n)} onRemove={() => removeConstraint(i)} />
+            <ConstraintRow key={c.joker} c={c} onChange={n => updateConstraint(i, n)} onRemove={() => removeConstraint(i)} showV2Fields={useV2Engine} />
           ))}
+        </div>
+      )}
+
+      { }
+      {useV2Engine && (
+        <div className="rounded-md border border-purple-500/20 bg-purple-950/10">
+          <button
+            type="button"
+            className="w-full flex items-center justify-between px-3 py-2 text-xs text-purple-200 hover:bg-purple-500/10"
+            onClick={() => setAdvancedOpen(o => !o)}
+          >
+            <span>
+              <span className="font-semibold">Advanced V2 filters</span>
+              <span className="ml-2 text-zinc-500">tag-position · boss · standard-pack card-level</span>
+            </span>
+            <span className="text-zinc-500">{advancedOpen ? "−" : "+"}</span>
+          </button>
+          {advancedOpen && (
+            <div className="px-3 pb-3 space-y-2">
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
+                Power-user JSON — the dedicated UI for these is on the roadmap.
+                All keys optional. Tag position: 0 = small-blind tag, 1 = big-blind tag.
+                <span className="block mt-1 text-zinc-500">Example shown is editable; leave empty to skip.</span>
+              </p>
+              <textarea
+                spellCheck={false}
+                value={advancedJson}
+                onChange={e => { setAdvancedJson(e.target.value); setAdvancedError(null); }}
+                placeholder={`{
+  "tagConstraints": [
+    { "tag": "Negative Tag", "position": 1, "maxAnte": 8 }
+  ],
+  "bossConstraints": [
+    { "boss": "The Wall", "maxAnte": 8 }
+  ],
+  "standardCardConstraints": [
+    {
+      "base": "Ace of Spades",
+      "enhancement": "Glass Card",
+      "edition": "Polychrome",
+      "seal": "Gold Seal",
+      "maxAnte": 4
+    }
+  ]
+}`}
+                className="w-full h-44 rounded border border-zinc-700 bg-zinc-950 px-2 py-1.5 font-mono text-[11px] text-zinc-200 placeholder:text-zinc-600 focus:border-purple-400/60 focus:outline-none"
+              />
+              {advancedError && (
+                <div className="text-[11px] text-red-300">Parse error: {advancedError}</div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
       { }
       <div className="flex flex-wrap items-center gap-3 rounded-md border border-yellow-500/15 bg-zinc-950/60 p-3">
         {!running ? (
-          <Button onClick={start} disabled={selected.length === 0} className="bg-yellow-400 hover:bg-yellow-300 text-zinc-950" data-testid="finder-start">
+          <Button onClick={start} disabled={selected.length === 0 && !advancedJson.trim()} className="bg-yellow-400 hover:bg-yellow-300 text-zinc-950" data-testid="finder-start">
             <Play className="mr-2 h-4 w-4" /> Start search
           </Button>
         ) : (
