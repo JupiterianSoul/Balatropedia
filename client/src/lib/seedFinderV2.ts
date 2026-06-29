@@ -21,8 +21,13 @@ import type {
   FinderHandle,
   JokerLocation,
   SeedMatch,
+  VoucherLocation,
+  TagLocation,
+  BossLocation,
+  StandardCardLocation,
 } from "./seedFinder";
 import { LEGENDARY_JOKERS } from "./seedItems";
+import { parseInspectJson, parseClauseDetail, locationFromParsed } from "./seedInspect";
 
 // Maximum shop pack slots scanned per ante for pack-based clauses. Default
 // run config exposes 6 packs/ante; we scan 0..PACK_SLOTS-1.
@@ -178,6 +183,174 @@ export function buildFilterJson(cfg: FinderConfig): string {
   return JSON.stringify({ clauses, partial: false, min_score: null });
 }
 
+// ─── Match assembly ─────────────────────────────────────────────────────────
+//
+// The engine's `inspect_seed` returns per-clause detail strings. The clause
+// order in that response is identical to the order we built in buildFilterJson:
+//   1) one clause per jokerConstraint   (possibly wrapped in any_of)
+//   2) one clause per voucherConstraint
+//   3) one clause per tagConstraint
+//   4) one clause per bossConstraint
+//   5) one clause per standardCardConstraint
+//
+// For each matched joker clause we parse the detail into a real JokerLocation
+// (ante, shop slot or pack #, edition, stickers). When inspect_seed fails or a
+// clause didn't match (shouldn't happen for top-level AND filter, but is
+// possible inside `any_of` sub-clauses — only one sub matched), we fall back
+// to a constraint-aware placeholder so the UI never shows the broken
+// "AFTER BOSS BLIND, SHOP SLOT 0" output.
+
+function fallbackLocation(jc: FinderConfig["jokerConstraints"][number]): JokerLocation {
+  const wantsLegendary = isLegendary(jc.joker);
+  const srcRaw = (jc as any).source as string | undefined;
+  const effectiveSource = wantsLegendary
+    ? "spectral-soul"
+    : (srcRaw && srcRaw !== "" ? srcRaw : "shop");
+  const carriedSlot = (jc.slot !== undefined && jc.slot >= 0 && jc.slot <= 15) ? (jc.slot + 1) : 0;
+  return {
+    joker: jc.joker,
+    edition: jc.edition ?? "",
+    source: effectiveSource,
+    ante: jc.maxAnte ?? 1,
+    slot: carriedSlot,
+    packName: effectiveSource === "buffoon-pack" ? "Buffoon Pack"
+      : effectiveSource === "arcana-soul" ? "Arcana Pack"
+      : effectiveSource === "spectral-soul" || effectiveSource === "spectral-wraith" ? "Spectral Pack"
+      : "",
+    packPosition: 0,
+    eternal: jc.sticker === "eternal",
+    perishable: jc.sticker === "perishable",
+    rental: jc.sticker === "rental",
+  };
+}
+
+function parseAnteFromDetail(detail: string): number | null {
+  const m = detail.match(/ante\s+(\d+)/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+export function buildMatch(seed: string, inspectJson: string | null, cfg: FinderConfig): SeedMatch {
+  const jokerLocations: JokerLocation[] = [];
+  const voucherLocations: VoucherLocation[] = [];
+  const tagLocations: TagLocation[] = [];
+
+  const inspect = inspectJson ? parseInspectJson(inspectJson) : null;
+  const clauses = inspect?.clauses ?? [];
+
+  // Clauses come back in filter-build order. Walk them and the source arrays
+  // in lockstep so we always know which constraint each clause belongs to.
+  let clauseIdx = 0;
+
+  // 1) Joker constraints.
+  for (const jc of cfg.jokerConstraints) {
+    const c = clauses[clauseIdx++];
+    let loc: JokerLocation | null = null;
+    if (c && c.matched) {
+      const parsed = parseClauseDetail(c.detail);
+      if (parsed) loc = locationFromParsed(parsed, jc);
+    }
+    jokerLocations.push(loc ?? fallbackLocation(jc));
+  }
+
+  // 2) Voucher constraints.
+  for (const vc of cfg.voucherConstraints ?? []) {
+    const c = clauses[clauseIdx++];
+    let ante = vc.maxAnte ?? 1;
+    if (c && c.matched) {
+      const parsed = parseClauseDetail(c.detail);
+      if (parsed && parsed.kind === "voucher") {
+        ante = parsed.ante;
+      } else {
+        const a = parseAnteFromDetail(c.detail);
+        if (a !== null) ante = a;
+      }
+    }
+    voucherLocations.push({ voucher: vc.voucher, ante });
+  }
+
+  // 3) Tag constraints.
+  for (const tc of cfg.tagConstraints ?? []) {
+    const c = clauses[clauseIdx++];
+    let ante = tc.maxAnte ?? 1;
+    let blind = ((tc as any).position ?? 0) as number;
+    if (c && c.matched) {
+      const parsed = parseClauseDetail(c.detail);
+      if (parsed && parsed.kind === "tag") {
+        ante = parsed.ante;
+        blind = parsed.blind;
+      } else {
+        const a = parseAnteFromDetail(c.detail);
+        if (a !== null) ante = a;
+      }
+    }
+    tagLocations.push({ tag: tc.tag, ante, blind });
+  }
+
+  // 4) Boss constraints.
+  const bossLocations: BossLocation[] = [];
+  for (const bc of cfg.bossConstraints ?? []) {
+    const c = clauses[clauseIdx++];
+    let ante = bc.maxAnte ?? 1;
+    let boss = bc.boss;
+    if (c && c.matched) {
+      const parsed = parseClauseDetail(c.detail);
+      if (parsed && parsed.kind === "boss") {
+        ante = parsed.ante;
+        boss = parsed.boss;
+      } else {
+        const a = parseAnteFromDetail(c.detail);
+        if (a !== null) ante = a;
+      }
+    }
+    bossLocations.push({ boss, ante });
+  }
+
+  // 5) Standard card constraints.
+  const standardCardLocations: StandardCardLocation[] = [];
+  for (const sc of cfg.standardCardConstraints ?? []) {
+    const c = clauses[clauseIdx++];
+    let ante = sc.maxAnte ?? 1;
+    let packIndex = 0;
+    let packName = "";
+    let cardIndex = 0;
+    let base = sc.base ?? (sc.suit && sc.rank ? `${sc.rank} of ${sc.suit}` : "");
+    if (c && c.matched) {
+      const parsed = parseClauseDetail(c.detail);
+      if (parsed && parsed.kind === "standard") {
+        ante = parsed.ante;
+        // Engine emits 0-based pack# and card index; normalize to 1-based for UI
+        // consistency with other SeedMatch locations (shop slot, pack#).
+        packIndex = parsed.packIndex + 1;
+        packName = parsed.packName;
+        cardIndex = parsed.cardIndex + 1;
+        base = parsed.base;
+      } else {
+        const a = parseAnteFromDetail(c.detail);
+        if (a !== null) ante = a;
+      }
+    }
+    standardCardLocations.push({
+      base,
+      enhancement: sc.enhancement,
+      edition: sc.edition,
+      seal: sc.seal,
+      ante,
+      packIndex,
+      packName,
+      cardIndex,
+    });
+  }
+
+  return {
+    seed,
+    jokerLocations,
+    voucherLocations,
+    tagLocations,
+    bossLocations,
+    standardCardLocations,
+  };
+}
+
 // ─── Worker dispatch ────────────────────────────────────────────────────────
 const SEED_LEN = 8;
 const HUGE_COUNT = (1n << 60n); // effectively unbounded; user stops manually
@@ -310,28 +483,8 @@ export class SeedFinderV2 {
       worker.onmessage = (ev) => {
         const msg = ev.data;
         if (msg.type === "matches") {
-          for (const m of msg.matches as Array<{ score: number; seed: string }>) {
-            // No per-joker locations yet from the engine. Surface the seed
-            // with placeholder locations so the MatchCard UI renders;
-            // users can click "Verify with Immolate" to get the breakdown.
-            const dummyLocations: JokerLocation[] = cfg.jokerConstraints.map((jc) => ({
-              joker: jc.joker,
-              edition: jc.edition ?? "",
-              source: "shop",
-              ante: 1,
-              slot: 0,
-              packName: "",
-              packPosition: 0,
-              eternal: false,
-              perishable: false,
-              rental: false,
-            }));
-            const match: SeedMatch = {
-              seed: m.seed,
-              jokerLocations: dummyLocations,
-              voucherLocations: [],
-              tagLocations: [],
-            };
+          for (const m of msg.matches as Array<{ score: number; seed: string; inspect: string | null }>) {
+            const match = buildMatch(m.seed, m.inspect, cfg);
             allMatches.push(match);
             matchesCount++;
             cb.onMatch?.(match);

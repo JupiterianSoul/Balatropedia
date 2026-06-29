@@ -40,14 +40,11 @@ for d in "${!DENSITIES[@]}"; do
     "$dir/ic_launcher_foreground.png"
 done
 
-# Adaptive icon background (solid Balatro dark) + XML wrappers.
+# Adaptive icon XML wrappers. (The ic_launcher_background color is defined
+# in values/colors.xml below; defining it in a second file causes a duplicate
+# resource error at build time.)
 mkdir -p "$RES/values" "$RES/mipmap-anydpi-v26" "$RES/drawable"
-cat > "$RES/values/ic_launcher_background.xml" <<XML
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="ic_launcher_background">$BG_COLOR</color>
-</resources>
-XML
+rm -f "$RES/values/ic_launcher_background.xml"
 
 cat > "$RES/mipmap-anydpi-v26/ic_launcher.xml" <<'XML'
 <?xml version="1.0" encoding="utf-8"?>

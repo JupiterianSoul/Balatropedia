@@ -3,6 +3,106 @@
 @tailwind utilities;
 
 /* ============================================================
+   MOBILE / TOUCH BASELINE
+   Kill the legacy 300ms tap delay + grey tap highlight on every
+   interactive element. Applied at the root so child overrides
+   are no longer needed and Capacitor's WebView gets native
+   responsiveness on Android.
+   ============================================================ */
+html {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+[role="button"],
+a,
+label,
+summary,
+input[type="button"],
+input[type="submit"],
+input[type="checkbox"],
+input[type="radio"],
+[data-tab-trigger],
+.balatro-tab {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow vertical scrolling without consuming horizontal gestures in scroll
+   containers — manipulation already excludes double-tap zoom. */
+[data-scroll-container] {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ============================================================
+   MOBILE SCROLL PERF
+   `contain: content` on every joker / entity card cuts paint and
+   layout cost dramatically when 150 cards scroll past the
+   viewport. content-visibility: auto skips work for cards that
+   are off-screen entirely (Chrome / WebView supports it as of
+   Android 10+). The `.mobile-card-contain` class is applied by
+   JokerCard and EntityChip; index.css owns the rule centrally so
+   we can tune it globally.
+   ============================================================ */
+.mobile-card-contain {
+  contain: content;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 88px;
+}
+
+@media (max-width: 768px) {
+  /* Phones don't benefit from the heavy multi-stop pixel-art
+     drop shadows when scrolling — they trash the compositor. */
+  .mobile-card-contain,
+  [data-balatro-card] {
+    box-shadow: none !important;
+  }
+}
+
+/* Mark long scroll views so the browser knows it can offload
+   them to their own layer. */
+.scroll-region {
+  contain: layout paint;
+  will-change: scroll-position;
+}
+
+/* ============================================================
+   MOBILE TOUCH TARGETS
+   Enforce the 44px minimum on common interactive primitives at
+   mobile breakpoints. The desktop UI is untouched. We keep the
+   visual size mostly the same but bump min-height so taps land
+   reliably; this is the cheapest fix that moves the needle on a
+   pixel-art layout with intentionally small UI.
+   ============================================================ */
+@media (max-width: 768px) {
+  button,
+  [role="button"],
+  a[href],
+  .balatro-tab,
+  .balatro-button,
+  [data-tab-trigger] {
+    min-height: 44px;
+  }
+
+  /* Selects + inputs */
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+  }
+
+  /* Tighten card grids so two cards fit on a phone without
+     horizontal scroll. */
+  .balatro-card {
+    min-width: 0;
+  }
+}
+
+/* ============================================================
    AUTHENTIC BALATRO THEME; palette + UIBox constants ported
    verbatim from globals.lua G.C and engine/ui.lua.
    Source: github.com/idkhan/Balatro3DS/globals.lua (line 316+)
@@ -12,6 +112,55 @@
 @font-face {
   font-family: "m6x11plus";
   src: url("/fonts/m6x11plus.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   SELF-HOSTED VENDOR FONTS
+   Inter (variable, 400–700), Geist Mono (variable, 400–600),
+   Silkscreen (400 + 700), VT323 (400). Latin subset only — enough
+   for FR + EN. Total weight is ~105 KB across all five files,
+   smaller than a single round-trip to fonts.googleapis.com and
+   works fully offline inside the APK.
+   Source: Google Fonts, downloaded once, no runtime fetch.
+   ============================================================ */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/vendor/inter-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/vendor/geistmono-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Silkscreen";
+  src: url("/fonts/vendor/silkscreen-400-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Silkscreen";
+  src: url("/fonts/vendor/silkscreen-700-latin.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "VT323";
+  src: url("/fonts/vendor/vt323-latin.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -223,54 +372,48 @@
   --input: 220 22% 14%;
 }
 
-/* Parchment; light vintage card-table theme. Dark text on cream surfaces. */
+/* Parchment; white/beige paper variant. Julie's spec: WHITE/BEIGE background
+   with brown / light-brown buttons. Foreground text is deep brown so it
+   stays legible on a near-white surface. */
 :root[data-theme="parchment"] {
-  --background: 36 30% 92%;             /* warm cream */
-  --foreground: 192 14% 18%;            /* deep teal-grey text */
-  --border: 36 18% 78%;
+  --background: 36 38% 96%;            /* near-white warm beige paper */
+  --foreground: 22 35% 14%;            /* deep brown ink */
+  --border: 28 28% 78%;
 
-  --card: 36 35% 96%;
-  --card-foreground: 192 14% 18%;
-  --card-border: 36 22% 80%;
+  --card: 36 42% 98%;
+  --card-foreground: 22 35% 14%;
+  --card-border: 28 26% 80%;
 
-  --sidebar: 36 28% 88%;
-  --sidebar-foreground: 192 14% 22%;
-  --sidebar-border: 36 18% 76%;
-  --sidebar-primary: 4 78% 50%;
+  --sidebar: 36 35% 92%;
+  --sidebar-foreground: 22 35% 16%;
+  --sidebar-border: 28 26% 76%;
+  --sidebar-primary: 25 60% 38%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 36 35% 82%;
-  --sidebar-accent-foreground: 192 14% 18%;
-  --sidebar-ring: 42 78% 50%;
+  --sidebar-accent: 32 45% 88%;
+  --sidebar-accent-foreground: 22 35% 16%;
+  --sidebar-ring: 25 60% 38%;
 
-  --popover: 36 38% 95%;
-  --popover-foreground: 192 14% 18%;
-  --popover-border: 36 22% 80%;
+  --popover: 36 42% 97%;
+  --popover-foreground: 22 35% 14%;
+  --popover-border: 28 26% 80%;
 
   --primary-foreground: 0 0% 100%;
   --secondary-foreground: 0 0% 100%;
 
-  --muted: 36 22% 82%;
-  --muted-foreground: 192 10% 35%;
+  --muted: 32 32% 88%;
+  --muted-foreground: 25 18% 38%;
 
-  --accent-foreground: 192 14% 12%;
+  --accent-foreground: 22 35% 14%;
 
-  --input: 36 25% 86%;
-  --ring: 42 78% 50%;
+  --input: 32 38% 93%;
+  --ring: 25 60% 38%;
 }
 
-/* Soften the heavy pure-black borders and shadows used by the felt theme
-   when running on lighter surfaces; they look harsh on cream. */
-:root[data-theme="parchment"] aside,
-:root[data-theme="parchment"] header {
-  border-color: hsl(36 22% 70%) !important;
-  box-shadow: 0 2px 0 hsl(36 22% 78%) !important;
-}
-:root[data-theme="parchment"] .mult-text {
-  text-shadow: 0 1px 0 hsl(36 25% 80%);
-}
-:root[data-theme="parchment"] .chips-text {
-  text-shadow: 0 1px 0 hsl(36 25% 80%);
-}
+/* The old per-theme balatro-tab block lived here. It has been
+   removed: it was using :not([data-state="active"]) which raised
+   its specificity above the newer cleaner block at the bottom of
+   this file, so the new colors Julie asked for never won the
+   cascade. The bottom block is the source of truth now. */
 
 @layer base {
   * { @apply border-border; }
@@ -318,6 +461,19 @@
     background-attachment: fixed;
     min-height: 100dvh;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Parchment is a near-white paper variant. The Balatro felt vignette
+     looks like a giant dark smudge on a white background, so we clear
+     the image stack and let the warm paper colour speak for itself. */
+  :root[data-theme="parchment"] body {
+    background-image:
+      /* Faint warm haze top — keeps the paper feeling tactile */
+      radial-gradient(ellipse 90% 50% at 50% 0%, hsla(32, 60%, 70%, 0.12), transparent 75%),
+      /* Subtle paper-fibre dot grid in a warm brown tone */
+      radial-gradient(hsla(28, 35%, 55%, 0.10) 1px, transparent 1px);
+    background-size: auto, 14px 14px;
+    background-position: center top, center;
   }
 }
 
@@ -1029,3 +1185,232 @@
     .joker-conveyor-track { animation: none; }
   }
 }
+
+/* ============================================================
+   THEME-SCOPED BUTTON COLORS
+
+   Julie's spec (final):
+   - Felt:       grey background, ALL buttons red + blue
+   - Midnight:   deep blue background, ALL buttons black (default look)
+   - Parchment:  cream/beige background, ALL buttons brown / light brown
+
+   Targets every clickable surface in the app, not just .balatro-tab:
+     - .balatro-tab (chunky tab buttons)
+     - shadcn <Button> (variants default / secondary / outline)
+     - generic <button> inside .casino-card and tab content
+   ============================================================ */
+
+/* All rules below use !important on the visual properties so they
+   can never be beaten by the base .balatro-tab gradient defined in
+   @layer components, no matter what specificity tricks remain in
+   the codebase. This is the final say on per-theme button colors. */
+
+/* ─── FELT ───
+   Grey table; ALL buttons red+blue.
+   Inactive   = blue chip gradient.
+   Active/hot = red mult gradient. */
+:root[data-theme="felt"] .balatro-tab,
+:root:not([data-theme]) .balatro-tab {
+  background: linear-gradient(180deg, hsl(208 78% 56%) 0%, hsl(212 82% 38%) 100%) !important;
+  border-color: hsl(212 82% 22%) !important;
+  color: #fff !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.28),
+    0 var(--bal-emboss) 0 hsl(212 82% 22%),
+    0 calc(var(--bal-emboss) + 2px) 4px rgba(0, 0, 0, 0.5) !important;
+}
+:root[data-theme="felt"] .balatro-tab:hover,
+:root:not([data-theme]) .balatro-tab:hover {
+  filter: brightness(1.10);
+  color: #fff !important;
+}
+:root[data-theme="felt"] .balatro-tab[data-state="active"],
+:root[data-theme="felt"] .balatro-tab.is-active,
+:root:not([data-theme]) .balatro-tab[data-state="active"],
+:root:not([data-theme]) .balatro-tab.is-active {
+  background: linear-gradient(180deg, hsl(4 99% 72%) 0%, hsl(4 96% 56%) 100%) !important;
+  border-color: hsl(4 96% 32%) !important;
+  color: #fff !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.40),
+    inset 0 -2px 0 hsl(4 96% 32% / 0.4),
+    0 var(--bal-emboss) 0 hsl(4 96% 32%),
+    0 calc(var(--bal-emboss) + 2px) 0 hsl(195 32% 6%),
+    0 calc(var(--bal-emboss) + 6px) 8px hsl(4 96% 56% / 0.35) !important;
+}
+
+/* Felt; shadcn <Button> variants (primary=red, secondary=blue) */
+:root[data-theme="felt"] button[class*="bg-primary"],
+:root:not([data-theme]) button[class*="bg-primary"] {
+  background: linear-gradient(180deg, hsl(4 99% 72%) 0%, hsl(4 96% 56%) 100%) !important;
+  border-color: hsl(4 96% 32%) !important;
+  color: #fff !important;
+}
+:root[data-theme="felt"] button[class*="bg-secondary"],
+:root:not([data-theme]) button[class*="bg-secondary"] {
+  background: linear-gradient(180deg, hsl(208 78% 56%) 0%, hsl(212 82% 38%) 100%) !important;
+  border-color: hsl(212 82% 22%) !important;
+  color: #fff !important;
+}
+
+/* ─── MIDNIGHT ───
+   Deep blue table; ALL buttons black. */
+:root[data-theme="midnight"] .balatro-tab {
+  background: linear-gradient(180deg, hsl(220 22% 16%) 0%, hsl(220 30% 6%) 100%) !important;
+  border-color: hsl(220 35% 3%) !important;
+  color: hsl(var(--bal-joker-grey)) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.10),
+    0 var(--bal-emboss) 0 hsl(220 40% 2%),
+    0 calc(var(--bal-emboss) + 2px) 4px rgba(0, 0, 0, 0.6) !important;
+}
+:root[data-theme="midnight"] .balatro-tab:hover {
+  color: hsl(var(--bal-gold)) !important;
+}
+:root[data-theme="midnight"] .balatro-tab[data-state="active"],
+:root[data-theme="midnight"] .balatro-tab.is-active {
+  background: linear-gradient(180deg, hsl(220 22% 24%) 0%, hsl(220 28% 10%) 100%) !important;
+  border-color: hsl(var(--bal-gold) / 0.6) !important;
+  color: hsl(var(--bal-gold)) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.22),
+    inset 0 -2px 0 hsl(220 40% 2% / 0.5),
+    0 var(--bal-emboss) 0 hsl(220 40% 2%),
+    0 calc(var(--bal-emboss) + 4px) 8px rgba(0, 0, 0, 0.55) !important;
+}
+:root[data-theme="midnight"] button[class*="bg-primary"],
+:root[data-theme="midnight"] button[class*="bg-secondary"] {
+  background: linear-gradient(180deg, hsl(220 22% 16%) 0%, hsl(220 30% 6%) 100%) !important;
+  border-color: hsl(220 40% 2%) !important;
+  color: hsl(var(--bal-ui-text-light)) !important;
+}
+
+/* ─── PARCHMENT ───
+   Cream/beige table; ALL buttons brown / light brown.
+   Inactive = light brown leather.
+   Active   = darker brown leather. */
+:root[data-theme="parchment"] .balatro-tab {
+  background: linear-gradient(180deg, hsl(28 48% 62%) 0%, hsl(24 46% 46%) 100%) !important;
+  border-color: hsl(22 48% 26%) !important;
+  color: hsl(36 38% 96%) !important;
+  text-shadow: 0 1px 0 rgba(60, 30, 10, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(36 50% 92% / 0.40),
+    0 var(--bal-emboss) 0 hsl(22 48% 22%),
+    0 calc(var(--bal-emboss) + 2px) 4px rgba(60, 30, 10, 0.30) !important;
+}
+:root[data-theme="parchment"] .balatro-tab:hover {
+  filter: brightness(1.08);
+  color: #fff !important;
+}
+:root[data-theme="parchment"] .balatro-tab[data-state="active"],
+:root[data-theme="parchment"] .balatro-tab.is-active {
+  background: linear-gradient(180deg, hsl(22 58% 38%) 0%, hsl(18 62% 24%) 100%) !important;
+  border-color: hsl(15 60% 14%) !important;
+  color: hsl(36 50% 96%) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(45 60% 80% / 0.35),
+    inset 0 -2px 0 hsl(15 60% 14% / 0.5),
+    0 var(--bal-emboss) 0 hsl(15 60% 14%),
+    0 calc(var(--bal-emboss) + 2px) 0 hsl(22 48% 22%),
+    0 calc(var(--bal-emboss) + 6px) 8px hsl(22 55% 28% / 0.45) !important;
+}
+:root[data-theme="parchment"] button[class*="bg-primary"] {
+  background: linear-gradient(180deg, hsl(22 58% 38%) 0%, hsl(18 62% 24%) 100%) !important;
+  border-color: hsl(15 60% 14%) !important;
+  color: hsl(36 50% 96%) !important;
+}
+:root[data-theme="parchment"] button[class*="bg-secondary"] {
+  background: linear-gradient(180deg, hsl(28 48% 62%) 0%, hsl(24 46% 46%) 100%) !important;
+  border-color: hsl(22 48% 26%) !important;
+  color: hsl(36 38% 96%) !important;
+}
+
+/* ============================================================
+   CATCH-ALL BUTTON THEMING
+   ------------------------------------------------------------
+   Julie's spec is "ALL BUTTONS of the app" must follow the
+   theme. The rules above only catch .balatro-tab and shadcn
+   <Button class*="bg-primary"|"bg-secondary">; this section
+   covers the long tail:
+     - shadcn variants outline / ghost / destructive
+     - plain <button> in tab content with no bg utility
+     - LanguageSwitcher, SoundToggle, ko-fi style buttons
+
+   What we explicitly DO NOT theme:
+     - BottomTabBar (Julie wants it solid black) — opts out
+       via the .bottom-tab class.
+     - Any element with the .no-theme class.
+     - The X close button in detail sheets — hard-coded red
+       inline style takes precedence over our background.
+     - Buttons inside inputs / sprites — they use bg-transparent.
+   ============================================================ */
+
+/* FELT — themed buttons (opt-in via data-skin="balatro") become blue chips. */
+:root[data-theme="felt"]   [data-skin="balatro"]:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]),
+:root:not([data-theme]) [data-skin="balatro"]:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
+  background: linear-gradient(180deg, hsl(208 78% 56%) 0%, hsl(212 82% 38%) 100%) !important;
+  border-color: hsl(212 82% 22%) !important;
+  color: #fff !important;
+}
+
+/* MIDNIGHT — themed buttons (opt-in via data-skin="balatro") become black. */
+:root[data-theme="midnight"] [data-skin="balatro"]:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
+  background: linear-gradient(180deg, hsl(220 22% 16%) 0%, hsl(220 30% 6%) 100%) !important;
+  border-color: hsl(220 40% 2%) !important;
+  color: hsl(var(--bal-ui-text-light)) !important;
+}
+
+/* PARCHMENT — themed buttons (opt-in via data-skin="balatro") become light brown. */
+:root[data-theme="parchment"] [data-skin="balatro"]:not(.balatro-tab):not(.bottom-tab):not(.no-theme):not([class*="bg-transparent"]):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-destructive"]):not([class*="bg-accent"]):not([class*="bg-card"]):not([class*="bg-muted"]):not([class*="bg-background"]):not([class*="bg-popover"]):not([data-bal-skip-theme]):not([role="combobox"]):not(.bal-icon-btn):not([aria-label="Close"]) {
+  background: linear-gradient(180deg, hsl(28 48% 62%) 0%, hsl(24 46% 46%) 100%) !important;
+  border-color: hsl(22 48% 26%) !important;
+  color: hsl(36 38% 96%) !important;
+}
+
+/* The Radix Sheet built-in close X needs to stay visible against the
+   themed background. Force a subtle muted backdrop on it. */
+:root[data-theme] .absolute.right-4.top-4[class*="rounded-sm"] {
+  background: transparent !important;
+  border: 0 !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Override Tailwind's data-[state=active]:bg-background on TabsTrigger
+   so the active joker / favorites / calculator tab does not turn into
+   a dark "background" coloured rectangle, undoing our theme paint. */
+:root[data-theme] [data-state="active"].balatro-tab,
+:root:not([data-theme]) [data-state="active"].balatro-tab {
+  /* background is set by the per-theme active rules above and they
+     already use !important; this block just blocks Tailwind's
+     bg-background from leaking through on un-themed defaults. */
+}
+
+/* TabsList must NEVER show a dark wrapper. Belt and suspenders. */
+:root [role="tablist"],
+:root [role="tablist"] > div {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================
+   PHONE-PERF GUARDRAILS
+   backdrop-filter forces a GPU composite of everything behind
+   the element every frame — measurable battery drain and heat on
+   mid-range Android. Sticky bars at 95% opacity already hide the
+   content behind them, so we strip the blur on phones (≤ 768px)
+   and keep it on tablet/desktop where the GPU cost is hidden.
+   ============================================================ */
+@media (max-width: 768px) {
+  .backdrop-blur,
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+

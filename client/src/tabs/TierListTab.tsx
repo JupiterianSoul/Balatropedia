@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Info, ExternalLink, X } from "lucide-react";
+import { TabIntro } from "@/components/TabIntro";
+import { Trophy, Info, ExternalLink, X } from "lucide-react";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -112,13 +113,11 @@ function JokerCell({ id, onClick }: { id: string; onClick: (id: string) => void 
     <button
       onClick={() => onClick(id)}
       title={displayName}
-      className="group flex flex-col items-center gap-0.5 rounded-md p-1 transition-transform hover:scale-110 hover:bg-white/5"
+      aria-label={displayName}
+      className="transition-transform hover:scale-110"
       data-testid={`tierlist-joker-${id}`}
     >
-      <JokerSprite jokerId={id} name={displayName} size={56} />
-      <span className="hidden truncate text-[10px] text-foreground/70 group-hover:block lg:block lg:max-w-[80px]">
-        {displayName}
-      </span>
+      <JokerSprite jokerId={id} name={displayName} size={56} clickable={false} />
     </button>
   );
 }
@@ -162,7 +161,10 @@ export function TierListTab() {
   }, [stake, deck, t]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 p-2 md:p-4">
+      <TabIntro Icon={Trophy} title={t("ui.intro.tierlist.title")}>
+        {t("ui.intro.tierlist.desc")}
+      </TabIntro>
       { }
       {!disclaimerHidden && (
         <div
@@ -191,7 +193,7 @@ export function TierListTab() {
       )}
 
       { }
-      <div className="flex flex-wrap items-end gap-3">
+      <div className="sticky top-[60px] z-[5] -mx-2 flex flex-wrap items-end gap-3 border-b border-border/40 bg-background/95 px-2 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/75 md:static md:mx-0 md:border-0 md:bg-transparent md:px-0 md:py-0 md:backdrop-blur-0">
         <div className="min-w-[180px] flex-1">
           <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             {t("ui.tierlist.filter_stake")}
@@ -248,20 +250,20 @@ export function TierListTab() {
             <div
               key={tier}
               className={cn(
-                "flex gap-3 rounded-md border-2 p-2",
+                "flex gap-2 rounded-md border-2 p-1.5 sm:gap-3 sm:p-2",
                 tone.border,
               )}
               data-testid={`tier-row-${tier}`}
             >
               <div
                 className={cn(
-                  "flex w-16 shrink-0 items-center justify-center rounded font-display text-3xl font-black",
+                  "flex w-10 shrink-0 items-center justify-center rounded font-display text-2xl font-black sm:w-16 sm:text-3xl",
                   tone.bg, tone.text,
                 )}
               >
                 {tier}
               </div>
-              <div className="flex flex-1 flex-wrap items-start gap-1 py-1">
+              <div className="flex flex-1 flex-wrap items-start gap-0.5 py-1 sm:gap-1">
                 {ids.length === 0 ? (
                   <span className="self-center text-xs italic text-muted-foreground">
                     {t("ui.tierlist.empty_tier")}

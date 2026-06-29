@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { TabIntro } from "@/components/TabIntro";
+import { CheckToggle } from "@/components/primitives";
 import {
   Dices, Search, Play, Loader2, Target, Telescope, Skull, Sparkles, ListTree,
   Library, ChevronDown, ChevronRight,
@@ -25,6 +27,7 @@ import { describeShopSlot, describePackSlot } from "@/lib/seedFinderLocation";
 import {
   useSeedTabState, setAnalyzer, type AnalyzerView,
 } from "@/lib/seedTabState";
+import { useT } from "@/lib/i18n";
 
 const ALL_JOKERS = [...COMMON_JOKERS, ...UNCOMMON_JOKERS, ...RARE_JOKERS, ...LEGENDARY_JOKERS]
   .filter((j, i, a) => a.indexOf(j) === i)
@@ -137,10 +140,11 @@ function PackBlock({ p }: { p: PackContents }) {
 }
 
 function AnteBody({ r }: { r: AnteResult }) {
+  const t = useT();
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-2">
       <div className="rounded-md border border-zinc-800/60 bg-zinc-950/50 p-2.5">
-        <div className="text-[10px] uppercase tracking-wider text-zinc-500 mb-1.5">Shop Queue</div>
+        <div className="text-[10px] uppercase tracking-wider text-zinc-500 mb-1.5">{t("ui.seeds.shop_queue")}</div>
         <div className="space-y-0.5 text-xs">
           {r.shopQueue.map((it, i) => {
             const slot = i + 1;
@@ -244,21 +248,22 @@ function InputsPanel({
   onRun: () => void;
   isRunning: boolean;
 }) {
+  const t = useT();
   return (
     <div className="rounded-lg border border-yellow-500/30 bg-zinc-950/80 p-3 space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2">
         <div className="lg:col-span-2">
-          <Label className="text-xs text-zinc-400">Seed</Label>
+          <Label className="text-xs text-zinc-400">{t("ui.seeds.seed")}</Label>
           <Input
             value={input.seed}
             onChange={e => setInput({ ...input, seed: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10) })}
-            placeholder="e.g. 8Q47WV6K"
+            placeholder={t("ui.seeds.seed_placeholder")}
             className="font-mono uppercase h-9"
             data-testid="input-seed"
           />
         </div>
         <div>
-          <Label className="text-xs text-zinc-400">Deck</Label>
+          <Label className="text-xs text-zinc-400">{t("ui.seeds.deck")}</Label>
           <Select value={input.deck} onValueChange={v => setInput({ ...input, deck: v })}>
             <SelectTrigger className="h-9" data-testid="select-deck"><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -267,7 +272,7 @@ function InputsPanel({
           </Select>
         </div>
         <div>
-          <Label className="text-xs text-zinc-400">Stake</Label>
+          <Label className="text-xs text-zinc-400">{t("ui.seeds.stake")}</Label>
           <Select value={input.stake} onValueChange={v => setInput({ ...input, stake: v })}>
             <SelectTrigger className="h-9" data-testid="select-stake"><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -276,7 +281,7 @@ function InputsPanel({
           </Select>
         </div>
         <div>
-          <Label className="text-xs text-zinc-400">Version</Label>
+          <Label className="text-xs text-zinc-400">{t("ui.seeds.version")}</Label>
           <Select value={String(input.version)} onValueChange={v => setInput({ ...input, version: Number(v) })}>
             <SelectTrigger className="h-9" data-testid="select-version"><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -288,10 +293,10 @@ function InputsPanel({
         </div>
       </div>
       <details className="text-xs">
-        <summary className="cursor-pointer text-zinc-400 hover:text-zinc-200 select-none">Advanced options</summary>
+        <summary className="cursor-pointer text-zinc-400 hover:text-zinc-200 select-none">{t("ui.seeds.advanced_options")}</summary>
         <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-2 p-2 rounded border border-zinc-800/50 bg-zinc-900/30">
           <div>
-            <Label className="text-xs text-zinc-400">Max Ante</Label>
+            <Label className="text-xs text-zinc-400">{t("ui.seeds.max_ante")}</Label>
             <Input
               type="number" min={1} max={39}
               value={input.maxAnte}
@@ -300,7 +305,7 @@ function InputsPanel({
             />
           </div>
           <div>
-            <Label className="text-xs text-zinc-400">Shop items / ante</Label>
+            <Label className="text-xs text-zinc-400">{t("ui.seeds.shop_items_ante")}</Label>
             <Input
               type="number" min={1} max={30}
               value={input.cardsPerAnte}
@@ -309,7 +314,7 @@ function InputsPanel({
             />
           </div>
           <div>
-            <Label className="text-xs text-zinc-400">Packs / ante</Label>
+            <Label className="text-xs text-zinc-400">{t("ui.seeds.packs_ante")}</Label>
             <Input
               type="number" min={0} max={6}
               value={input.packsPerAnte}
@@ -318,21 +323,46 @@ function InputsPanel({
             />
           </div>
           <div className="flex flex-col gap-1 pt-3 text-zinc-300">
-            <label className="flex items-center gap-2"><input type="checkbox" checked={input.showman} onChange={e => setInput({ ...input, showman: e.target.checked })} /> Showman owned</label>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={input.freshProfile} onChange={e => setInput({ ...input, freshProfile: e.target.checked })} /> Fresh profile</label>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={input.freshRun} onChange={e => setInput({ ...input, freshRun: e.target.checked })} /> Fresh run</label>
+            <label className="flex items-center gap-2">
+              <CheckToggle
+                active={input.showman}
+                onToggle={() => setInput({ ...input, showman: !input.showman })}
+                testId="toggle-seeds-showman"
+                ariaLabel={t("ui.seeds.showman")}
+              />
+              {t("ui.seeds.showman")}
+            </label>
+            <label className="flex items-center gap-2">
+              <CheckToggle
+                active={input.freshProfile}
+                onToggle={() => setInput({ ...input, freshProfile: !input.freshProfile })}
+                testId="toggle-seeds-fresh-profile"
+                ariaLabel={t("ui.seeds.fresh_profile")}
+              />
+              {t("ui.seeds.fresh_profile")}
+            </label>
+            <label className="flex items-center gap-2">
+              <CheckToggle
+                active={input.freshRun}
+                onToggle={() => setInput({ ...input, freshRun: !input.freshRun })}
+                testId="toggle-seeds-fresh-run"
+                ariaLabel={t("ui.seeds.fresh_run")}
+              />
+              {t("ui.seeds.fresh_run")}
+            </label>
           </div>
         </div>
       </details>
       <Button onClick={onRun} disabled={!input.seed || isRunning} className="w-full md:w-auto bg-yellow-400 hover:bg-yellow-300 text-zinc-950" data-testid="button-analyze">
         {isRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
-        Analyze seed
+        {t("ui.seeds.analyze_seed")}
       </Button>
     </div>
   );
 }
 
 function ViewSwitcher({ view, onChange }: { view: AnalyzerView; onChange: (v: AnalyzerView) => void }) {
+  const t = useT();
   const btn = (v: AnalyzerView, label: string, Icon: any) => (
     <Button
       key={v}
@@ -346,14 +376,15 @@ function ViewSwitcher({ view, onChange }: { view: AnalyzerView; onChange: (v: An
   );
   return (
     <div className="flex flex-wrap gap-1 border-b border-yellow-500/15 pb-2">
-      {btn("spoiler", "Full Spoiler", ListTree)}
-      {btn("joker", "Find a Joker", Search)}
-      {btn("soul", "Soul / Black Hole", Skull)}
+      {btn("spoiler", t("ui.seeds.full_spoiler"), ListTree)}
+      {btn("joker", t("ui.seeds.find_joker"), Search)}
+      {btn("soul", t("ui.seeds.soul_black_hole"), Skull)}
     </div>
   );
 }
 
 function FullSpoilerView({ results }: { results: AnteResult[] }) {
+  const t = useT();
   const [expanded, setExpanded] = useState<Record<number, boolean>>(() => ({ [results[0]?.ante ?? 1]: true }));
 
   const allOpen = results.every(r => expanded[r.ante]);
@@ -365,9 +396,9 @@ function FullSpoilerView({ results }: { results: AnteResult[] }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <div className="text-xs text-zinc-500">Click an ante to expand its shop queue + boosters.</div>
+        <div className="text-xs text-zinc-500">{t("ui.seeds.click_ante_hint")}</div>
         <Button size="sm" variant="ghost" onClick={toggleAll} className="text-xs h-7">
-          {allOpen ? "Collapse all" : "Expand all"}
+          {allOpen ? t("ui.seeds.collapse_all") : t("ui.seeds.expand_all")}
         </Button>
       </div>
       <div className="space-y-1.5">
@@ -385,6 +416,7 @@ function FullSpoilerView({ results }: { results: AnteResult[] }) {
 }
 
 function JokerHuntView({ results, maxAnte }: { results: AnteResult[]; maxAnte: number }) {
+  const t = useT();
   const query = useSeedTabState(s => s.analyzer.jokerQuery);
   const setQuery = (v: string) => setAnalyzer({ jokerQuery: v });
   const matches = useMemo<JokerSighting[]>(() => query ? findJoker(results, query, 200) : [], [results, query]);
@@ -394,12 +426,12 @@ function JokerHuntView({ results, maxAnte }: { results: AnteResult[]; maxAnte: n
     <div className="space-y-3">
       <div className="flex flex-col md:flex-row gap-2 items-start md:items-end">
         <div className="flex-1">
-          <Label className="text-xs text-zinc-400">Joker name</Label>
+          <Label className="text-xs text-zinc-400">{t("ui.seeds.joker_name")}</Label>
           <Input
             list="joker-list"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Perkeo, Blueprint, Brainstorm..."
+            placeholder={t("ui.seeds.joker_placeholder")}
             data-testid="input-hunter-query"
           />
           <datalist id="joker-list">
@@ -407,12 +439,12 @@ function JokerHuntView({ results, maxAnte }: { results: AnteResult[]; maxAnte: n
           </datalist>
         </div>
         <div className="text-xs text-zinc-500 pb-2">
-          {query ? `${matches.length} sighting${matches.length === 1 ? "" : "s"} in antes 1-${maxAnte}` : "Type a joker name."}
+          {query ? t("ui.seeds.sightings_in_antes", { n: String(matches.length), m: String(maxAnte) }) : t("ui.seeds.type_joker_name")}
         </div>
       </div>
       {query && matches.length === 0 && (
         <div className="text-sm text-zinc-500 italic">
-          No sightings of "{query}" in antes 1-{maxAnte}. Try a higher max ante.
+          {t("ui.seeds.no_sightings", { q: query, m: String(maxAnte) })}
         </div>
       )}
       {matches.length > 0 && (
@@ -421,11 +453,11 @@ function JokerHuntView({ results, maxAnte }: { results: AnteResult[]; maxAnte: n
             <thead className="bg-zinc-900/70 text-zinc-400 text-xs uppercase">
               <tr>
                 <th className="p-2 text-left w-[40px]"></th>
-                <th className="p-2 text-left">Ante</th>
-                <th className="p-2 text-left">Location</th>
-                <th className="p-2 text-left">Rarity</th>
-                <th className="p-2 text-left">Edition</th>
-                <th className="p-2 text-left">Stickers</th>
+                <th className="p-2 text-left">{t("ui.seeds.col_ante")}</th>
+                <th className="p-2 text-left">{t("ui.seeds.col_location")}</th>
+                <th className="p-2 text-left">{t("ui.seeds.col_rarity")}</th>
+                <th className="p-2 text-left">{t("ui.seeds.col_edition")}</th>
+                <th className="p-2 text-left">{t("ui.seeds.col_stickers")}</th>
               </tr>
             </thead>
             <tbody>
@@ -483,15 +515,16 @@ function renderHunterLocation(m: JokerSighting): React.ReactNode {
 }
 
 function SoulView({ results, maxAnte }: { results: AnteResult[]; maxAnte: number }) {
+  const t = useT();
   const spawns = useMemo<SoulSighting[]>(() => findSoulSpawns(results), [results]);
   return (
     <div className="space-y-3">
       <div className="text-xs text-zinc-500">
-        The Soul rolls a random Legendary joker and appears in Arcana / Spectral packs. Black Hole upgrades a poker hand and appears in Celestial / Spectral packs.
-        Both gate on <code className="text-amber-300">random("soul_*") &gt; 0.997</code> per pack.
+        {t("ui.seeds.soul_explanation")}
+        {" "}{t("ui.seeds.both_gate_on")} <code className="text-amber-300">random("soul_*") &gt; 0.997</code> {t("ui.seeds.per_pack")}.
       </div>
       {spawns.length === 0 ? (
-        <div className="text-sm text-zinc-500 italic">No Soul or Black Hole spawns in antes 1-{maxAnte}.</div>
+        <div className="text-sm text-zinc-500 italic">{t("ui.seeds.no_soul_spawns", { m: String(maxAnte) })}</div>
       ) : (
         <div className="space-y-2">
           {spawns.map((s, i) => {
@@ -499,24 +532,24 @@ function SoulView({ results, maxAnte }: { results: AnteResult[]; maxAnte: number
             return (
               <div key={i} className="rounded-md border border-purple-500/30 bg-purple-950/10 p-2.5">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-                  <span className="font-mono text-yellow-300">Ante {s.ante}</span>
+                  <span className="font-mono text-yellow-300">{t("ui.seeds.col_ante")} {s.ante}</span>
                   <span className="text-purple-300 font-semibold">{s.card}</span>
-                  <span className="text-zinc-400 text-xs">in {s.packName}</span>
+                  <span className="text-zinc-400 text-xs">{t("ui.seeds.in")} {s.packName}</span>
                   <span className="text-zinc-500 text-[10px] uppercase tracking-wider">{s.source.replace("-", " ")}</span>
                 </div>
                 {s.card === "The Soul" && s.resolvedJoker && (
                   <div className="mt-2 flex items-center gap-2 text-sm rounded-md border border-purple-500/15 bg-zinc-950/40 px-2 py-1.5">
-                    <span className="text-zinc-500 text-xs">resolves to</span>
+                    <span className="text-zinc-500 text-xs">{t("ui.seeds.resolves_to")}</span>
                     {id && <JokerSprite jokerId={id} name={s.resolvedJoker.joker} size={32} className="border-0 bg-transparent" />}
                     <span className={`font-semibold ${rarityClass(s.resolvedJoker.rarity)}`}>{s.resolvedJoker.joker}</span>
                     {s.resolvedJoker.edition !== "No Edition" && (
                       <span className={`italic text-xs ${editionClass(s.resolvedJoker.edition)}`}>[{s.resolvedJoker.edition}]</span>
                     )}
-                    <span className="ml-auto text-[10px] text-zinc-500 uppercase tracking-wider">Legendary</span>
+                    <span className="ml-auto text-[10px] text-zinc-500 uppercase tracking-wider">{t("ui.seeds.legendary")}</span>
                   </div>
                 )}
                 {s.card === "The Soul" && !s.resolvedJoker && (
-                  <div className="mt-1 text-[10px] text-zinc-500 italic">(Legendary resolution unavailable)</div>
+                  <div className="mt-1 text-[10px] text-zinc-500 italic">{t("ui.seeds.resolution_unavailable")}</div>
                 )}
               </div>
             );
@@ -530,6 +563,7 @@ function SoulView({ results, maxAnte }: { results: AnteResult[]; maxAnte: number
 type SubTab = "analyzer" | "finder" | "library";
 
 export function SeedsTab() {
+  const t = useT();
   const [subTab, setSubTab] = useState<SubTab>("analyzer");
 
   const analyzer = useSeedTabState(s => s.analyzer);
@@ -552,39 +586,37 @@ export function SeedsTab() {
 
   return (
     <div className="space-y-4 p-2 md:p-4">
-      <div className="flex flex-wrap items-baseline gap-3">
-        <h1 className="text-2xl font-bold text-yellow-200 flex items-center gap-2">
-          <Dices className="h-7 w-7" /> Seeds
-        </h1>
-        <p className="text-sm text-zinc-400">
-          Analyze a seed, search for one matching your wants, or revisit your saved seeds.
-        </p>
-      </div>
+      <TabIntro Icon={Dices} title={t("ui.intro.seeds.title")}>
+        {t("ui.intro.seeds.desc")}
+      </TabIntro>
 
-      <div className="flex flex-wrap gap-2 border-b border-yellow-500/30 pb-2">
+      {/* Sub-tab pills — sticky on phones so the user can swap views without
+          scrolling back up. Horizontal scroll fallback if the three buttons
+          overflow on small phones (they shouldn't, but defensive). */}
+      <div className="sticky top-[60px] z-[5] -mx-2 flex gap-2 overflow-x-auto border-b border-yellow-500/30 bg-[hsl(178_14%_13%)]/95 px-2 pb-2 pt-1 backdrop-blur md:static md:mx-0 md:overflow-visible md:bg-transparent md:px-0 md:pt-0 md:backdrop-blur-none">
         <Button
           variant={subTab === "analyzer" ? "default" : "ghost"}
           onClick={() => setSubTab("analyzer")}
-          className={subTab === "analyzer" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950" : ""}
+          className={(subTab === "analyzer" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950 " : "") + "shrink-0"}
           data-testid="tab-analyzer"
         >
-          <Telescope className="mr-2 h-4 w-4" /> Seed Analyzer
+          <Telescope className="mr-2 h-4 w-4" /> {t("ui.seeds.seed_analyzer")}
         </Button>
         <Button
           variant={subTab === "finder" ? "default" : "ghost"}
           onClick={() => setSubTab("finder")}
-          className={subTab === "finder" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950" : ""}
+          className={(subTab === "finder" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950 " : "") + "shrink-0"}
           data-testid="tab-finder"
         >
-          <Target className="mr-2 h-4 w-4" /> Seed Finder
+          <Target className="mr-2 h-4 w-4" /> {t("ui.seeds.seed_finder_tab")}
         </Button>
         <Button
           variant={subTab === "library" ? "default" : "ghost"}
           onClick={() => setSubTab("library")}
-          className={subTab === "library" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950" : ""}
+          className={(subTab === "library" ? "bg-yellow-400 hover:bg-yellow-300 text-zinc-950 " : "") + "shrink-0"}
           data-testid="tab-library"
         >
-          <Library className="mr-2 h-4 w-4" /> Seed Library
+          <Library className="mr-2 h-4 w-4" /> {t("ui.seeds.seed_library")}
           {librarySize > 0 && <span className="ml-1.5 text-[10px] bg-zinc-800/80 px-1.5 py-0.5 rounded">{librarySize}</span>}
         </Button>
       </div>
@@ -606,9 +638,10 @@ export function SeedsTab() {
           )}
 
           {!analyzer.results && (
-            <div className="text-center text-sm text-zinc-500 italic py-12">
-              Enter a seed and click <b>Analyze seed</b> to see boss, voucher, tags, shop queue, every booster and its contents, and locate any joker or Soul spawn.
-            </div>
+            <div
+              className="text-center text-sm text-zinc-500 italic py-12"
+              dangerouslySetInnerHTML={{ __html: t("ui.seeds.empty_prompt") }}
+            />
           )}
         </div>
       )}

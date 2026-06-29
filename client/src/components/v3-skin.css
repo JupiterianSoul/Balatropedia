@@ -82,9 +82,8 @@ html.v3-skin [role="tabpanel"] {
    Only primary CTAs are red. Specific buttons are blue.
    ============================================================ */
 
-html.v3-skin button:not([data-sprite]),
-html.v3-skin [role="button"]:not(a):not([data-sprite]),
-html.v3-skin [data-testid^="button-"]:not([data-sprite]) {
+html.v3-skin [data-skin="balatro"]:not([data-sprite]),
+html.v3-skin .balatro-tab:not([data-sprite]) {
   font-family: "m6x11plus", "Courier New", monospace !important;
   letter-spacing: 1px !important;
   border: 3px solid #000 !important;
@@ -115,14 +114,12 @@ html.v3-skin [data-sprite] {
 html.v3-skin button[data-sprite]::after,
 html.v3-skin [data-sprite]::after { content: none !important; }
 
-html.v3-skin button:hover:not(:disabled):not([data-sprite]),
-html.v3-skin [role="button"]:hover:not(:disabled):not([data-sprite]),
-html.v3-skin [data-testid^="button-"]:hover:not(:disabled):not([data-sprite]) {
+html.v3-skin [data-skin="balatro"]:hover:not(:disabled):not([data-sprite]),
+html.v3-skin .balatro-tab:hover:not(:disabled):not([data-sprite]) {
   filter: brightness(1.12) !important;
 }
-html.v3-skin button:active:not(:disabled):not([data-sprite]),
-html.v3-skin [role="button"]:active:not(:disabled):not([data-sprite]),
-html.v3-skin [data-testid^="button-"]:active:not(:disabled):not([data-sprite]) {
+html.v3-skin [data-skin="balatro"]:active:not(:disabled):not([data-sprite]),
+html.v3-skin .balatro-tab:active:not(:disabled):not([data-sprite]) {
   transform: translateY(4px) !important;
   box-shadow:
     0 1px 0 #000,
@@ -130,9 +127,8 @@ html.v3-skin [data-testid^="button-"]:active:not(:disabled):not([data-sprite]) {
 }
 
 /* Shimmer sweep on hover */
-html.v3-skin button:not([data-sprite])::after,
-html.v3-skin [role="button"]:not([data-sprite])::after,
-html.v3-skin [data-testid^="button-"]:not([data-sprite])::after {
+html.v3-skin [data-skin="balatro"]:not([data-sprite])::after,
+html.v3-skin .balatro-tab:not([data-sprite])::after {
   content: "";
   position: absolute; top: 0; left: -100%;
   width: 60%; height: 100%;
@@ -141,9 +137,8 @@ html.v3-skin [data-testid^="button-"]:not([data-sprite])::after {
   transition: left 0.5s ease;
   pointer-events: none;
 }
-html.v3-skin button:hover:not([data-sprite])::after,
-html.v3-skin [role="button"]:hover:not([data-sprite])::after,
-html.v3-skin [data-testid^="button-"]:hover:not([data-sprite])::after {
+html.v3-skin [data-skin="balatro"]:hover:not([data-sprite])::after,
+html.v3-skin .balatro-tab:hover:not([data-sprite])::after {
   left: 130%;
 }
 

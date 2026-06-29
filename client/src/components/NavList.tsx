@@ -73,13 +73,18 @@ export function NavList({ groups, currentTab, onSelect, favCount }: NavListProps
                     data-sound="tab_switch"
                     onClick={() => go(v)}
                     onMouseEnter={() => playSound("hover")}
-                    className={`rounded px-3 py-2 text-left text-sm transition-colors hover:bg-[hsl(150_16%_10%)] ${
+                    className={`rounded border-l-4 px-3 py-2 text-left text-sm transition-colors hover:bg-[hsl(150_16%_10%)] ${
                       active
-                        ? "bg-[hsl(150_16%_10%)] font-semibold"
-                        : "text-[hsl(45_15%_85%)]"
+                        ? "bg-[hsl(150_16%_8%)] font-bold shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]"
+                        : "border-transparent text-[hsl(45_15%_85%)]"
                     }`}
-                    style={active ? { color: color.active } : undefined}
+                    style={
+                      active
+                        ? { color: color.active, borderLeftColor: color.active }
+                        : undefined
+                    }
                     data-testid={`nav-${v}`}
+                    aria-current={active ? "page" : undefined}
                   >
                     {t(`ui.nav.${v}`)}
                   </button>

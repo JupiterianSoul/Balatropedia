@@ -1,4 +1,5 @@
 import { Skull, ShieldCheck } from "lucide-react";
+import { TabIntro } from "@/components/TabIntro";
 import { JokerSprite } from "@/components/JokerSprite";
 import { useApp } from "@/lib/appContext";
 import { JOKER_MAP } from "@/lib/helpers";
@@ -12,12 +13,9 @@ export function BossBlindsTab() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="font-display text-xl text-accent">{t("ui.boss.title")}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t("ui.boss.subtitle")}
-        </p>
-      </div>
+      <TabIntro Icon={Skull} title={t("ui.boss.title")}>
+        {t("ui.boss.subtitle")}
+      </TabIntro>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {BOSSES.map((b) => (

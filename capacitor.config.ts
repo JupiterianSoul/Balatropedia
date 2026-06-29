@@ -12,7 +12,10 @@ const config: CapacitorConfig = {
     backgroundColor: "#1c262a",
     // Allow http://localhost only via WebView default; outbound HTTPS is fine.
     // No allowNavigation — the app is fully offline.
-    webContentsDebuggingEnabled: false,
+    // Temporarily enabled while wiring threaded WASM + verifying
+    // crossOriginIsolated on-device. Flip to false before any release
+    // build that ships to the Play Store.
+    webContentsDebuggingEnabled: true,
   },
   plugins: {
     SplashScreen: {

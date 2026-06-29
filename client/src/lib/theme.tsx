@@ -29,14 +29,11 @@ function readStoredTheme(): Theme {
 function applyTheme(t: Theme) {
   if (typeof document === "undefined") return;
   document.documentElement.setAttribute("data-theme", t);
-
-  if (t === "parchment") {
-    document.documentElement.classList.remove("dark");
-    document.documentElement.classList.add("light");
-  } else {
-    document.documentElement.classList.remove("light");
-    document.documentElement.classList.add("dark");
-  }
+  // All three themes are dark surfaces now (felt = teal, midnight = blue,
+  // parchment = brown leather). Keep .dark always on so shadcn primitives
+  // stay consistent across themes.
+  document.documentElement.classList.remove("light");
+  document.documentElement.classList.add("dark");
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useApp } from "@/lib/appContext";
 import { Joker } from "@/lib/helpers";
 import { useGameText, useI18n } from "@/lib/i18n";
@@ -6,7 +7,12 @@ import { JokerSprite } from "./JokerSprite";
 import { playSound } from "@/lib/sound";
 import { FormattedBalatroText } from "@/lib/balatroText";
 
-export function JokerCard({ joker }: { joker: Joker }) {
+// Cached at module init — runs once per app lifetime, not per card.
+const HAS_HOVER = typeof window !== "undefined"
+  && typeof window.matchMedia === "function"
+  && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+function JokerCardBase({ joker }: { joker: Joker }) {
   const { openJokerDetail, isFavoriteJoker, toggleFavoriteJoker } = useApp();
   const localized = useGameText("jokers", joker.id);
   const { lang } = useI18n();
@@ -20,7 +26,7 @@ export function JokerCard({ joker }: { joker: Joker }) {
       tabIndex={0}
       data-sound="card_place"
       onClick={() => openJokerDetail(joker.id)}
-      onMouseEnter={() => playSound("hover")}
+      onMouseEnter={HAS_HOVER ? () => playSound("hover") : undefined}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -28,7 +34,8 @@ export function JokerCard({ joker }: { joker: Joker }) {
         }
       }}
       data-testid={`card-joker-${joker.id}`}
-      className="balatro-card balatro-hover group flex cursor-pointer flex-col p-3.5 focus-visible:ring-2 focus-visible:ring-ring"
+      data-balatro-card="joker"
+      className="balatro-card balatro-hover mobile-card-contain group flex cursor-pointer flex-col p-2 focus-visible:ring-2 focus-visible:ring-ring sm:p-3.5"
       style={{ contentVisibility: "auto", containIntrinsicSize: "auto 180px" } as React.CSSProperties}
     >
       {joker.rarity && (
@@ -36,10 +43,10 @@ export function JokerCard({ joker }: { joker: Joker }) {
           <RarityBadge rarity={joker.rarity} />
         </div>
       )}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex min-w-0 items-start gap-2.5">
-          <JokerSprite jokerId={joker.id} name={displayName} size={56} />
-          <h3 className="min-w-0 font-display text-base font-bold leading-tight gold-text">
+      <div className="flex items-start justify-between gap-1.5 sm:gap-2">
+        <div className="flex min-w-0 items-start gap-1.5 sm:gap-2.5">
+          <JokerSprite jokerId={joker.id} name={displayName} size={48} />
+          <h3 className="min-w-0 font-display text-[13px] font-bold leading-tight gold-text sm:text-base">
             {displayName}
           </h3>
         </div>
@@ -74,4 +81,9 @@ export function JokerCard({ joker }: { joker: Joker }) {
     </div>
   );
 }
+
+/** Memoized: joker objects come from the static JOKERS array (stable references),
+ *  so default shallow-compare correctly skips re-renders when filters/sort change
+ *  but the card itself is still visible. Saves ~150 reconciliations per filter tap. */
+export const JokerCard = memo(JokerCardBase);
 

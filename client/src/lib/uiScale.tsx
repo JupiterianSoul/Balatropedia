@@ -3,10 +3,24 @@ import {
 } from "react";
 
 const STORAGE_KEY = "balatro-ui-scale";
-const DEFAULT_SCALE = 1.0;
-export const UI_SCALE_MIN = 0.8;
-export const UI_SCALE_MAX = 1.6;
-export const UI_SCALE_STEP = 0.05;
+const DEFAULT_SCALE = 1.10;
+export const UI_SCALE_MIN = 1.10;
+export const UI_SCALE_MAX = 1.40;
+export const UI_SCALE_STEP = 0.15;
+
+/** Three-step preset: Small (default, 110%), Medium (125%), Big (140%). */
+export const UI_SCALE_PRESETS = [1.10, 1.25, 1.40] as const;
+export type UIScalePresetValue = (typeof UI_SCALE_PRESETS)[number];
+
+export function nearestPreset(n: number): UIScalePresetValue {
+  let best: UIScalePresetValue = UI_SCALE_PRESETS[0];
+  let bestDist = Math.abs(n - best);
+  for (const p of UI_SCALE_PRESETS) {
+    const d = Math.abs(n - p);
+    if (d < bestDist) { best = p; bestDist = d; }
+  }
+  return best;
+}
 
 interface UIScaleState {
   scale: number;
@@ -17,7 +31,9 @@ const UIScaleContext = createContext<UIScaleState | null>(null);
 
 function clamp(n: number): number {
   if (!Number.isFinite(n)) return DEFAULT_SCALE;
-  return Math.max(UI_SCALE_MIN, Math.min(UI_SCALE_MAX, n));
+  // Snap any stored value to the nearest preset so legacy values
+  // (e.g. 1.0 from before the 3-step migration) move to a valid step.
+  return nearestPreset(Math.max(UI_SCALE_MIN, Math.min(UI_SCALE_MAX, n)));
 }
 
 function readStored(): number {
