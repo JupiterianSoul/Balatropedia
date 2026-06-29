@@ -636,6 +636,54 @@ export function SeedFinderTab() {
     return () => { cancelled = true; };
   }, [v3Beta]);
 
+  // ─── Cold-start pre-warm (phase 2) ─────────────────────────────────────────
+  //
+  // When the SeedFinder tab mounts, fetch the engine WASM into HTTP cache
+  // and pre-compile the module. On a phone APK this trims ~200-400ms off
+  // first-search latency since the worker spawn no longer pays a cold
+  // network/compile hit when the user finally clicks Start.
+  //
+  // We pre-warm whichever bundle the tab is actually going to use:
+  //   - threaded engine if the page is cross-origin isolated;
+  //   - SIMD bundle otherwise (if SIMD is supported);
+  //   - scalar bundle as last fallback.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      // SIMD probe.
+      const simdBytes = new Uint8Array([
+        0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00,
+        0x01, 0x05, 0x01, 0x60, 0x00, 0x01, 0x7b,
+        0x03, 0x02, 0x01, 0x00,
+        0x0a, 0x0a, 0x01, 0x08, 0x00, 0x41, 0x00, 0xfd, 0x0f, 0xfd, 0x62, 0x0b,
+      ]);
+      let simd = false;
+      try { simd = WebAssembly.validate(simdBytes); } catch { simd = false; }
+      const canThread =
+        typeof (window as any).crossOriginIsolated !== "undefined"
+        && (window as any).crossOriginIsolated === true
+        && typeof SharedArrayBuffer !== "undefined";
+      const urls: string[] = [];
+      if (canThread) urls.push("/engine-v2-threads/balatro_seed_engine_bg.wasm");
+      urls.push(simd
+        ? "/engine-v2-simd/balatro_seed_engine_bg.wasm"
+        : "/engine-v2/balatro_seed_engine_bg.wasm");
+      for (const url of urls) {
+        if (cancelled) return;
+        try {
+          const res = await fetch(url, { cache: "force-cache" });
+          if (cancelled || !res.ok) return;
+          if (typeof WebAssembly.compileStreaming === "function") {
+            await WebAssembly.compileStreaming(res);
+          }
+        } catch {
+          // Best-effort; the real load surfaces any real error.
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   // Share-link import on first mount.
   useEffect(() => {
     try {

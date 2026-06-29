@@ -17,6 +17,9 @@
 
 /// <reference lib="webworker" />
 
+// Marker so TypeScript treats this file as a module rather than a global script.
+export {};
+
 type EngineModule = {
   init: () => void;
   scan_chunk: (

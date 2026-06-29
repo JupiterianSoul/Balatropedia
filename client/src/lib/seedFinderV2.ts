@@ -192,14 +192,28 @@ export class SeedFinderV2 {
 
     const cores = navigator.hardwareConcurrency || 4;
     // Cap at 32 — modern threadrippers / m-series studios can hit this.
-    const threads = cfg.threads ?? Math.max(1, Math.min(32, cores));
+    const requested = cfg.threads ?? Math.max(1, Math.min(32, cores));
     const filterJson = buildFilterJson(cfg);
+
+    // ─── Decide execution mode ───────────────────────────────────────────────
+    //
+    // THREADED: page is cross-origin isolated, SharedArrayBuffer exists.
+    // We spawn ONE worker that owns a rayon pool of `cores` threads.
+    //
+    // FALLBACK: we spawn N legacy workers, each with its own WASM heap.
+    const canThread =
+      typeof (self as any).crossOriginIsolated !== "undefined"
+      && (self as any).crossOriginIsolated === true
+      && typeof SharedArrayBuffer !== "undefined";
+    const threads = canThread ? 1 : requested;
 
     const origin = self.location.origin;
     const scalarJs = new URL("/engine-v2/balatro_seed_engine.js", origin).toString();
     const scalarWasm = new URL("/engine-v2/balatro_seed_engine_bg.wasm", origin).toString();
     const simdJs = new URL("/engine-v2-simd/balatro_seed_engine.js", origin).toString();
     const simdWasm = new URL("/engine-v2-simd/balatro_seed_engine_bg.wasm", origin).toString();
+    const threadsJs = new URL("/engine-v2-threads/balatro_seed_engine.js", origin).toString();
+    const threadsWasm = new URL("/engine-v2-threads/balatro_seed_engine_bg.wasm", origin).toString();
 
     const allMatches: SeedMatch[] = [];
     // Per-worker scan counts. We sum these on every progress callback so the
@@ -214,14 +228,19 @@ export class SeedFinderV2 {
     const promise = new Promise<SeedMatch[]>((res) => { resolveOuter = res; });
 
     // Track which engine each worker reported using. We surface a single
-    // string ("SIMD" / "scalar" / "mixed") via the onProgress.engine field.
+    // string ("threaded" / "SIMD" / "scalar" / "mixed") via
+    // onProgress.engine. Threaded mode always reports "threaded"
+    // regardless of SIMD because rayon-on-WASM is the dominant signal.
+    let threadedWorkers = 0;
     let simdWorkers = 0;
     let scalarWorkers = 0;
-    const engineLabel = () =>
-      simdWorkers === 0 && scalarWorkers === 0 ? "loading"
-      : scalarWorkers === 0 ? "SIMD"
-      : simdWorkers === 0 ? "scalar"
-      : "mixed";
+    const engineLabel = () => {
+      if (threadedWorkers > 0) return "threaded";
+      if (simdWorkers === 0 && scalarWorkers === 0) return "loading";
+      if (scalarWorkers === 0) return "SIMD";
+      if (simdWorkers === 0) return "scalar";
+      return "mixed";
+    };
 
     const emitProgress = () => {
       const total = perWorkerScanned.reduce((a, b) => a + b, 0);
@@ -270,10 +289,15 @@ export class SeedFinderV2 {
     let workersDone = 0;
 
     for (let i = 0; i < threads; i++) {
-      const worker = new Worker(
-        new URL("./seedFinderV2Worker.ts", import.meta.url),
-        { type: "module" },
-      );
+      const worker = canThread
+        ? new Worker(
+            new URL("./seedFinderV2WorkerThreaded.ts", import.meta.url),
+            { type: "module" },
+          )
+        : new Worker(
+            new URL("./seedFinderV2Worker.ts", import.meta.url),
+            { type: "module" },
+          );
       this.workers.push(worker);
 
       // Disjoint start ranks per worker. We use a 60-bit stride so workers
@@ -316,7 +340,9 @@ export class SeedFinderV2 {
           // Worker reports cumulative `scanned` for itself.
           perWorkerScanned[workerIdx] = Number(msg.scanned);
         } else if (msg.type === "ready") {
-          if (msg.simd) simdWorkers++; else scalarWorkers++;
+          if (msg.threaded) threadedWorkers++;
+          else if (msg.simd) simdWorkers++;
+          else scalarWorkers++;
         } else if (msg.type === "error") {
           cb.onError?.(typeof msg.message === "string" ? msg.message : "Worker error");
         } else if (msg.type === "done") {
@@ -335,21 +361,37 @@ export class SeedFinderV2 {
         cb.onError?.(err.message || "Worker error (uncaught)");
       };
 
-      worker.postMessage({
-        type: "scan",
-        scalarJs,
-        scalarWasm,
-        simdJs,
-        simdWasm,
-        filterJson,
-        startRank: startRank.toString(),
-        count: HUGE_COUNT.toString(),
-        seedLen: SEED_LEN,
-        deck: cfg.deck,
-        stake: cfg.stake,
-        partial: false,
-        minScore: 0,
-      });
+      if (canThread) {
+        worker.postMessage({
+          type: "scan",
+          threadsJs,
+          threadsWasm,
+          filterJson,
+          startRank: startRank.toString(),
+          count: HUGE_COUNT.toString(),
+          seedLen: SEED_LEN,
+          deck: cfg.deck,
+          stake: cfg.stake,
+          partial: false,
+          minScore: 0,
+        });
+      } else {
+        worker.postMessage({
+          type: "scan",
+          scalarJs,
+          scalarWasm,
+          simdJs,
+          simdWasm,
+          filterJson,
+          startRank: startRank.toString(),
+          count: HUGE_COUNT.toString(),
+          seedLen: SEED_LEN,
+          deck: cfg.deck,
+          stake: cfg.stake,
+          partial: false,
+          minScore: 0,
+        });
+      }
     }
 
     return { stop, promise };
