@@ -74,34 +74,36 @@ export function BottomTabBar({
                     : "text-[hsl(45_15%_75%)]",
                 )}
               >
-                {Icon ? (
-                  <Icon
-                    className={cn(
-                      "h-5 w-5",
-                      active && "drop-shadow-[0_0_4px_hsl(var(--bal-mult))]",
-                    )}
-                    strokeWidth={active ? 2.5 : 2}
-                  />
-                ) : jokerSpriteUrl ? (
-                  <img
-                    src={jokerSpriteUrl}
-                    alt=""
-                    aria-hidden="true"
-                    className={cn(
-                      "h-6 w-5 object-contain",
-                      active && "drop-shadow-[0_0_4px_hsl(var(--bal-mult))]",
-                    )}
-                    style={{
-                      imageRendering: "pixelated",
-                      // @ts-expect-error vendor fallback
-                      WebkitImageRendering: "crisp-edges",
-                    }}
-                    draggable={false}
-                  />
-                ) : (
-                  // Fallback if sprite asset is missing
-                  <span className="font-pixel text-[14px] leading-none">J</span>
-                )}
+                <span className="flex h-6 w-6 items-center justify-center">
+                  {Icon ? (
+                    <Icon
+                      className={cn(
+                        "h-5 w-5",
+                        active && "drop-shadow-[0_0_4px_hsl(var(--bal-mult))]",
+                      )}
+                      strokeWidth={active ? 2.5 : 2}
+                    />
+                  ) : jokerSpriteUrl ? (
+                    <img
+                      src={jokerSpriteUrl}
+                      alt=""
+                      aria-hidden="true"
+                      className={cn(
+                        "h-6 w-5 object-contain",
+                        active && "drop-shadow-[0_0_4px_hsl(var(--bal-mult))]",
+                      )}
+                      style={{
+                        imageRendering: "pixelated",
+                        // @ts-expect-error vendor fallback
+                        WebkitImageRendering: "crisp-edges",
+                      }}
+                      draggable={false}
+                    />
+                  ) : (
+                    // Fallback if sprite asset is missing
+                    <span className="font-pixel text-[18px] leading-none">J</span>
+                  )}
+                </span>
                 <span className="font-pixel text-[10px] leading-none tracking-tight">
                   {resolveLabel(labelKey)}
                 </span>
