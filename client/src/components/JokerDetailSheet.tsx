@@ -10,7 +10,7 @@ import {
   RolePill, RiskBadge, StageBadge, ScalingBadge, StarToggle, JokerChip, SectionLabel, RarityBadge,
 } from "./primitives";
 import { JokerSprite } from "./JokerSprite";
-import { Sparkles } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useGameText, useT, useLabels, useCuratedText, useI18n } from "@/lib/i18n";
 import type { WhyRule, UseCaseRule } from "@/lib/helpers";
@@ -35,13 +35,18 @@ export function JokerDetailSheet() {
     <Sheet open={!!j} onOpenChange={(o) => !o && closeJokerDetail()}>
       <SheetContent
         side={isMobile ? "bottom" : "right"}
-        className="flex w-full flex-col overflow-hidden p-0 sm:max-w-md"
-        style={isMobile ? { height: "100dvh", maxHeight: "100dvh" } : { height: "100dvh" }}
+        className={
+          isMobile
+            ? "flex w-full flex-col overflow-hidden p-0"
+            : "flex w-full flex-col overflow-hidden p-0 sm:max-w-none md:max-w-[min(640px,50vw)] lg:max-w-[min(720px,50vw)] md:!right-auto md:!left-1/2 md:!-translate-x-1/2 md:!translate-y-0 md:!border md:!rounded-lg md:!top-4"
+        }
+        style={isMobile ? { height: "100dvh", maxHeight: "100dvh" } : { maxHeight: "calc(100vh - 2rem)" }}
+        hideClose
         data-testid="sheet-joker-detail"
       >
         {j && (
           <div className="flex h-full flex-col overflow-hidden">
-            <div className="flex-1 overflow-y-auto overscroll-contain p-5">
+            <div className="flex-1 overflow-y-auto overscroll-contain p-5 md:p-8">
               <SheetHeader className="space-y-2 pr-8 text-left">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex min-w-0 items-start gap-3">
@@ -57,12 +62,24 @@ export function JokerDetailSheet() {
                       )}
                     </div>
                   </div>
-                  <StarToggle
-                    active={isFavoriteJoker(j.id)}
-                    onToggle={() => toggleFavoriteJoker(j.id)}
-                    testId={`button-favorite-detail-${j.id}`}
-                    size={20}
-                  />
+                  <div className="flex items-center gap-2 shrink-0">
+                    <StarToggle
+                      active={isFavoriteJoker(j.id)}
+                      onToggle={() => toggleFavoriteJoker(j.id)}
+                      testId={`button-favorite-detail-${j.id}`}
+                      size={20}
+                    />
+                    <button
+                      type="button"
+                      onClick={closeJokerDetail}
+                      data-testid={`button-close-detail-${j.id}`}
+                      aria-label="Close"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-md text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2"
+                      style={{ backgroundColor: '#dc2626', border: '1px solid #991b1b' }}
+                    >
+                      <X className="h-5 w-5" strokeWidth={2.5} />
+                    </button>
+                  </div>
                 </div>
                 <p className="text-sm text-foreground/90">
                   <FormattedBalatroText text={localized.text || j.summary} id={j.id} lang={lang} />
@@ -77,9 +94,9 @@ export function JokerDetailSheet() {
                 </div>
               </SheetHeader>
 
-              <div className="mt-6 space-y-6">
+              <div className="mt-6 space-y-6 md:grid md:grid-cols-2 md:gap-6 md:space-y-0">
                 {}
-                <section className="rounded-md border border-accent/25 bg-accent/[0.04] p-3.5" data-testid="section-why-play">
+                <section className="rounded-md border border-accent/25 bg-accent/[0.04] p-3.5 md:col-span-2" data-testid="section-why-play">
                   <div className="mb-2.5 flex items-center gap-1.5">
                     <Sparkles className="h-3.5 w-3.5 text-accent" />
                     <SectionLabel>{t("ui.sheet.why_play")}</SectionLabel>

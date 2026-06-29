@@ -9,6 +9,7 @@ export function Phase3Sprite({
   size = 64,
   accent,
   className,
+  frame = false,
 }: {
   category: Phase3Category;
   id: string;
@@ -17,6 +18,8 @@ export function Phase3Sprite({
 
   accent?: string;
   className?: string;
+  /** When true, render the legacy dark rounded container. Default false. */
+  frame?: boolean;
 }) {
   const url = getPhase3Sprite(category, id);
   const [failed, setFailed] = useState(false);
@@ -25,10 +28,15 @@ export function Phase3Sprite({
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden rounded-md border border-accent/20 bg-[hsl(150_16%_6%)] shadow-inner",
+        "flex shrink-0 items-center justify-center overflow-hidden",
+        frame && "rounded-md border border-accent/20 bg-[hsl(150_16%_6%)] shadow-inner",
         className,
       )}
-      style={{ width: size, height: size, ...(accent ? { borderColor: `${accent}55` } : {}) }}
+      style={{
+        width: size,
+        height: size,
+        ...(frame && accent ? { borderColor: `${accent}55` } : {}),
+      }}
       data-testid={`sprite-${category}-${id}`}
     >
       {showImg ? (
@@ -38,7 +46,7 @@ export function Phase3Sprite({
           loading="lazy"
           decoding="async"
           onError={() => setFailed(true)}
-          className="h-full w-full object-contain p-1"
+          className={cn("h-full w-full object-contain", frame && "p-1")}
           style={{
             imageRendering: "pixelated",
             // @ts-expect-error vendor fallback

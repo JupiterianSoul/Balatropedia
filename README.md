@@ -36,7 +36,23 @@
 ### Seed Engine
 
 - **Analyzer**: paste a seed, simulate antes ahead with the WASM engine, see shops, packs, vouchers, Soul resolutions
-- **Finder**: search the entire seed space against constraints (joker in ante 1, guaranteed Negative tag, etc.), tunable CPU workers and tries per batch
+- **Finder (V2, default)**: the in-house
+  [Balatro Seed Searcher](https://github.com/JupiterianSoul/Balatro-Seed-Searcher)
+  Rust+WASM engine — SIMD when the browser supports it, scalar otherwise.
+  First-class filter rows for jokers (with edition + sticker + source),
+  vouchers, tags (small-blind / big-blind position), bosses, and standard
+  pack cards (suit + rank + enhancement + edition + seal). Soul → specific
+  legendary and Wraith → specific Rare are resolved by the engine. The
+  Verify Seed inspector reports clause-by-clause matches for any seed.
+  Filters serialise into a shareable `?seedfinder=...` URL. Bit-for-bit
+  internal parity harness passes 100k seeds with zero divergences (see
+  `scripts/PARITY.md` in the engine repo).
+- **Finder (V1, legacy)**: Immolate-based, fully verified. Available via
+  the `?legacy=1` URL flag for diagnostics or A/B comparison against V2.
+- **Device-aware Search Speed**: auto-detects core count, mobile vs PC,
+  and reported RAM, then picks a sensible default worker count (Eco on
+  low-end phones, Extreme on 24+ core workstations). A `?` popover next to
+  the dropdown explains the tiers in plain English.
 - **Library**: curated and user-saved notable seeds
 
 ### Tier List & Community
@@ -81,7 +97,7 @@ Balatropedia is an unofficial, non-commercial fan project. It is not affiliated 
 
 - **Frontend**: React + TypeScript, Vite, Tailwind CSS, shadcn/ui, Wouter routing
 - **Backend**: Express, Drizzle ORM, Neon Postgres
-- **Seed Engine**: Rust compiled to WebAssembly, Web Worker pool
+- **Seed Engine**: in-house Rust→WASM engine (V2, default) with SIMD detection. Immolate WASM remains as legacy fallback (`?legacy=1`). Both run in a Web Worker pool sized by an on-device profiler.
 - **Auth**: Google OAuth via Passport
 - **i18n**: in-tree JSON dictionaries (English, Français, Español)
 - **Hosting**: Render (Frankfurt)

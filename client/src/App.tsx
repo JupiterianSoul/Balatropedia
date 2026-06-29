@@ -1,5 +1,7 @@
 import { Switch, Route, Router } from "wouter";
+import { useEffect } from "react";
 import { useHashLocation } from "wouter/use-hash-location";
+import "@/components/v3-skin.css";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -11,6 +13,7 @@ import { DetailProvider } from "@/lib/detailContext";
 import { RunProvider } from "@/lib/runContext";
 import { EasterEggsProvider } from "@/lib/easterEggs";
 import { CRTOverlay } from "@/components/CRTOverlay";
+import { BalatroSplashV3 } from "@/components/BalatroSplashV3";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
 
@@ -24,6 +27,10 @@ function AppRouter() {
 }
 
 function App() {
+  useEffect(() => {
+    document.documentElement.classList.add("v3-skin");
+    return () => document.documentElement.classList.remove("v3-skin");
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={150}>
@@ -38,6 +45,7 @@ function App() {
                       <AppRouter />
                     </Router>
                     <CRTOverlay />
+                    <BalatroSplashV3 />
                   </EasterEggsProvider>
                 </DetailProvider>
               </RunProvider>

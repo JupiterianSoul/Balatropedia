@@ -1,0 +1,176 @@
+/* ============================================================
+   Balatropedia v3 splash
+   - Big "Balatropedia" appears letter-by-letter (home style)
+   - Two joker bands emerge from the middle and fly to the sides
+   - Animated red+blue blob bg, vignette, noise
+   ============================================================ */
+
+.balatro-splash-v3 {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #0a0205;
+  opacity: 1;
+  transition: opacity 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.splash-fade-out {
+  opacity: 0;
+  transform: scale(1.04);
+  transition:
+    opacity 0.75s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* -------- Animated blurred blobs (red + blue) -------- */
+.splash-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.78;
+  pointer-events: none;
+  will-change: transform;
+  mix-blend-mode: screen;
+}
+.splash-blob-red-1   { width: 55vw; height: 55vw; background: radial-gradient(circle, #ff2233 0%, #c4291d 45%, transparent 75%); top: -10vw; left: -10vw;  animation: blob-drift-1 7s   ease-in-out infinite alternate; }
+.splash-blob-red-2   { width: 65vw; height: 65vw; background: radial-gradient(circle, #ff4757 0%, #a8261e 45%, transparent 75%); bottom: -15vw; right: -15vw; animation: blob-drift-2 9s   ease-in-out infinite alternate; }
+.splash-blob-red-3   { width: 40vw; height: 40vw; background: radial-gradient(circle, #f44b3c 0%, #8c1810 50%, transparent 80%); top: 50%; left: 60%;        animation: blob-drift-3 6s   ease-in-out infinite alternate; }
+.splash-blob-blue-1  { width: 60vw; height: 60vw; background: radial-gradient(circle, #2db4ff 0%, #1e6fb5 45%, transparent 75%); top: 15%; right: -10vw;     animation: blob-drift-4 8s   ease-in-out infinite alternate; }
+.splash-blob-blue-2  { width: 50vw; height: 50vw; background: radial-gradient(circle, #4aa8ff 0%, #1e90ff 45%, transparent 75%); bottom: -8vw; left: -8vw;   animation: blob-drift-5 7.5s ease-in-out infinite alternate; }
+.splash-blob-blue-3  { width: 45vw; height: 45vw; background: radial-gradient(circle, #6cb4ff 0%, #2563eb 50%, transparent 80%); top: 60%; left: 10%;       animation: blob-drift-6 10s  ease-in-out infinite alternate; }
+@keyframes blob-drift-1 { 0% { transform: translate(0,0) scale(1); }     100% { transform: translate( 30vw,  20vh) scale(1.25); } }
+@keyframes blob-drift-2 { 0% { transform: translate(0,0) scale(1.10); }  100% { transform: translate(-25vw, -25vh) scale(0.90); } }
+@keyframes blob-drift-3 { 0% { transform: translate(0,0) scale(0.90); }  100% { transform: translate(-20vw,  15vh) scale(1.20); } }
+@keyframes blob-drift-4 { 0% { transform: translate(0,0) scale(1); }     100% { transform: translate(-30vw,  25vh) scale(1.15); } }
+@keyframes blob-drift-5 { 0% { transform: translate(0,0) scale(1.05); }  100% { transform: translate( 25vw, -20vh) scale(0.95); } }
+@keyframes blob-drift-6 { 0% { transform: translate(0,0) scale(1); }     100% { transform: translate( 20vw, -22vh) scale(1.18); } }
+
+/* Center vignette so the title pops */
+.splash-vignette {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 25%,
+    rgba(0, 0, 0, 0.45) 75%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}
+
+/* Subtle film grain */
+.splash-noise {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.15 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+
+/* ============================================================
+   TITLE — Letter-by-letter (home-screen style)
+   ============================================================ */
+.balatro-splash-v3-title {
+  position: relative;
+  z-index: 3;
+  font-family: "m6x11plus", "Courier New", monospace;
+  font-size: clamp(56px, 16vw, 120px);
+  letter-spacing: 1px;
+  line-height: 1;
+  display: flex;
+  white-space: nowrap;
+  transform: rotate(-2deg);
+}
+
+.splash-letter {
+  position: relative;
+  display: inline-block;
+  opacity: 0;
+  /* Pop in from above with a tiny overshoot, then settle */
+  animation: letter-drop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  text-shadow:
+    3px 3px 0 #000,
+    0 5px 0 rgba(0, 0, 0, 0.55),
+    0 0 16px currentColor,
+    0 0 32px currentColor;
+}
+.splash-letter-red  { color: #f44b3c; }
+.splash-letter-blue { color: #1e90ff; }
+
+@keyframes letter-drop {
+  0%   { opacity: 0; transform: translateY(-40px) scale(0.7); }
+  60%  { opacity: 1; transform: translateY(4px)   scale(1.10); }
+  100% { opacity: 1; transform: translateY(0)     scale(1);    }
+}
+
+/* ============================================================
+   JOKER BANDS — emerge from the middle of the title,
+   slide out to each side and become vertical conveyors.
+   ============================================================ */
+.splash-band {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 90px;
+  z-index: 2;
+  overflow: hidden;
+  opacity: 0;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  animation: band-emerge 1.2s cubic-bezier(0.22, 1, 0.36, 1) 1.7s forwards;
+}
+.splash-band-left  { left: 50%; transform: translateX(-50%) scale(0.4); }
+.splash-band-right { right: 50%; transform: translateX(50%) scale(0.4); }
+
+@keyframes band-emerge {
+  0%   { opacity: 0; }
+  20%  { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+.splash-band-left  { animation-name: band-fly-left; }
+.splash-band-right { animation-name: band-fly-right; }
+
+@keyframes band-fly-left {
+  0%   { opacity: 0; left: 50%; transform: translateX(-50%) scale(0.4) rotate(15deg); }
+  30%  { opacity: 1; }
+  100% { opacity: 1; left: 8px; transform: translateX(0)    scale(1)   rotate(0deg); }
+}
+@keyframes band-fly-right {
+  0%   { opacity: 0; right: 50%; transform: translateX(50%)  scale(0.4) rotate(-15deg); }
+  30%  { opacity: 1; }
+  100% { opacity: 1; right: 8px; transform: translateX(0)    scale(1)   rotate(0deg); }
+}
+
+.splash-band-track {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: band-scroll 14s linear infinite;
+}
+.splash-band-right .splash-band-track { animation-direction: reverse; }
+
+@keyframes band-scroll {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.splash-band-cell {
+  width: 90px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.splash-band-cell img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.5));
+}

@@ -110,15 +110,16 @@ export const COMMON_JOKERS: string[] = [
   "Joker","Greedy Joker","Lusty Joker","Wrathful Joker","Gluttonous Joker",
   "Jolly Joker","Zany Joker","Mad Joker","Crazy Joker","Droll Joker",
   "Sly Joker","Wily Joker","Clever Joker","Devious Joker","Crafty Joker",
-  "Half Joker","Credit Card","Banner","Mystic Summit","8 Ball","Misprint",
-  "Raised Fist","Chaos the Clown","Scary Face","Abstract Joker",
+  "Half Joker","Credit Card","Banner","Mystic Summit","8 Ball",
+  "Misprint","Raised Fist","Chaos the Clown","Scary Face","Abstract Joker",
   "Delayed Gratification","Gros Michel","Even Steven","Odd Todd","Scholar",
-  "Business Card","Supernova","Ride the Bus","Egg","Runner","Ice Cream",
-  "Splash","Blue Joker","Faceless Joker","Green Joker","Superposition",
-  "To Do List","Cavendish","Red Card","Square Joker","Riff-raff","Photograph",
-  "Reserved Parking","Mail In Rebate","Hallucination","Fortune Teller",
-  "Juggler","Drunkard","Golden Joker","Popcorn","Walkie Talkie","Smiley Face",
-  "Golden Ticket","Swashbuckler","Hanging Chad","Shoot the Moon",
+  "Business Card","Supernova","Ride the Bus","Egg","Runner",
+  "Ice Cream","Splash","Blue Joker","Faceless Joker","Green Joker",
+  "Superposition","To Do List","Cavendish","Red Card","Square Joker",
+  "Riff-raff","Photograph","Reserved Parking","Mail-In Rebate","Hallucination",
+  "Fortune Teller","Juggler","Drunkard","Golden Joker","Popcorn",
+  "Walkie Talkie","Smiley Face","Golden Ticket","Swashbuckler","Hanging Chad",
+  "Shoot the Moon",
 ];
 
 export const UNCOMMON_JOKERS_100: string[] = [
@@ -151,16 +152,18 @@ export const UNCOMMON_JOKERS_101C: string[] = [
 
 export const UNCOMMON_JOKERS: string[] = [
   "Joker Stencil","Four Fingers","Mime","Ceremonial Dagger","Marble Joker",
-  "Loyalty Card","Dusk","Fibonacci","Steel Joker","Hack","Pareidolia",
-  "Space Joker","Burglar","Blackboard","Sixth Sense","Constellation","Hiker",
-  "Card Sharp","Madness","Seance","Vampire","Shortcut","Hologram","Cloud 9",
-  "Rocket","Midas Mask","Luchador","Gift Card","Turtle Bean","Erosion",
-  "To the Moon","Stone Joker","Lucky Cat","Bull","Diet Cola","Trading Card",
-  "Flash Card","Spare Trousers","Ramen","Seltzer","Castle","Mr. Bones",
-  "Acrobat","Sock and Buskin","Troubadour","Certificate","Smeared Joker",
-  "Throwback","Rough Gem","Bloodstone","Arrowhead","Onyx Agate","Glass Joker",
-  "Showman","Flower Pot","Merry Andy","Oops! All 6s","The Idol","Seeing Double",
-  "Matador","Satellite","Cartomancer","Astronomer","Bootstraps",
+  "Loyalty Card","Dusk","Fibonacci","Steel Joker","Hack",
+  "Pareidolia","Space Joker","Burglar","Blackboard","Sixth Sense",
+  "Constellation","Hiker","Card Sharp","Madness","Seance",
+  "Shortcut","Hologram","Cloud 9","Rocket","Midas Mask",
+  "Luchador","Gift Card","Turtle Bean","Erosion","To the Moon",
+  "Stone Joker","Lucky Cat","Bull","Diet Cola","Trading Card",
+  "Flash Card","Spare Trousers","Ramen","Seltzer","Castle",
+  "Mr. Bones","Acrobat","Sock and Buskin","Troubadour","Certificate",
+  "Smeared Joker","Throwback","Rough Gem","Bloodstone","Arrowhead",
+  "Onyx Agate","Glass Joker","Showman","Flower Pot","Merry Andy",
+  "Oops! All 6s","The Idol","Seeing Double","Matador","Stuntman",
+  "Satellite","Cartomancer","Astronomer","Bootstraps",
 ];
 
 export const RARE_JOKERS_100: string[] = [
@@ -178,10 +181,10 @@ export const RARE_JOKERS_101C: string[] = [
 ];
 
 export const RARE_JOKERS: string[] = [
-  "DNA","Vagabond","Baron","Obelisk","Baseball Card","Ancient Joker","Campfire",
-  "Blueprint","Wee Joker","Hit the Road","The Duo","The Trio","The Family",
-  "The Order","The Tribe","Stuntman","Invisible Joker","Brainstorm",
-  "Drivers License","Burnt Joker",
+  "DNA","Vampire","Vagabond","Baron","Obelisk",
+  "Baseball Card","Ancient Joker","Campfire","Blueprint","Wee Joker",
+  "Hit the Road","The Duo","The Trio","The Family","The Order",
+  "The Tribe","Invisible Joker","Brainstorm","Driver's License","Burnt Joker",
 ];
 
 export const LEGENDARY_JOKERS: string[] = [
