@@ -117,7 +117,7 @@ function JokerCell({ id, onClick }: { id: string; onClick: (id: string) => void 
       className="transition-transform hover:scale-110"
       data-testid={`tierlist-joker-${id}`}
     >
-      <JokerSprite jokerId={id} name={displayName} size={44} clickable={false} />
+      <JokerSprite jokerId={id} name={displayName} size={56} clickable={false} />
     </button>
   );
 }
