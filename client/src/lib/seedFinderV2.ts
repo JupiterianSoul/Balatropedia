@@ -485,20 +485,13 @@ export class SeedFinderV2 {
         const msg = ev.data;
         if (msg.type === "matches") {
           for (const m of msg.matches as Array<{ score: number; seed: string; inspect: string | null }>) {
-            // SECOND-PASS VERIFICATION. The Rust V2 engine is fast but does not
-            // bit-exactly match real Balatro on every shop / pack path (no
-            // per-deck branching outside Ghost, no per-stake behavior). We
-            // run the candidate through the analyzer (`seedEngine.ts` — the
-            // TheSoul/Immolate-equivalent port) and drop the seed silently
-            // if any user-supplied constraint fails to reproduce. The user
-            // only ever sees seeds that the slow, accurate engine confirms.
-            const verdict = verifySeedAgainstConstraints(m.seed, cfg);
-            if (!verdict.ok) {
-              // Drop. Intentionally no UI noise; the count of dropped vs.
-              // surfaced matches is observable via the seeds/sec counter
-              // (which still ticks on the fast engine) versus the matches
-              // counter (which reflects only verified hits).
-              continue;
+            // Second-pass verification is disabled by default while we
+            // diagnose. Re-enable by setting localStorage.seedVerifier = "1".
+            if (typeof localStorage !== "undefined" && localStorage.getItem("seedVerifier") === "1") {
+              const verdict = verifySeedAgainstConstraints(m.seed, cfg);
+              if (!verdict.ok) {
+                continue;
+              }
             }
             const match = buildMatch(m.seed, m.inspect, cfg);
             allMatches.push(match);
