@@ -61,22 +61,6 @@ Interface:
 * Capacitor for the Android wrapper
 * Rust compiled to WebAssembly for the seed search engine
 
-## Run it
-
-```bash
-npm install
-npm run dev
-```
-
-Build the static bundle that ships in the Android APK:
-
-```bash
-npm run build:app
-npx cap sync android
-```
-
-Open `android/` in Android Studio and run on a connected device.
-
 ## Sources
 
 Joker data and synergy notes are cross referenced against the Balatro Fandom Wiki, dood.gg, Balatro HQ, Mobalytics, TheGamer, Two Average Gamers and validated discussion threads on r/balatro. Each joker detail sheet lists its own sources. Tier list ordering reflects aggregated community opinion, not authoritative ranking.
