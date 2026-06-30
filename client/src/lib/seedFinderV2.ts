@@ -485,9 +485,21 @@ export class SeedFinderV2 {
         const msg = ev.data;
         if (msg.type === "matches") {
           for (const m of msg.matches as Array<{ score: number; seed: string; inspect: string | null }>) {
-            // Second-pass verification is disabled by default while we
-            // diagnose. Re-enable by setting localStorage.seedVerifier = "1".
-            if (typeof localStorage !== "undefined" && localStorage.getItem("seedVerifier") === "1") {
+            // Second-pass verification: the Rust V2 engine reports candidates
+            // whose edition/source/joker name don't always reproduce in real
+            // Balatro. Concretely:
+            //   - For legendary jokers (Perkeo, Triboulet, ...) the engine's
+            //     `ante_soul_is` clause does NOT enforce the requested edition,
+            //     so it can return seeds where the Soul resolves to Perkeo BASE
+            //     while the user asked for Perkeo NEGATIVE.
+            //   - For non-legendary jokers with an edition requirement, the
+            //     engine sometimes returns a seed where some OTHER joker has
+            //     that edition in the requested slot.
+            // The verifier re-derives the seed with seedEngine.ts (analyzer
+            // math, cross-verified vs TheSoul) and drops the candidate if any
+            // constraint fails to reproduce. Disable for debugging by setting
+            // localStorage.seedVerifier = "0".
+            if (typeof localStorage === "undefined" || localStorage.getItem("seedVerifier") !== "0") {
               const verdict = verifySeedAgainstConstraints(m.seed, cfg);
               if (!verdict.ok) {
                 continue;
