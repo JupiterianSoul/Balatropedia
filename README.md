@@ -2,6 +2,8 @@
 
 Balatropedia is a fan-made reference and companion app for Balatro, the deckbuilder by LocalThunk and Playstack. It catalogs every joker, deck, stake, voucher, boss blind, consumable, edition, enhancement and seal in the game, then layers planning and analysis tools on top. The app runs in the browser and on Android as a Capacitor build with no account, no ads, no analytics and no online dependency.
 
+Link to Website : https://balatro-explorer-m22k.onrender.com
+
 ## What it covers
 
 Reference data:
