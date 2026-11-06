@@ -2,7 +2,7 @@
 
 Balatropedia is a fan-made reference and companion app for Balatro, the deckbuilder by LocalThunk and Playstack. It catalogs every joker, deck, stake, voucher, boss blind, consumable, edition, enhancement and seal in the game, then layers planning and analysis tools on top. The app runs in the browser and on Android as a Capacitor build with no account, no ads, no analytics and no online dependency.
 
-Link to Website : https://balatro-explorer-m22k.onrender.com
+Live site: https://balatro-explorer-m22k.onrender.com
 
 ## What it covers
 
@@ -52,6 +52,28 @@ Interface:
 * In browser synthesized sound effects, no audio files shipped
 * Full keyboard navigation
 * Mobile bottom tab bar, side drawer with tab descriptions, side conveyor of joker sprites on the home screen
+
+## Run it
+
+You need Node.js. The web build uses Express and a Neon Postgres database; copy `.env.example` to `.env` and set `DATABASE_URL`.
+
+```sh
+npm install
+npm run dev          # dev server with Vite
+npm run build        # production web build
+npm start            # serve the build
+npm run check        # type check
+npm run db:push      # apply the database schema
+```
+
+The Android app is a fully local build with no server, wrapped in Capacitor:
+
+```sh
+npm run cap:sync     # builds the app bundle and syncs it to android/
+npm run cap:open     # opens the project in Android Studio
+```
+
+`PLAYSTORE.md` has the details of how the web and app builds differ and how to release the app.
 
 ## Stack
 
